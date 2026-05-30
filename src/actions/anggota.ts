@@ -223,6 +223,35 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   revalidatePath("/pengurus/anggota")
 }
 
+async function prosesPenutupanAnggota(anggotaId: string) {
+  const simpananList = await prisma.simpanan.findMany({
+    where: { anggotaId, jenis: { in: ["POKOK", "WAJIB"] } },
+  })
+
+  await prisma.$transaction(async (tx) => {
+    for (const simpanan of simpananList) {
+      const saldo = Number(simpanan.saldo)
+      if (saldo <= 0) continue
+
+      await tx.simpanan.update({
+        where: { id: simpanan.id },
+        data: { saldo: { decrement: saldo } },
+      })
+
+      await tx.transaksiSimpanan.create({
+        data: {
+          anggotaId,
+          jenis: simpanan.jenis,
+          tipe: "PENARIKAN",
+          nominal: saldo,
+          saldoSetelah: 0,
+          keterangan: "Penutupan keanggotaan",
+        },
+      })
+    }
+  })
+}
+
 export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSchema>) {
   const session = await auth()
   if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
@@ -240,12 +269,17 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
     }
   }
 
+  if (parsed.status === "KELUAR") {
+    await prosesPenutupanAnggota(parsed.id)
+  }
+
   await prisma.anggota.update({
     where: { id: parsed.id },
     data: { status: parsed.status },
   })
 
   revalidatePath("/pengurus/anggota")
+  revalidatePath("/pengurus/simpanan")
 }
 
 export async function deleteAnggota(id: string) {
@@ -272,11 +306,13 @@ export async function deleteAnggota(id: string) {
   })
 
   if (hasRelations?.simpanan.length || hasRelations?.pinjaman.length) {
+    await prosesPenutupanAnggota(id)
     await prisma.anggota.update({
       where: { id },
       data: { status: "KELUAR" },
     })
     revalidatePath("/pengurus/anggota")
+    revalidatePath("/pengurus/simpanan")
     return { message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR" }
   }
 
