@@ -2,9 +2,9 @@ import { z } from "zod"
 
 export const ajukanPinjamanSchema = z.object({
   anggotaId: z.string().min(1, "Anggota wajib dipilih"),
+  jenisPinjamanId: z.string().min(1, "Jenis pinjaman wajib dipilih"),
   jumlah: z.number().positive("Jumlah pinjaman harus lebih dari 0"),
   tenor: z.number().int().min(1, "Tenor minimal 1 bulan"),
-  bunga: z.number().min(0, "Bunga tidak boleh negatif"),
   keterangan: z.string().optional().nullable(),
 })
 

@@ -27,6 +27,7 @@ type Pinjaman = {
   id: string
   noAnggota: string
   namaAnggota: string
+  jenisPinjaman: string
   jumlah: number
   tenor: number
   sisaPinjaman: number
@@ -134,6 +135,7 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
             <TableRow>
               <TableHead>No. Anggota</TableHead>
               <TableHead>Nama</TableHead>
+              <TableHead>Jenis</TableHead>
               <TableHead className="text-right">Jumlah</TableHead>
               <TableHead className="text-right">Tenor</TableHead>
               <TableHead className="text-right">Sisa</TableHead>
@@ -145,7 +147,7 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-muted-foreground">
+                <TableCell colSpan={9} className="text-center text-muted-foreground">
                   Tidak ada data pinjaman
                 </TableCell>
               </TableRow>
@@ -154,6 +156,7 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
                 <TableRow key={p.id}>
                   <TableCell className="font-mono text-xs">{p.noAnggota}</TableCell>
                   <TableCell>{p.namaAnggota}</TableCell>
+                  <TableCell className="text-xs">{p.jenisPinjaman}</TableCell>
                   <TableCell className="text-right font-mono">
                     Rp{Number(p.jumlah).toLocaleString("id-ID")}
                   </TableCell>

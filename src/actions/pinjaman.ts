@@ -32,7 +32,10 @@ export async function getPinjamanList(params: {
   const [raw, total] = await Promise.all([
     prisma.pinjaman.findMany({
       where,
-      include: { anggota: { select: { id: true, nama: true, noAnggota: true } } },
+      include: {
+        anggota: { select: { id: true, nama: true, noAnggota: true } },
+        jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { createdAt: "desc" },
@@ -45,6 +48,8 @@ export async function getPinjamanList(params: {
     anggotaId: p.anggotaId,
     noAnggota: p.anggota.noAnggota,
     namaAnggota: p.anggota.nama,
+    jenisPinjamanId: p.jenisPinjamanId,
+    jenisPinjaman: p.jenisPinjaman.nama,
     jumlah: Number(p.jumlah),
     tenor: p.tenor,
     bunga: Number(p.bunga),
@@ -65,6 +70,7 @@ export async function getPinjamanById(pinjamanId: string) {
     where: { id: pinjamanId },
     include: {
       anggota: { select: { id: true, nama: true, noAnggota: true } },
+      jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
       angsuran: { orderBy: { angsuranKe: "asc" } },
     },
   })
@@ -76,6 +82,8 @@ export async function getPinjamanById(pinjamanId: string) {
     anggotaId: raw.anggotaId,
     noAnggota: raw.anggota.noAnggota,
     namaAnggota: raw.anggota.nama,
+    jenisPinjamanId: raw.jenisPinjamanId,
+    jenisPinjaman: raw.jenisPinjaman.nama,
     jumlah: Number(raw.jumlah),
     tenor: raw.tenor,
     bunga: Number(raw.bunga),
@@ -110,12 +118,16 @@ export async function getPinjamanAnggota(anggotaId: string) {
 
   const raw = await prisma.pinjaman.findMany({
     where: { anggotaId },
-    include: { angsuran: { orderBy: { angsuranKe: "asc" } } },
+    include: {
+      jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
+      angsuran: { orderBy: { angsuranKe: "asc" } },
+    },
     orderBy: { createdAt: "desc" },
   })
 
   return raw.map((p) => ({
     id: p.id,
+    jenisPinjaman: p.jenisPinjaman.nama,
     jumlah: Number(p.jumlah),
     tenor: p.tenor,
     bunga: Number(p.bunga),
@@ -152,16 +164,20 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 
+  const jenis = await prisma.jenisPinjaman.findUnique({ where: { id: parsed.jenisPinjamanId } })
+  if (!jenis) throw new Error("Jenis pinjaman tidak ditemukan")
+
   const angsuranPokok = Number((parsed.jumlah / parsed.tenor).toFixed(2))
-  const angsuranJasa = Number((parsed.jumlah * (parsed.bunga / 100)).toFixed(2))
+  const angsuranJasa = Number((parsed.jumlah * (Number(jenis.bunga) / 100)).toFixed(2))
   const angsuranTotal = Number((angsuranPokok + angsuranJasa).toFixed(2))
 
   await prisma.pinjaman.create({
     data: {
       anggotaId: parsed.anggotaId,
+      jenisPinjamanId: parsed.jenisPinjamanId,
       jumlah: parsed.jumlah,
       tenor: parsed.tenor,
-      bunga: parsed.bunga,
+      bunga: Number(jenis.bunga),
       angsuranPokok,
       angsuranJasa,
       angsuranTotal,
@@ -342,4 +358,20 @@ export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
   return { success: true }
+}
+
+export async function getJenisPinjamanList() {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  const raw = await prisma.jenisPinjaman.findMany({
+    orderBy: { nama: "asc" },
+  })
+
+  return raw.map((j) => ({
+    id: j.id,
+    nama: j.nama,
+    bunga: Number(j.bunga),
+    keterangan: j.keterangan,
+  }))
 }

@@ -136,9 +136,24 @@ model TransaksiSimpanan {
   @@map("transaksi_simpanan")
 }
 
+model JenisPinjaman {
+  id         String  @id @default(uuid())
+  nama       String  @unique
+  bunga      Decimal @db.Decimal(5, 2)
+  keterangan String? @db.Text
+
+  pinjaman Pinjaman[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("jenis_pinjaman")
+}
+
 model Pinjaman {
   id              String     @id @default(uuid())
   anggotaId       String
+  jenisPinjamanId String
   jumlah          Decimal    @db.Decimal(18, 2)
   tenor           Int
   bunga           Decimal    @db.Decimal(5, 2)
@@ -154,8 +169,9 @@ model Pinjaman {
   keterangan      String?    @db.Text
   disetujuiOlehId String?
 
-  anggota  Anggota    @relation(fields: [anggotaId], references: [id])
-  angsuran Angsuran[]
+  anggota       Anggota       @relation(fields: [anggotaId], references: [id])
+  jenisPinjaman JenisPinjaman @relation(fields: [jenisPinjamanId], references: [id])
+  angsuran      Angsuran[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
