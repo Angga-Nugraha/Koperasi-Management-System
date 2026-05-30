@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { hitungSHU, getAlokasiConfig, saveAlokasiConfig } from "@/lib/shu"
 import { buatJurnal } from "@/lib/jurnal"
+import { catatLog } from "@/lib/audit"
 
 export async function getSHUList() {
   const session = await auth()
@@ -97,6 +98,13 @@ export async function generateSHU(tahun: number) {
     })
   })
 
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "SHU",
+    newValue: { tahun, totalSHU: hasil.keuangan.totalSHU, anggota: hasil.totalAnggota },
+  })
+
   revalidatePath("/pengurus/shu")
   return { success: true }
 }
@@ -157,6 +165,13 @@ export async function setujuiSHU(tahun: number) {
       entries,
       createdById: session.user.id,
     })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "APPROVE",
+    entityType: "SHU",
+    newValue: { tahun, status: "FINAL" },
   })
 
   revalidatePath("/pengurus/shu")

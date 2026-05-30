@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { generateNoAnggota } from "@/lib/utils/anggota"
 import { deleteOrphanFiles } from "@/lib/utils/file"
+import { catatLog } from "@/lib/audit"
 
 export async function getAnggotaList(params: {
   search?: string
@@ -170,7 +171,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
 
   const noAnggota = generateNoAnggota(tglMasuk, urutan)
 
-  await prisma.anggota.create({
+  const created = await prisma.anggota.create({
     data: {
       nik: parsed.nik,
       noAnggota,
@@ -183,6 +184,14 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
       tglMasuk,
       status: "AKTIF",
     },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "ANGGOTA",
+    entityId: created.id,
+    newValue: { nik: parsed.nik, noAnggota, nama: parsed.nama },
   })
 
   revalidatePath("/pengurus/anggota")
@@ -205,7 +214,7 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   if (existing?.foto && existing.foto !== parsed.foto) oldFiles.push(existing.foto)
   if (existing?.ktp && existing.ktp !== parsed.ktp) oldFiles.push(existing.ktp)
 
-  await prisma.anggota.update({
+  const updated = await prisma.anggota.update({
     where: { id: parsed.id },
     data: {
       nama: parsed.nama,
@@ -219,6 +228,13 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   })
 
   await deleteOrphanFiles(oldFiles)
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE",
+    entityType: "ANGGOTA",
+    entityId: parsed.id,
+    newValue: { nama: updated.nama },
+  })
 
   revalidatePath("/pengurus/anggota")
 }
@@ -273,9 +289,20 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
     await prosesPenutupanAnggota(parsed.id)
   }
 
+  const before = await prisma.anggota.findUnique({ where: { id: parsed.id }, select: { status: true } })
+
   await prisma.anggota.update({
     where: { id: parsed.id },
     data: { status: parsed.status },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE_STATUS",
+    entityType: "ANGGOTA",
+    entityId: parsed.id,
+    oldValue: before ? { status: before.status } : null,
+    newValue: { status: parsed.status },
   })
 
   revalidatePath("/pengurus/anggota")
@@ -311,6 +338,13 @@ export async function deleteAnggota(id: string) {
       where: { id },
       data: { status: "KELUAR" },
     })
+    await catatLog({
+      userId: session.user.id,
+      action: "DELETE",
+      entityType: "ANGGOTA",
+      entityId: id,
+      newValue: { status: "KELUAR", note: "Memiliki data transaksi" },
+    })
     revalidatePath("/pengurus/anggota")
     revalidatePath("/pengurus/simpanan")
     return { message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR" }
@@ -318,6 +352,13 @@ export async function deleteAnggota(id: string) {
 
   await prisma.anggota.delete({ where: { id } })
   await deleteOrphanFiles([anggota.foto, anggota.ktp])
+  await catatLog({
+    userId: session.user.id,
+    action: "DELETE",
+    entityType: "ANGGOTA",
+    entityId: id,
+    newValue: { deleted: true },
+  })
   revalidatePath("/pengurus/anggota")
   return { message: "Anggota berhasil dihapus" }
 }

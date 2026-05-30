@@ -97,6 +97,7 @@ async function main() {
 
     anggotaIds.push(anggotaId)
     console.log(`  Anggota: ${a.nama} (${noAnggota}, ${a.email} / anggota123)`)
+  }
 
   // ─── User Pengurus & Pengawas ──────────────────────
   await prisma.user.create({
@@ -118,7 +119,6 @@ async function main() {
     },
   })
   console.log("  User: pengawas@simko.test / pengawas123 (PENGAWAS)")
-  }
 
   // ─── Akun lookup ────────────────────────────────────
   const kasAkun = await prisma.akun.findFirstOrThrow({ where: { kode: "1.1.1" } })

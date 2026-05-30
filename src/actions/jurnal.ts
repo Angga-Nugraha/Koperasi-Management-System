@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
 import { buatJurnal } from "@/lib/jurnal"
+import { catatLog } from "@/lib/audit"
 
 export async function getJurnalList(params: {
   search?: string
@@ -110,8 +111,9 @@ export async function createJurnalManual(input: z.infer<typeof jurnalManualSchem
     }
   }
 
+  let noJurnal = ""
   await prisma.$transaction(async (tx) => {
-    await buatJurnal(tx, {
+    noJurnal = await buatJurnal(tx, {
       tanggal: new Date(parsed.tanggal),
       keterangan: parsed.keterangan,
       entries: parsed.entries.map((e) => ({
@@ -121,6 +123,14 @@ export async function createJurnalManual(input: z.infer<typeof jurnalManualSchem
       })),
       createdById: session.user.id,
     })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "JURNAL_MANUAL",
+    entityId: noJurnal,
+    newValue: { keterangan: parsed.keterangan, entries: parsed.entries.length },
   })
 
   revalidatePath("/pengurus/jurnal")

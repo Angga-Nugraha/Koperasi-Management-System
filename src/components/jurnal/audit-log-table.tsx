@@ -23,6 +23,7 @@ import {
 type AuditItem = {
   id: string
   userId: string | null
+  userEmail: string
   action: string
   entityType: string
   entityId: string | null
@@ -62,8 +63,8 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
     router.push(`/pengurus/jurnal/audit-log?${params.toString()}`)
   }
 
-  const entityTypes = ["SEMUA", "Anggota", "Simpanan", "Pinjaman", "JurnalUmum", "User"]
-  const actions = ["SEMUA", "CREATE", "UPDATE", "DELETE"]
+  const entityTypes = ["SEMUA", "ANGGOTA", "SETORAN_SIMPANAN", "PENARIKAN_SIMPANAN", "PENUTUPAN_SIMPANAN", "PINJAMAN", "ANGSURAN", "JURNAL_MANUAL", "SHU"]
+  const actions = ["SEMUA", "CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "DISBURSE", "PAYMENT", "UPDATE_STATUS"]
 
   return (
     <div className="space-y-4">
@@ -106,24 +107,28 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
           <TableHeader>
             <TableRow>
               <TableHead>Waktu</TableHead>
+              <TableHead>User</TableHead>
               <TableHead>Tipe</TableHead>
               <TableHead>Aksi</TableHead>
               <TableHead>Entitas</TableHead>
-              <TableHead>ID</TableHead>
+              <TableHead>Detail</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
                   Belum ada log
                 </TableCell>
               </TableRow>
             )}
             {data.map((l) => (
               <TableRow key={l.id}>
-                <TableCell className="text-sm">
+                <TableCell className="text-sm whitespace-nowrap">
                   {new Date(l.createdAt).toLocaleString("id-ID")}
+                </TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {l.userEmail}
                 </TableCell>
                 <TableCell>
                   <span className="rounded bg-muted px-2 py-0.5 text-xs font-medium">
@@ -143,8 +148,9 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
                     {l.action}
                   </span>
                 </TableCell>
-                <TableCell className="text-sm">{l.entityType}</TableCell>
-                <TableCell className="font-mono text-xs">{l.entityId?.slice(0, 12)}...</TableCell>
+                <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground" title={l.entityId ?? ""}>
+                  {l.entityId ?? "-"}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

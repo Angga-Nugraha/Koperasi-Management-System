@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache"
 import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema } from "@/lib/validations/simpanan"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
+import { catatLog } from "@/lib/audit"
 
 export async function getSimpananList(params: {
   search?: string
@@ -143,6 +144,14 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
     })
   })
 
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "SETORAN_SIMPANAN",
+    entityId: parsed.anggotaId,
+    newValue: { jenis: parsed.jenis, nominal: parsed.nominal },
+  })
+
   revalidatePath("/pengurus/simpanan")
   revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
@@ -193,6 +202,14 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
       ],
       createdById: session.user.id,
     })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "PENARIKAN_SIMPANAN",
+    entityId: parsed.anggotaId,
+    newValue: { jenis: parsed.jenis, nominal: parsed.nominal },
   })
 
   revalidatePath("/pengurus/simpanan")
@@ -256,6 +273,14 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
       where: { id: parsed.anggotaId },
       data: { status: "KELUAR" },
     })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE",
+    entityType: "PENUTUPAN_SIMPANAN",
+    entityId: parsed.anggotaId,
+    newValue: { status: "KELUAR" },
   })
 
   revalidatePath("/pengurus/simpanan")

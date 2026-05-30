@@ -12,6 +12,7 @@ import {
 } from "@/lib/validations/pinjaman"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
+import { catatLog } from "@/lib/audit"
 
 export async function getPinjamanList(params: {
   search?: string
@@ -172,7 +173,7 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
   const angsuranJasa = Number((parsed.jumlah * (Number(jenis.bunga) / 100)).toFixed(2))
   const angsuranTotal = Number((angsuranPokok + angsuranJasa).toFixed(2))
 
-  await prisma.pinjaman.create({
+  const created = await prisma.pinjaman.create({
     data: {
       anggotaId: parsed.anggotaId,
       jenisPinjamanId: parsed.jenisPinjamanId,
@@ -187,6 +188,14 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
       tglPengajuan: new Date(),
       keterangan: parsed.keterangan || null,
     },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "PINJAMAN",
+    entityId: created.id,
+    newValue: { anggotaId: parsed.anggotaId, jumlah: parsed.jumlah, tenor: parsed.tenor },
   })
 
   revalidatePath("/pengurus/pinjaman")
@@ -214,6 +223,14 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
     },
   })
 
+  await catatLog({
+    userId: session.user.id,
+    action: "APPROVE",
+    entityType: "PINJAMAN",
+    entityId: parsed.pinjamanId,
+    newValue: { status: "DISETUJUI" },
+  })
+
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
   return { success: true }
@@ -234,6 +251,14 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
   await prisma.pinjaman.update({
     where: { id: parsed.pinjamanId },
     data: { status: "DITOLAK", tglDitolak: new Date() },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "REJECT",
+    entityType: "PINJAMAN",
+    entityId: parsed.pinjamanId,
+    newValue: { status: "DITOLAK" },
   })
 
   revalidatePath("/pengurus/pinjaman")
@@ -292,6 +317,14 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
       ],
       createdById: session.user.id,
     })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "DISBURSE",
+    entityType: "PINJAMAN",
+    entityId: parsed.pinjamanId,
+    newValue: { status: "DICAIKKAN", jumlah: Number(pinjaman.jumlah) },
   })
 
   revalidatePath("/pengurus/pinjaman")
@@ -370,6 +403,14 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
     }
   })
 
+  await catatLog({
+    userId: session.user.id,
+    action: "PAYMENT",
+    entityType: "ANGSURAN",
+    entityId: nextAngsuran.id,
+    newValue: { angsuranKe: nextAngsuran.angsuranKe, pokok, jasa, denda, isLunas },
+  })
+
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
   return { success: true }
@@ -390,6 +431,14 @@ export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) 
   await prisma.pinjaman.update({
     where: { id: parsed.pinjamanId },
     data: { status: "GAGAL" },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE",
+    entityType: "PINJAMAN",
+    entityId: parsed.pinjamanId,
+    newValue: { status: "GAGAL" },
   })
 
   revalidatePath("/pengurus/pinjaman")
