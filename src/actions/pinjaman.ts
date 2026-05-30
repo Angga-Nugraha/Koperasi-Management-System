@@ -11,6 +11,7 @@ import {
   hapusPinjamanSchema,
 } from "@/lib/validations/pinjaman"
 import { z } from "zod"
+import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
 
 export async function getPinjamanList(params: {
   search?: string
@@ -32,7 +33,10 @@ export async function getPinjamanList(params: {
   const [raw, total] = await Promise.all([
     prisma.pinjaman.findMany({
       where,
-      include: { anggota: { select: { id: true, nama: true, noAnggota: true } } },
+      include: {
+        anggota: { select: { id: true, nama: true, noAnggota: true } },
+        jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { createdAt: "desc" },
@@ -45,6 +49,8 @@ export async function getPinjamanList(params: {
     anggotaId: p.anggotaId,
     noAnggota: p.anggota.noAnggota,
     namaAnggota: p.anggota.nama,
+    jenisPinjamanId: p.jenisPinjamanId,
+    jenisPinjaman: p.jenisPinjaman.nama,
     jumlah: Number(p.jumlah),
     tenor: p.tenor,
     bunga: Number(p.bunga),
@@ -65,6 +71,7 @@ export async function getPinjamanById(pinjamanId: string) {
     where: { id: pinjamanId },
     include: {
       anggota: { select: { id: true, nama: true, noAnggota: true } },
+      jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
       angsuran: { orderBy: { angsuranKe: "asc" } },
     },
   })
@@ -76,6 +83,8 @@ export async function getPinjamanById(pinjamanId: string) {
     anggotaId: raw.anggotaId,
     noAnggota: raw.anggota.noAnggota,
     namaAnggota: raw.anggota.nama,
+    jenisPinjamanId: raw.jenisPinjamanId,
+    jenisPinjaman: raw.jenisPinjaman.nama,
     jumlah: Number(raw.jumlah),
     tenor: raw.tenor,
     bunga: Number(raw.bunga),
@@ -110,12 +119,16 @@ export async function getPinjamanAnggota(anggotaId: string) {
 
   const raw = await prisma.pinjaman.findMany({
     where: { anggotaId },
-    include: { angsuran: { orderBy: { angsuranKe: "asc" } } },
+    include: {
+      jenisPinjaman: { select: { id: true, nama: true, bunga: true } },
+      angsuran: { orderBy: { angsuranKe: "asc" } },
+    },
     orderBy: { createdAt: "desc" },
   })
 
   return raw.map((p) => ({
     id: p.id,
+    jenisPinjaman: p.jenisPinjaman.nama,
     jumlah: Number(p.jumlah),
     tenor: p.tenor,
     bunga: Number(p.bunga),
@@ -152,16 +165,20 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 
+  const jenis = await prisma.jenisPinjaman.findUnique({ where: { id: parsed.jenisPinjamanId } })
+  if (!jenis) throw new Error("Jenis pinjaman tidak ditemukan")
+
   const angsuranPokok = Number((parsed.jumlah / parsed.tenor).toFixed(2))
-  const angsuranJasa = Number((parsed.jumlah * (parsed.bunga / 100)).toFixed(2))
+  const angsuranJasa = Number((parsed.jumlah * (Number(jenis.bunga) / 100)).toFixed(2))
   const angsuranTotal = Number((angsuranPokok + angsuranJasa).toFixed(2))
 
   await prisma.pinjaman.create({
     data: {
       anggotaId: parsed.anggotaId,
+      jenisPinjamanId: parsed.jenisPinjamanId,
       jumlah: parsed.jumlah,
       tenor: parsed.tenor,
-      bunga: parsed.bunga,
+      bunga: Number(jenis.bunga),
       angsuranPokok,
       angsuranJasa,
       angsuranTotal,
@@ -265,6 +282,16 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
     })
 
     await tx.angsuran.createMany({ data: angsuranData })
+
+    await buatJurnal(tx, {
+      tanggal: tglCair,
+      keterangan: `Pencairan Pinjaman ${pinjaman.id.slice(0, 8)}`,
+      entries: [
+        { akunKode: COA_PIUTANG_PINJAMAN, debit: Number(pinjaman.jumlah), kredit: 0 },
+        { akunKode: COA_KAS, debit: 0, kredit: Number(pinjaman.jumlah) },
+      ],
+      createdById: session.user.id,
+    })
   })
 
   revalidatePath("/pengurus/pinjaman")
@@ -297,11 +324,13 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
   const isLunas = sisaPinjamanSetelah <= 0
 
+  const tglBayar = new Date()
+
   await prisma.$transaction(async (tx) => {
     await tx.angsuran.update({
       where: { id: nextAngsuran.id },
       data: {
-        tglBayar: new Date(),
+        tglBayar,
         denda,
         total: pokok + jasa + denda,
         status: "LUNAS",
@@ -315,6 +344,30 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
         status: isLunas ? "LUNAS" : pinjaman.status,
       },
     })
+
+    const entries: Array<{ akunKode: string; debit: number; kredit: number }> = []
+    const totalBayar = pokok + jasa + denda
+    if (totalBayar > 0) {
+      entries.push({ akunKode: COA_KAS, debit: totalBayar, kredit: 0 })
+    }
+    if (pokok > 0) {
+      entries.push({ akunKode: COA_PIUTANG_PINJAMAN, debit: 0, kredit: pokok })
+    }
+    if (jasa > 0) {
+      entries.push({ akunKode: COA_PENDAPATAN_JASA, debit: 0, kredit: jasa })
+    }
+    if (denda > 0) {
+      entries.push({ akunKode: COA_PENDAPATAN_DENDA, debit: 0, kredit: denda })
+    }
+
+    if (entries.length > 0) {
+      await buatJurnal(tx, {
+        tanggal: tglBayar,
+        keterangan: `Bayar Angsuran #${nextAngsuran.angsuranKe} Pinjaman ${parsed.pinjamanId.slice(0, 8)}`,
+        entries,
+        createdById: session.user.id,
+      })
+    }
   })
 
   revalidatePath("/pengurus/pinjaman")
@@ -342,4 +395,20 @@ export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
   return { success: true }
+}
+
+export async function getJenisPinjamanList() {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  const raw = await prisma.jenisPinjaman.findMany({
+    orderBy: { nama: "asc" },
+  })
+
+  return raw.map((j) => ({
+    id: j.id,
+    nama: j.nama,
+    bunga: Number(j.bunga),
+    keterangan: j.keterangan,
+  }))
 }

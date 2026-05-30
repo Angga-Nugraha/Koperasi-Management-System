@@ -129,9 +129,10 @@ Total: **84 tasks** | Estimasi: **~6-8 minggu**
 | # | Task | Detail |
 |---|------|--------|
 | 8.1 | Halaman Konfigurasi Koperasi | UI untuk update parameter dari tabel Konfigurasi: plafon, rate bunga, denda, grace period, % SHU |
-| 8.2 | Validasi Perubahan Konfigurasi | Beberapa parameter hanya bisa diubah di periode tertentu (sebelum tutup buku) |
-| 8.3 | Audit Log untuk Konfigurasi | Setiap perubahan konfigurasi tercatat |
-| 8.4 | Manajemen Akun (COA) | Pengurus bisa tambah/nonaktifkan akun, tidak bisa hapus (riwayat jurnal) |
+| 8.2 | Manajemen Jenis Pinjaman | CRUD jenis pinjaman (nama, default bunga, keterangan). Data sudah di-seed di Phase 5, halaman management di `/pengurus/konfigurasi` |
+| 8.3 | Validasi Perubahan Konfigurasi | Beberapa parameter hanya bisa diubah di periode tertentu (sebelum tutup buku) |
+| 8.4 | Audit Log untuk Konfigurasi | Setiap perubahan konfigurasi tercatat |
+| 8.5 | Manajemen Akun (COA) | Pengurus bisa tambah/nonaktifkan akun, tidak bisa hapus (riwayat jurnal) |
 
 ---
 
@@ -184,7 +185,7 @@ Total: **84 tasks** | Estimasi: **~6-8 minggu**
 | 5 - Pinjaman | 10 tasks | 5-7 hari |
 | 6 - Buku Besar | 11 tasks | 4-6 hari |
 | 7 - SHU | 7 tasks | 4-5 hari |
-| 8 - Konfigurasi | 4 tasks | 2-3 hari |
+| 8 - Konfigurasi | 5 tasks | 2-3 hari |
 | 9 - Dashboard | 4 tasks | 3-4 hari |
 | 10 - Testing | 7 tasks | 5-7 hari |
 | 11 - Deployment | 5 tasks | 2-3 hari |

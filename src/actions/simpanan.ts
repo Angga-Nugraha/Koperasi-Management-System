@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema } from "@/lib/validations/simpanan"
 import { z } from "zod"
+import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 
 export async function getSimpananList(params: {
   search?: string
@@ -106,27 +107,40 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 
-  const simpanan = await prisma.simpanan.upsert({
-    where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
-    create: {
-      anggotaId: parsed.anggotaId,
-      jenis: parsed.jenis,
-      saldo: parsed.nominal,
-    },
-    update: {
-      saldo: { increment: parsed.nominal },
-    },
-  })
+  await prisma.$transaction(async (tx) => {
+    const simpanan = await tx.simpanan.upsert({
+      where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
+      create: {
+        anggotaId: parsed.anggotaId,
+        jenis: parsed.jenis,
+        saldo: parsed.nominal,
+      },
+      update: {
+        saldo: { increment: parsed.nominal },
+      },
+    })
 
-  await prisma.transaksiSimpanan.create({
-    data: {
-      anggotaId: parsed.anggotaId,
-      jenis: parsed.jenis,
-      tipe: "SETORAN",
-      nominal: parsed.nominal,
-      saldoSetelah: Number(simpanan.saldo),
-      keterangan: parsed.keterangan || null,
-    },
+    await tx.transaksiSimpanan.create({
+      data: {
+        anggotaId: parsed.anggotaId,
+        jenis: parsed.jenis,
+        tipe: "SETORAN",
+        nominal: parsed.nominal,
+        saldoSetelah: Number(simpanan.saldo),
+        keterangan: parsed.keterangan || null,
+      },
+    })
+
+    const akunSimpanan = getSimpananAkun(parsed.jenis)
+    await buatJurnal(tx, {
+      tanggal: new Date(),
+      keterangan: `Setoran ${parsed.jenis} ${anggota?.noAnggota}`,
+      entries: [
+        { akunKode: COA_KAS, debit: parsed.nominal, kredit: 0 },
+        { akunKode: akunSimpanan, debit: 0, kredit: parsed.nominal },
+      ],
+      createdById: session.user.id,
+    })
   })
 
   revalidatePath("/pengurus/simpanan")
@@ -143,26 +157,42 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
 
   const parsed = tarikSimpananSchema.parse(input)
 
+  const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
+  if (!anggota) throw new Error("Anggota tidak ditemukan")
+
   const simpanan = await prisma.simpanan.findUnique({
     where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
   })
   if (!simpanan) throw new Error("Simpanan tidak ditemukan")
   if (Number(simpanan.saldo) < parsed.nominal) throw new Error("Saldo tidak mencukupi")
 
-  await prisma.simpanan.update({
-    where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
-    data: { saldo: { decrement: parsed.nominal } },
-  })
+  await prisma.$transaction(async (tx) => {
+    await tx.simpanan.update({
+      where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
+      data: { saldo: { decrement: parsed.nominal } },
+    })
 
-  await prisma.transaksiSimpanan.create({
-    data: {
-      anggotaId: parsed.anggotaId,
-      jenis: parsed.jenis,
-      tipe: "PENARIKAN",
-      nominal: parsed.nominal,
-      saldoSetelah: Number(simpanan.saldo) - parsed.nominal,
-      keterangan: parsed.keterangan || null,
-    },
+    await tx.transaksiSimpanan.create({
+      data: {
+        anggotaId: parsed.anggotaId,
+        jenis: parsed.jenis,
+        tipe: "PENARIKAN",
+        nominal: parsed.nominal,
+        saldoSetelah: Number(simpanan.saldo) - parsed.nominal,
+        keterangan: parsed.keterangan || null,
+      },
+    })
+
+    const akunSimpanan = getSimpananAkun(parsed.jenis)
+    await buatJurnal(tx, {
+      tanggal: new Date(),
+      keterangan: `Penarikan ${parsed.jenis} ${anggota.noAnggota}`,
+      entries: [
+        { akunKode: akunSimpanan, debit: parsed.nominal, kredit: 0 },
+        { akunKode: COA_KAS, debit: 0, kredit: parsed.nominal },
+      ],
+      createdById: session.user.id,
+    })
   })
 
   revalidatePath("/pengurus/simpanan")
@@ -208,6 +238,17 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
           saldoSetelah: 0,
           keterangan: parsed.keterangan || "Penutupan keanggotaan",
         },
+      })
+
+      const akunSimpanan = getSimpananAkun(simpanan.jenis)
+      await buatJurnal(tx, {
+        tanggal: new Date(),
+        keterangan: `Penutupan ${simpanan.jenis} ${anggota.noAnggota}`,
+        entries: [
+          { akunKode: akunSimpanan, debit: saldo, kredit: 0 },
+          { akunKode: COA_KAS, debit: 0, kredit: saldo },
+        ],
+        createdById: session.user.id,
       })
     }
 

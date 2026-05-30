@@ -1,21 +1,43 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ajukanPinjaman } from "@/actions/pinjaman"
+import { ajukanPinjaman, getJenisPinjamanList } from "@/actions/pinjaman"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
+
+type JenisPinjaman = { id: string; nama: string; bunga: number }
 
 export default function AjukanPinjamanPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [jenisList, setJenisList] = useState<JenisPinjaman[]>([])
+  const [selectedJenis, setSelectedJenis] = useState<string>("")
+  const [defaultBunga, setDefaultBunga] = useState<number>(0)
+
+  useEffect(() => {
+    getJenisPinjamanList().then(setJenisList)
+  }, [])
+
+  function handleJenisChange(value: string) {
+    setSelectedJenis(value)
+    const jenis = jenisList.find((j) => j.id === value)
+    setDefaultBunga(jenis?.bunga ?? 0)
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -27,9 +49,9 @@ export default function AjukanPinjamanPage() {
     try {
       await ajukanPinjaman({
         anggotaId: formData.get("anggotaId") as string,
+        jenisPinjamanId: formData.get("jenisPinjamanId") as string,
         jumlah: Number(formData.get("jumlah")),
         tenor: Number(formData.get("tenor")),
-        bunga: Number(formData.get("bunga")),
         keterangan: (formData.get("keterangan") as string) || null,
       })
       router.push("/pengurus/pinjaman")
@@ -66,6 +88,30 @@ export default function AjukanPinjamanPage() {
             <AnggotaSelect name="anggotaId" required />
 
             <div className="space-y-2">
+              <Label htmlFor="jenisPinjamanId">Jenis Pinjaman *</Label>
+              <Select name="jenisPinjamanId" value={selectedJenis} onValueChange={handleJenisChange} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih jenis pinjaman" />
+                </SelectTrigger>
+                <SelectContent>
+                  {jenisList.map((j) => (
+                    <SelectItem key={j.id} value={j.id}>
+                      {j.nama} ({j.bunga}%/bln)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bunga">Bunga (% per bulan)</Label>
+              <Input id="bunga" value={defaultBunga} disabled className="bg-muted" />
+              <p className="text-xs text-muted-foreground">
+                Bunga mengikuti default jenis pinjaman
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="jumlah">Jumlah Pinjaman (Rp) *</Label>
               <Input id="jumlah" name="jumlah" type="number" placeholder="0" min="1" required />
             </div>
@@ -73,14 +119,6 @@ export default function AjukanPinjamanPage() {
             <div className="space-y-2">
               <Label htmlFor="tenor">Tenor (bulan) *</Label>
               <Input id="tenor" name="tenor" type="number" placeholder="12" min="1" required />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="bunga">Bunga (% per bulan) *</Label>
-              <Input id="bunga" name="bunga" type="number" placeholder="2" min="0" step="0.1" required />
-              <p className="text-xs text-muted-foreground">
-                Bunga flat per bulan. Contoh: 2 berarti 2% per bulan dari jumlah pinjaman.
-              </p>
             </div>
 
             <div className="space-y-2">
