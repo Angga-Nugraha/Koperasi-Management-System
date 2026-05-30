@@ -219,7 +219,7 @@ export default function TambahAnggotaPage() {
                   onChange={(e) => setBuatUser(e.target.checked)}
                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
-                <span className="text-sm font-medium">Buatkan user account</span>
+                <span className="text-sm font-medium">Buatkan Akun Anggota</span>
               </label>
 
               {buatUser && (
