@@ -41,6 +41,7 @@ type Pinjaman = {
   id: string
   noAnggota: string
   namaAnggota: string
+  jenisPinjaman: string
   jumlah: number
   tenor: number
   bunga: number
@@ -166,6 +167,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
           <dl className="grid grid-cols-2 gap-4 text-sm">
             <div><dt className="text-muted-foreground">Tgl Pengajuan</dt><dd>{new Date(pinjaman.tglPengajuan).toLocaleDateString("id-ID")}</dd></div>
             <div><dt className="text-muted-foreground">Tgl Disetujui</dt><dd>{pinjaman.tglDisetujui ? new Date(pinjaman.tglDisetujui).toLocaleDateString("id-ID") : "-"}</dd></div>
+            <div><dt className="text-muted-foreground">Jenis Pinjaman</dt><dd>{pinjaman.jenisPinjaman}</dd></div>
             <div><dt className="text-muted-foreground">Tgl Dicairkan</dt><dd>{pinjaman.tglCair ? new Date(pinjaman.tglCair).toLocaleDateString("id-ID") : "-"}</dd></div>
             <div><dt className="text-muted-foreground">Bunga</dt><dd>{pinjaman.bunga}% / bulan</dd></div>
             {pinjaman.keterangan && (
