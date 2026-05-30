@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createAnggota } from "@/actions/anggota"
-import { ArrowLeft, X } from "lucide-react"
+import { ArrowLeft, X, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 
 export default function TambahAnggotaPage() {
@@ -19,6 +19,7 @@ export default function TambahAnggotaPage() {
   const [ktp, setKtp] = useState<string | null>(null)
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
+  const [buatUser, setBuatUser] = useState(false)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -78,6 +79,9 @@ export default function TambahAnggotaPage() {
         foto,
         ktp,
         tglMasuk: formData.get("tglMasuk") as string,
+        buatUser,
+        email: buatUser ? (formData.get("email") as string) : undefined,
+        password: buatUser ? (formData.get("password") as string) : undefined,
       })
       router.push("/pengurus/anggota")
       router.refresh()
@@ -205,6 +209,31 @@ export default function TambahAnggotaPage() {
                 defaultValue={new Date().toISOString().split("T")[0]}
                 required
               />
+            </div>
+
+            <div className="rounded-lg border p-4 space-y-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={buatUser}
+                  onChange={(e) => setBuatUser(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <span className="text-sm font-medium">Buatkan user account</span>
+              </label>
+
+              {buatUser && (
+                <div className="space-y-4 pl-7 border-l-2 border-primary/20">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input id="email" name="email" type="email" placeholder="anggota@email.com" required={buatUser} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password *</Label>
+                    <Input id="password" name="password" type="password" placeholder="Minimal 6 karakter" minLength={6} required={buatUser} />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-4 pt-4">

@@ -8,6 +8,7 @@ import { z } from "zod"
 import { generateNoAnggota } from "@/lib/utils/anggota"
 import { deleteOrphanFiles } from "@/lib/utils/file"
 import { catatLog } from "@/lib/audit"
+import bcrypt from "bcryptjs"
 
 export async function getAnggotaList(params: {
   search?: string
@@ -186,6 +187,34 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
     },
   })
 
+  if (parsed.buatUser) {
+    if (!parsed.email || !parsed.password) {
+      throw new Error("Email dan password wajib diisi untuk membuat user account")
+    }
+    const existingEmail = await prisma.user.findUnique({ where: { email: parsed.email } })
+    if (existingEmail) {
+      throw new Error("Email sudah digunakan")
+    }
+
+    await prisma.user.create({
+      data: {
+        email: parsed.email,
+        passwordHash: await bcrypt.hash(parsed.password, 10),
+        role: "ANGGOTA",
+        anggotaId: created.id,
+        isActive: true,
+      },
+    })
+
+    await catatLog({
+      userId: session.user.id,
+      action: "CREATE",
+      entityType: "USER",
+      entityId: created.id,
+      newValue: { email: parsed.email, role: "ANGGOTA" },
+    })
+  }
+
   await catatLog({
     userId: session.user.id,
     action: "CREATE",
@@ -361,6 +390,82 @@ export async function deleteAnggota(id: string) {
   })
   revalidatePath("/pengurus/anggota")
   return { message: "Anggota berhasil dihapus" }
+}
+
+export async function resetPasswordAnggota(userId: string, password: string) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) throw new Error("User tidak ditemukan")
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash: await bcrypt.hash(password, 10) },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE",
+    entityType: "USER",
+    entityId: userId,
+    newValue: { action: "reset_password" },
+  })
+
+  return { success: true }
+}
+
+export async function toggleUserActive(userId: string) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) throw new Error("User tidak ditemukan")
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { isActive: !user.isActive },
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "UPDATE",
+    entityType: "USER",
+    entityId: userId,
+    newValue: { isActive: !user.isActive },
+  })
+
+  return { success: true, isActive: !user.isActive }
+}
+
+export async function getUserByAnggotaId(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) return null
+
+  const user = await prisma.user.findUnique({
+    where: { anggotaId },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      isActive: true,
+      createdAt: true,
+    },
+  })
+
+  if (!user) return null
+
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    isActive: user.isActive,
+    createdAt: user.createdAt.toISOString(),
+  }
 }
 
 export async function getAnggotaSaldo(anggotaId: string) {

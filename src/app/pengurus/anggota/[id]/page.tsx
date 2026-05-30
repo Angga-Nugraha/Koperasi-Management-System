@@ -27,6 +27,7 @@ export default async function DetailAnggotaPage({ params }: Props) {
         tglMasuk: anggota.tglMasuk,
         status: anggota.status,
         createdAt: anggota.createdAt,
+        user: anggota.user,
         simpanan: anggota.simpanan.map((s) => ({
           jenis: s.jenis,
           saldo: s.saldo,

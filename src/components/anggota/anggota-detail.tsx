@@ -34,6 +34,14 @@ import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Download, Eye } from "lucide-react"
 import Link from "next/link"
 
+type UserInfo = {
+  id: string
+  email: string
+  role: string
+  isActive: boolean
+  createdAt: string
+} | null
+
 type AnggotaDetail = {
   id: string
   nik: string
@@ -47,6 +55,7 @@ type AnggotaDetail = {
   tglMasuk: string
   status: string
   createdAt: string
+  user: UserInfo
   simpanan: { jenis: string; saldo: number }[]
   pinjaman: {
     id: string
@@ -331,6 +340,45 @@ export function AnggotaDetailClient({ anggota }: Props) {
                 </Badge>
               </div>
             </div>
+            </CardContent>
+          </Card>
+
+          {/* User Account */}
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>User Account</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {anggota.user ? (
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium">{anggota.user.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Role</p>
+                      <Badge variant="secondary">{anggota.user.role}</Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Status</p>
+                      <Badge variant={anggota.user.isActive ? "default" : "destructive"}>
+                        {anggota.user.isActive ? "Aktif" : "Nonaktif"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Dibuat</p>
+                      <p className="font-medium">
+                        {new Date(anggota.user.createdAt).toLocaleDateString("id-ID")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Anggota ini belum memiliki user account.
+                </p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

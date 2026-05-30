@@ -12,6 +12,9 @@ export const anggotaSchema = z.object({
   foto: z.string().optional().nullable(),
   ktp: z.string().optional().nullable(),
   tglMasuk: z.string().min(1, "Tanggal masuk wajib diisi"),
+  buatUser: z.boolean().optional().default(false),
+  email: z.string().email("Email tidak valid").optional().or(z.literal("")),
+  password: z.string().min(6, "Password minimal 6 karakter").optional().or(z.literal("")),
 })
 
 export const anggotaUpdateSchema = anggotaSchema.extend({
@@ -21,6 +24,11 @@ export const anggotaUpdateSchema = anggotaSchema.extend({
 export const anggotaStatusSchema = z.object({
   id: z.string(),
   status: z.enum(["AKTIF", "NONAKTIF", "KELUAR"]),
+})
+
+export const resetPasswordSchema = z.object({
+  userId: z.string(),
+  password: z.string().min(6, "Password minimal 6 karakter"),
 })
 
 export type AnggotaInput = z.infer<typeof anggotaSchema>
