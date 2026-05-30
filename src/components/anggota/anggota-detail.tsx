@@ -56,7 +56,7 @@ type AnggotaDetail = {
   status: string
   createdAt: string
   user: UserInfo
-  simpanan: { jenis: string; saldo: number }[]
+  simpanan: { jenisKode: string; jenisNama: string; saldo: number }[]
   pinjaman: {
     id: string
     jumlah: number
@@ -405,8 +405,8 @@ export function AnggotaDetailClient({ anggota }: Props) {
                     </TableRow>
                   ) : (
                     anggota.simpanan.map((s) => (
-                      <TableRow key={s.jenis}>
-                        <TableCell>{s.jenis}</TableCell>
+                      <TableRow key={s.jenisKode}>
+                        <TableCell className="font-medium">{s.jenisNama}</TableCell>
                         <TableCell className="text-right font-mono">
                           Rp {Number(s.saldo).toLocaleString("id-ID")}
                         </TableCell>

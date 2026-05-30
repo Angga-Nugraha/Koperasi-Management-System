@@ -7,21 +7,37 @@ import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema } fro
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
-import { getKonfig, getNumber } from "@/lib/konfig"
+
+export async function getJenisSimpananList() {
+  const session = await auth()
+  if (!session?.user) return []
+
+  const raw = await prisma.jenisSimpanan.findMany({
+    orderBy: { urutan: "asc" },
+  })
+
+  return raw.map((j) => ({
+    id: j.id,
+    kode: j.kode,
+    nama: j.nama,
+    minimalSetoran: Number(j.minimalSetoran),
+    keterangan: j.keterangan,
+  }))
+}
 
 export async function getSimpananList(params: {
   search?: string
-  jenis?: string
+  jenisSimpananId?: string
   page?: number
   pageSize?: number
 }) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const { search, jenis, page = 1, pageSize = 15 } = params
+  const { search, jenisSimpananId, page = 1, pageSize = 15 } = params
 
   const where: Record<string, unknown> = {}
-  if (jenis && jenis !== "SEMUA") where.jenis = jenis
+  if (jenisSimpananId) where.jenisSimpananId = jenisSimpananId
   if (search) {
     where.anggota = { nama: { contains: search } }
   }
@@ -29,7 +45,10 @@ export async function getSimpananList(params: {
   const [raw, total] = await Promise.all([
     prisma.simpanan.findMany({
       where,
-      include: { anggota: { select: { id: true, nama: true, noAnggota: true } } },
+      include: {
+        anggota: { select: { id: true, nama: true, noAnggota: true } },
+        jenisSimpanan: { select: { kode: true, nama: true } },
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { createdAt: "desc" },
@@ -42,7 +61,9 @@ export async function getSimpananList(params: {
     anggotaId: s.anggotaId,
     noAnggota: s.anggota.noAnggota,
     namaAnggota: s.anggota.nama,
-    jenis: s.jenis,
+    jenisSimpananId: s.jenisSimpananId,
+    jenisKode: s.jenisSimpanan.kode,
+    jenisNama: s.jenisSimpanan.nama,
     saldo: Number(s.saldo),
     createdAt: s.createdAt.toISOString(),
     updatedAt: s.updatedAt.toISOString(),
@@ -54,12 +75,15 @@ export async function getSimpananList(params: {
 export async function getSimpananAnggota(anggotaId: string) {
   const raw = await prisma.simpanan.findMany({
     where: { anggotaId },
-    orderBy: { jenis: "asc" },
+    include: { jenisSimpanan: { select: { kode: true, nama: true } } },
+    orderBy: { jenisSimpanan: { urutan: "asc" } },
   })
 
   return raw.map((s) => ({
     id: s.id,
-    jenis: s.jenis,
+    jenisSimpananId: s.jenisSimpananId,
+    jenisKode: s.jenisSimpanan.kode,
+    jenisNama: s.jenisSimpanan.nama,
     saldo: Number(s.saldo),
     createdAt: s.createdAt.toISOString(),
     updatedAt: s.updatedAt.toISOString(),
@@ -68,16 +92,17 @@ export async function getSimpananAnggota(anggotaId: string) {
 
 export async function getMutasiAnggota(
   anggotaId: string,
-  params: { jenis?: string; page?: number; pageSize?: number }
+  params: { jenisSimpananId?: string; page?: number; pageSize?: number }
 ) {
-  const { jenis, page = 1, pageSize = 20 } = params
+  const { jenisSimpananId, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = { anggotaId }
-  if (jenis && jenis !== "SEMUA") where.jenis = jenis
+  if (jenisSimpananId) where.jenisSimpananId = jenisSimpananId
 
   const [raw, total] = await Promise.all([
     prisma.transaksiSimpanan.findMany({
       where,
+      include: { jenisSimpanan: { select: { kode: true, nama: true } } },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { createdAt: "desc" },
@@ -87,7 +112,9 @@ export async function getMutasiAnggota(
 
   const data = raw.map((t) => ({
     id: t.id,
-    jenis: t.jenis,
+    jenisSimpananId: t.jenisSimpananId,
+    jenisKode: t.jenisSimpanan.kode,
+    jenisNama: t.jenisSimpanan.nama,
     tipe: t.tipe,
     nominal: Number(t.nominal),
     saldoSetelah: Number(t.saldoSetelah),
@@ -109,22 +136,19 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 
-  const konfig = await getKonfig()
-  if (parsed.jenis === "POKOK") {
-    const minPokok = getNumber(konfig, "simpanan_pokok", 100000)
-    if (parsed.nominal < minPokok) throw new Error(`Setoran simpanan pokok minimal Rp${minPokok.toLocaleString("id-ID")}`)
-  }
-  if (parsed.jenis === "WAJIB") {
-    const minWajib = getNumber(konfig, "simpanan_wajib_perbulan", 50000)
-    if (parsed.nominal < minWajib) throw new Error(`Setoran simpanan wajib per bulan minimal Rp${minWajib.toLocaleString("id-ID")}`)
+  const jenis = await prisma.jenisSimpanan.findUnique({ where: { id: parsed.jenisSimpananId } })
+  if (!jenis) throw new Error("Jenis simpanan tidak ditemukan")
+
+  if (parsed.nominal < Number(jenis.minimalSetoran)) {
+    throw new Error(`Setoran ${jenis.nama} minimal Rp${Number(jenis.minimalSetoran).toLocaleString("id-ID")}`)
   }
 
   await prisma.$transaction(async (tx) => {
     const simpanan = await tx.simpanan.upsert({
-      where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
+      where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
       create: {
         anggotaId: parsed.anggotaId,
-        jenis: parsed.jenis,
+        jenisSimpananId: parsed.jenisSimpananId,
         saldo: parsed.nominal,
       },
       update: {
@@ -135,7 +159,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
     await tx.transaksiSimpanan.create({
       data: {
         anggotaId: parsed.anggotaId,
-        jenis: parsed.jenis,
+        jenisSimpananId: parsed.jenisSimpananId,
         tipe: "SETORAN",
         nominal: parsed.nominal,
         saldoSetelah: Number(simpanan.saldo),
@@ -143,10 +167,10 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
       },
     })
 
-    const akunSimpanan = getSimpananAkun(parsed.jenis)
+    const akunSimpanan = getSimpananAkun(jenis.kode)
     await buatJurnal(tx, {
       tanggal: new Date(),
-      keterangan: `Setoran ${parsed.jenis} ${anggota?.noAnggota}`,
+      keterangan: `Setoran ${jenis.nama} ${anggota.noAnggota}`,
       entries: [
         { akunKode: COA_KAS, debit: parsed.nominal, kredit: 0 },
         { akunKode: akunSimpanan, debit: 0, kredit: parsed.nominal },
@@ -160,7 +184,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
     action: "CREATE",
     entityType: "SETORAN_SIMPANAN",
     entityId: parsed.anggotaId,
-    newValue: { jenis: parsed.jenis, nominal: parsed.nominal },
+    newValue: { jenisSimpananId: parsed.jenisSimpananId, nominal: parsed.nominal },
   })
 
   revalidatePath("/pengurus/simpanan")
@@ -180,22 +204,25 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 
+  const jenis = await prisma.jenisSimpanan.findUnique({ where: { id: parsed.jenisSimpananId } })
+  if (!jenis) throw new Error("Jenis simpanan tidak ditemukan")
+
   const simpanan = await prisma.simpanan.findUnique({
-    where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
+    where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
   })
   if (!simpanan) throw new Error("Simpanan tidak ditemukan")
   if (Number(simpanan.saldo) < parsed.nominal) throw new Error("Saldo tidak mencukupi")
 
   await prisma.$transaction(async (tx) => {
     await tx.simpanan.update({
-      where: { anggotaId_jenis: { anggotaId: parsed.anggotaId, jenis: parsed.jenis } },
+      where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
       data: { saldo: { decrement: parsed.nominal } },
     })
 
     await tx.transaksiSimpanan.create({
       data: {
         anggotaId: parsed.anggotaId,
-        jenis: parsed.jenis,
+        jenisSimpananId: parsed.jenisSimpananId,
         tipe: "PENARIKAN",
         nominal: parsed.nominal,
         saldoSetelah: Number(simpanan.saldo) - parsed.nominal,
@@ -203,10 +230,10 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
       },
     })
 
-    const akunSimpanan = getSimpananAkun(parsed.jenis)
+    const akunSimpanan = getSimpananAkun(jenis.kode)
     await buatJurnal(tx, {
       tanggal: new Date(),
-      keterangan: `Penarikan ${parsed.jenis} ${anggota.noAnggota}`,
+      keterangan: `Penarikan ${jenis.nama} ${anggota.noAnggota}`,
       entries: [
         { akunKode: akunSimpanan, debit: parsed.nominal, kredit: 0 },
         { akunKode: COA_KAS, debit: 0, kredit: parsed.nominal },
@@ -220,7 +247,7 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
     action: "CREATE",
     entityType: "PENARIKAN_SIMPANAN",
     entityId: parsed.anggotaId,
-    newValue: { jenis: parsed.jenis, nominal: parsed.nominal },
+    newValue: { jenisSimpananId: parsed.jenisSimpananId, nominal: parsed.nominal },
   })
 
   revalidatePath("/pengurus/simpanan")
@@ -241,8 +268,14 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
   if (!anggota) throw new Error("Anggota tidak ditemukan")
   if (anggota.status === "KELUAR") throw new Error("Anggota sudah keluar")
 
+  const jenisPokokWajib = await prisma.jenisSimpanan.findMany({
+    where: { kode: { in: ["POKOK", "WAJIB"] } },
+  })
+  const jenisIds = jenisPokokWajib.map((j) => j.id)
+
   const simpananList = await prisma.simpanan.findMany({
-    where: { anggotaId: parsed.anggotaId, jenis: { in: ["POKOK", "WAJIB"] } },
+    where: { anggotaId: parsed.anggotaId, jenisSimpananId: { in: jenisIds } },
+    include: { jenisSimpanan: true },
   })
 
   if (simpananList.length === 0) throw new Error("Tidak ada simpanan pokok atau wajib")
@@ -260,7 +293,7 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
       await tx.transaksiSimpanan.create({
         data: {
           anggotaId: parsed.anggotaId,
-          jenis: simpanan.jenis,
+          jenisSimpananId: simpanan.jenisSimpananId,
           tipe: "PENARIKAN",
           nominal: saldo,
           saldoSetelah: 0,
@@ -268,10 +301,10 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
         },
       })
 
-      const akunSimpanan = getSimpananAkun(simpanan.jenis)
+      const akunSimpanan = getSimpananAkun(simpanan.jenisSimpanan.kode)
       await buatJurnal(tx, {
         tanggal: new Date(),
-        keterangan: `Penutupan ${simpanan.jenis} ${anggota.noAnggota}`,
+        keterangan: `Penutupan ${simpanan.jenisSimpanan.nama} ${anggota.noAnggota}`,
         entries: [
           { akunKode: akunSimpanan, debit: saldo, kredit: 0 },
           { akunKode: COA_KAS, debit: 0, kredit: saldo },

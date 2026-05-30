@@ -1,5 +1,6 @@
 import { getSimpananList } from "@/actions/simpanan"
 import { SimpananTable } from "@/components/simpanan/simpanan-table"
+import { prisma } from "@/lib/prisma"
 
 type Props = {
   searchParams: Promise<{ search?: string; jenis?: string; page?: string }>
@@ -8,10 +9,16 @@ type Props = {
 export default async function SimpananListPage({ searchParams }: Props) {
   const params = await searchParams
   const search = params.search ?? ""
-  const jenis = params.jenis ?? "SEMUA"
+  const jenisCode = params.jenis ?? ""
   const page = Number(params.page) || 1
 
-  const result = await getSimpananList({ search, jenis, page })
+  let jenisSimpananId: string | undefined
+  if (jenisCode && jenisCode !== "SEMUA") {
+    const jenis = await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } })
+    if (jenis) jenisSimpananId = jenis.id
+  }
+
+  const result = await getSimpananList({ search, jenisSimpananId, page })
 
   return (
     <div className="space-y-6">
@@ -26,7 +33,6 @@ export default async function SimpananListPage({ searchParams }: Props) {
         page={result.page}
         totalPages={result.totalPages}
         search={search}
-        jenis={jenis}
       />
     </div>
   )

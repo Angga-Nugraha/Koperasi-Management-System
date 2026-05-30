@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,6 +18,14 @@ export default function TarikSimpananPage() {
   const preselected = searchParams.get("anggotaId") ?? ""
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [jenisSukarelaId, setJenisSukarelaId] = useState<string>("")
+
+  useEffect(() => {
+    fetch("/api/jenis-simpanan").then(r => r.json()).then((list: Array<{ id: string; kode: string }>) => {
+      const sukarela = list.find((j) => j.kode === "SUKARELA")
+      if (sukarela) setJenisSukarelaId(sukarela.id)
+    }).catch(() => {})
+  }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -29,7 +37,7 @@ export default function TarikSimpananPage() {
     try {
       await tarikSimpanan({
         anggotaId: formData.get("anggotaId") as string,
-        jenis: "SUKARELA",
+        jenisSimpananId: jenisSukarelaId,
         nominal: Number(formData.get("nominal")),
         keterangan: (formData.get("keterangan") as string) || null,
       })

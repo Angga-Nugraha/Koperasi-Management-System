@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,7 +30,8 @@ type Simpanan = {
   anggotaId: string
   noAnggota: string
   namaAnggota: string
-  jenis: string
+  jenisKode: string
+  jenisNama: string
   saldo: number
 }
 
@@ -40,13 +41,6 @@ type Props = {
   page: number
   totalPages: number
   search: string
-  jenis: string
-}
-
-const JENIS_MAP: Record<string, string> = {
-  POKOK: "Pokok",
-  WAJIB: "Wajib",
-  SUKARELA: "Sukarela",
 }
 
 const JENIS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
@@ -55,15 +49,20 @@ const JENIS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
   SUKARELA: "outline",
 }
 
-export function SimpananTable({ data, total, page, totalPages, search: initialSearch, jenis: initialJenis }: Props) {
+export function SimpananTable({ data, total, page, totalPages, search: initialSearch }: Props) {
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch)
-  const [jenis, setJenis] = useState(initialJenis)
+  const [jenisFilter, setJenisFilter] = useState("SEMUA")
+  const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
+
+  useEffect(() => {
+    fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
+  }, [])
 
   function onSearch() {
     const params = new URLSearchParams()
     if (search) params.set("search", search)
-    if (jenis && jenis !== "SEMUA") params.set("jenis", jenis)
+    if (jenisFilter && jenisFilter !== "SEMUA") params.set("jenis", jenisFilter)
     router.push(`/pengurus/simpanan?${params.toString()}`)
   }
 
@@ -111,15 +110,15 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
             </div>
           </div>
           <div className="w-40">
-            <Select value={jenis} onValueChange={(v) => { setJenis(v); onSearch() }}>
+            <Select value={jenisFilter} onValueChange={(v) => { setJenisFilter(v); onSearch() }}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="SEMUA">Semua</SelectItem>
-                <SelectItem value="POKOK">Pokok</SelectItem>
-                <SelectItem value="WAJIB">Wajib</SelectItem>
-                <SelectItem value="SUKARELA">Sukarela</SelectItem>
+                {jenisList.map((j) => (
+                  <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -149,8 +148,8 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
                   <TableCell className="font-mono text-sm">{s.noAnggota}</TableCell>
                   <TableCell>{s.namaAnggota}</TableCell>
                   <TableCell>
-                    <Badge variant={JENIS_VARIANTS[s.jenis] ?? "secondary"}>
-                      {JENIS_MAP[s.jenis] ?? s.jenis}
+                    <Badge variant={JENIS_VARIANTS[s.jenisKode] ?? "secondary"}>
+                      {s.jenisNama}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right font-mono">

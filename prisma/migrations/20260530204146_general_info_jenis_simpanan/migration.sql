@@ -15,6 +15,20 @@ CREATE TABLE `users` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `general_info` (
+    `id` VARCHAR(191) NOT NULL,
+    `namaKoperasi` VARCHAR(191) NOT NULL DEFAULT 'Koperasi Simpan Pinjam',
+    `alamat` TEXT NULL,
+    `noAhu` VARCHAR(191) NULL,
+    `logo` VARCHAR(191) NULL,
+    `website` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `anggota` (
     `id` VARCHAR(191) NOT NULL,
     `nik` VARCHAR(191) NOT NULL,
@@ -23,6 +37,8 @@ CREATE TABLE `anggota` (
     `alamat` TEXT NOT NULL,
     `pekerjaan` VARCHAR(191) NULL,
     `penghasilan` DECIMAL(18, 2) NULL,
+    `foto` VARCHAR(191) NULL,
+    `ktp` VARCHAR(191) NULL,
     `tglMasuk` DATETIME(3) NOT NULL,
     `status` ENUM('AKTIF', 'NONAKTIF', 'KELUAR') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -34,15 +50,31 @@ CREATE TABLE `anggota` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `jenis_simpanan` (
+    `id` VARCHAR(191) NOT NULL,
+    `kode` VARCHAR(191) NOT NULL,
+    `nama` VARCHAR(191) NOT NULL,
+    `minimalSetoran` DECIMAL(18, 2) NOT NULL DEFAULT 0,
+    `keterangan` TEXT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `urutan` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `jenis_simpanan_kode_key`(`kode`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `simpanan` (
     `id` VARCHAR(191) NOT NULL,
     `anggotaId` VARCHAR(191) NOT NULL,
-    `jenis` ENUM('POKOK', 'WAJIB', 'SUKARELA') NOT NULL,
+    `jenisSimpananId` VARCHAR(191) NOT NULL,
     `saldo` DECIMAL(18, 2) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `simpanan_anggotaId_jenis_key`(`anggotaId`, `jenis`),
+    UNIQUE INDEX `simpanan_anggotaId_jenisSimpananId_key`(`anggotaId`, `jenisSimpananId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -50,7 +82,7 @@ CREATE TABLE `simpanan` (
 CREATE TABLE `transaksi_simpanan` (
     `id` VARCHAR(191) NOT NULL,
     `anggotaId` VARCHAR(191) NOT NULL,
-    `jenis` ENUM('POKOK', 'WAJIB', 'SUKARELA') NOT NULL,
+    `jenisSimpananId` VARCHAR(191) NOT NULL,
     `tipe` VARCHAR(191) NOT NULL,
     `nominal` DECIMAL(18, 2) NOT NULL,
     `saldoSetelah` DECIMAL(18, 2) NOT NULL,
@@ -62,9 +94,23 @@ CREATE TABLE `transaksi_simpanan` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `jenis_pinjaman` (
+    `id` VARCHAR(191) NOT NULL,
+    `nama` VARCHAR(191) NOT NULL,
+    `bunga` DECIMAL(5, 2) NOT NULL,
+    `keterangan` TEXT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `jenis_pinjaman_nama_key`(`nama`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `pinjaman` (
     `id` VARCHAR(191) NOT NULL,
     `anggotaId` VARCHAR(191) NOT NULL,
+    `jenisPinjamanId` VARCHAR(191) NOT NULL,
     `jumlah` DECIMAL(18, 2) NOT NULL,
     `tenor` INTEGER NOT NULL,
     `bunga` DECIMAL(5, 2) NOT NULL,
@@ -217,10 +263,19 @@ ALTER TABLE `users` ADD CONSTRAINT `users_anggotaId_fkey` FOREIGN KEY (`anggotaI
 ALTER TABLE `simpanan` ADD CONSTRAINT `simpanan_anggotaId_fkey` FOREIGN KEY (`anggotaId`) REFERENCES `anggota`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `simpanan` ADD CONSTRAINT `simpanan_jenisSimpananId_fkey` FOREIGN KEY (`jenisSimpananId`) REFERENCES `jenis_simpanan`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `transaksi_simpanan` ADD CONSTRAINT `transaksi_simpanan_anggotaId_fkey` FOREIGN KEY (`anggotaId`) REFERENCES `anggota`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `transaksi_simpanan` ADD CONSTRAINT `transaksi_simpanan_jenisSimpananId_fkey` FOREIGN KEY (`jenisSimpananId`) REFERENCES `jenis_simpanan`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `pinjaman` ADD CONSTRAINT `pinjaman_anggotaId_fkey` FOREIGN KEY (`anggotaId`) REFERENCES `anggota`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `pinjaman` ADD CONSTRAINT `pinjaman_jenisPinjamanId_fkey` FOREIGN KEY (`jenisPinjamanId`) REFERENCES `jenis_pinjaman`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `angsuran` ADD CONSTRAINT `angsuran_pinjamanId_fkey` FOREIGN KEY (`pinjamanId`) REFERENCES `pinjaman`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -19,21 +19,22 @@ import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
+type JenisSimpanan = { id: string; kode: string; nama: string; minimalSetoran: number }
+
 export default function SetorSimpananPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const preselected = searchParams.get("anggotaId") ?? ""
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [simpananPokok, setSimpananPokok] = useState(100000)
-  const [simpananWajib, setSimpananWajib] = useState(50000)
+  const [jenisList, setJenisList] = useState<JenisSimpanan[]>([])
+  const [selectedJenis, setSelectedJenis] = useState<string>("")
 
   useEffect(() => {
-    fetch("/api/konfig").then(r => r.json()).then(konfig => {
-      if (konfig.simpanan_pokok) setSimpananPokok(Number(konfig.simpanan_pokok))
-      if (konfig.simpanan_wajib_perbulan) setSimpananWajib(Number(konfig.simpanan_wajib_perbulan))
-    }).catch(() => {})
+    fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
   }, [])
+
+  const selected = jenisList.find((j) => j.id === selectedJenis)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -45,7 +46,7 @@ export default function SetorSimpananPage() {
     try {
       await setorSimpanan({
         anggotaId: formData.get("anggotaId") as string,
-        jenis: formData.get("jenis") as "POKOK" | "WAJIB" | "SUKARELA",
+        jenisSimpananId: formData.get("jenisSimpananId") as string,
         nominal: Number(formData.get("nominal")),
         keterangan: (formData.get("keterangan") as string) || null,
       })
@@ -83,25 +84,29 @@ export default function SetorSimpananPage() {
             <AnggotaSelect name="anggotaId" value={preselected} required />
 
             <div className="space-y-2">
-              <Label htmlFor="jenis">Jenis Simpanan *</Label>
-              <Select name="jenis" required>
+              <Label htmlFor="jenisSimpananId">Jenis Simpanan *</Label>
+              <Select name="jenisSimpananId" value={selectedJenis} onValueChange={setSelectedJenis} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih jenis" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="POKOK">Pokok</SelectItem>
-                  <SelectItem value="WAJIB">Wajib</SelectItem>
-                  <SelectItem value="SUKARELA">Sukarela</SelectItem>
+                  {jenisList.map((j) => (
+                    <SelectItem key={j.id} value={j.id}>
+                      {j.nama} ({j.kode})
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="nominal">Nominal (Rp) *</Label>
-              <Input id="nominal" name="nominal" type="number" placeholder="0" min="1" required />
-              <p className="text-xs text-muted-foreground">
-                Min: Pokok Rp{simpananPokok.toLocaleString("id-ID")} | Wajib Rp{simpananWajib.toLocaleString("id-ID")}
-              </p>
+              <Input id="nominal" name="nominal" type="number" placeholder="0" min={selected?.minimalSetoran ?? 1} required />
+              {selected && selected.minimalSetoran > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Minimal setoran: Rp{selected.minimalSetoran.toLocaleString("id-ID")}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">

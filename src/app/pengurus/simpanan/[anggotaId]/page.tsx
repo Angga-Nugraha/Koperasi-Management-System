@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { prisma } from "@/lib/prisma"
 
 type Props = {
   params: Promise<{ anggotaId: string }>
@@ -16,14 +17,14 @@ type Props = {
 export default async function SimpananAnggotaPage({ params, searchParams }: Props) {
   const { anggotaId } = await params
   const sp = await searchParams
-  const jenis = sp.jenis ?? "SEMUA"
+  const jenisCode = sp.jenis ?? "SEMUA"
   const page = Number(sp.page) || 1
 
   const anggota = await getAnggotaById(anggotaId)
   if (!anggota) notFound()
 
   const simpanan = await getSimpananAnggota(anggotaId)
-  const mutasi = await getMutasiAnggota(anggotaId, { jenis, page })
+  const mutasi = await getMutasiAnggota(anggotaId, { jenisSimpananId: jenisCode !== "SEMUA" ? (await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } }))?.id : undefined, page })
 
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
 
@@ -48,10 +49,10 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
 
       <div className="grid gap-4 md:grid-cols-4">
         {simpanan.map((s) => (
-          <Card key={s.jenis}>
+          <Card key={s.jenisKode}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium capitalize">
-                Simpanan {s.jenis.toLowerCase()}
+              <CardTitle className="text-sm font-medium">
+                {s.jenisNama}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -74,7 +75,6 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
         total={mutasi.total}
         page={mutasi.page}
         totalPages={mutasi.totalPages}
-        jenis={jenis}
         anggotaId={anggotaId}
       />
 

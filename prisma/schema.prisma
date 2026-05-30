@@ -21,12 +21,6 @@ enum MemberStatus {
   KELUAR
 }
 
-enum SavingType {
-  POKOK
-  WAJIB
-  SUKARELA
-}
-
 enum LoanStatus {
   PENGAJUAN
   DISETUJUI
@@ -78,6 +72,20 @@ model User {
   @@map("users")
 }
 
+model GeneralInfo {
+  id             String  @id @default(uuid())
+  namaKoperasi   String  @default("Koperasi Simpan Pinjam")
+  alamat         String? @db.Text
+  noAhu          String?
+  logo           String?
+  website        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("general_info")
+}
+
 model Anggota {
   id          String       @id @default(uuid())
   nik         String       @unique
@@ -104,32 +112,52 @@ model Anggota {
   @@map("anggota")
 }
 
-model Simpanan {
-  id        String     @id @default(uuid())
-  anggotaId String
-  jenis     SavingType
-  saldo     Decimal    @db.Decimal(18, 2)
+model JenisSimpanan {
+  id             String  @id @default(uuid())
+  kode           String  @unique // POKOK, WAJIB, SUKARELA
+  nama           String
+  minimalSetoran Decimal @default(0) @db.Decimal(18, 2)
+  keterangan     String? @db.Text
+  isActive       Boolean @default(true)
+  urutan         Int     @default(0)
 
-  anggota Anggota @relation(fields: [anggotaId], references: [id])
+  simpanan          Simpanan[]
+  transaksiSimpanan TransaksiSimpanan[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([anggotaId, jenis])
+  @@map("jenis_simpanan")
+}
+
+model Simpanan {
+  id              String  @id @default(uuid())
+  anggotaId       String
+  jenisSimpananId String
+  saldo           Decimal @db.Decimal(18, 2)
+
+  anggota       Anggota       @relation(fields: [anggotaId], references: [id])
+  jenisSimpanan JenisSimpanan @relation(fields: [jenisSimpananId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([anggotaId, jenisSimpananId])
   @@map("simpanan")
 }
 
 model TransaksiSimpanan {
-  id           String     @id @default(uuid())
-  anggotaId    String
-  jenis        SavingType
-  tipe         String // SETORAN / PENARIKAN
-  nominal      Decimal    @db.Decimal(18, 2)
-  saldoSetelah Decimal    @db.Decimal(18, 2)
-  keterangan   String?    @db.Text
-  dibuatOlehId String?
+  id              String   @id @default(uuid())
+  anggotaId       String
+  jenisSimpananId String
+  tipe            String   // SETORAN / PENARIKAN
+  nominal         Decimal  @db.Decimal(18, 2)
+  saldoSetelah    Decimal  @db.Decimal(18, 2)
+  keterangan      String?  @db.Text
+  dibuatOlehId    String?
 
-  anggota Anggota @relation(fields: [anggotaId], references: [id])
+  anggota       Anggota       @relation(fields: [anggotaId], references: [id])
+  jenisSimpanan JenisSimpanan @relation(fields: [jenisSimpananId], references: [id])
 
   createdAt DateTime @default(now())
 

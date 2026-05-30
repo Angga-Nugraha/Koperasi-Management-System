@@ -163,6 +163,10 @@ async function main() {
   const jenisKonsumsi = await prisma.jenisPinjaman.findFirstOrThrow({ where: { nama: "Konsumsi" } })
   const jenisPendidikan = await prisma.jenisPinjaman.findFirstOrThrow({ where: { nama: "Pendidikan" } })
 
+  const jenisPokok = await prisma.jenisSimpanan.findFirstOrThrow({ where: { kode: "POKOK" } })
+  const jenisWajib = await prisma.jenisSimpanan.findFirstOrThrow({ where: { kode: "WAJIB" } })
+  const jenisSukarela = await prisma.jenisSimpanan.findFirstOrThrow({ where: { kode: "SUKARELA" } })
+
   let jurnalCounter = 0
 
   async function buatJurnal(
@@ -209,11 +213,11 @@ async function main() {
     // ── POKOK (one-time) ──
     const pokokNominal = 500_000
     await prisma.simpanan.create({
-      data: { id: uuidv4(), anggotaId, jenis: "POKOK", saldo: pokokNominal },
+      data: { id: uuidv4(), anggotaId, jenisSimpananId: jenisPokok.id, saldo: pokokNominal },
     })
     await prisma.transaksiSimpanan.create({
       data: {
-        id: uuidv4(), anggotaId, jenis: "POKOK", tipe: "SETORAN",
+        id: uuidv4(), anggotaId, jenisSimpananId: jenisPokok.id, tipe: "SETORAN",
         nominal: pokokNominal, saldoSetelah: pokokNominal,
         keterangan: "Setoran awal Pokok",
       },
@@ -240,7 +244,7 @@ async function main() {
 
       await prisma.transaksiSimpanan.create({
         data: {
-          id: uuidv4(), anggotaId, jenis: "WAJIB", tipe: "SETORAN",
+          id: uuidv4(), anggotaId, jenisSimpananId: jenisWajib.id, tipe: "SETORAN",
           nominal: WAJIB_PER_BULAN, saldoSetelah: totalWajib,
           keterangan: `Setoran Wajib bulan ${tgl.toLocaleDateString("id-ID", { month: "long", year: "numeric" })}`,
         },
@@ -262,17 +266,17 @@ async function main() {
 
     // Create the simpanan wajib record with final balance
     await prisma.simpanan.create({
-      data: { id: uuidv4(), anggotaId, jenis: "WAJIB", saldo: totalWajib },
+      data: { id: uuidv4(), anggotaId, jenisSimpananId: jenisWajib.id, saldo: totalWajib },
     })
 
     // ── SUKARELA (one-time) ──
     const sukarelaNominal = SUKARELA_NOMINAL[i]
     await prisma.simpanan.create({
-      data: { id: uuidv4(), anggotaId, jenis: "SUKARELA", saldo: sukarelaNominal },
+      data: { id: uuidv4(), anggotaId, jenisSimpananId: jenisSukarela.id, saldo: sukarelaNominal },
     })
     await prisma.transaksiSimpanan.create({
       data: {
-        id: uuidv4(), anggotaId, jenis: "SUKARELA", tipe: "SETORAN",
+        id: uuidv4(), anggotaId, jenisSimpananId: jenisSukarela.id, tipe: "SETORAN",
         nominal: sukarelaNominal, saldoSetelah: sukarelaNominal,
         keterangan: `Setoran Sukarela ${anggota.nama}`,
       },

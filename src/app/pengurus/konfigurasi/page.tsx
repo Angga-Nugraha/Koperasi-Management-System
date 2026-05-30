@@ -1,11 +1,22 @@
-import { getKonfigList, getAkunList } from "@/actions/konfigurasi"
+import { getKonfigList, getAkunList, getGeneralInfo, getJenisPinjamanList, getJenisSimpananList } from "@/actions/konfigurasi"
 import { KonfigurasiPage } from "@/components/konfigurasi/konfigurasi-page"
 
 export default async function PengaturanPage() {
-  const [konfig, akun] = await Promise.all([
+  const [konfig, akun, generalInfo, jenisPinjaman, jenisSimpanan] = await Promise.all([
     getKonfigList(),
     getAkunList(),
+    getGeneralInfo(),
+    getJenisPinjamanList(),
+    getJenisSimpananList(),
   ])
 
-  return <KonfigurasiPage konfig={konfig} akun={akun} />
+  return (
+    <KonfigurasiPage
+      konfig={konfig}
+      akun={akun}
+      generalInfo={generalInfo}
+      jenisPinjaman={jenisPinjaman}
+      jenisSimpanan={jenisSimpanan}
+    />
+  )
 }

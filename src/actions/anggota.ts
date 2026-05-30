@@ -70,7 +70,7 @@ export async function getAnggotaById(id: string) {
   const raw = await prisma.anggota.findUnique({
     where: { id },
     include: {
-      simpanan: true,
+      simpanan: { include: { jenisSimpanan: true } },
       pinjaman: { include: { angsuran: true } },
       user: true,
     },
@@ -95,7 +95,8 @@ export async function getAnggotaById(id: string) {
     simpanan: raw.simpanan.map((s) => ({
       id: s.id,
       anggotaId: s.anggotaId,
-      jenis: s.jenis,
+      jenisKode: s.jenisSimpanan.kode,
+      jenisNama: s.jenisSimpanan.nama,
       saldo: Number(s.saldo),
       createdAt: s.createdAt.toISOString(),
       updatedAt: s.updatedAt.toISOString(),
@@ -269,8 +270,13 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
 }
 
 async function prosesPenutupanAnggota(anggotaId: string) {
+  const jenisPokokWajib = await prisma.jenisSimpanan.findMany({
+    where: { kode: { in: ["POKOK", "WAJIB"] } },
+  })
+  const jenisIds = jenisPokokWajib.map((j) => j.id)
+
   const simpananList = await prisma.simpanan.findMany({
-    where: { anggotaId, jenis: { in: ["POKOK", "WAJIB"] } },
+    where: { anggotaId, jenisSimpananId: { in: jenisIds } },
   })
 
   await prisma.$transaction(async (tx) => {
@@ -286,7 +292,7 @@ async function prosesPenutupanAnggota(anggotaId: string) {
       await tx.transaksiSimpanan.create({
         data: {
           anggotaId,
-          jenis: simpanan.jenis,
+          jenisSimpananId: simpanan.jenisSimpananId,
           tipe: "PENARIKAN",
           nominal: saldo,
           saldoSetelah: 0,

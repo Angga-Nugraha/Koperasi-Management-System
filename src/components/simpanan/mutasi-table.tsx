@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -24,7 +24,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type Mutasi = {
   id: string
-  jenis: string
+  jenisKode: string
+  jenisNama: string
   tipe: string
   nominal: number
   saldoSetelah: number
@@ -37,7 +38,6 @@ type Props = {
   total: number
   page: number
   totalPages: number
-  jenis: string
   anggotaId: string
 }
 
@@ -51,12 +51,17 @@ const TIPE_LABEL: Record<string, string> = {
   PENARIKAN: "Penarikan",
 }
 
-export function MutasiTable({ data, total, page, totalPages, jenis: initialJenis, anggotaId }: Props) {
+export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props) {
   const router = useRouter()
-  const [jenis, setJenis] = useState(initialJenis)
+  const [jenisFilter, setJenisFilter] = useState("SEMUA")
+  const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
+
+  useEffect(() => {
+    fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
+  }, [])
 
   function onFilterChange(v: string) {
-    setJenis(v)
+    setJenisFilter(v)
     const params = new URLSearchParams()
     if (v !== "SEMUA") params.set("jenis", v)
     router.push(`/pengurus/simpanan/${anggotaId}?${params.toString()}`)
@@ -74,15 +79,15 @@ export function MutasiTable({ data, total, page, totalPages, jenis: initialJenis
         <div className="flex items-center justify-between">
           <CardTitle>Mutasi</CardTitle>
           <div className="w-40">
-            <Select value={jenis} onValueChange={onFilterChange}>
+            <Select value={jenisFilter} onValueChange={onFilterChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="SEMUA">Semua</SelectItem>
-                <SelectItem value="POKOK">Pokok</SelectItem>
-                <SelectItem value="WAJIB">Wajib</SelectItem>
-                <SelectItem value="SUKARELA">Sukarela</SelectItem>
+                {jenisList.map((j) => (
+                  <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -113,7 +118,7 @@ export function MutasiTable({ data, total, page, totalPages, jenis: initialJenis
                   <TableCell className="text-sm">
                     {new Date(t.createdAt).toLocaleDateString("id-ID")}
                   </TableCell>
-                  <TableCell className="capitalize">{t.jenis.toLowerCase()}</TableCell>
+                  <TableCell>{t.jenisNama}</TableCell>
                   <TableCell>
                     <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
                       {TIPE_LABEL[t.tipe] ?? t.tipe}

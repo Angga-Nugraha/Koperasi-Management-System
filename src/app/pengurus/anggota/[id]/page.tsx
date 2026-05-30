@@ -29,7 +29,8 @@ export default async function DetailAnggotaPage({ params }: Props) {
         createdAt: anggota.createdAt,
         user: anggota.user,
         simpanan: anggota.simpanan.map((s) => ({
-          jenis: s.jenis,
+          jenisKode: s.jenisKode,
+          jenisNama: s.jenisNama,
           saldo: s.saldo,
         })),
         pinjaman: anggota.pinjaman.map((p) => ({

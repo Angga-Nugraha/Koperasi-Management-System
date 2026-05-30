@@ -103,6 +103,46 @@ async function main() {
     console.log("  ⏭️  Admin sudah ada, skip")
   }
 
+  // ========== SEED GENERAL INFO ==========
+  await prisma.generalInfo.create({
+    data: {
+      namaKoperasi: "Koperasi Dharma Mitra Persada",
+      alamat: "Cibinong, Bogor",
+      noAhu: "",
+    },
+  })
+  console.log("  ✅ General info tersimpan")
+
+  // ========== SEED JENIS SIMPANAN ==========
+  const jenisSimpanan = [
+    { kode: "POKOK", nama: "Simpanan Pokok", minimalSetoran: 100000, urutan: 1, keterangan: "Setoran sekali seumur keanggotaan" },
+    { kode: "WAJIB", nama: "Simpanan Wajib", minimalSetoran: 50000, urutan: 2, keterangan: "Setoran wajib setiap bulan" },
+    { kode: "SUKARELA", nama: "Simpanan Sukarela", minimalSetoran: 0, urutan: 3, keterangan: "Setoran sukareala kapan saja" },
+  ]
+  for (const js of jenisSimpanan) {
+    await prisma.jenisSimpanan.upsert({
+      where: { kode: js.kode },
+      update: js,
+      create: js,
+    })
+  }
+  console.log(`  ✅ ${jenisSimpanan.length} jenis simpanan tersimpan`)
+
+  // ========== SEED JENIS PINJAMAN ==========
+  const jenisPinjaman = [
+    { nama: "Konsumsi", bunga: 1.5, keterangan: "Pinjaman untuk kebutuhan konsumtif" },
+    { nama: "Pendidikan", bunga: 1.0, keterangan: "Pinjaman untuk biaya pendidikan" },
+    { nama: "Produktif", bunga: 2.0, keterangan: "Pinjaman untuk modal usaha" },
+  ]
+  for (const jp of jenisPinjaman) {
+    await prisma.jenisPinjaman.upsert({
+      where: { nama: jp.nama },
+      update: jp,
+      create: jp,
+    })
+  }
+  console.log(`  ✅ ${jenisPinjaman.length} jenis pinjaman tersimpan`)
+
   // ========== SEED DEFAULT KONFIGURASI ==========
   const konfigurasi = [
     { key: "plafon_max_saldo", value: "3", tipeData: "DECIMAL", keterangan: "Plafon maksimal pinjaman (kelipatan saldo simpanan)" },
@@ -116,12 +156,6 @@ async function main() {
     { key: "alokasi_pengurus", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengurus (%)" },
     { key: "alokasi_pengawas", value: "5", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengawas (%)" },
     { key: "alokasi_sosial", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Dana Sosial & Pendidikan (%)" },
-    { key: "no_ahu", value: "", tipeData: "STRING", keterangan: "Nomor AHU (badan hukum)" },
-    { key: "nama_koperasi", value: "Koperasi Dharma Mitra Persada", tipeData: "STRING", keterangan: "Nama koperasi" },
-    { key: "alamat_koperasi", value: "Cibinong, Bogor", tipeData: "STRING", keterangan: "Alamat koperasi" },
-    { key: "simpanan_pokok", value: "100000", tipeData: "DECIMAL", keterangan: "Nominal simpanan pokok (sekali)" },
-    { key: "simpanan_wajib_perbulan", value: "50000", tipeData: "DECIMAL", keterangan: "Nominal simpanan wajib per bulan" },
-    { key: "simpanan_wajib_tgl_jatuh_tempo", value: "10", tipeData: "NUMBER", keterangan: "Tanggal jatuh tempo simpanan wajib" },
   ]
 
   for (const cfg of konfigurasi) {

@@ -18,13 +18,15 @@ import { Badge } from "@/components/ui/badge"
 
 type Simpanan = {
   id: string
-  jenis: string
+  jenisKode: string
+  jenisNama: string
   saldo: number
 }
 
 type Mutasi = {
   id: string
-  jenis: string
+  jenisKode: string
+  jenisNama: string
   tipe: string
   nominal: number
   saldoSetelah: number
@@ -59,10 +61,10 @@ export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
 
       <div className="grid gap-4 md:grid-cols-4">
         {simpanan.map((s) => (
-          <Card key={s.jenis}>
+          <Card key={s.jenisKode}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium capitalize">
-                Simpanan {s.jenis.toLowerCase()}
+              <CardTitle className="text-sm font-medium">
+                {s.jenisNama}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -108,7 +110,7 @@ export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
                     <TableCell className="text-sm">
                       {new Date(t.createdAt).toLocaleDateString("id-ID")}
                     </TableCell>
-                    <TableCell className="capitalize">{t.jenis.toLowerCase()}</TableCell>
+                    <TableCell>{t.jenisNama}</TableCell>
                     <TableCell>
                       <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
                         {TIPE_LABEL[t.tipe] ?? t.tipe}

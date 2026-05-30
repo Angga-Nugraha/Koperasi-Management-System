@@ -15,8 +15,8 @@ export default function LoginPage() {
   const [namaKoperasi, setNamaKoperasi] = useState("Simko")
 
   useEffect(() => {
-    fetch("/api/konfig").then(r => r.json()).then(konfig => {
-      if (konfig.nama_koperasi) setNamaKoperasi(konfig.nama_koperasi)
+    fetch("/api/general-info").then(r => r.json()).then(info => {
+      if (info?.namaKoperasi) setNamaKoperasi(info.namaKoperasi)
     }).catch(() => {})
   }, [])
 
