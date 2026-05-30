@@ -115,6 +115,10 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
                 <div>
+                  <span className="text-muted-foreground">Jenis</span>
+                  <p className="font-medium">{p.jenisPinjaman}</p>
+                </div>
+                <div>
                   <span className="text-muted-foreground">Tenor</span>
                   <p className="font-medium">{p.tenor} bulan</p>
                 </div>
