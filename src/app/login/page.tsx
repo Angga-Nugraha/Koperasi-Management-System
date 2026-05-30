@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,6 +12,13 @@ export default function LoginPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [namaKoperasi, setNamaKoperasi] = useState("Simko")
+
+  useEffect(() => {
+    fetch("/api/konfig").then(r => r.json()).then(konfig => {
+      if (konfig.nama_koperasi) setNamaKoperasi(konfig.nama_koperasi)
+    }).catch(() => {})
+  }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -41,7 +48,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-primary">Simko</CardTitle>
+          <CardTitle className="text-2xl text-primary">{namaKoperasi}</CardTitle>
           <CardDescription>Sistem Manajemen Koperasi</CardDescription>
         </CardHeader>
         <CardContent>

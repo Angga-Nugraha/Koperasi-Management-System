@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { signOut } from "@/lib/auth"
+import { getKonfig, getString } from "@/lib/konfig"
 
 const NAV_ITEMS = [
   { href: "/pengurus", label: "Dashboard", icon: LayoutDashboard },
@@ -35,13 +36,15 @@ export default async function PengurusLayout({ children }: { children: React.Rea
   }
 
   const initial = session?.user?.email?.charAt(0).toUpperCase() ?? "U"
+  const konfig = await getKonfig()
+  const namaKoperasi = getString(konfig, "nama_koperasi", "Simko")
 
   return (
     <div className="flex min-h-screen">
       <aside className="hidden w-64 border-r bg-card md:flex md:flex-col">
         <div className="flex h-14 items-center border-b px-6">
           <Link href="/pengurus" className="text-lg font-bold text-primary">
-            Simko
+            {namaKoperasi}
           </Link>
           <span className="ml-2 rounded-md bg-primary/10 px-2 py-0.5 text-xs text-primary">
             {role === "BENDAHARA" ? "Bendahara" : "Pengurus"}

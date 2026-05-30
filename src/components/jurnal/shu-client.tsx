@@ -12,12 +12,13 @@ type Props = {
   beban: { items: { kode: string; nama: string; saldo: number }[]; total: number }
   shuKotor: number
   cadangan: number
+  pctCadangan: number
   shuDibagi: number
   jumlahAnggota: number
   perAnggota: number
 }
 
-export function SHUClient({ dari, sampai, pendapatan, beban, shuKotor, cadangan, shuDibagi, jumlahAnggota, perAnggota }: Props) {
+export function SHUClient({ dari, sampai, pendapatan, beban, shuKotor, cadangan, pctCadangan, shuDibagi, jumlahAnggota, perAnggota }: Props) {
   const router = useRouter()
 
   function handleSubmit(e: React.FormEvent) {
@@ -98,7 +99,7 @@ export function SHUClient({ dari, sampai, pendapatan, beban, shuKotor, cadangan,
               <td className="py-2 text-right font-medium">{fmt(shuKotor)}</td>
             </tr>
             <tr className="border-b">
-              <td className="py-2">Cadangan (20%)</td>
+              <td className="py-2">Cadangan ({pctCadangan}%)</td>
               <td className="py-2 text-right text-amber-600">({fmt(cadangan)})</td>
             </tr>
             <tr className="border-b font-semibold">

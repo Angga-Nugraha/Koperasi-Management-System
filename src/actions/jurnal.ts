@@ -7,6 +7,7 @@ import { z } from "zod"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
 import { buatJurnal } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
+import { getKonfig, getNumber } from "@/lib/konfig"
 
 export async function getJurnalList(params: {
   search?: string
@@ -386,7 +387,9 @@ export async function getSHU(dari?: string, sampai?: string) {
   ])
 
   const shuKotor = pendapatan.total - beban.total
-  const cadangan = Math.round(shuKotor * 0.2 * 100) / 100
+  const konfig = await getKonfig()
+  const pctCadangan = getNumber(konfig, "alokasi_cad", 20)
+  const cadangan = Math.round(shuKotor * (pctCadangan / 100) * 100) / 100
   const shuDibagi = shuKotor - cadangan
 
   const anggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
@@ -396,6 +399,7 @@ export async function getSHU(dari?: string, sampai?: string) {
     beban,
     shuKotor,
     cadangan,
+    pctCadangan,
     shuDibagi,
     jumlahAnggota: anggota,
     perAnggota: anggota > 0 ? Math.round((shuDibagi / anggota) * 100) / 100 : 0,

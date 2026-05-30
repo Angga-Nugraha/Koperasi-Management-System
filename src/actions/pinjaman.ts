@@ -13,6 +13,7 @@ import {
 import { z } from "zod"
 import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
+import { getKonfig, getNumber } from "@/lib/konfig"
 
 export async function getPinjamanList(params: {
   search?: string
@@ -168,6 +169,22 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
 
   const jenis = await prisma.jenisPinjaman.findUnique({ where: { id: parsed.jenisPinjamanId } })
   if (!jenis) throw new Error("Jenis pinjaman tidak ditemukan")
+
+  const konfig = await getKonfig()
+  const tenorMin = getNumber(konfig, "tenor_min", 3)
+  const tenorMax = getNumber(konfig, "tenor_max", 36)
+  const plafonMaxSaldo = getNumber(konfig, "plafon_max_saldo", 3)
+
+  if (parsed.tenor < tenorMin) throw new Error(`Tenor minimal ${tenorMin} bulan`)
+  if (parsed.tenor > tenorMax) throw new Error(`Tenor maksimal ${tenorMax} bulan`)
+
+  const totalSimpanan = await prisma.simpanan.aggregate({
+    where: { anggotaId: parsed.anggotaId },
+    _sum: { saldo: true },
+  })
+  const maxPlafon = Math.round((Number(totalSimpanan._sum.saldo ?? 0) * plafonMaxSaldo) * 100) / 100
+  if (parsed.jumlah > maxPlafon) throw new Error(`Jumlah pinjaman melebihi plafon. Maksimal Rp${maxPlafon.toLocaleString("id-ID")} (${plafonMaxSaldo}× saldo simpanan)`)
+  if (parsed.jumlah <= 0) throw new Error("Jumlah pinjaman harus lebih dari 0")
 
   const angsuranPokok = Number((parsed.jumlah / parsed.tenor).toFixed(2))
   const angsuranJasa = Number((parsed.jumlah * (Number(jenis.bunga) / 100)).toFixed(2))
@@ -353,11 +370,22 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const isLastAngsuran = pinjaman.angsuran.length === 1
   const pokok = isLastAngsuran ? Number(pinjaman.sisaPinjaman) : Number(nextAngsuran.pokok)
   const jasa = Number(nextAngsuran.jasa)
-  const denda = parsed.nominal > pokok + jasa ? Number((parsed.nominal - pokok - jasa).toFixed(2)) : 0
-  const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
-  const isLunas = sisaPinjamanSetelah <= 0
+
+  const konfig = await getKonfig()
+  const dendaPerHari = getNumber(konfig, "denda_per_hari", 0.5)
+  const gracePeriod = getNumber(konfig, "grace_period", 7)
 
   const tglBayar = new Date()
+  const jatuhTempo = nextAngsuran.jatuhTempo
+  const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
+  const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
+  const denda = effectiveDaysLate > 0
+    ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+    : 0
+  const totalHarusDibayar = pokok + jasa + denda
+  if (parsed.nominal < totalHarusDibayar) throw new Error(`Pembayaran kurang. Total yang harus dibayar: Rp${totalHarusDibayar.toLocaleString("id-ID")} (pokok Rp${pokok.toLocaleString("id-ID")} + jasa Rp${jasa.toLocaleString("id-ID")}${denda > 0 ? ` + denda Rp${denda.toLocaleString("id-ID")}` : ""})`)
+  const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
+  const isLunas = sisaPinjamanSetelah <= 0
 
   await prisma.$transaction(async (tx) => {
     await tx.angsuran.update({

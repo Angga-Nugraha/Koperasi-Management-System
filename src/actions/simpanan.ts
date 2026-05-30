@@ -7,6 +7,7 @@ import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema } fro
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
+import { getKonfig, getNumber } from "@/lib/konfig"
 
 export async function getSimpananList(params: {
   search?: string
@@ -107,6 +108,16 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
 
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
+
+  const konfig = await getKonfig()
+  if (parsed.jenis === "POKOK") {
+    const minPokok = getNumber(konfig, "simpanan_pokok", 100000)
+    if (parsed.nominal < minPokok) throw new Error(`Setoran simpanan pokok minimal Rp${minPokok.toLocaleString("id-ID")}`)
+  }
+  if (parsed.jenis === "WAJIB") {
+    const minWajib = getNumber(konfig, "simpanan_wajib_perbulan", 50000)
+    if (parsed.nominal < minWajib) throw new Error(`Setoran simpanan wajib per bulan minimal Rp${minWajib.toLocaleString("id-ID")}`)
+  }
 
   await prisma.$transaction(async (tx) => {
     const simpanan = await tx.simpanan.upsert({

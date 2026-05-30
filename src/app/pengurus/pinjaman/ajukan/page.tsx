@@ -28,9 +28,15 @@ export default function AjukanPinjamanPage() {
   const [jenisList, setJenisList] = useState<JenisPinjaman[]>([])
   const [selectedJenis, setSelectedJenis] = useState<string>("")
   const [defaultBunga, setDefaultBunga] = useState<number>(0)
+  const [tenorMin, setTenorMin] = useState(3)
+  const [tenorMax, setTenorMax] = useState(36)
 
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
+    fetch("/api/konfig").then(r => r.json()).then(konfig => {
+      if (konfig.tenor_min) setTenorMin(Number(konfig.tenor_min))
+      if (konfig.tenor_max) setTenorMax(Number(konfig.tenor_max))
+    }).catch(() => {})
   }, [])
 
   function handleJenisChange(value: string) {
@@ -117,8 +123,8 @@ export default function AjukanPinjamanPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tenor">Tenor (bulan) *</Label>
-              <Input id="tenor" name="tenor" type="number" placeholder="12" min="1" required />
+              <Label htmlFor="tenor">Tenor ({tenorMin}-{tenorMax} bulan) *</Label>
+              <Input id="tenor" name="tenor" type="number" placeholder="12" min={tenorMin} max={tenorMax} required />
             </div>
 
             <div className="space-y-2">

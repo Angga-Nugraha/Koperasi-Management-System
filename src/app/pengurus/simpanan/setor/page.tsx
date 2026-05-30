@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -25,6 +25,15 @@ export default function SetorSimpananPage() {
   const preselected = searchParams.get("anggotaId") ?? ""
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [simpananPokok, setSimpananPokok] = useState(100000)
+  const [simpananWajib, setSimpananWajib] = useState(50000)
+
+  useEffect(() => {
+    fetch("/api/konfig").then(r => r.json()).then(konfig => {
+      if (konfig.simpanan_pokok) setSimpananPokok(Number(konfig.simpanan_pokok))
+      if (konfig.simpanan_wajib_perbulan) setSimpananWajib(Number(konfig.simpanan_wajib_perbulan))
+    }).catch(() => {})
+  }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -90,6 +99,9 @@ export default function SetorSimpananPage() {
             <div className="space-y-2">
               <Label htmlFor="nominal">Nominal (Rp) *</Label>
               <Input id="nominal" name="nominal" type="number" placeholder="0" min="1" required />
+              <p className="text-xs text-muted-foreground">
+                Min: Pokok Rp{simpananPokok.toLocaleString("id-ID")} | Wajib Rp{simpananWajib.toLocaleString("id-ID")}
+              </p>
             </div>
 
             <div className="space-y-2">

@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { getKonfig, getNumber } from "@/lib/konfig"
 
 async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date) {
   const akunAll = await prisma.akun.findMany({
@@ -265,7 +266,9 @@ export async function exportSHU(params: Param) {
     getSaldoAkunTipe("BEBAN", sampaiTanggal),
   ])
   const shuKotor = pendapatan.total - beban.total
-  const cadangan = Math.round(shuKotor * 0.2 * 100) / 100
+  const konfig = await getKonfig()
+  const pctCadangan = getNumber(konfig, "alokasi_cad", 20)
+  const cadangan = Math.round(shuKotor * (pctCadangan / 100) * 100) / 100
   const shuDibagi = shuKotor - cadangan
   const jumlahAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
 
@@ -277,7 +280,7 @@ export async function exportSHU(params: Param) {
   ws.addRow({ ket: "Total Pendapatan", jumlah: pendapatan.total })
   ws.addRow({ ket: "Total Beban", jumlah: beban.total })
   ws.addRow({ ket: "SHU Kotor", jumlah: shuKotor }).font = { bold: true }
-  ws.addRow({ ket: "Cadangan (20%)", jumlah: cadangan })
+  ws.addRow({ ket: "Cadangan (" + pctCadangan + "%)", jumlah: cadangan })
   ws.addRow({ ket: "SHU Dibagi", jumlah: shuDibagi }).font = { bold: true }
   ws.addRow({ ket: "Jumlah Anggota Aktif", jumlah: jumlahAnggota })
   ws.addRow({ ket: "SHU per Anggota", jumlah: jumlahAnggota > 0 ? Math.round((shuDibagi / jumlahAnggota) * 100) / 100 : 0 }).font = { bold: true }
