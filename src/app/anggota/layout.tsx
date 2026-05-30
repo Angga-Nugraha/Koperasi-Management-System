@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { LayoutDashboard, PiggyBank, HandCoins, LogOut } from "lucide-react"
+import { LayoutDashboard, PiggyBank, HandCoins, Scale, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/anggota", label: "Dashboard", icon: LayoutDashboard },
   { href: "/anggota/simpanan", label: "Simpanan Saya", icon: PiggyBank },
   { href: "/anggota/pinjaman", label: "Pinjaman Saya", icon: HandCoins },
+  { href: "/anggota/shu", label: "SHU Saya", icon: Scale },
 ]
 
 export default async function AnggotaLayout({ children }: { children: React.ReactNode }) {

@@ -9,6 +9,7 @@ import {
   BookOpen,
   Settings,
   LogOut,
+  Scale,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/pengurus/simpanan", label: "Simpanan", icon: PiggyBank },
   { href: "/pengurus/pinjaman", label: "Pinjaman", icon: HandCoins },
   { href: "/pengurus/jurnal", label: "Akuntansi", icon: BookOpen },
+  { href: "/pengurus/shu", label: "SHU", icon: Scale },
   { href: "/pengurus/konfigurasi", label: "Pengaturan", icon: Settings },
 ]
 
