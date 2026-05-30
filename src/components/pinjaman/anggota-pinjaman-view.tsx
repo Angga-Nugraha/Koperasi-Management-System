@@ -30,6 +30,7 @@ type Angsuran = {
 
 type Pinjaman = {
   id: string
+  jenisPinjaman: string
   jumlah: number
   tenor: number
   bunga: number
@@ -120,6 +121,10 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
                 <div>
                   <span className="text-muted-foreground">Bunga</span>
                   <p className="font-medium">{p.bunga}% / bln</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Jenis</span>
+                  <p className="font-medium">{p.jenisPinjaman}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Angsuran / bln</span>
