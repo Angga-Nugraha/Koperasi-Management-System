@@ -290,7 +290,8 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const nextAngsuran = pinjaman.angsuran[0]
   if (!nextAngsuran) throw new Error("Semua angsuran sudah lunas")
 
-  const pokok = Number(nextAngsuran.pokok)
+  const isLastAngsuran = pinjaman.angsuran.length === 1
+  const pokok = isLastAngsuran ? Number(pinjaman.sisaPinjaman) : Number(nextAngsuran.pokok)
   const jasa = Number(nextAngsuran.jasa)
   const denda = parsed.nominal > pokok + jasa ? Number((parsed.nominal - pokok - jasa).toFixed(2)) : 0
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
