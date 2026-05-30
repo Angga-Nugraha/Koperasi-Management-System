@@ -66,6 +66,26 @@ const KATEGORI_LABEL: Record<string, string> = {
 
 const KATEGORI_ORDER = ["umum", "pinjaman", "simpanan", "shu"]
 
+const DEFAULT_TIPE: Record<string, string> = {
+  nama_koperasi: "STRING",
+  alamat_koperasi: "STRING",
+  no_ahu: "STRING",
+  plafon_max_saldo: "DECIMAL",
+  denda_per_hari: "DECIMAL",
+  grace_period: "NUMBER",
+  tenor_min: "NUMBER",
+  tenor_max: "NUMBER",
+  simpanan_pokok: "DECIMAL",
+  simpanan_wajib_perbulan: "DECIMAL",
+  simpanan_wajib_tgl_jatuh_tempo: "NUMBER",
+  alokasi_jm: "DECIMAL",
+  alokasi_ju: "DECIMAL",
+  alokasi_cad: "DECIMAL",
+  alokasi_pengurus: "DECIMAL",
+  alokasi_pengawas: "DECIMAL",
+  alokasi_sosial: "DECIMAL",
+}
+
 export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: AkunItem[] }) {
   const router = useRouter()
   const [locked, setLocked] = useState(true)
@@ -84,7 +104,7 @@ export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: 
     try {
       const items = konfig.filter((k) => GROUP_CATEGORY[k.key] === cat)
       for (const item of items) {
-        await updateKonfig(item.key, values[item.key])
+        await updateKonfig(item.key, values[item.key] ?? "")
       }
       router.refresh()
     } catch (e) {
@@ -115,12 +135,32 @@ export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: 
     }
   }
 
+  const konfigMap = new Map(konfig.map((k) => [k.key, k]))
   const grouped = new Map<string, KonfigItem[]>()
-  for (const item of konfig) {
-    const cat = GROUP_CATEGORY[item.key]
-    if (!cat) continue
+  const usedKeys = new Set<string>()
+  for (const [key, cat] of Object.entries(GROUP_CATEGORY)) {
     if (!grouped.has(cat)) grouped.set(cat, [])
-    grouped.get(cat)!.push(item)
+    const existing = konfigMap.get(key)
+    usedKeys.add(key)
+    if (existing) {
+      grouped.get(cat)!.push(existing)
+    } else {
+      grouped.get(cat)!.push({
+        id: `new-${key}`,
+        key,
+        value: "",
+        tipeData: DEFAULT_TIPE[key] ?? "DECIMAL",
+        keterangan: "",
+      })
+    }
+  }
+  for (const item of konfig) {
+    if (!usedKeys.has(item.key)) {
+      const cat = GROUP_CATEGORY[item.key]
+      if (cat && grouped.has(cat)) {
+        grouped.get(cat)!.push(item)
+      }
+    }
   }
 
   return (

@@ -29,13 +29,11 @@ export async function updateKonfig(key: string, value: string) {
   }
 
   const existing = await prisma.konfigurasi.findUnique({ where: { key } })
-  if (!existing) throw new Error("Konfigurasi tidak ditemukan")
 
-  const oldValue = existing.value
-
-  await prisma.konfigurasi.update({
+  await prisma.konfigurasi.upsert({
     where: { key },
-    data: { value },
+    update: { value },
+    create: { key, value, tipeData: "STRING" },
   })
 
   await catatLog({
@@ -43,7 +41,7 @@ export async function updateKonfig(key: string, value: string) {
     action: "UPDATE",
     entityType: "KONFIGURASI",
     entityId: key,
-    oldValue: { key, value: oldValue },
+    oldValue: { key, value: existing?.value },
     newValue: { key, value },
   })
 
