@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `anggota` ADD COLUMN `foto` VARCHAR(191) NULL,
+    ADD COLUMN `ktp` VARCHAR(191) NULL;

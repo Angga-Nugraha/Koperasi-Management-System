@@ -1,0 +1,299 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ========== ENUMS ==========
+
+enum Role {
+  PENGURUS
+  BENDAHARA
+  ANGGOTA
+  PENGAWAS
+}
+
+enum MemberStatus {
+  AKTIF
+  NONAKTIF
+  KELUAR
+}
+
+enum SavingType {
+  POKOK
+  WAJIB
+  SUKARELA
+}
+
+enum LoanStatus {
+  PENGAJUAN
+  DISETUJUI
+  DITOLAK
+  DICAIKKAN
+  LUNAS
+  GAGAL
+}
+
+enum InstallmentStatus {
+  BELUM_LUNAS
+  LUNAS
+  TERLAMBAT
+}
+
+enum AccountType {
+  ASET
+  LIABILITAS
+  EKUITAS
+  PENDAPATAN
+  BEBAN
+}
+
+enum NormalBalance {
+  DEBIT
+  KREDIT
+}
+
+enum SHUStatus {
+  DRAFT
+  FINAL
+}
+
+// ========== MODELS ==========
+
+model User {
+  id           String  @id @default(uuid())
+  email        String  @unique
+  passwordHash String
+  role         Role
+  isActive     Boolean @default(true)
+  anggotaId    String? @unique
+
+  anggota Anggota? @relation(fields: [anggotaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Anggota {
+  id          String       @id @default(uuid())
+  nik         String       @unique
+  noAnggota   String       @unique
+  nama        String
+  alamat      String       @db.Text
+  pekerjaan   String?
+  penghasilan Decimal?     @db.Decimal(18, 2)
+  foto        String?
+  ktp         String?
+  tglMasuk    DateTime
+  status      MemberStatus
+
+  user User?
+
+  simpanan          Simpanan[]
+  transaksiSimpanan TransaksiSimpanan[]
+  pinjaman          Pinjaman[]
+  shuAnggota        SHUAnggota[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("anggota")
+}
+
+model Simpanan {
+  id        String     @id @default(uuid())
+  anggotaId String
+  jenis     SavingType
+  saldo     Decimal    @db.Decimal(18, 2)
+
+  anggota Anggota @relation(fields: [anggotaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([anggotaId, jenis])
+  @@map("simpanan")
+}
+
+model TransaksiSimpanan {
+  id           String     @id @default(uuid())
+  anggotaId    String
+  jenis        SavingType
+  tipe         String // SETORAN / PENARIKAN
+  nominal      Decimal    @db.Decimal(18, 2)
+  saldoSetelah Decimal    @db.Decimal(18, 2)
+  keterangan   String?    @db.Text
+  dibuatOlehId String?
+
+  anggota Anggota @relation(fields: [anggotaId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("transaksi_simpanan")
+}
+
+model Pinjaman {
+  id              String     @id @default(uuid())
+  anggotaId       String
+  jumlah          Decimal    @db.Decimal(18, 2)
+  tenor           Int
+  bunga           Decimal    @db.Decimal(5, 2)
+  angsuranPokok   Decimal    @db.Decimal(18, 2)
+  angsuranJasa    Decimal    @db.Decimal(18, 2)
+  angsuranTotal   Decimal    @db.Decimal(18, 2)
+  sisaPinjaman    Decimal    @db.Decimal(18, 2)
+  status          LoanStatus
+  tglPengajuan    DateTime
+  tglDisetujui    DateTime?
+  tglDitolak      DateTime?
+  tglCair         DateTime?
+  keterangan      String?    @db.Text
+  disetujuiOlehId String?
+
+  anggota  Anggota    @relation(fields: [anggotaId], references: [id])
+  angsuran Angsuran[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pinjaman")
+}
+
+model Angsuran {
+  id         String            @id @default(uuid())
+  pinjamanId String
+  angsuranKe Int
+  jatuhTempo DateTime
+  tglBayar   DateTime?
+  pokok      Decimal           @db.Decimal(18, 2)
+  jasa       Decimal           @db.Decimal(18, 2)
+  denda      Decimal           @default(0) @db.Decimal(18, 2)
+  total      Decimal           @db.Decimal(18, 2)
+  status     InstallmentStatus
+
+  pinjaman Pinjaman @relation(fields: [pinjamanId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pinjamanId, angsuranKe])
+  @@map("angsuran")
+}
+
+model Akun {
+  id          String        @id @default(uuid())
+  kode        String        @unique
+  nama        String
+  tipe        AccountType
+  saldoNormal NormalBalance
+  isActive    Boolean       @default(true)
+
+  detailJurnal DetailJurnal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("akun")
+}
+
+model JurnalUmum {
+  id          String   @id @default(uuid())
+  noJurnal    String   @unique
+  tanggal     DateTime
+  keterangan  String?  @db.Text
+  createdById String?
+
+  detail DetailJurnal[]
+
+  createdAt DateTime @default(now())
+
+  @@map("jurnal_umum")
+}
+
+model DetailJurnal {
+  id       String  @id @default(uuid())
+  jurnalId String
+  akunId   String
+  debit    Decimal @default(0) @db.Decimal(18, 2)
+  kredit   Decimal @default(0) @db.Decimal(18, 2)
+
+  jurnal JurnalUmum @relation(fields: [jurnalId], references: [id])
+  akun   Akun       @relation(fields: [akunId], references: [id])
+
+  @@map("detail_jurnal")
+}
+
+model SHU {
+  id       String    @id @default(uuid())
+  tahun    Int       @unique
+  totalSHU Decimal   @db.Decimal(18, 2)
+  status   SHUStatus
+
+  alokasi    AlokasiSHU[]
+  shuAnggota SHUAnggota[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("shu")
+}
+
+model AlokasiSHU {
+  id         String  @id @default(uuid())
+  shuId      String
+  pos        String // JM, JU, CAD, PENGURUS, PENGAWAS, SOSIAL
+  persentase Decimal @db.Decimal(5, 2)
+  nominal    Decimal @db.Decimal(18, 2)
+
+  shu SHU @relation(fields: [shuId], references: [id])
+
+  @@unique([shuId, pos])
+  @@map("alokasi_shu")
+}
+
+model SHUAnggota {
+  id        String  @id @default(uuid())
+  anggotaId String
+  shuId     String
+  jasaModal Decimal @default(0) @db.Decimal(18, 2)
+  jasaUsaha Decimal @default(0) @db.Decimal(18, 2)
+  total     Decimal @default(0) @db.Decimal(18, 2)
+
+  anggota Anggota @relation(fields: [anggotaId], references: [id])
+  shu     SHU     @relation(fields: [shuId], references: [id])
+
+  @@unique([anggotaId, shuId])
+  @@map("shu_anggota")
+}
+
+model AuditLog {
+  id         String  @id @default(uuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?
+
+  createdAt DateTime @default(now())
+
+  @@map("audit_log")
+}
+
+model Konfigurasi {
+  id         String  @id @default(uuid())
+  key        String  @unique
+  value      String
+  tipeData   String // STRING, NUMBER, BOOLEAN, DECIMAL
+  keterangan String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("konfigurasi")
+}
