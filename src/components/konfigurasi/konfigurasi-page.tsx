@@ -12,38 +12,36 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getKonfigList, updateKonfig, getAkunList, createAkun, toggleAkunActive } from "@/actions/konfigurasi"
-import { Save, Plus, Power, PowerOff } from "lucide-react"
+import { Save, Plus, Power, PowerOff, Lock, Unlock } from "lucide-react"
 
 type KonfigItem = Awaited<ReturnType<typeof getKonfigList>>[number]
 type AkunItem = Awaited<ReturnType<typeof getAkunList>>[number]
 
 const GROUP_LABELS: Record<string, string> = {
-  plafon_max_saldo: "Plafon Pinjaman",
-  bunga_pinjaman: "Bunga Pinjaman",
-  denda_per_hari: "Denda",
-  grace_period: "Tenggang Waktu",
-  tenor_min: "Tenor Minimal",
-  tenor_max: "Tenor Maximal",
-  simpanan_pokok: "Simpanan Pokok",
-  simpanan_wajib_perbulan: "Simpanan Wajib",
-  simpanan_wajib_tgl_jatuh_tempo: "Jatuh Tempo Wajib",
-  alokasi_jm: "Alokasi Jasa Modal",
-  alokasi_ju: "Alokasi Jasa Usaha",
-  alokasi_cad: "Alokasi Cadangan",
-  alokasi_pengurus: "Alokasi Pengurus",
-  alokasi_pengawas: "Alokasi Pengawas",
-  alokasi_sosial: "Alokasi Dana Sosial",
-  no_anggota_prefix: "Prefix Anggota",
   nama_koperasi: "Nama Koperasi",
   alamat_koperasi: "Alamat Koperasi",
+  no_ahu: "Nomor AHU",
+  plafon_max_saldo: "Maks. Plafon (× saldo)",
+  denda_per_hari: "Denda per Hari (%)",
+  grace_period: "Grace Period (hari)",
+  tenor_min: "Tenor Min (bulan)",
+  tenor_max: "Tenor Max (bulan)",
+  simpanan_pokok: "Simpanan Pokok (Rp)",
+  simpanan_wajib_perbulan: "Simpanan Wajib/bulan (Rp)",
+  simpanan_wajib_tgl_jatuh_tempo: "Jatuh Tempo (tanggal)",
+  alokasi_jm: "Jasa Modal (%)",
+  alokasi_ju: "Jasa Usaha (%)",
+  alokasi_cad: "Cadangan (%)",
+  alokasi_pengurus: "Pengurus (%)",
+  alokasi_pengawas: "Pengawas (%)",
+  alokasi_sosial: "Pendidikan & Sosial (%)",
 }
 
 const GROUP_CATEGORY: Record<string, string> = {
   nama_koperasi: "umum",
   alamat_koperasi: "umum",
-  no_anggota_prefix: "umum",
+  no_ahu: "umum",
   plafon_max_saldo: "pinjaman",
-  bunga_pinjaman: "pinjaman",
   denda_per_hari: "pinjaman",
   grace_period: "pinjaman",
   tenor_min: "pinjaman",
@@ -59,10 +57,18 @@ const GROUP_CATEGORY: Record<string, string> = {
   alokasi_sosial: "shu",
 }
 
+const KATEGORI_LABEL: Record<string, string> = {
+  umum: "Umum",
+  pinjaman: "Pinjaman",
+  simpanan: "Simpanan",
+  shu: "SHU",
+}
+
 const KATEGORI_ORDER = ["umum", "pinjaman", "simpanan", "shu"]
 
 export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: AkunItem[] }) {
   const router = useRouter()
+  const [locked, setLocked] = useState(true)
   const [values, setValues] = useState<Record<string, string>>(() => {
     const map: Record<string, string> = {}
     for (const k of konfig) map[k.key] = k.value
@@ -73,10 +79,13 @@ export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: 
   const [akunForm, setAkunForm] = useState({ kode: "", nama: "", tipe: "ASET", saldoNormal: "DEBIT" })
   const [akunError, setAkunError] = useState("")
 
-  async function handleSave(key: string) {
-    setSaving(key)
+  async function handleSaveCategory(cat: string) {
+    setSaving(cat)
     try {
-      await updateKonfig(key, values[key])
+      const items = konfig.filter((k) => GROUP_CATEGORY[k.key] === cat)
+      for (const item of items) {
+        await updateKonfig(item.key, values[item.key])
+      }
       router.refresh()
     } catch (e) {
       console.error(e)
@@ -108,16 +117,26 @@ export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: 
 
   const grouped = new Map<string, KonfigItem[]>()
   for (const item of konfig) {
-    const cat = GROUP_CATEGORY[item.key] ?? "umum"
+    const cat = GROUP_CATEGORY[item.key]
+    if (!cat) continue
     if (!grouped.has(cat)) grouped.set(cat, [])
     grouped.get(cat)!.push(item)
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Pengaturan</h1>
-        <p className="text-sm text-muted-foreground">Konfigurasi koperasi dan manajemen akun</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Pengaturan</h1>
+          <p className="text-sm text-muted-foreground">Konfigurasi koperasi dan manajemen akun</p>
+        </div>
+        <Button
+          variant={locked ? "outline" : "default"}
+          onClick={() => setLocked(!locked)}
+        >
+          {locked ? <Lock className="mr-2 h-4 w-4" /> : <Unlock className="mr-2 h-4 w-4" />}
+          {locked ? "Buka Kunci" : "Kunci"}
+        </Button>
       </div>
 
       <Tabs defaultValue="konfig">
@@ -133,28 +152,31 @@ export function KonfigurasiPage({ konfig, akun }: { konfig: KonfigItem[]; akun: 
             return (
               <Card key={cat}>
                 <CardHeader>
-                  <CardTitle className="capitalize">{cat}</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>{KATEGORI_LABEL[cat] ?? cat}</CardTitle>
+                    <Button
+                      size="sm"
+                      onClick={() => handleSaveCategory(cat)}
+                      disabled={saving === cat || locked}
+                    >
+                      <Save className="mr-1 h-3 w-3" />
+                      {saving === cat ? "Menyimpan..." : "Simpan"}
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {items.map((item) => (
                     <div key={item.key} className="grid grid-cols-3 items-center gap-4">
                       <Label className="text-right text-sm">
                         {GROUP_LABELS[item.key] ?? item.key}
-                        {item.keterangan && (
-                          <p className="text-xs text-muted-foreground font-normal">{item.keterangan}</p>
-                        )}
                       </Label>
                       <Input
                         value={values[item.key] ?? ""}
                         onChange={(e) => setValues({ ...values, [item.key]: e.target.value })}
+                        disabled={locked}
                         type={item.tipeData === "NUMBER" || item.tipeData === "DECIMAL" ? "number" : "text"}
                       />
-                      <div className="flex items-center gap-2">
-                        <Button size="sm" onClick={() => handleSave(item.key)} disabled={saving === item.key}>
-                          <Save className="mr-1 h-3 w-3" />
-                          {saving === item.key ? "..." : "Simpan"}
-                        </Button>
-                      </div>
+                      <div />
                     </div>
                   ))}
                 </CardContent>

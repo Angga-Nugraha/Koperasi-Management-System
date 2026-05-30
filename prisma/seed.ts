@@ -106,7 +106,6 @@ async function main() {
   // ========== SEED DEFAULT KONFIGURASI ==========
   const konfigurasi = [
     { key: "plafon_max_saldo", value: "3", tipeData: "DECIMAL", keterangan: "Plafon maksimal pinjaman (kelipatan saldo simpanan)" },
-    { key: "bunga_pinjaman", value: "2", tipeData: "DECIMAL", keterangan: "Bunga pinjaman per bulan (%)" },
     { key: "denda_per_hari", value: "0.5", tipeData: "DECIMAL", keterangan: "Denda keterlambatan per hari (%)" },
     { key: "grace_period", value: "7", tipeData: "NUMBER", keterangan: "Tenggang waktu keterlambatan (hari)" },
     { key: "tenor_min", value: "3", tipeData: "NUMBER", keterangan: "Tenor minimal pinjaman (bulan)" },
@@ -117,7 +116,7 @@ async function main() {
     { key: "alokasi_pengurus", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengurus (%)" },
     { key: "alokasi_pengawas", value: "5", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengawas (%)" },
     { key: "alokasi_sosial", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Dana Sosial & Pendidikan (%)" },
-    { key: "no_anggota_prefix", value: "AGT", tipeData: "STRING", keterangan: "Prefix nomor anggota" },
+    { key: "no_ahu", value: "", tipeData: "STRING", keterangan: "Nomor AHU (badan hukum)" },
     { key: "nama_koperasi", value: "Koperasi Dharma Mitra Persada", tipeData: "STRING", keterangan: "Nama koperasi" },
     { key: "alamat_koperasi", value: "Cibinong, Bogor", tipeData: "STRING", keterangan: "Alamat koperasi" },
     { key: "simpanan_pokok", value: "100000", tipeData: "DECIMAL", keterangan: "Nominal simpanan pokok (sekali)" },
