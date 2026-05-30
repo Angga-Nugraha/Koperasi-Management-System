@@ -79,7 +79,6 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [statusDialogOpen, setStatusDialogOpen] = useState(false)
   const [newStatus, setNewStatus] = useState(anggota.status)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [deleteMsg, setDeleteMsg] = useState<string | null>(null)
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
 
   async function handleStatusChange() {
@@ -97,9 +96,8 @@ export function AnggotaDetailClient({ anggota }: Props) {
 
   async function handleDelete() {
     try {
-      const result = await deleteAnggota(anggota.id)
-      setDeleteMsg(result.message)
-      setTimeout(() => router.push("/pengurus/anggota"), 1500)
+      await deleteAnggota(anggota.id)
+      router.replace("/pengurus/anggota")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menghapus")
     }
@@ -191,7 +189,6 @@ export function AnggotaDetailClient({ anggota }: Props) {
                   diubah menjadi KELUAR.
                 </DialogDescription>
               </DialogHeader>
-              {deleteMsg && <p className="text-sm text-green-600">{deleteMsg}</p>}
               <DialogFooter>
                 <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                   Batal

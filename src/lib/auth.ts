@@ -1,9 +1,10 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
+import { cache } from "react"
 import { prisma } from "@/lib/prisma"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
   adapter: undefined,
   session: { strategy: "jwt" },
   pages: {
@@ -60,3 +61,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 })
+
+export { handlers, signIn, signOut }
+export const auth = cache(rawAuth)
