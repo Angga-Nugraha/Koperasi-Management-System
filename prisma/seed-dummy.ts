@@ -56,6 +56,8 @@ async function main() {
   console.log("Data lama dibersihkan.\n")
 
   // ─── Anggota & User ─────────────────────────────────
+  const adminUserId = adminUser?.id ?? null
+
   const anggotaData = [
     { nama: "Ali Ahmad", nik: "3174010101010001", email: "ali@simko.test" },
     { nama: "Budi Santoso", nik: "3174010101010002", email: "budi@simko.test" },
@@ -85,6 +87,16 @@ async function main() {
       },
     })
 
+    await prisma.auditLog.create({
+      data: {
+        userId: adminUserId,
+        action: "CREATE",
+        entityType: "ANGGOTA",
+        entityId: anggotaId,
+        newValue: { nik: a.nik, noAnggota, nama: a.nama },
+      },
+    })
+
     await prisma.user.create({
       data: {
         id: uuidv4(),
@@ -100,22 +112,42 @@ async function main() {
   }
 
   // ─── User Pengurus & Pengawas ──────────────────────
+  const pengurusUserId = uuidv4()
   await prisma.user.create({
     data: {
-      id: uuidv4(),
+      id: pengurusUserId,
       email: "bendahara@simko.test",
       passwordHash: await bcrypt.hash("pengurus123", 10),
       role: "BENDAHARA",
     },
   })
+  await prisma.auditLog.create({
+    data: {
+      userId: adminUserId,
+      action: "CREATE",
+      entityType: "USER",
+      entityId: pengurusUserId,
+      newValue: { email: "bendahara@simko.test", role: "BENDAHARA" },
+    },
+  })
   console.log("  User: bendahara@simko.test / pengurus123 (BENDAHARA)")
 
+  const pengawasUserId = uuidv4()
   await prisma.user.create({
     data: {
-      id: uuidv4(),
+      id: pengawasUserId,
       email: "pengawas@simko.test",
       passwordHash: await bcrypt.hash("pengawas123", 10),
       role: "PENGAWAS",
+    },
+  })
+  await prisma.auditLog.create({
+    data: {
+      userId: adminUserId,
+      action: "CREATE",
+      entityType: "USER",
+      entityId: pengawasUserId,
+      newValue: { email: "pengawas@simko.test", role: "PENGAWAS" },
     },
   })
   console.log("  User: pengawas@simko.test / pengawas123 (PENGAWAS)")
@@ -186,6 +218,15 @@ async function main() {
         keterangan: "Setoran awal Pokok",
       },
     })
+    await prisma.auditLog.create({
+      data: {
+        userId: adminUserId,
+        action: "CREATE",
+        entityType: "SETORAN_SIMPANAN",
+        entityId: anggotaId,
+        newValue: { jenis: "POKOK", nominal: pokokNominal },
+      },
+    })
     await buatJurnal(TGL_DAFTAR, `Setoran POKOK ${anggota.nama}`, [
       { akunId: kasAkun.id, debit: pokokNominal, kredit: 0 },
       { akunId: akunPokok.id, debit: 0, kredit: pokokNominal },
@@ -202,6 +243,15 @@ async function main() {
           id: uuidv4(), anggotaId, jenis: "WAJIB", tipe: "SETORAN",
           nominal: WAJIB_PER_BULAN, saldoSetelah: totalWajib,
           keterangan: `Setoran Wajib bulan ${tgl.toLocaleDateString("id-ID", { month: "long", year: "numeric" })}`,
+        },
+      })
+      await prisma.auditLog.create({
+        data: {
+          userId: adminUserId,
+          action: "CREATE",
+          entityType: "SETORAN_SIMPANAN",
+          entityId: anggotaId,
+          newValue: { jenis: "WAJIB", nominal: WAJIB_PER_BULAN, bulan: m + 1 },
         },
       })
       await buatJurnal(tgl, `Setoran WAJIB ${anggota.nama} bulan ${m + 1}`, [
@@ -225,6 +275,15 @@ async function main() {
         id: uuidv4(), anggotaId, jenis: "SUKARELA", tipe: "SETORAN",
         nominal: sukarelaNominal, saldoSetelah: sukarelaNominal,
         keterangan: `Setoran Sukarela ${anggota.nama}`,
+      },
+    })
+    await prisma.auditLog.create({
+      data: {
+        userId: adminUserId,
+        action: "CREATE",
+        entityType: "SETORAN_SIMPANAN",
+        entityId: anggotaId,
+        newValue: { jenis: "SUKARELA", nominal: sukarelaNominal },
       },
     })
     await buatJurnal(TGL_DAFTAR, `Setoran SUKARELA ${anggota.nama}`, [
@@ -285,6 +344,25 @@ async function main() {
       },
     })
 
+    await prisma.auditLog.create({
+      data: {
+        userId: adminUserId,
+        action: "CREATE",
+        entityType: "PINJAMAN",
+        entityId: pinjaman.id,
+        newValue: { anggotaId, jumlah: pc.jumlah, tenor: pc.tenor },
+      },
+    })
+    await prisma.auditLog.create({
+      data: {
+        userId: adminUserId,
+        action: "DISBURSE",
+        entityType: "PINJAMAN",
+        entityId: pinjaman.id,
+        newValue: { status: "DICAIKKAN" },
+      },
+    })
+
     // Jurnal pencairan
     await buatJurnal(tglCair, `Pencairan Pinjaman ${pc.nama}`, [
       { akunId: akunPiutang.id, debit: pc.jumlah, kredit: 0 },
@@ -319,6 +397,15 @@ async function main() {
       sisa = sisaSetelah
 
       if (a <= ANGSURAN_LUNAS) {
+        await prisma.auditLog.create({
+          data: {
+            userId: adminUserId,
+            action: "PAYMENT",
+            entityType: "ANGSURAN",
+            entityId: pinjaman.id,
+            newValue: { angsuranKe: a, pokok, jasa: jasaPerBulan, isLunas: false },
+          },
+        })
         await buatJurnal(addMonths(tglCair, a), `Bayar Angsuran #${a} Pinjaman ${pc.nama}`, [
           { akunId: kasAkun.id, debit: ttl, kredit: 0 },
           { akunId: akunPiutang.id, debit: 0, kredit: pokok },
@@ -337,6 +424,7 @@ async function main() {
   const totalPinjaman = await prisma.pinjaman.count()
   const totalJurnal = await prisma.jurnalUmum.count()
   const totalDetail = await prisma.detailJurnal.count()
+  const totalAudit = await prisma.auditLog.count()
 
   console.log(`\n✅ Selesai!`)
   console.log(`   Anggota         : ${totalAnggota}`)
@@ -344,6 +432,7 @@ async function main() {
   console.log(`   Rek. Simpanan   : ${totalSimpanan}`)
   console.log(`   Pinjaman        : ${totalPinjaman}`)
   console.log(`   Jurnal          : ${totalJurnal} transaksi, ${totalDetail} baris`)
+  console.log(`   Audit Log       : ${totalAudit} catatan`)
   console.log(`\n📧 Login anggota: ali@simko.test / anggota123`)
   console.log(`   Admin: email & password dari seed awal`)
 }
