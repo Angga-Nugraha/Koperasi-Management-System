@@ -33,14 +33,23 @@ export function KonfigAlokasiForm({
   const [confirm, setConfirm] = useState<{ onConfirm: () => void } | null>(null)
 
   const total = items.reduce((s, i) => s + i.persentase, 0)
+  const akunSukarela = akunList.find((a) => a.kode === "2.1.3")
 
   function updateItem(index: number, field: keyof Indikator, value: unknown) {
-    setItems(items.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+    if (field === "kelompok") {
+      setItems(items.map((item, i) =>
+        i === index
+          ? { ...item, kelompok: value as string, akunId: value === "ANGGOTA" ? (akunSukarela?.id ?? null) : null }
+          : item,
+      ))
+    } else {
+      setItems(items.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+    }
   }
 
   function addItem() {
     const maxUrutan = items.reduce((m, i) => Math.max(m, i.urutan), 0)
-    setItems([...items, { id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: null, urutan: maxUrutan + 1, isActive: true } as Indikator])
+    setItems([...items, { id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: akunSukarela?.id ?? null, urutan: maxUrutan + 1, isActive: true } as Indikator])
   }
 
   function removeItem(index: number) {
