@@ -14,6 +14,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   setujuiPinjaman,
   tolakPinjaman,
   cairkanPinjaman,
@@ -80,9 +85,11 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
   const status = pinjaman.status
 
   async function handleAction(action: string) {
+    setConfirm(null)
     setLoading(action)
     setError(null)
     try {
@@ -109,6 +116,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   }
 
   async function handleBayar(angsuranKe: number) {
+    setConfirm(null)
     setLoading(`bayar-${angsuranKe}`)
     setError(null)
     try {
@@ -188,16 +196,16 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
       <div className="flex flex-wrap gap-2">
         {status === "PENGAJUAN" && (
           <>
-            <Button onClick={() => handleAction("setujui")} disabled={loading !== null}>
+            <Button onClick={() => setConfirm({ title: "Setujui Pinjaman", desc: `Setujui pinjaman ${pinjaman.noAnggota} sebesar Rp${pinjaman.jumlah.toLocaleString("id-ID")}?`, onConfirm: () => handleAction("setujui") })} disabled={loading !== null}>
               <Check className="mr-2 h-4 w-4" /> Setujui
             </Button>
-            <Button variant="destructive" onClick={() => handleAction("tolak")} disabled={loading !== null}>
+            <Button variant="destructive" onClick={() => setConfirm({ title: "Tolak Pinjaman", desc: `Tolak pengajuan pinjaman ${pinjaman.noAnggota}?`, onConfirm: () => handleAction("tolak") })} disabled={loading !== null}>
               <X className="mr-2 h-4 w-4" /> Tolak
             </Button>
           </>
         )}
         {status === "DISETUJUI" && (
-          <Button onClick={() => handleAction("cairkan")} disabled={loading !== null}>
+          <Button onClick={() => setConfirm({ title: "Cairkan Pinjaman", desc: `Cairkan pinjaman ${pinjaman.noAnggota} sebesar Rp${pinjaman.jumlah.toLocaleString("id-ID")}?`, onConfirm: () => handleAction("cairkan") })} disabled={loading !== null}>
             <Banknote className="mr-2 h-4 w-4" /> Cairkan
           </Button>
         )}
@@ -208,7 +216,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
           </div>
         )}
         {(status === "PENGAJUAN" || status === "DISETUJUI") && (
-          <Button variant="destructive" onClick={() => handleAction("hapus")} disabled={loading !== null}>
+          <Button variant="destructive" onClick={() => setConfirm({ title: "Hapus Pinjaman", desc: `Hapus pinjaman ${pinjaman.noAnggota}? Tindakan ini tidak dapat dikembalikan.`, onConfirm: () => handleAction("hapus") })} disabled={loading !== null}>
             <Trash2 className="mr-2 h-4 w-4" /> Hapus
           </Button>
         )}
@@ -260,7 +268,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => handleBayar(a.angsuranKe)}
+                                onClick={() => setConfirm({ title: `Bayar Angsuran #${a.angsuranKe}`, desc: `Bayar angsuran ke-${a.angsuranKe} sebesar Rp${a.total.toLocaleString("id-ID")} (Pokok Rp${a.pokok.toLocaleString("id-ID")} + Jasa Rp${a.jasa.toLocaleString("id-ID")}${a.denda > 0 ? ` + Denda Rp${a.denda.toLocaleString("id-ID")}` : ""})?`, onConfirm: () => handleBayar(a.angsuranKe) })}
                                 disabled={loading === `bayar-${a.angsuranKe}`}
                               >
                                 <Wallet className="mr-1 h-3 w-3" />
@@ -278,6 +286,19 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
           </CardContent>
         </Card>
       )}
+
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

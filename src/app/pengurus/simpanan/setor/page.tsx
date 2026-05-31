@@ -14,6 +14,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { setorSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 import { ArrowLeft } from "lucide-react"
@@ -35,13 +40,15 @@ export default function SetorSimpananPage() {
   }, [])
 
   const selected = jenisList.find((j) => j.id === selectedJenis)
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handleSubmit() {
+    setConfirm(null)
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    const form = document.getElementById("setor-form") as HTMLFormElement
+    const formData = new FormData(form)
 
     try {
       await setorSimpanan({
@@ -57,6 +64,11 @@ export default function SetorSimpananPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setConfirm({ title: "Setor Simpanan", desc: "Simpan setoran simpanan baru?", onConfirm: handleSubmit })
   }
 
   return (
@@ -76,7 +88,7 @@ export default function SetorSimpananPage() {
       <Card className="max-w-lg">
         <CardHeader><CardTitle>Form Setoran</CardTitle></CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="setor-form" onSubmit={handleSubmitClick} className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
             )}
@@ -123,6 +135,18 @@ export default function SetorSimpananPage() {
           </form>
         </CardContent>
       </Card>
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

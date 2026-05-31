@@ -7,8 +7,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { createAnggota } from "@/actions/anggota"
-import { ArrowLeft, X, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, X } from "lucide-react"
 import Link from "next/link"
 
 export default function TambahAnggotaPage() {
@@ -20,6 +25,7 @@ export default function TambahAnggotaPage() {
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
   const [buatUser, setBuatUser] = useState(false)
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -62,12 +68,13 @@ export default function TambahAnggotaPage() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handleSubmit() {
+    setConfirm(null)
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    const form = document.getElementById("tambah-anggota-form") as HTMLFormElement
+    const formData = new FormData(form)
 
     try {
       await createAnggota({
@@ -92,6 +99,11 @@ export default function TambahAnggotaPage() {
     }
   }
 
+  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setConfirm({ title: "Tambah Anggota", desc: "Simpan data anggota baru?", onConfirm: handleSubmit })
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -111,7 +123,7 @@ export default function TambahAnggotaPage() {
           <CardTitle>Form Registrasi</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="tambah-anggota-form" onSubmit={handleSubmitClick} className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
                 {error}
@@ -247,6 +259,18 @@ export default function TambahAnggotaPage() {
           </form>
         </CardContent>
       </Card>
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -6,6 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Upload, CheckCircle2, XCircle, ArrowLeft } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { importAnggotaFromCsv, type ImportRowResult } from "@/actions/import-anggota"
 import Link from "next/link"
 
@@ -14,9 +19,10 @@ export function ImportAnggotaForm() {
   const [results, setResults] = useState<ImportRowResult[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSubmit() {
+    setConfirm(null)
     if (!file) return
 
     setLoading(true)
@@ -34,6 +40,12 @@ export function ImportAnggotaForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmitClick(e: React.FormEvent) {
+    e.preventDefault()
+    if (!file) return
+    setConfirm({ title: "Import Anggota", desc: `Import data dari "${file.name}"? Proses tidak dapat dibatalkan.`, onConfirm: handleSubmit })
   }
 
   const successCount = results?.filter((r) => r.success).length ?? 0
@@ -57,7 +69,7 @@ export function ImportAnggotaForm() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmitClick} className="space-y-4">
             <div className="flex items-center gap-4">
               <input
                 id="file"
@@ -150,6 +162,18 @@ export function ImportAnggotaForm() {
           </CardContent>
         </Card>
       )}
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

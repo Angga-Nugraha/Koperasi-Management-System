@@ -7,6 +7,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { tarikSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 import { ArrowLeft } from "lucide-react"
@@ -19,6 +24,7 @@ export default function TarikSimpananPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [jenisSukarelaId, setJenisSukarelaId] = useState<string>("")
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   useEffect(() => {
     fetch("/api/jenis-simpanan").then(r => r.json()).then((list: Array<{ id: string; kode: string }>) => {
@@ -27,12 +33,13 @@ export default function TarikSimpananPage() {
     }).catch(() => {})
   }, [])
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handleSubmit() {
+    setConfirm(null)
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    const form = document.getElementById("tarik-form") as HTMLFormElement
+    const formData = new FormData(form)
 
     try {
       await tarikSimpanan({
@@ -48,6 +55,11 @@ export default function TarikSimpananPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setConfirm({ title: "Tarik Simpanan", desc: "Proses penarikan simpanan?", onConfirm: handleSubmit })
   }
 
   return (
@@ -67,7 +79,7 @@ export default function TarikSimpananPage() {
       <Card className="max-w-lg">
         <CardHeader><CardTitle>Form Penarikan</CardTitle></CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="tarik-form" onSubmit={handleSubmitClick} className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
             )}
@@ -100,6 +112,18 @@ export default function TarikSimpananPage() {
           </form>
         </CardContent>
       </Card>
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

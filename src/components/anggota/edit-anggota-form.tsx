@@ -7,6 +7,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { updateAnggota } from "@/actions/anggota"
 import { ArrowLeft, X } from "lucide-react"
 import Link from "next/link"
@@ -34,6 +39,7 @@ export function EditAnggotaForm({ anggota }: Props) {
   const [ktp, setKtp] = useState<string | null>(anggota.ktp)
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -76,12 +82,13 @@ export function EditAnggotaForm({ anggota }: Props) {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handleSubmit() {
+    setConfirm(null)
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
+    const form = document.getElementById("edit-anggota-form") as HTMLFormElement
+    const formData = new FormData(form)
 
     try {
       await updateAnggota({
@@ -94,6 +101,7 @@ export function EditAnggotaForm({ anggota }: Props) {
         foto,
         ktp,
         tglMasuk: formData.get("tglMasuk") as string,
+        buatUser: false,
       })
       router.push(`/pengurus/anggota/${anggota.id}`)
       router.refresh()
@@ -102,6 +110,11 @@ export function EditAnggotaForm({ anggota }: Props) {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setConfirm({ title: "Edit Anggota", desc: "Simpan perubahan data anggota?", onConfirm: handleSubmit })
   }
 
   return (
@@ -123,7 +136,7 @@ export function EditAnggotaForm({ anggota }: Props) {
           <CardTitle>Form Edit</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="edit-anggota-form" onSubmit={handleSubmitClick} className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
                 {error}
@@ -237,6 +250,18 @@ export function EditAnggotaForm({ anggota }: Props) {
           </form>
         </CardContent>
       </Card>
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

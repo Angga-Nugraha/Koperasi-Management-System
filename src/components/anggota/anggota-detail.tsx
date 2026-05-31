@@ -16,6 +16,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -90,8 +95,10 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [newStatus, setNewStatus] = useState(anggota.status)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   async function handleStatusChange() {
+    setConfirm(null)
     try {
       await updateAnggotaStatus({
         id: anggota.id,
@@ -105,6 +112,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
   }
 
   async function handleDelete() {
+    setConfirm(null)
     try {
       await deleteAnggota(anggota.id)
       router.replace("/pengurus/anggota")
@@ -165,7 +173,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                 <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
                   Batal
                 </Button>
-                <Button onClick={handleStatusChange}>Simpan</Button>
+                <Button onClick={() => setConfirm({ title: "Ubah Status Anggota", desc: `Ubah status ${anggota.nama} menjadi ${STATUS_MAP[newStatus] ?? newStatus}?`, onConfirm: handleStatusChange })}>Simpan</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -203,7 +211,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                 <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                   Batal
                 </Button>
-                <Button variant="destructive" onClick={handleDelete}>
+                <Button variant="destructive" onClick={() => setConfirm({ title: "Hapus Anggota", desc: `Yakin ingin menghapus ${anggota.nama}? Tindakan ini tidak dapat dikembalikan.`, onConfirm: handleDelete })}>
                   Hapus
                 </Button>
               </DialogFooter>
@@ -478,6 +486,19 @@ export function AnggotaDetailClient({ anggota }: Props) {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
