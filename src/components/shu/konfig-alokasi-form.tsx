@@ -148,9 +148,11 @@ export function KonfigAlokasiForm({
               </div>
               <div className="space-y-1.5 flex-1">
                 <Label className="text-xs">Akun Jurnal</Label>
+                {item.kelompok === "ANGGOTA" && <span className="ml-1 text-xs text-muted-foreground">(otomatis ke 2.1.3)</span>}
                 <Select
                   value={item.akunId ?? "__none__"}
                   onValueChange={(v) => updateItem(index, "akunId", v === "__none__" ? null : v)}
+                  disabled={item.kelompok === "ANGGOTA"}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih akun" />
