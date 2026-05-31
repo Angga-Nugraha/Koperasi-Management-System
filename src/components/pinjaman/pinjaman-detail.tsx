@@ -233,7 +233,10 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pinjaman.angsuran.map((a) => (
+                {(status === "DICAIKKAN"
+                  ? pinjaman.angsuran.filter((a) => a.status !== "LUNAS")
+                  : pinjaman.angsuran
+                ).map((a) => (
                   <TableRow key={a.id}>
                     <TableCell>{a.angsuranKe}</TableCell>
                     <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
