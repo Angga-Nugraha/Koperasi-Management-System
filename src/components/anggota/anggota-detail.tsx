@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table"
 import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Download, Eye } from "lucide-react"
+import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
 type UserInfo = {
@@ -330,7 +331,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
               <div>
                 <p className="text-sm text-muted-foreground">Tanggal Masuk</p>
                 <p className="font-medium">
-                  {new Date(anggota.tglMasuk).toLocaleDateString("id-ID")}
+                  {formatTanggal(anggota.tglMasuk)}
                 </p>
               </div>
               <div>
@@ -369,7 +370,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                     <div>
                       <p className="text-sm text-muted-foreground">Dibuat</p>
                       <p className="font-medium">
-                        {new Date(anggota.user.createdAt).toLocaleDateString("id-ID")}
+                        {formatTanggal(anggota.user.createdAt)}
                       </p>
                     </div>
                   </div>

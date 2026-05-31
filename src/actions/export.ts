@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { formatTanggal } from "@/lib/format"
 
 export async function exportJurnalExcel(params: {
   search?: string
@@ -56,7 +57,7 @@ export async function exportJurnalExcel(params: {
     for (const d of j.detail) {
       ws.addRow({
         noJurnal: j.noJurnal,
-        tanggal: j.tanggal.toLocaleDateString("id-ID"),
+        tanggal: formatTanggal(j.tanggal),
         keterangan: j.keterangan,
         kodeAkun: d.akun.kode,
         namaAkun: d.akun.nama,
@@ -108,7 +109,7 @@ export async function exportJurnalPdf(params: {
   const rows = data.flatMap((j) =>
     j.detail.map((d) => ({
       noJurnal: j.noJurnal,
-      tanggal: j.tanggal.toLocaleDateString("id-ID"),
+      tanggal: formatTanggal(j.tanggal),
       keterangan: j.keterangan,
       akunKode: d.akun.kode,
       akunNama: d.akun.nama,

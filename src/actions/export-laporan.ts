@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { formatTanggal } from "@/lib/format"
 
 async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?: Date) {
   const akunAll = await prisma.akun.findMany({
@@ -97,7 +98,7 @@ export async function exportBukuBesar(params: Param) {
       : Math.round((saldo + Number(d.kredit) - Number(d.debit)) * 100) / 100
     saldo = s
     ws.addRow({
-      tanggal: d.jurnal.tanggal.toLocaleDateString("id-ID"),
+      tanggal: formatTanggal(d.jurnal.tanggal),
       noJurnal: d.jurnal.noJurnal,
       keterangan: d.jurnal.keterangan,
       debit: Number(d.debit),
@@ -260,7 +261,7 @@ export async function exportArusKas(params: Param) {
     totalMasuk += masuk
     totalKeluar += keluar
     ws.addRow({
-      tanggal: d.jurnal.tanggal.toLocaleDateString("id-ID"),
+      tanggal: formatTanggal(d.jurnal.tanggal),
       noJurnal: d.jurnal.noJurnal,
       keterangan: d.jurnal.keterangan,
       masuk,

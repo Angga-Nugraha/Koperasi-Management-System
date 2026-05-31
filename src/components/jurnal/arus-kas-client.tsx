@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { formatTanggal } from "@/lib/format"
 import { Label } from "@/components/ui/label"
 
 type ArusKasItem = {
@@ -90,7 +91,7 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
             )}
             {items.map((i, idx) => (
               <tr key={idx} className="border-b">
-                <td className="px-4 py-2">{new Date(i.tanggal).toLocaleDateString("id-ID")}</td>
+                <td className="px-4 py-2">{formatTanggal(i.tanggal)}</td>
                 <td className="px-4 py-2 font-mono text-xs">{i.noJurnal}</td>
                 <td className="px-4 py-2">{i.keterangan}</td>
                 <td className="px-4 py-2 text-right text-green-700">

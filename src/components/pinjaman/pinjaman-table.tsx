@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Search, ChevronLeft, ChevronRight } from "lucide-react"
+import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
 type Pinjaman = {
@@ -170,7 +171,7 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
                     </Badge>
                   </TableCell>
                   <TableCell className="text-xs">
-                    {new Date(p.tglPengajuan).toLocaleDateString("id-ID")}
+                    {formatTanggal(p.tglPengajuan)}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" asChild>

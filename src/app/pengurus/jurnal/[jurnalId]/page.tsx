@@ -1,5 +1,6 @@
 import { getJurnalById } from "@/actions/jurnal"
 import Link from "next/link"
+import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
 
 type Props = {
@@ -32,7 +33,7 @@ export default async function JurnalDetailPage({ params }: Props) {
           <div>
             <span className="text-sm text-muted-foreground">Tanggal</span>
             <p className="font-medium">
-              {new Date(jurnal.tanggal).toLocaleDateString("id-ID")}
+              {formatTanggal(jurnal.tanggal)}
             </p>
           </div>
           <div className="sm:col-span-2">

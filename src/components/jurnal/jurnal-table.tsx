@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
+import { formatTanggal } from "@/lib/format"
 import { useRouter, useSearchParams } from "next/navigation"
 
 type JurnalItem = {
@@ -99,7 +100,7 @@ export function JurnalTable({ data, total, page, totalPages, search }: Props) {
                   </Link>
                 </TableCell>
                 <TableCell className="text-sm">
-                  {new Date(j.tanggal).toLocaleDateString("id-ID")}
+                  {formatTanggal(j.tanggal)}
                 </TableCell>
                 <TableCell className="text-sm">{j.keterangan}</TableCell>
                 <TableCell className="text-right text-sm">{fmt(j.totalDebit)}</TableCell>

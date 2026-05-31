@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { formatTanggal } from "@/lib/format"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type Mutasi = {
@@ -116,7 +117,7 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
               data.map((t) => (
                 <TableRow key={t.id}>
                   <TableCell className="text-sm">
-                    {new Date(t.createdAt).toLocaleDateString("id-ID")}
+                    {formatTanggal(t.createdAt)}
                   </TableCell>
                   <TableCell>{t.jenisNama}</TableCell>
                   <TableCell>

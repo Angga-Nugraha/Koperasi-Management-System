@@ -23,6 +23,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Search, Plus, ChevronLeft, ChevronRight, Upload } from "lucide-react"
+import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
 type Anggota = {
@@ -167,7 +168,7 @@ export function AnggotaTable({
                   <TableCell className="font-mono text-sm">{a.noAnggota}</TableCell>
                   <TableCell className="font-mono text-sm">{a.nik}</TableCell>
                   <TableCell>{a.nama}</TableCell>
-                  <TableCell>{new Date(a.tglMasuk).toLocaleDateString("id-ID")}</TableCell>
+                  <TableCell>{formatTanggal(a.tglMasuk)}</TableCell>
                   <TableCell>
                     <Badge variant={STATUS_VARIANTS[a.status] ?? "secondary"}>
                       {STATUS_MAP[a.status] ?? a.status}

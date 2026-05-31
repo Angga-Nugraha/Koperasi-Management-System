@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatTanggal } from "@/lib/format"
 import { Badge } from "@/components/ui/badge"
 
 type Angsuran = {
@@ -158,11 +159,11 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
                       {p.angsuran.map((a) => (
                         <TableRow key={a.id}>
                           <TableCell>{a.angsuranKe}</TableCell>
-                          <TableCell className="text-xs">{new Date(a.jatuhTempo).toLocaleDateString("id-ID")}</TableCell>
+                          <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
                           <TableCell className="text-right font-mono">Rp{a.pokok.toLocaleString("id-ID")}</TableCell>
                           <TableCell className="text-right font-mono">Rp{a.jasa.toLocaleString("id-ID")}</TableCell>
                           <TableCell className="text-right font-mono">Rp{a.total.toLocaleString("id-ID")}</TableCell>
-                          <TableCell className="text-xs">{a.tglBayar ? new Date(a.tglBayar).toLocaleDateString("id-ID") : "-"}</TableCell>
+                          <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
                           <TableCell>
                             <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
                               {a.status === "LUNAS" ? "Lunas" : "Belum"}

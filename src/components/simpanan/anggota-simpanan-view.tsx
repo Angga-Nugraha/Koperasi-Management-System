@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatTanggal } from "@/lib/format"
 import { Badge } from "@/components/ui/badge"
 
 type Simpanan = {
@@ -108,7 +109,7 @@ export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
                 mutasi.data.map((t) => (
                   <TableRow key={t.id}>
                     <TableCell className="text-sm">
-                      {new Date(t.createdAt).toLocaleDateString("id-ID")}
+                      {formatTanggal(t.createdAt)}
                     </TableCell>
                     <TableCell>{t.jenisNama}</TableCell>
                     <TableCell>

@@ -1,3 +1,4 @@
+import { formatTanggal } from "@/lib/format"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type TransaksiItem = {
@@ -37,7 +38,7 @@ export function TransaksiTerbaru({ data }: Props) {
           data.map((t) => (
             <TableRow key={t.id}>
               <TableCell className="text-sm whitespace-nowrap">
-                {new Date(t.tanggal).toLocaleDateString("id-ID")}
+                {formatTanggal(t.tanggal)}
               </TableCell>
               <TableCell className="font-mono text-xs">{t.noJurnal}</TableCell>
               <TableCell className="max-w-[200px] truncate" title={t.keterangan ?? ""}>

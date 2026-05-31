@@ -36,7 +36,7 @@ export async function getJurnalList(params: {
       },
       skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: { createdAt: "desc" },
+      orderBy: { tanggal: "desc" },
     }),
     prisma.jurnalUmum.count({ where }),
   ])
@@ -151,8 +151,8 @@ export async function getBukuBesar(
   const whereJurnal: Record<string, unknown> = {}
   if (tanggalMulai || tanggalSelesai) {
     const filter: Record<string, Date> = {}
-    if (tanggalMulai) filter.gte = new Date(tanggalMulai)
-    if (tanggalSelesai) filter.lte = new Date(tanggalSelesai)
+    if (tanggalMulai) filter.gte = new Date(tanggalMulai + "T00:00:00")
+    if (tanggalSelesai) filter.lte = new Date(tanggalSelesai + "T23:59:59")
     whereJurnal.tanggal = filter
   }
 
@@ -192,7 +192,7 @@ export async function getNeracaSaldo(tanggalSelesai?: string) {
 
   const whereJurnal: Record<string, unknown> = {}
   if (tanggalSelesai) {
-    whereJurnal.tanggal = { lte: new Date(tanggalSelesai) }
+    whereJurnal.tanggal = { lte: new Date(tanggalSelesai + "T23:59:59") }
   }
 
   const detail = await prisma.detailJurnal.findMany({
@@ -310,7 +310,7 @@ export async function getNeraca(sampai?: string) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const sampaiTanggal = sampai ? new Date(sampai) : undefined
+  const sampaiTanggal = sampai ? new Date(sampai + "T23:59:59") : undefined
 
   const [aset, liabilitas, ekuitas, pendapatan, beban] = await Promise.all([
     getSaldoAkunTipe("ASET", sampaiTanggal),
@@ -348,8 +348,8 @@ export async function getLabaRugi(dari?: string, sampai?: string) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const sampaiTanggal = sampai ? new Date(sampai) : undefined
-  const dariTanggal = dari ? new Date(dari) : undefined
+  const dariTanggal = dari ? new Date(dari + "T00:00:00") : undefined
+  const sampaiTanggal = sampai ? new Date(sampai + "T23:59:59") : undefined
 
   const [pendapatan, beban] = await Promise.all([
     getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal),
@@ -365,8 +365,8 @@ export async function getArusKas(dari?: string, sampai?: string) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const tanggalMulai = dari ? new Date(dari) : new Date("2020-01-01")
-  const tanggalSelesai = sampai ? new Date(sampai) : new Date()
+  const tanggalMulai = dari ? new Date(dari + "T00:00:00") : new Date("2020-01-01T00:00:00")
+  const tanggalSelesai = sampai ? new Date(sampai + "T23:59:59") : new Date()
 
   const kasAkun = await prisma.akun.findFirst({
     where: { kode: "1.1.1", isActive: true },

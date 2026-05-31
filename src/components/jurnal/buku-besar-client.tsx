@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { formatTanggal } from "@/lib/format"
 
 type AkunItem = { id: string; kode: string; nama: string; tipe: string; saldoNormal: string }
 
@@ -122,7 +123,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
                 )}
                 {rows.map((r, i) => (
                   <tr key={i} className="border-b">
-                    <td className="px-4 py-2">{new Date(r.tanggal).toLocaleDateString("id-ID")}</td>
+                    <td className="px-4 py-2">{formatTanggal(r.tanggal)}</td>
                     <td className="px-4 py-2 font-mono text-xs">{r.noJurnal}</td>
                     <td className="px-4 py-2">{r.keterangan}</td>
                     <td className="px-4 py-2 text-right">{r.debit > 0 ? fmt(r.debit) : "-"}</td>

@@ -34,13 +34,26 @@ export async function getDashboardPengurus(tahun: number) {
   })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
-  const shuTahun = await prisma.sHU.findFirst({
-    where: { tahun },
-    select: { totalSHU: true },
-  })
-  const totalSHU = Number(shuTahun?.totalSHU ?? 0)
-
   const range = tahunRange(tahun)
+
+  // Hitung SHU TB real-time dari PENDAPATAN - BEBAN (tidak hanya dari tabel SHU)
+  const detailPendapatanBeban = await prisma.detailJurnal.findMany({
+    where: {
+      akun: { tipe: { in: ["PENDAPATAN", "BEBAN"] } },
+      jurnal: { tanggal: range },
+    },
+    include: { akun: { select: { tipe: true } } },
+  })
+  let totalPendapatan = 0
+  let totalBeban = 0
+  for (const d of detailPendapatanBeban) {
+    if (d.akun.tipe === "PENDAPATAN") {
+      totalPendapatan += Number(d.kredit) - Number(d.debit)
+    } else {
+      totalBeban += Number(d.debit) - Number(d.kredit)
+    }
+  }
+  const totalSHU = Math.round((totalPendapatan - totalBeban) * 100) / 100
 
   const transaksiTahun = await prisma.transaksiSimpanan.findMany({
     where: { createdAt: range },

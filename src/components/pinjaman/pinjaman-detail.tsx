@@ -23,6 +23,7 @@ import {
   hapusPinjaman,
 } from "@/actions/pinjaman"
 import { ArrowLeft, Check, X, Banknote, Wallet, Trash2 } from "lucide-react"
+import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
 type Angsuran = {
@@ -166,10 +167,10 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
         <CardHeader><CardTitle>Informasi Pinjaman</CardTitle></CardHeader>
         <CardContent>
           <dl className="grid grid-cols-2 gap-4 text-sm">
-            <div><dt className="text-muted-foreground">Tgl Pengajuan</dt><dd>{new Date(pinjaman.tglPengajuan).toLocaleDateString("id-ID")}</dd></div>
-            <div><dt className="text-muted-foreground">Tgl Disetujui</dt><dd>{pinjaman.tglDisetujui ? new Date(pinjaman.tglDisetujui).toLocaleDateString("id-ID") : "-"}</dd></div>
+            <div><dt className="text-muted-foreground">Tgl Pengajuan</dt><dd>{formatTanggal(pinjaman.tglPengajuan)}</dd></div>
+            <div><dt className="text-muted-foreground">Tgl Disetujui</dt><dd>{pinjaman.tglDisetujui ? formatTanggal(pinjaman.tglDisetujui) : "-"}</dd></div>
             <div><dt className="text-muted-foreground">Jenis Pinjaman</dt><dd>{pinjaman.jenisPinjaman}</dd></div>
-            <div><dt className="text-muted-foreground">Tgl Dicairkan</dt><dd>{pinjaman.tglCair ? new Date(pinjaman.tglCair).toLocaleDateString("id-ID") : "-"}</dd></div>
+            <div><dt className="text-muted-foreground">Tgl Dicairkan</dt><dd>{pinjaman.tglCair ? formatTanggal(pinjaman.tglCair) : "-"}</dd></div>
             <div><dt className="text-muted-foreground">Bunga</dt><dd>{pinjaman.bunga}% / bulan</dd></div>
             {pinjaman.keterangan && (
               <div className="col-span-2"><dt className="text-muted-foreground">Keterangan</dt><dd>{pinjaman.keterangan}</dd></div>
@@ -240,12 +241,12 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                 {pinjaman.angsuran.map((a) => (
                   <TableRow key={a.id}>
                     <TableCell>{a.angsuranKe}</TableCell>
-                    <TableCell className="text-xs">{new Date(a.jatuhTempo).toLocaleDateString("id-ID")}</TableCell>
+                    <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
                     <TableCell className="text-right font-mono">Rp{a.pokok.toLocaleString("id-ID")}</TableCell>
                     <TableCell className="text-right font-mono">Rp{a.jasa.toLocaleString("id-ID")}</TableCell>
                     <TableCell className="text-right font-mono">Rp{a.denda.toLocaleString("id-ID")}</TableCell>
                     <TableCell className="text-right font-mono">Rp{a.total.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-xs">{a.tglBayar ? new Date(a.tglBayar).toLocaleDateString("id-ID") : "-"}</TableCell>
+                    <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
                     <TableCell>
                       <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
                         {a.status === "LUNAS" ? "Lunas" : "Belum"}
