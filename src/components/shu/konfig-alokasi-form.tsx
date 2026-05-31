@@ -7,6 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { getIndikatorSHUList, saveAllIndikatorSHU } from "@/actions/shu"
 import { getAkunList } from "@/actions/konfigurasi"
 import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react"
@@ -25,6 +30,7 @@ export function KonfigAlokasiForm({
   const [items, setItems] = useState(initial.length > 0 ? initial : [{ id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: null, urutan: 1, isActive: true } as Indikator])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [confirm, setConfirm] = useState<{ onConfirm: () => void } | null>(null)
 
   const total = items.reduce((s, i) => s + i.persentase, 0)
 
@@ -43,14 +49,7 @@ export function KonfigAlokasiForm({
   }
 
   async function handleSave() {
-    if (Math.abs(total - 100) > 0.01) {
-      setError("Total persentase harus 100%")
-      return
-    }
-    if (items.some((i) => !i.kode || !i.nama)) {
-      setError("Kode dan Nama harus diisi untuk semua item")
-      return
-    }
+    setConfirm(null)
     setLoading(true)
     setError("")
     try {
@@ -62,12 +61,24 @@ export function KonfigAlokasiForm({
         akunId: i.akunId,
         urutan: i.urutan,
       })))
-      router.refresh()
+      router.push("/pengurus/shu")
     } catch (e) {
       setError((e as Error).message)
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSaveClick() {
+    if (Math.abs(total - 100) > 0.01) {
+      setError("Total persentase harus 100%")
+      return
+    }
+    if (items.some((i) => !i.kode || !i.nama)) {
+      setError("Kode dan Nama harus diisi untuk semua item")
+      return
+    }
+    setConfirm({ onConfirm: handleSave })
   }
 
   return (
@@ -168,13 +179,26 @@ export function KonfigAlokasiForm({
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <div className="flex justify-end">
-            <Button onClick={handleSave} disabled={loading}>
+            <Button onClick={handleSaveClick} disabled={loading}>
               <Save className="mr-2 h-4 w-4" />
               {loading ? "Menyimpan..." : "Simpan"}
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Simpan Konfigurasi SHU</AlertDialogTitle>
+            <AlertDialogDescription>Simpan perubahan indikator SHU dan kembali ke daftar?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
