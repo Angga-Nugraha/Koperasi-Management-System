@@ -12,6 +12,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   getKonfigList, updateKonfig, getAkunList, createAkun, toggleAkunActive,
@@ -93,6 +98,9 @@ export function KonfigurasiPage({
   const [akunForm, setAkunForm] = useState({ kode: "", nama: "", tipe: "ASET", saldoNormal: "DEBIT" })
   const [akunError, setAkunError] = useState("")
 
+  // Confirm dialog
+  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+
   // Jenis Pinjaman dialog
   const [jpDialog, setJpDialog] = useState(false)
   const [jpForm, setJpForm] = useState({ id: "", nama: "", bunga: 0, keterangan: "" })
@@ -106,6 +114,7 @@ export function KonfigurasiPage({
   const [jsEditing, setJsEditing] = useState(false)
 
   async function handleSaveCategory(cat: string) {
+    setConfirm(null)
     setSaving(cat)
     try {
       const items = konfig.filter((k) => GROUP_CATEGORY[k.key] === cat)
@@ -140,6 +149,7 @@ export function KonfigurasiPage({
   }
 
   async function handleSaveGeneralInfo() {
+    setConfirm(null)
     setGiSaving(true)
     setGiError("")
     try {
@@ -153,6 +163,7 @@ export function KonfigurasiPage({
   }
 
   async function handleCreateAkun() {
+    setConfirm(null)
     setAkunError("")
     try {
       await createAkun(akunForm as { kode: string; nama: string; tipe: "ASET" | "LIABILITAS" | "EKUITAS" | "PENDAPATAN" | "BEBAN"; saldoNormal: "DEBIT" | "KREDIT" })
@@ -174,6 +185,7 @@ export function KonfigurasiPage({
   }
 
   async function handleSaveJenisPinjaman() {
+    setConfirm(null)
     setJpError("")
     try {
       if (jpEditing) {
@@ -191,7 +203,7 @@ export function KonfigurasiPage({
   }
 
   async function handleDeleteJenisPinjaman(id: string) {
-    if (!confirm("Hapus jenis pinjaman ini?")) return
+    setConfirm(null)
     try {
       await deleteJenisPinjaman(id)
       router.refresh()
@@ -208,6 +220,7 @@ export function KonfigurasiPage({
   }
 
   async function handleSaveJenisSimpanan() {
+    setConfirm(null)
     setJsError("")
     try {
       if (jsEditing) {
@@ -297,7 +310,7 @@ export function KonfigurasiPage({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Informasi Koperasi</CardTitle>
-                <Button size="sm" onClick={handleSaveGeneralInfo} disabled={giSaving || locked}>
+                <Button size="sm" onClick={() => setConfirm({ title: "Simpan Info Koperasi", desc: "Simpan perubahan informasi koperasi?", onConfirm: handleSaveGeneralInfo })} disabled={giSaving || locked}>
                   <Save className="mr-1 h-3 w-3" />
                   {giSaving ? "Menyimpan..." : "Simpan"}
                 </Button>
@@ -372,7 +385,7 @@ export function KonfigurasiPage({
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>{KATEGORI_LABEL[cat] ?? cat}</CardTitle>
-                    <Button size="sm" onClick={() => handleSaveCategory(cat)} disabled={saving === cat || locked}>
+                    <Button size="sm" onClick={() => setConfirm({ title: "Simpan Konfigurasi", desc: "Simpan perubahan konfigurasi?", onConfirm: () => handleSaveCategory(cat) })} disabled={saving === cat || locked}>
                       <Save className="mr-1 h-3 w-3" />
                       {saving === cat ? "Menyimpan..." : "Simpan"}
                     </Button>
@@ -431,7 +444,7 @@ export function KonfigurasiPage({
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setJpDialog(false)}>Batal</Button>
-                      <Button onClick={handleSaveJenisPinjaman}>Simpan</Button>
+                      <Button onClick={() => setConfirm({ title: jpEditing ? "Edit Jenis Pinjaman" : "Tambah Jenis Pinjaman", desc: "Simpan data jenis pinjaman?", onConfirm: handleSaveJenisPinjaman })}>Simpan</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -455,7 +468,7 @@ export function KonfigurasiPage({
                       <TableCell className="text-muted-foreground">{jp.keterangan ?? "—"}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => openEditJenisPinjaman(jp)} disabled={locked}><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteJenisPinjaman(jp.id)} disabled={locked}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => setConfirm({ title: "Hapus Jenis Pinjaman", desc: `Hapus "${jp.nama}"? Tindakan ini tidak dapat dikembalikan.`, onConfirm: () => handleDeleteJenisPinjaman(jp.id) })} disabled={locked}><Trash2 className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -503,7 +516,7 @@ export function KonfigurasiPage({
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setJsDialog(false)}>Batal</Button>
-                      <Button onClick={handleSaveJenisSimpanan}>Simpan</Button>
+                      <Button onClick={() => setConfirm({ title: jsEditing ? "Edit Jenis Simpanan" : "Tambah Jenis Simpanan", desc: "Simpan data jenis simpanan?", onConfirm: handleSaveJenisSimpanan })}>Simpan</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -602,7 +615,7 @@ export function KonfigurasiPage({
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setAkunDialog(false)}>Batal</Button>
-                      <Button onClick={handleCreateAkun}>Simpan</Button>
+                      <Button onClick={() => setConfirm({ title: "Tambah Akun", desc: "Buat akun baru?", onConfirm: handleCreateAkun })}>Simpan</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -646,6 +659,19 @@ export function KonfigurasiPage({
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
