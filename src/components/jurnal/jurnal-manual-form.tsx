@@ -123,7 +123,7 @@ export function JurnalManualForm({ akunList }: Props) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-md border">
+      <div className="rounded-md border">
         <table className="w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="border-b bg-muted/50">

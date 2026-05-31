@@ -35,7 +35,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />
-      <main className="flex-1 overflow-y-auto bg-background p-6">{children}</main>
+      <main className="flex-1 overflow-auto bg-background p-6">{children}</main>
     </div>
   )
 }
