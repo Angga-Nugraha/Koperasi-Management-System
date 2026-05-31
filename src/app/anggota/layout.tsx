@@ -21,12 +21,14 @@ export default async function AnggotaLayout({ children }: { children: React.Reac
   const initial = session?.user?.email?.charAt(0).toUpperCase() ?? "U"
   const generalInfo = await prisma.generalInfo.findFirst()
   const namaKoperasi = generalInfo?.namaKoperasi ?? "Simko"
+  const logoKoperasi = generalInfo?.logo ?? null
 
   return (
     <div className="flex min-h-screen">
       <AppSidebar
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}
+        logoKoperasi={logoKoperasi}
         roleLabel="Anggota"
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}

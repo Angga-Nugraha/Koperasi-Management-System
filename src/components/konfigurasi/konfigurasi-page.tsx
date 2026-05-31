@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,7 +19,7 @@ import {
   getJenisPinjamanList, createJenisPinjaman, updateJenisPinjaman, deleteJenisPinjaman,
   getJenisSimpananList, createJenisSimpanan, updateJenisSimpanan, toggleJenisSimpananActive,
 } from "@/actions/konfigurasi"
-import { Save, Plus, Power, PowerOff, Lock, Unlock, Pencil, Trash2 } from "lucide-react"
+import { Save, Plus, Pencil, Trash2, Upload, X, Lock, Unlock } from "lucide-react"
 
 type KonfigItem = Awaited<ReturnType<typeof getKonfigList>>[number]
 type AkunItem = Awaited<ReturnType<typeof getAkunList>>[number]
@@ -80,10 +81,12 @@ export function KonfigurasiPage({
     namaKoperasi: generalInfo?.namaKoperasi ?? "",
     alamat: generalInfo?.alamat ?? "",
     noAhu: generalInfo?.noAhu ?? "",
+    logo: generalInfo?.logo ?? "",
     website: generalInfo?.website ?? "",
   })
   const [giSaving, setGiSaving] = useState(false)
   const [giError, setGiError] = useState("")
+  const [logouploading, setLogouploading] = useState(false)
 
   // Akun dialog
   const [akunDialog, setAkunDialog] = useState(false)
@@ -114,6 +117,25 @@ export function KonfigurasiPage({
       console.error(e)
     } finally {
       setSaving(null)
+    }
+  }
+
+  async function handleUploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLogouploading(true)
+    try {
+      const formData = new FormData()
+      formData.set("file", file)
+      formData.set("type", "logo")
+      const res = await fetch("/api/upload", { method: "POST", body: formData })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? "Gagal upload")
+      setGi({ ...gi, logo: data.url })
+    } catch (err) {
+      setGiError((err as Error).message)
+    } finally {
+      setLogouploading(false)
     }
   }
 
@@ -253,6 +275,13 @@ export function KonfigurasiPage({
         <p className="text-sm text-muted-foreground">Konfigurasi koperasi dan manajemen master data</p>
       </div>
 
+      <div className="flex items-center justify-end">
+        <Button variant={locked ? "outline" : "default"} onClick={() => setLocked(!locked)} size="sm">
+          {locked ? <Unlock className="mr-1 h-4 w-4" /> : <Lock className="mr-1 h-4 w-4" />}
+          {locked ? "Buka Kunci" : "Kunci"}
+        </Button>
+      </div>
+
       <Tabs defaultValue="general">
         <TabsList className="flex-wrap">
           <TabsTrigger value="general">Info Koperasi</TabsTrigger>
@@ -268,7 +297,7 @@ export function KonfigurasiPage({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Informasi Koperasi</CardTitle>
-                <Button size="sm" onClick={handleSaveGeneralInfo} disabled={giSaving}>
+                <Button size="sm" onClick={handleSaveGeneralInfo} disabled={giSaving || locked}>
                   <Save className="mr-1 h-3 w-3" />
                   {giSaving ? "Menyimpan..." : "Simpan"}
                 </Button>
@@ -278,19 +307,56 @@ export function KonfigurasiPage({
               {giError && <p className="text-sm text-destructive">{giError}</p>}
               <div className="space-y-2">
                 <Label>Nama Koperasi</Label>
-                <Input value={gi.namaKoperasi} onChange={(e) => setGi({ ...gi, namaKoperasi: e.target.value })} />
+                <Input value={gi.namaKoperasi} onChange={(e) => setGi({ ...gi, namaKoperasi: e.target.value })} disabled={locked} />
               </div>
               <div className="space-y-2">
                 <Label>Alamat</Label>
-                <Textarea value={gi.alamat} onChange={(e) => setGi({ ...gi, alamat: e.target.value })} />
+                <Textarea value={gi.alamat} onChange={(e) => setGi({ ...gi, alamat: e.target.value })} disabled={locked} />
               </div>
               <div className="space-y-2">
                 <Label>Nomor AHU (Badan Hukum)</Label>
-                <Input value={gi.noAhu} onChange={(e) => setGi({ ...gi, noAhu: e.target.value })} />
+                <Input value={gi.noAhu} onChange={(e) => setGi({ ...gi, noAhu: e.target.value })} disabled={locked} />
+              </div>
+              <div className="space-y-2">
+                <Label>Logo Koperasi</Label>
+                <div className="flex items-center gap-4">
+                  {gi.logo ? (
+                    <div className="relative">
+                      <img src={gi.logo} alt="Logo" className="h-16 w-16 rounded-lg border object-contain" />
+                      {!locked && (
+                        <button
+                          type="button"
+                          onClick={() => setGi({ ...gi, logo: "" })}
+                          className="absolute -right-2 -top-2 rounded-full bg-destructive p-0.5 text-destructive-foreground"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-dashed text-muted-foreground">
+                      <Upload className="h-5 w-5" />
+                    </div>
+                  )}
+                  {!locked && (
+                    <label className="cursor-pointer">
+                      <span className="rounded-md bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground hover:bg-secondary/80">
+                        {logouploading ? "Uploading..." : "Pilih File"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={handleUploadLogo}
+                        disabled={logouploading}
+                      />
+                    </label>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>Website</Label>
-                <Input value={gi.website} onChange={(e) => setGi({ ...gi, website: e.target.value })} />
+                <Input value={gi.website} onChange={(e) => setGi({ ...gi, website: e.target.value })} disabled={locked} />
               </div>
             </CardContent>
           </Card>
@@ -298,12 +364,6 @@ export function KonfigurasiPage({
 
         {/* ─── Konfigurasi ─── */}
         <TabsContent value="konfig" className="space-y-6">
-          <div className="flex items-center justify-end">
-            <Button variant={locked ? "outline" : "default"} onClick={() => setLocked(!locked)}>
-              {locked ? <Lock className="mr-2 h-4 w-4" /> : <Unlock className="mr-2 h-4 w-4" />}
-              {locked ? "Buka Kunci" : "Kunci"}
-            </Button>
-          </div>
           {KATEGORI_ORDER.map((cat) => {
             const items = grouped.get(cat)
             if (!items?.length) return null
@@ -343,9 +403,9 @@ export function KonfigurasiPage({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Daftar Jenis Pinjaman</CardTitle>
-                <Dialog open={jpDialog} onOpenChange={(open) => { if (!open) { setJpEditing(false); setJpForm({ id: "", nama: "", bunga: 0, keterangan: "" }) } setJpDialog(open) }}>
+                <Dialog open={jpDialog && !locked} onOpenChange={(open) => { if (!open || locked) { setJpEditing(false); setJpForm({ id: "", nama: "", bunga: 0, keterangan: "" }) } setJpDialog(open && !locked) }}>
                   <DialogTrigger asChild>
-                    <Button onClick={() => { setJpForm({ id: "", nama: "", bunga: 0, keterangan: "" }); setJpEditing(false); setJpError("") }}>
+                    <Button onClick={() => { setJpForm({ id: "", nama: "", bunga: 0, keterangan: "" }); setJpEditing(false); setJpError("") }} disabled={locked}>
                       <Plus className="mr-2 h-4 w-4" />
                       Tambah
                     </Button>
@@ -394,8 +454,8 @@ export function KonfigurasiPage({
                       <TableCell>{jp.bunga}% / bln</TableCell>
                       <TableCell className="text-muted-foreground">{jp.keterangan ?? "—"}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => openEditJenisPinjaman(jp)}><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteJenisPinjaman(jp.id)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => openEditJenisPinjaman(jp)} disabled={locked}><Pencil className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteJenisPinjaman(jp.id)} disabled={locked}><Trash2 className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -411,9 +471,9 @@ export function KonfigurasiPage({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Daftar Jenis Simpanan</CardTitle>
-                <Dialog open={jsDialog} onOpenChange={(open) => { if (!open) { setJsEditing(false); setJsForm({ id: "", kode: "", nama: "", minimalSetoran: 0, keterangan: "" }) } setJsDialog(open) }}>
+                <Dialog open={jsDialog && !locked} onOpenChange={(open) => { if (!open || locked) { setJsEditing(false); setJsForm({ id: "", kode: "", nama: "", minimalSetoran: 0, keterangan: "" }) } setJsDialog(open && !locked) }}>
                   <DialogTrigger asChild>
-                    <Button onClick={() => { setJsForm({ id: "", kode: "", nama: "", minimalSetoran: 0, keterangan: "" }); setJsEditing(false); setJsError("") }}>
+                    <Button onClick={() => { setJsForm({ id: "", kode: "", nama: "", minimalSetoran: 0, keterangan: "" }); setJsEditing(false); setJsError("") }} disabled={locked}>
                       <Plus className="mr-2 h-4 w-4" />
                       Tambah
                     </Button>
@@ -456,7 +516,7 @@ export function KonfigurasiPage({
                     <TableHead>Kode</TableHead>
                     <TableHead>Nama</TableHead>
                     <TableHead>Min. Setoran</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead className="text-center">Aktif</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -467,13 +527,19 @@ export function KonfigurasiPage({
                       <TableCell>{js.nama}</TableCell>
                       <TableCell>Rp{js.minimalSetoran.toLocaleString("id-ID")}</TableCell>
                       <TableCell>
-                        <Badge variant={js.isActive ? "default" : "secondary"}>{js.isActive ? "Aktif" : "Nonaktif"}</Badge>
+                        <div className="flex flex-col items-center gap-1">
+                          <Switch
+                            checked={js.isActive}
+                            onCheckedChange={() => handleToggleJenisSimpanan(js.id)}
+                            disabled={locked}
+                          />
+                          <span className={`text-xs ${js.isActive ? "text-primary" : "text-muted-foreground"}`}>
+                            {js.isActive ? "Aktif" : "Nonaktif"}
+                          </span>
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => openEditJenisSimpanan(js)}><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleToggleJenisSimpanan(js.id)}>
-                          {js.isActive ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
-                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => openEditJenisSimpanan(js)} disabled={locked}><Pencil className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -489,9 +555,9 @@ export function KonfigurasiPage({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Daftar Akun</CardTitle>
-                <Dialog open={akunDialog} onOpenChange={setAkunDialog}>
+                <Dialog open={akunDialog && !locked} onOpenChange={(open) => setAkunDialog(open && !locked)}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button disabled={locked}>
                       <Plus className="mr-2 h-4 w-4" />
                       Tambah Akun
                     </Button>
@@ -550,8 +616,7 @@ export function KonfigurasiPage({
                     <TableHead>Nama</TableHead>
                     <TableHead>Tipe</TableHead>
                     <TableHead>Saldo Normal</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
+                    <TableHead className="text-center">Aktif</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -562,12 +627,16 @@ export function KonfigurasiPage({
                       <TableCell><Badge variant="outline">{a.tipe}</Badge></TableCell>
                       <TableCell>{a.saldoNormal}</TableCell>
                       <TableCell>
-                        <Badge variant={a.isActive ? "default" : "secondary"}>{a.isActive ? "Aktif" : "Nonaktif"}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => handleToggleAkun(a.id)} title={a.isActive ? "Nonaktifkan" : "Aktifkan"}>
-                          {a.isActive ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
-                        </Button>
+                        <div className="flex flex-col items-center gap-1">
+                          <Switch
+                            checked={a.isActive}
+                            onCheckedChange={() => handleToggleAkun(a.id)}
+                            disabled={locked}
+                          />
+                          <span className={`text-xs ${a.isActive ? "text-primary" : "text-muted-foreground"}`}>
+                            {a.isActive ? "Aktif" : "Nonaktif"}
+                          </span>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

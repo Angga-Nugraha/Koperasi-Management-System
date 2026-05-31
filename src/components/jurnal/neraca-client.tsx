@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
@@ -29,13 +30,17 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 rounded-lg border bg-card p-4">
+      <Card>
+        <CardContent className="p-4">
+        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
         <div className="space-y-2">
           <Label>Sampai Tanggal</Label>
           <Input type="date" name="sampai" defaultValue={sampai} />
         </div>
         <Button type="submit">Tampilkan</Button>
       </form>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-md border">

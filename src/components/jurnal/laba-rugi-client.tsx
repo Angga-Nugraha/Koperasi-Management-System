@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
@@ -32,7 +33,9 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 rounded-lg border bg-card p-4">
+      <Card>
+        <CardContent className="p-4">
+        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
         <div className="space-y-2">
           <Label>Dari</Label>
           <Input type="date" name="dari" defaultValue={dari} />
@@ -43,6 +46,8 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
         </div>
         <Button type="submit">Tampilkan</Button>
       </form>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-md border">
@@ -82,12 +87,14 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
         </div>
       </div>
 
-      <div className="rounded-lg border bg-primary/5 p-6 text-center">
-        <p className="text-sm text-muted-foreground">Laba / Rugi Bersih</p>
-        <p className={`text-2xl font-bold ${labaBersih >= 0 ? "text-green-600" : "text-red-600"}`}>
-          {fmt(labaBersih)}
-        </p>
-      </div>
+      <Card className="bg-primary/5">
+        <CardContent className="p-6 text-center">
+          <p className="text-sm text-muted-foreground">Laba / Rugi Bersih</p>
+          <p className={`text-2xl font-bold ${labaBersih >= 0 ? "text-green-600" : "text-red-600"}`}>
+            {fmt(labaBersih)}
+          </p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

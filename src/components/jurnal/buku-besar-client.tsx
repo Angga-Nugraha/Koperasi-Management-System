@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -32,9 +33,12 @@ type Props = {
   sampai: string
   detail: DetailItem[]
   akunTerpilih: AkunItem | null
+  saldoAwal?: number
+  page?: number
+  totalPages?: number
 }
 
-export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih }: Props) {
+export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih, saldoAwal = 0, page = 1, totalPages = 0 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -55,7 +59,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
   const fmt = (n: number) =>
     new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
-  let saldo = 0
+  let saldo = saldoAwal
   const rows = detail.map((d) => {
     if (d.saldoNormal === "DEBIT") {
       saldo += d.debit - d.kredit
@@ -65,9 +69,17 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
     return { ...d, saldo: Math.round(saldo * 100) / 100 }
   })
 
+  function goPage(p: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", String(p))
+    router.push(`/pengurus/jurnal/buku-besar?${params.toString()}`)
+  }
+
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 rounded-lg border bg-card p-4">
+      <div className="space-y-6">
+      <Card>
+        <CardContent className="p-4">
+        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
         <div className="space-y-2">
           <Label>Akun</Label>
           <Select name="akunId" defaultValue={akunId}>
@@ -93,14 +105,18 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
         </div>
         <Button type="submit">Tampilkan</Button>
       </form>
+        </CardContent>
+      </Card>
 
       {akunTerpilih && (
         <>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-lg font-semibold">
-              {akunTerpilih.kode} - {akunTerpilih.nama}
-            </p>
-          </div>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-lg font-semibold">
+                {akunTerpilih.kode} - {akunTerpilih.nama}
+              </p>
+            </CardContent>
+          </Card>
 
           <div className="rounded-md border">
             <Table>
@@ -135,6 +151,21 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
               </TableBody>
             </Table>
           </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>{rows.length} dari {detail.length > 0 ? `${(page - 1) * detail.length + rows.length}` : 0} transaksi</span>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goPage(page - 1)}>
+                  Sebelumnya
+                </Button>
+                <span>Halaman {page} dari {totalPages}</span>
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goPage(page + 1)}>
+                  Selanjutnya
+                </Button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -19,7 +19,7 @@ export async function getSHUList() {
   }))
 }
 
-export async function getSHUByTahun(tahun: number) {
+export async function getSHUByTahun(tahun: number, page = 1, pageSize = 20) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
@@ -29,14 +29,21 @@ export async function getSHUByTahun(tahun: number) {
       alokasi: {
         include: { indikator: { select: { nama: true, kode: true } } },
       },
-      shuAnggota: {
-        include: { anggota: { select: { noAnggota: true, nama: true } } },
-        orderBy: { total: "desc" },
-      },
     },
   })
 
   if (!raw) return null
+
+  const [shuAnggota, total] = await Promise.all([
+    prisma.sHUAnggota.findMany({
+      where: { shuId: raw.id },
+      include: { anggota: { select: { noAnggota: true, nama: true } } },
+      orderBy: { total: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.sHUAnggota.count({ where: { shuId: raw.id } }),
+  ])
 
   return {
     id: raw.id,
@@ -50,7 +57,7 @@ export async function getSHUByTahun(tahun: number) {
       persentase: Number(a.persentase),
       nominal: Number(a.nominal),
     })),
-    shuAnggota: raw.shuAnggota.map((a) => ({
+    shuAnggota: shuAnggota.map((a) => ({
       anggotaId: a.anggotaId,
       noAnggota: a.anggota.noAnggota,
       nama: a.anggota.nama,
@@ -58,6 +65,9 @@ export async function getSHUByTahun(tahun: number) {
       jasaUsaha: Number(a.jasaUsaha),
       total: Number(a.total),
     })),
+    total,
+    page,
+    totalPages: Math.ceil(total / pageSize),
   }
 }
 

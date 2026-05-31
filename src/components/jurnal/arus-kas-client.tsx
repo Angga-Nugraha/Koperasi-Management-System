@@ -1,7 +1,8 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { formatTanggal } from "@/lib/format"
 import { Label } from "@/components/ui/label"
@@ -10,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 type ArusKasItem = {
   tanggal: string
   noJurnal: string
-  keterangan: string
+  keterangan: string | null
   masuk: number
   keluar: number
 }
@@ -22,10 +23,13 @@ type Props = {
   totalMasuk: number
   totalKeluar: number
   saldoAkhir: number
+  page?: number
+  totalPages?: number
 }
 
-export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, saldoAkhir }: Props) {
+export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, saldoAkhir, page = 1, totalPages = 0 }: Props) {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -40,9 +44,17 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
 
   const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
+  function goPage(p: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", String(p))
+    router.push(`/pengurus/jurnal/arus-kas?${params.toString()}`)
+  }
+
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 rounded-lg border bg-card p-4">
+      <Card>
+        <CardContent className="p-4">
+        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
         <div className="space-y-2">
           <Label>Dari</Label>
           <Input type="date" name="dari" defaultValue={dari} />
@@ -53,22 +65,30 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
         </div>
         <Button type="submit">Tampilkan</Button>
       </form>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border bg-green-50 p-4 text-center">
-          <p className="text-sm text-muted-foreground">Total Masuk</p>
-          <p className="text-xl font-bold text-green-700">{fmt(totalMasuk)}</p>
-        </div>
-        <div className="rounded-lg border bg-red-50 p-4 text-center">
-          <p className="text-sm text-muted-foreground">Total Keluar</p>
-          <p className="text-xl font-bold text-red-700">{fmt(totalKeluar)}</p>
-        </div>
-        <div className="rounded-lg border bg-blue-50 p-4 text-center">
-          <p className="text-sm text-muted-foreground">Saldo Akhir</p>
-          <p className={`text-xl font-bold ${saldoAkhir >= 0 ? "text-blue-700" : "text-red-700"}`}>
-            {fmt(saldoAkhir)}
-          </p>
-        </div>
+        <Card className="bg-green-50">
+          <CardContent className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Total Masuk</p>
+            <p className="text-xl font-bold text-green-700">{fmt(totalMasuk)}</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-red-50">
+          <CardContent className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Total Keluar</p>
+            <p className="text-xl font-bold text-red-700">{fmt(totalKeluar)}</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-blue-50">
+          <CardContent className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Saldo Akhir</p>
+            <p className={`text-xl font-bold ${saldoAkhir >= 0 ? "text-blue-700" : "text-red-700"}`}>
+              {fmt(saldoAkhir)}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="rounded-md border">
@@ -106,6 +126,20 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
           </TableBody>
         </Table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>Halaman {page} dari {totalPages}</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goPage(page - 1)}>
+              Sebelumnya
+            </Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goPage(page + 1)}>
+              Selanjutnya
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

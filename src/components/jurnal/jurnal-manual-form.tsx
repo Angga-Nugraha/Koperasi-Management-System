@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -101,7 +102,8 @@ export function JurnalManualForm({ akunList }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-lg border bg-card p-6 space-y-4">
+      <Card>
+        <CardContent className="p-6 space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label>Tanggal</Label>
@@ -122,7 +124,8 @@ export function JurnalManualForm({ akunList }: Props) {
             />
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <div className="rounded-md border">
         <Table>

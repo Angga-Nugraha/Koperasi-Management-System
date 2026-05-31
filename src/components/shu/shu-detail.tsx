@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,6 +14,7 @@ type SHUDetail = NonNullable<Awaited<ReturnType<typeof getSHUByTahun>>>
 
 export function SHUDetailCard({ data }: { data: SHUDetail }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState("")
@@ -175,6 +176,38 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
               )}
             </TableBody>
           </Table>
+
+          {data.totalPages && data.totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+              <span>Halaman {data.page} dari {data.totalPages}</span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={(data.page ?? 1) <= 1}
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams.toString())
+                    params.set("page", String((data.page ?? 1) - 1))
+                    router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
+                  }}
+                >
+                  Sebelumnya
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={(data.page ?? 1) >= (data.totalPages ?? 1)}
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams.toString())
+                    params.set("page", String((data.page ?? 1) + 1))
+                    router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
+                  }}
+                >
+                  Selanjutnya
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

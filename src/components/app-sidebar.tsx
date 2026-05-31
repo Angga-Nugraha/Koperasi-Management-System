@@ -42,17 +42,21 @@ export type NavItem = {
 type Props = {
   items: NavItem[]
   namaKoperasi: string
+  logoKoperasi?: string | null
   roleLabel: string
   userEmail: string
   userInitial: string
 }
 
-export function AppSidebar({ items, namaKoperasi, roleLabel, userEmail, userInitial }: Props) {
+export function AppSidebar({ items, namaKoperasi, logoKoperasi, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
 
   const navLinks = items.map((item) => {
     const Icon = ICON_MAP[item.icon]
-    const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+    const depth = item.href.split("/").filter(Boolean).length
+    const isActive = depth <= 1
+      ? pathname === item.href
+      : pathname === item.href || pathname.startsWith(item.href + "/")
     return (
       <Link
         key={item.href}
@@ -104,13 +108,13 @@ export function AppSidebar({ items, namaKoperasi, roleLabel, userEmail, userInit
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center border-b px-6">
+      <div className="flex h-14 items-center gap-3 border-b px-6">
+        {logoKoperasi && (
+          <img src={logoKoperasi} alt="Logo" className="h-8 w-8 rounded-lg object-contain" />
+        )}
         <Link href={items[0]?.href ?? "/"} className="text-lg font-bold text-primary">
           {namaKoperasi}
         </Link>
-        <span className="ml-2 rounded-md bg-primary/10 px-2 py-0.5 text-xs text-primary">
-          {roleLabel}
-        </span>
       </div>
       <nav className="flex-1 space-y-1 p-4">{navLinks}</nav>
       {userSection}

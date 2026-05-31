@@ -2,12 +2,12 @@ import { getArusKas } from "@/actions/jurnal"
 import { ArusKasClient } from "@/components/jurnal/arus-kas-client"
 
 type Props = {
-  searchParams: Promise<{ dari?: string; sampai?: string }>
+  searchParams: Promise<{ dari?: string; sampai?: string; page?: string }>
 }
 
 export default async function ArusKasPage({ searchParams }: Props) {
-  const { dari, sampai } = await searchParams
-  const result = await getArusKas(dari ?? undefined, sampai ?? undefined)
+  const { dari, sampai, page } = await searchParams
+  const result = await getArusKas(dari ?? undefined, sampai ?? undefined, Number(page) || 1)
 
   return (
     <div className="space-y-6">
@@ -22,7 +22,7 @@ export default async function ArusKasPage({ searchParams }: Props) {
           </a>
         </div>
       </div>
-      <ArusKasClient dari={dari ?? ""} sampai={sampai ?? ""} {...result} />
+      <ArusKasClient dari={dari ?? ""} sampai={sampai ?? ""} items={result.items} totalMasuk={result.totalMasuk} totalKeluar={result.totalKeluar} saldoAkhir={result.saldoAkhir} page={result.page} totalPages={result.totalPages} />
     </div>
   )
 }

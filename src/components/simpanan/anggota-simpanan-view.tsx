@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter, useSearchParams } from "next/navigation"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -37,7 +39,7 @@ type Mutasi = {
 
 type Props = {
   simpanan: Simpanan[]
-  mutasi: { data: Mutasi[]; total: number }
+  mutasi: { data: Mutasi[]; total: number; page?: number; totalPages?: number }
 }
 
 const TIPE_VARIANTS: Record<string, "default" | "destructive"> = {
@@ -51,7 +53,15 @@ const TIPE_LABEL: Record<string, string> = {
 }
 
 export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
+
+  function goPage(p: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", String(p))
+    router.push(`/anggota/simpanan?${params.toString()}`)
+  }
 
   return (
     <div className="space-y-6">
@@ -128,6 +138,30 @@ export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
               )}
             </TableBody>
           </Table>
+
+          {mutasi.totalPages && mutasi.totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+              <span>Halaman {mutasi.page} dari {mutasi.totalPages}</span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={(mutasi.page ?? 1) <= 1}
+                  onClick={() => goPage((mutasi.page ?? 1) - 1)}
+                >
+                  Sebelumnya
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={(mutasi.page ?? 1) >= (mutasi.totalPages ?? 1)}
+                  onClick={() => goPage((mutasi.page ?? 1) + 1)}
+                >
+                  Selanjutnya
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

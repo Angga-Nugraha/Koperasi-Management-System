@@ -1,6 +1,7 @@
 import { getJurnalById } from "@/actions/jurnal"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
+import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type Props = {
@@ -19,7 +20,8 @@ export default async function JurnalDetailPage({ params }: Props) {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
 
-      <div className="rounded-lg border bg-card p-6">
+      <Card>
+        <CardContent className="p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <span className="text-sm text-muted-foreground">No Jurnal</span>
@@ -36,7 +38,8 @@ export default async function JurnalDetailPage({ params }: Props) {
             <p className="font-medium">{jurnal.keterangan}</p>
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <div className="rounded-md border">
         <Table>

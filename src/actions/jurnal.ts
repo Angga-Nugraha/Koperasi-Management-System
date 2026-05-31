@@ -140,7 +140,9 @@ export async function createJurnalManual(input: z.infer<typeof jurnalManualSchem
 export async function getBukuBesar(
   akunId?: string,
   tanggalMulai?: string,
-  tanggalSelesai?: string
+  tanggalSelesai?: string,
+  page = 1,
+  pageSize = 20
 ) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
@@ -160,19 +162,40 @@ export async function getBukuBesar(
     ? await prisma.akun.findUnique({ where: { id: akunId } })
     : null
 
-  const detail = await prisma.detailJurnal.findMany({
-    where: {
-      ...whereDetail,
-      jurnal: whereJurnal,
-    },
-    include: {
-      jurnal: { select: { noJurnal: true, tanggal: true, keterangan: true } },
-      akun: { select: { id: true, kode: true, nama: true, saldoNormal: true } },
-    },
-    orderBy: [{ jurnal: { tanggal: "asc" } }, { jurnal: { noJurnal: "asc" } }],
-  })
+  const where = { ...whereDetail, jurnal: whereJurnal }
 
-  return detail.map((d) => ({
+  const [total, allBefore, detail] = await Promise.all([
+    prisma.detailJurnal.count({ where }),
+    prisma.detailJurnal.findMany({
+      where,
+      include: {
+        akun: { select: { saldoNormal: true } },
+      },
+      orderBy: [{ jurnal: { tanggal: "asc" } }, { jurnal: { noJurnal: "asc" } }],
+      take: (page - 1) * pageSize,
+    }),
+    prisma.detailJurnal.findMany({
+      where,
+      include: {
+        jurnal: { select: { noJurnal: true, tanggal: true, keterangan: true } },
+        akun: { select: { id: true, kode: true, nama: true, saldoNormal: true } },
+      },
+      orderBy: [{ jurnal: { tanggal: "asc" } }, { jurnal: { noJurnal: "asc" } }],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ])
+
+  let saldoAwal = 0
+  for (const d of allBefore) {
+    if (d.akun.saldoNormal === "DEBIT") {
+      saldoAwal += Number(d.debit) - Number(d.kredit)
+    } else {
+      saldoAwal += Number(d.kredit) - Number(d.debit)
+    }
+  }
+
+  const data = detail.map((d) => ({
     jurnalId: d.jurnalId,
     noJurnal: d.jurnal.noJurnal,
     tanggal: d.jurnal.tanggal.toISOString(),
@@ -184,6 +207,8 @@ export async function getBukuBesar(
     debit: Number(d.debit),
     kredit: Number(d.kredit),
   }))
+
+  return { data, total, page, totalPages: Math.ceil(total / pageSize), saldoAwal: Math.round(saldoAwal * 100) / 100 }
 }
 
 export async function getNeracaSaldo(tanggalSelesai?: string) {
@@ -365,7 +390,7 @@ export async function getLabaRugi(dari?: string, sampai?: string) {
   return { pendapatan, beban, labaBersih }
 }
 
-export async function getArusKas(dari?: string, sampai?: string) {
+export async function getArusKas(dari?: string, sampai?: string, page = 1, pageSize = 20) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
@@ -375,20 +400,34 @@ export async function getArusKas(dari?: string, sampai?: string) {
   const kasAkun = await prisma.akun.findFirst({
     where: { kode: "1.1.1", isActive: true },
   })
-  if (!kasAkun) return { items: [], totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0 }
+  if (!kasAkun) return { items: [], totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0, total: 0, page: 1, totalPages: 0 }
 
-  const detail = await prisma.detailJurnal.findMany({
-    where: {
-      akunId: kasAkun.id,
-      jurnal: {
-        tanggal: { gte: tanggalMulai, lte: tanggalSelesai },
+  const whereKas = {
+    akunId: kasAkun.id,
+    jurnal: {
+      tanggal: { gte: tanggalMulai, lte: tanggalSelesai },
+    },
+  }
+
+  const [aggregate, total, detail] = await Promise.all([
+    prisma.detailJurnal.aggregate({
+      where: whereKas,
+      _sum: { debit: true, kredit: true },
+    }),
+    prisma.detailJurnal.count({ where: whereKas }),
+    prisma.detailJurnal.findMany({
+      where: whereKas,
+      include: {
+        jurnal: { select: { tanggal: true, keterangan: true, noJurnal: true } },
       },
-    },
-    include: {
-      jurnal: { select: { tanggal: true, keterangan: true, noJurnal: true } },
-    },
-    orderBy: { jurnal: { tanggal: "asc" } },
-  })
+      orderBy: { jurnal: { tanggal: "asc" } },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ])
+
+  const totalMasuk = Number(aggregate._sum.debit ?? 0)
+  const totalKeluar = Number(aggregate._sum.kredit ?? 0)
 
   const items = detail.map((d) => ({
     tanggal: d.jurnal.tanggal.toISOString(),
@@ -398,9 +437,5 @@ export async function getArusKas(dari?: string, sampai?: string) {
     keluar: Number(d.kredit),
   }))
 
-  const totalMasuk = items.reduce((s, i) => s + i.masuk, 0)
-  const totalKeluar = items.reduce((s, i) => s + i.keluar, 0)
-  const saldoAkhir = totalMasuk - totalKeluar
-
-  return { items, totalMasuk, totalKeluar, saldoAkhir }
+  return { items, totalMasuk, totalKeluar, saldoAkhir: totalMasuk - totalKeluar, total, page, totalPages: Math.ceil(total / pageSize) }
 }
