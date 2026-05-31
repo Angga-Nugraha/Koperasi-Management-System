@@ -7,28 +7,43 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { setujuiSHU, getSHUByTahun } from "@/actions/shu"
-import { CheckCircle2, Clock, ArrowLeft, Download } from "lucide-react"
+import { hapusSHU, generateSHU, getSHUByTahun } from "@/actions/shu"
+import { FileText, ArrowLeft, Download, Trash2, RefreshCw } from "lucide-react"
 
 type SHUDetail = NonNullable<Awaited<ReturnType<typeof getSHUByTahun>>>
 
 export function SHUDetailCard({ data }: { data: SHUDetail }) {
   const router = useRouter()
-  const [approving, setApproving] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState("")
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState("")
+  const [regenerating, setRegenerating] = useState(false)
+  const [regenError, setRegenError] = useState("")
 
-  async function handleApprove() {
-    setApproving(true)
-    setError("")
+  async function handleDelete() {
+    setDeleting(true)
+    setDeleteError("")
     try {
-      await setujuiSHU(data.tahun)
-      setOpen(false)
-      router.refresh()
-    } catch (e) {
-      setError((e as Error).message)
+      await hapusSHU(data.tahun)
+      router.push("/pengurus/shu")
+    } catch (err) {
+      setDeleteError((err as Error).message)
     } finally {
-      setApproving(false)
+      setDeleting(false)
+    }
+  }
+
+  async function handleRegenerate() {
+    setRegenerating(true)
+    setRegenError("")
+    try {
+      await hapusSHU(data.tahun)
+      await generateSHU(data.tahun)
+      router.refresh()
+    } catch (err) {
+      setRegenError((err as Error).message)
+    } finally {
+      setRegenerating(false)
     }
   }
 
@@ -41,43 +56,55 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
           </Button>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">SHU Tahun {data.tahun}</h1>
-            <p className="text-sm text-muted-foreground">
-              Status: <Badge variant={data.status === "FINAL" ? "default" : "secondary"}>
-                {data.status === "FINAL" ? <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> FINAL</span> : <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> DRAFT</span>}
+            <div className="text-sm text-muted-foreground">
+              Status:{" "}
+              <Badge variant={data.status === "FINAL" ? "default" : "secondary"}>
+                {data.status === "FINAL" ? (
+                  <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Closed</span>
+                ) : (
+                  <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Estimasi</span>
+                )}
               </Badge>
-            </p>
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {data.status === "DRAFT" && (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="default">
-                  <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Setujui & Finalkan
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Setujui SHU {data.tahun}</DialogTitle>
-                  <DialogDescription>
-                    Setelah disetujui, status akan menjadi FINAL dan jurnal penutup akan dibuat. Tindakan ini tidak dapat dibatalkan.
-                  </DialogDescription>
-                </DialogHeader>
-                {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>Batal</Button>
-                  <Button onClick={handleApprove} disabled={approving}>
-                    {approving ? "Memproses..." : "Setujui"}
+            <>
+              <Button variant="outline" onClick={handleRegenerate} disabled={regenerating}>
+                <RefreshCw className={`mr-2 h-4 w-4 ${regenerating ? "animate-spin" : ""}`} />
+                {regenerating ? "Memproses..." : "Generate Ulang"}
+              </Button>
+              <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Hapus
                   </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Hapus SHU {data.tahun}?</DialogTitle>
+                    <DialogDescription>
+                      SHU estimasi akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+                    </DialogDescription>
+                  </DialogHeader>
+                  {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>Batal</Button>
+                    <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+                      {deleting ? "Menghapus..." : "Hapus"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </>
           )}
+          {regenError && <p className="text-sm text-destructive">{regenError}</p>}
           <Button variant="outline" onClick={async () => {
             const { exportSHUExcel } = await import("@/actions/shu")
-            const buffer = await exportSHUExcel(data.tahun)
-            const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+            const buf = await exportSHUExcel(data.tahun)
+            const blob = new Blob([new Uint8Array(buf)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
             const url = URL.createObjectURL(blob)
             const a = document.createElement("a")
             a.href = url
@@ -102,9 +129,9 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
               <p className="text-sm text-muted-foreground">Total SHU</p>
               <p className="text-2xl font-bold text-primary">Rp {data.totalSHU.toLocaleString("id-ID")}</p>
             </div>
-            {data.alokasi.map((a) => (
+              {data.alokasi.map((a) => (
               <div key={a.pos} className="rounded-lg border p-4">
-                <p className="text-sm text-muted-foreground">{posLabel(a.pos)} ({a.persentase}%)</p>
+                <p className="text-sm text-muted-foreground">{a.indikatorNama} ({a.persentase}%)</p>
                 <p className="text-xl font-semibold">Rp {a.nominal.toLocaleString("id-ID")}</p>
               </div>
             ))}
@@ -152,16 +179,4 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
       </Card>
     </div>
   )
-}
-
-function posLabel(pos: string) {
-  const map: Record<string, string> = {
-    JM: "Jasa Modal",
-    JU: "Jasa Usaha",
-    CAD: "Cadangan",
-    PENGURUS: "Pengurus",
-    PENGAWAS: "Pengawas",
-    SOSIAL: "Pendidikan & Sosial",
-  }
-  return map[pos] ?? pos
 }

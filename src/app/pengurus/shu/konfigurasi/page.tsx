@@ -1,7 +1,11 @@
-import { getKonfigAlokasi } from "@/actions/shu"
+import { getIndikatorSHUList } from "@/actions/shu"
+import { getAkunList } from "@/actions/konfigurasi"
 import { KonfigAlokasiForm } from "@/components/shu/konfig-alokasi-form"
 
 export default async function KonfigurasiSHUPage() {
-  const data = await getKonfigAlokasi()
-  return <KonfigAlokasiForm data={data} />
+  const [data, akunList] = await Promise.all([
+    getIndikatorSHUList(),
+    getAkunList(),
+  ])
+  return <KonfigAlokasiForm data={data} akunList={akunList} />
 }

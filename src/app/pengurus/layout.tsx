@@ -1,25 +1,17 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import {
-  LayoutDashboard,
-  Users,
-  PiggyBank,
-  HandCoins,
-  BookOpen,
-  Settings,
-  Scale,
-} from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/pengurus", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/pengurus/anggota", label: "Anggota", icon: Users },
-  { href: "/pengurus/simpanan", label: "Simpanan", icon: PiggyBank },
-  { href: "/pengurus/pinjaman", label: "Pinjaman", icon: HandCoins },
-  { href: "/pengurus/jurnal", label: "Akuntansi", icon: BookOpen },
-  { href: "/pengurus/shu", label: "SHU", icon: Scale },
-  { href: "/pengurus/konfigurasi", label: "Pengaturan", icon: Settings },
+  { href: "/pengurus", label: "Dashboard", icon: "LayoutDashboard" },
+  { href: "/pengurus/anggota", label: "Anggota", icon: "Users" },
+  { href: "/pengurus/simpanan", label: "Simpanan", icon: "PiggyBank" },
+  { href: "/pengurus/pinjaman", label: "Pinjaman", icon: "HandCoins" },
+  { href: "/pengurus/jurnal", label: "Akuntansi", icon: "BookOpen" },
+  { href: "/pengurus/shu", label: "SHU", icon: "Scale" },
+  { href: "/pengurus/tutup-buku", label: "Tutup Buku", icon: "FileText" },
+  { href: "/pengurus/konfigurasi", label: "Pengaturan", icon: "Settings" },
 ]
 
 export default async function PengurusLayout({ children }: { children: React.ReactNode }) {

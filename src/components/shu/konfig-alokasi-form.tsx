@@ -6,28 +6,62 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getKonfigAlokasi, updateKonfigAlokasi } from "@/actions/shu"
-import { ArrowLeft, Save } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getIndikatorSHUList, saveAllIndikatorSHU } from "@/actions/shu"
+import { getAkunList } from "@/actions/konfigurasi"
+import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react"
 
-type Konfig = Awaited<ReturnType<typeof getKonfigAlokasi>>
+type Indikator = Awaited<ReturnType<typeof getIndikatorSHUList>>[number]
+type Akun = Awaited<ReturnType<typeof getAkunList>>[number]
 
-export function KonfigAlokasiForm({ data: initial }: { data: Konfig }) {
+export function KonfigAlokasiForm({
+  data: initial,
+  akunList,
+}: {
+  data: Indikator[]
+  akunList: Akun[]
+}) {
   const router = useRouter()
-  const [data, setData] = useState(initial)
+  const [items, setItems] = useState(initial.length > 0 ? initial : [{ id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: null, urutan: 1, isActive: true } as Indikator])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const total = data.jmPersen + data.juPersen + data.cadPersen + data.pengurusPersen + data.pengawasPersen + data.sosialPersen
+  const total = items.reduce((s, i) => s + i.persentase, 0)
+
+  function updateItem(index: number, field: keyof Indikator, value: unknown) {
+    setItems(items.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+  }
+
+  function addItem() {
+    const maxUrutan = items.reduce((m, i) => Math.max(m, i.urutan), 0)
+    setItems([...items, { id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: null, urutan: maxUrutan + 1, isActive: true } as Indikator])
+  }
+
+  function removeItem(index: number) {
+    if (items.length <= 1) return
+    setItems(items.filter((_, i) => i !== index))
+  }
 
   async function handleSave() {
     if (Math.abs(total - 100) > 0.01) {
       setError("Total persentase harus 100%")
       return
     }
+    if (items.some((i) => !i.kode || !i.nama)) {
+      setError("Kode dan Nama harus diisi untuk semua item")
+      return
+    }
     setLoading(true)
     setError("")
     try {
-      await updateKonfigAlokasi(data)
+      await saveAllIndikatorSHU(items.map((i) => ({
+        kode: i.kode,
+        nama: i.nama,
+        persentase: i.persentase,
+        kelompok: i.kelompok,
+        akunId: i.akunId,
+        urutan: i.urutan,
+      })))
       router.refresh()
     } catch (e) {
       setError((e as Error).message)
@@ -36,15 +70,6 @@ export function KonfigAlokasiForm({ data: initial }: { data: Konfig }) {
     }
   }
 
-  const fields: Array<{ key: keyof Konfig; label: string }> = [
-    { key: "jmPersen", label: "Jasa Modal (JM)" },
-    { key: "juPersen", label: "Jasa Usaha (JU)" },
-    { key: "cadPersen", label: "Cadangan" },
-    { key: "pengurusPersen", label: "Pengurus" },
-    { key: "pengawasPersen", label: "Pengawas" },
-    { key: "sosialPersen", label: "Pendidikan & Sosial" },
-  ]
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -52,30 +77,84 @@ export function KonfigAlokasiForm({ data: initial }: { data: Konfig }) {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Konfigurasi Alokasi SHU</h1>
-          <p className="text-sm text-muted-foreground">Atur persentase pembagian SHU untuk setiap pos</p>
+          <h1 className="text-2xl font-bold tracking-tight">Konfigurasi Indikator SHU</h1>
+          <p className="text-sm text-muted-foreground">Atur indikator pembagian SHU. Total persentase harus 100%.</p>
         </div>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Persentase Alokasi</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Indikator SHU</CardTitle>
+          <Button variant="outline" size="sm" onClick={addItem}>
+            <Plus className="mr-2 h-4 w-4" />
+            Tambah
+          </Button>
         </CardHeader>
         <CardContent className="space-y-4">
-          {fields.map(({ key, label }) => (
-            <div key={key} className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-right">{label}</Label>
-              <div className="flex items-center gap-2">
+          {items.map((item, index) => (
+            <div key={index} className="flex items-end gap-3 rounded-lg border p-4">
+              <div className="space-y-1.5 flex-1">
+                <Label className="text-xs">Kode</Label>
+                <Input
+                  placeholder="JM"
+                  value={item.kode}
+                  onChange={(e) => updateItem(index, "kode", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5 flex-1">
+                <Label className="text-xs">Nama</Label>
+                <Input
+                  placeholder="Jasa Modal"
+                  value={item.nama}
+                  onChange={(e) => updateItem(index, "nama", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5 w-24">
+                <Label className="text-xs">%</Label>
                 <Input
                   type="number"
                   min={0}
                   max={100}
                   step={0.5}
-                  value={data[key]}
-                  onChange={(e) => setData({ ...data, [key]: Number(e.target.value) })}
+                  value={item.persentase}
+                  onChange={(e) => updateItem(index, "persentase", Number(e.target.value))}
                 />
-                <span className="text-sm text-muted-foreground w-4">%</span>
               </div>
+              <div className="space-y-1.5 w-32">
+                <Label className="text-xs">Kelompok</Label>
+                <Select
+                  value={item.kelompok}
+                  onValueChange={(v) => updateItem(index, "kelompok", v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ANGGOTA">Anggota</SelectItem>
+                    <SelectItem value="DANA">Dana</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5 flex-1">
+                <Label className="text-xs">Akun Jurnal</Label>
+                <Select
+                  value={item.akunId ?? "__none__"}
+                  onValueChange={(v) => updateItem(index, "akunId", v === "__none__" ? null : v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih akun" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">-- Tanpa akun --</SelectItem>
+                    {akunList.map((a) => (
+                      <SelectItem key={a.id} value={a.id}>{a.kode} - {a.nama}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => removeItem(index)} disabled={items.length <= 1}>
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
             </div>
           ))}
 

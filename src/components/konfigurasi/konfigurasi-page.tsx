@@ -32,12 +32,6 @@ const GROUP_LABELS: Record<string, string> = {
   grace_period: "Grace Period (hari)",
   tenor_min: "Tenor Min (bulan)",
   tenor_max: "Tenor Max (bulan)",
-  alokasi_jm: "Jasa Modal (%)",
-  alokasi_ju: "Jasa Usaha (%)",
-  alokasi_cad: "Cadangan (%)",
-  alokasi_pengurus: "Pengurus (%)",
-  alokasi_pengawas: "Pengawas (%)",
-  alokasi_sosial: "Pendidikan & Sosial (%)",
 }
 
 const GROUP_CATEGORY: Record<string, string> = {
@@ -46,20 +40,13 @@ const GROUP_CATEGORY: Record<string, string> = {
   grace_period: "pinjaman",
   tenor_min: "pinjaman",
   tenor_max: "pinjaman",
-  alokasi_jm: "shu",
-  alokasi_ju: "shu",
-  alokasi_cad: "shu",
-  alokasi_pengurus: "shu",
-  alokasi_pengawas: "shu",
-  alokasi_sosial: "shu",
 }
 
 const KATEGORI_LABEL: Record<string, string> = {
   pinjaman: "Pinjaman",
-  shu: "SHU",
 }
 
-const KATEGORI_ORDER = ["pinjaman", "shu"]
+const KATEGORI_ORDER = ["pinjaman"]
 
 const DEFAULT_TIPE: Record<string, string> = {
   plafon_max_saldo: "DECIMAL",
@@ -67,12 +54,6 @@ const DEFAULT_TIPE: Record<string, string> = {
   grace_period: "NUMBER",
   tenor_min: "NUMBER",
   tenor_max: "NUMBER",
-  alokasi_jm: "DECIMAL",
-  alokasi_ju: "DECIMAL",
-  alokasi_cad: "DECIMAL",
-  alokasi_pengurus: "DECIMAL",
-  alokasi_pengawas: "DECIMAL",
-  alokasi_sosial: "DECIMAL",
 }
 
 export function KonfigurasiPage({

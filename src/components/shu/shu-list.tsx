@@ -8,10 +8,86 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { generateSHU, getSHUList } from "@/actions/shu"
-import { Plus, FileSpreadsheet, CheckCircle2, Clock } from "lucide-react"
+import { generateSHU, hapusSHU, getSHUList } from "@/actions/shu"
+import { Plus, FileSpreadsheet, FileText, Trash2 } from "lucide-react"
 
 type SHU = Awaited<ReturnType<typeof getSHUList>>[number]
+
+function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
+  const router = useRouter()
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState("")
+
+  async function handleDelete(e: React.MouseEvent) {
+    e.stopPropagation()
+    setDeleting(true)
+    setDeleteError("")
+    try {
+      await hapusSHU(shu.tahun)
+      setDeleteOpen(false)
+      onDelete()
+    } catch (err) {
+      setDeleteError((err as Error).message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  return (
+    <Card className="cursor-pointer transition-shadow hover:shadow-md" onClick={() => router.push(`/pengurus/shu/${shu.tahun}`)}>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-2xl">SHU {shu.tahun}</CardTitle>
+          <div className="flex items-center gap-1">
+            {shu.status === "DRAFT" && (
+              <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent onClick={(e) => e.stopPropagation()}>
+                  <DialogHeader>
+                    <DialogTitle>Hapus SHU {shu.tahun}?</DialogTitle>
+                    <DialogDescription>
+                      SHU draft akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+                    </DialogDescription>
+                  </DialogHeader>
+                  {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>Batal</Button>
+                    <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+                      {deleting ? "Menghapus..." : "Hapus"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+            <Badge variant={shu.status === "FINAL" ? "default" : "secondary"}>
+              {shu.status === "FINAL" ? (
+                <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Closed</span>
+              ) : (
+                <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Estimasi</span>
+              )}
+            </Badge>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-3xl font-bold text-primary">
+          Rp {shu.totalSHU.toLocaleString("id-ID")}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">Total SHU</p>
+      </CardContent>
+    </Card>
+  )
+}
 
 export function SHUList({ data }: { data: SHU[] }) {
   const router = useRouter()
@@ -99,26 +175,7 @@ export function SHUList({ data }: { data: SHU[] }) {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((shu) => (
-            <Card key={shu.id} className="cursor-pointer transition-shadow hover:shadow-md" onClick={() => router.push(`/pengurus/shu/${shu.tahun}`)}>
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl">SHU {shu.tahun}</CardTitle>
-                  <Badge variant={shu.status === "FINAL" ? "default" : "secondary"}>
-                    {shu.status === "FINAL" ? (
-                      <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> FINAL</span>
-                    ) : (
-                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> DRAFT</span>
-                    )}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-primary">
-                  Rp {shu.totalSHU.toLocaleString("id-ID")}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">Total SHU</p>
-              </CardContent>
-            </Card>
+            <SHUCard key={shu.id} shu={shu} onDelete={() => router.refresh()} />
           ))}
         </div>
       )}

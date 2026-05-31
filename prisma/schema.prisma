@@ -237,6 +237,7 @@ model Akun {
   isActive    Boolean       @default(true)
 
   detailJurnal DetailJurnal[]
+  indikatorSHU IndikatorSHU[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -286,16 +287,34 @@ model SHU {
   @@map("shu")
 }
 
+model IndikatorSHU {
+  id          String  @id @default(uuid())
+  kode        String  @unique // JM, JU, CAD, PENGURUS, PENGAWAS, SOSIAL
+  nama        String         // Jasa Modal, Jasa Usaha, Cadangan
+  persentase  Decimal @db.Decimal(5, 2)
+  kelompok    String         // ANGGOTA | DANA
+  akunId      String?
+  urutan      Int
+  isActive    Boolean @default(true)
+
+  akun   Akun?  @relation(fields: [akunId], references: [id])
+  alokasi AlokasiSHU[]
+
+  @@map("indikator_shu")
+}
+
 model AlokasiSHU {
   id         String  @id @default(uuid())
   shuId      String
-  pos        String // JM, JU, CAD, PENGURUS, PENGAWAS, SOSIAL
+  indikatorId String
+  pos        String // snapshot of IndikatorSHU.kode at generation time
   persentase Decimal @db.Decimal(5, 2)
   nominal    Decimal @db.Decimal(18, 2)
 
-  shu SHU @relation(fields: [shuId], references: [id])
+  shu       SHU          @relation(fields: [shuId], references: [id])
+  indikator IndikatorSHU @relation(fields: [indikatorId], references: [id])
 
-  @@unique([shuId, pos])
+  @@unique([shuId, indikatorId])
   @@map("alokasi_shu")
 }
 

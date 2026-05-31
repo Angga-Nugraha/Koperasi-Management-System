@@ -66,7 +66,6 @@ function AkuntansiNav() {
     { href: "/pengurus/jurnal/neraca", label: "Neraca" },
     { href: "/pengurus/jurnal/laba-rugi", label: "Laba / Rugi" },
     { href: "/pengurus/jurnal/arus-kas", label: "Arus Kas" },
-    { href: "/pengurus/jurnal/shu", label: "SHU" },
     { href: "/pengurus/jurnal/audit-log", label: "Audit Log" },
   ]
 

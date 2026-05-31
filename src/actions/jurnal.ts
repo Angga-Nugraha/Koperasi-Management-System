@@ -7,7 +7,6 @@ import { z } from "zod"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
 import { buatJurnal } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
-import { getKonfig, getNumber } from "@/lib/konfig"
 
 export async function getJurnalList(params: {
   search?: string
@@ -258,7 +257,8 @@ export async function getAkunList() {
 
 async function getSaldoAkunTipe(
   tipe: string,
-  sampaiTanggal?: Date
+  sampaiTanggal?: Date,
+  dariTanggal?: Date
 ) {
   const akunAll = await prisma.akun.findMany({
     where: { tipe: tipe as any, isActive: true },
@@ -269,7 +269,9 @@ async function getSaldoAkunTipe(
     akunId: { in: akunIds },
   }
   const whereJurnal: Record<string, unknown> = {}
-  if (sampaiTanggal) {
+  if (dariTanggal && sampaiTanggal) {
+    whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
+  } else if (sampaiTanggal) {
     whereJurnal.tanggal = { lte: sampaiTanggal }
   }
 
@@ -310,13 +312,36 @@ export async function getNeraca(sampai?: string) {
 
   const sampaiTanggal = sampai ? new Date(sampai) : undefined
 
-  const [aset, liabilitas, ekuitas] = await Promise.all([
+  const [aset, liabilitas, ekuitas, pendapatan, beban] = await Promise.all([
     getSaldoAkunTipe("ASET", sampaiTanggal),
     getSaldoAkunTipe("LIABILITAS", sampaiTanggal),
     getSaldoAkunTipe("EKUITAS", sampaiTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal),
   ])
 
-  return { aset, liabilitas, ekuitas }
+  // Include laba bersih sebagai bagian ekuitas agar neraca balance
+  // meskipun jurnal penutup belum dijalankan (3.1.2 masih 0)
+  const labaBersih = pendapatan.total - beban.total
+  const adjustedEkuitas = [...ekuitas.items]
+  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === "3.1.2")
+  const existingSHUSaldo = shuIdx >= 0 ? ekuitas.items[shuIdx]!.saldo : 0
+  if (labaBersih !== 0) {
+    if (shuIdx >= 0) {
+      adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
+    } else {
+      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih })
+    }
+  }
+
+  return {
+    aset,
+    liabilitas,
+    ekuitas: {
+      items: adjustedEkuitas,
+      total: ekuitas.total + labaBersih - existingSHUSaldo,
+    },
+  }
 }
 
 export async function getLabaRugi(dari?: string, sampai?: string) {
@@ -324,10 +349,11 @@ export async function getLabaRugi(dari?: string, sampai?: string) {
   if (!session?.user) throw new Error("Unauthorized")
 
   const sampaiTanggal = sampai ? new Date(sampai) : undefined
+  const dariTanggal = dari ? new Date(dari) : undefined
 
   const [pendapatan, beban] = await Promise.all([
-    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal),
-    getSaldoAkunTipe("BEBAN", sampaiTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal),
   ])
 
   const labaBersih = pendapatan.total - beban.total
@@ -373,35 +399,4 @@ export async function getArusKas(dari?: string, sampai?: string) {
   const saldoAkhir = totalMasuk - totalKeluar
 
   return { items, totalMasuk, totalKeluar, saldoAkhir }
-}
-
-export async function getSHU(dari?: string, sampai?: string) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
-
-  const sampaiTanggal = sampai ? new Date(sampai) : undefined
-
-  const [pendapatan, beban] = await Promise.all([
-    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal),
-    getSaldoAkunTipe("BEBAN", sampaiTanggal),
-  ])
-
-  const shuKotor = pendapatan.total - beban.total
-  const konfig = await getKonfig()
-  const pctCadangan = getNumber(konfig, "alokasi_cad", 20)
-  const cadangan = Math.round(shuKotor * (pctCadangan / 100) * 100) / 100
-  const shuDibagi = shuKotor - cadangan
-
-  const anggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
-
-  return {
-    pendapatan,
-    beban,
-    shuKotor,
-    cadangan,
-    pctCadangan,
-    shuDibagi,
-    jumlahAnggota: anggota,
-    perAnggota: anggota > 0 ? Math.round((shuDibagi / anggota) * 100) / 100 : 0,
-  }
 }

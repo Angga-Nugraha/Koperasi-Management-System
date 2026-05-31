@@ -1,12 +1,11 @@
-import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { LayoutDashboard, FileText } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
+import { auth } from "@/lib/auth"
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/pengawas", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/pengawas/laporan", label: "Laporan", icon: FileText },
+  { href: "/pengawas", label: "Dashboard", icon: "LayoutDashboard" },
+  { href: "/pengawas/laporan", label: "Laporan", icon: "FileText" },
 ]
 
 export default async function PengawasLayout({ children }: { children: React.ReactNode }) {

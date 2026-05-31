@@ -2,18 +2,41 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type LucideIcon, LogOut, Menu } from "lucide-react"
+import {
+  LayoutDashboard,
+  Users,
+  PiggyBank,
+  HandCoins,
+  BookOpen,
+  Settings,
+  Scale,
+  FileText,
+  LogOut,
+  Menu,
+  type LucideIcon,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { signOut } from "next-auth/react"
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  Users,
+  PiggyBank,
+  HandCoins,
+  BookOpen,
+  Settings,
+  Scale,
+  FileText,
+}
 
 export type NavItem = {
   href: string
   label: string
-  icon: LucideIcon
+  icon: string
 }
 
 type Props = {
@@ -28,6 +51,7 @@ export function AppSidebar({ items, namaKoperasi, roleLabel, userEmail, userInit
   const pathname = usePathname()
 
   const navLinks = items.map((item) => {
+    const Icon = ICON_MAP[item.icon]
     const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
     return (
       <Link
@@ -40,7 +64,7 @@ export function AppSidebar({ items, namaKoperasi, roleLabel, userEmail, userInit
             : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
         )}
       >
-        <item.icon className="h-4 w-4" />
+        {Icon && <Icon className="h-4 w-4" />}
         {item.label}
       </Link>
     )
@@ -110,6 +134,7 @@ export function AppSidebar({ items, namaKoperasi, roleLabel, userEmail, userInit
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">
+          <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
           {sidebarContent}
         </SheetContent>
       </Sheet>

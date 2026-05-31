@@ -43,6 +43,7 @@ async function main() {
     { kode: "2.1.1", nama: "Simpanan Pokok", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.1.2", nama: "Simpanan Wajib", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.1.3", nama: "Simpanan Sukarela", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
+    { kode: "2.1.4", nama: "Dana Jasa Modal", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.1", nama: "Dana Cadangan", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.2", nama: "Dana Sosial", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.3", nama: "Dana Pendidikan", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
@@ -143,6 +144,29 @@ async function main() {
   }
   console.log(`  ✅ ${jenisPinjaman.length} jenis pinjaman tersimpan`)
 
+  // ========== SEED INDIKATOR SHU ==========
+  const shuAkun = await prisma.akun.findUnique({ where: { kode: "3.1.2" } })
+  const cadAkun = await prisma.akun.findUnique({ where: { kode: "2.2.1" } })
+  const sosialAkun = await prisma.akun.findUnique({ where: { kode: "2.2.2" } })
+  const jasaModalAkun = await prisma.akun.findUnique({ where: { kode: "2.1.4" } })
+
+  const indikatorSHU = [
+    { kode: "JM", nama: "Jasa Modal", persentase: 30, kelompok: "ANGGOTA", akunId: jasaModalAkun?.id ?? null, urutan: 1 },
+    { kode: "JU", nama: "Jasa Usaha", persentase: 30, kelompok: "ANGGOTA", akunId: null, urutan: 2 },
+    { kode: "CAD", nama: "Cadangan", persentase: 15, kelompok: "DANA", akunId: cadAkun?.id ?? null, urutan: 3 },
+    { kode: "PENGURUS", nama: "Pengurus", persentase: 10, kelompok: "DANA", akunId: shuAkun?.id ?? null, urutan: 4 },
+    { kode: "PENGAWAS", nama: "Pengawas", persentase: 5, kelompok: "DANA", akunId: shuAkun?.id ?? null, urutan: 5 },
+    { kode: "SOSIAL", nama: "Dana Sosial & Pendidikan", persentase: 10, kelompok: "DANA", akunId: sosialAkun?.id ?? null, urutan: 6 },
+  ]
+  for (const ind of indikatorSHU) {
+    await prisma.indikatorSHU.upsert({
+      where: { kode: ind.kode },
+      update: ind,
+      create: ind,
+    })
+  }
+  console.log(`  ✅ ${indikatorSHU.length} indikator SHU tersimpan`)
+
   // ========== SEED DEFAULT KONFIGURASI ==========
   const konfigurasi = [
     { key: "plafon_max_saldo", value: "3", tipeData: "DECIMAL", keterangan: "Plafon maksimal pinjaman (kelipatan saldo simpanan)" },
@@ -150,12 +174,6 @@ async function main() {
     { key: "grace_period", value: "7", tipeData: "NUMBER", keterangan: "Tenggang waktu keterlambatan (hari)" },
     { key: "tenor_min", value: "3", tipeData: "NUMBER", keterangan: "Tenor minimal pinjaman (bulan)" },
     { key: "tenor_max", value: "36", tipeData: "NUMBER", keterangan: "Tenor maksimal pinjaman (bulan)" },
-    { key: "alokasi_jm", value: "30", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Jasa Modal (%)" },
-    { key: "alokasi_ju", value: "30", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Jasa Usaha (%)" },
-    { key: "alokasi_cad", value: "15", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Cadangan (%)" },
-    { key: "alokasi_pengurus", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengurus (%)" },
-    { key: "alokasi_pengawas", value: "5", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Pengawas (%)" },
-    { key: "alokasi_sosial", value: "10", tipeData: "DECIMAL", keterangan: "Alokasi SHU untuk Dana Sosial & Pendidikan (%)" },
   ]
 
   for (const cfg of konfigurasi) {

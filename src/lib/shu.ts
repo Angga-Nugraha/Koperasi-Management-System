@@ -1,76 +1,65 @@
 import { prisma } from "@/lib/prisma"
 
-type KonfigAlokasi = {
-  jmPersen: number
-  juPersen: number
-  cadPersen: number
-  pengurusPersen: number
-  pengawasPersen: number
-  sosialPersen: number
+export type IndikatorSHUData = {
+  id: string
+  kode: string
+  nama: string
+  persentase: number
+  kelompok: string
+  akunId: string | null
+  urutan: number
+  isActive: boolean
 }
 
-const DEFAULT_ALOKASI: KonfigAlokasi = {
-  jmPersen: 30,
-  juPersen: 30,
-  cadPersen: 15,
-  pengurusPersen: 10,
-  pengawasPersen: 5,
-  sosialPersen: 10,
-}
-
-const KEY_MAP: Record<keyof KonfigAlokasi, string> = {
-  jmPersen: "alokasi_jm",
-  juPersen: "alokasi_ju",
-  cadPersen: "alokasi_cad",
-  pengurusPersen: "alokasi_pengurus",
-  pengawasPersen: "alokasi_pengawas",
-  sosialPersen: "alokasi_sosial",
-}
-
-const FIELD_MAP: Record<string, keyof KonfigAlokasi> = {
-  alokasi_jm: "jmPersen",
-  alokasi_ju: "juPersen",
-  alokasi_cad: "cadPersen",
-  alokasi_pengurus: "pengurusPersen",
-  alokasi_pengawas: "pengawasPersen",
-  alokasi_sosial: "sosialPersen",
-}
-
-export async function getAlokasiConfig(): Promise<KonfigAlokasi> {
-  const rows = await prisma.konfigurasi.findMany({
-    where: { key: { startsWith: "alokasi_" } },
+export async function getIndikatorSHU(): Promise<IndikatorSHUData[]> {
+  const rows = await prisma.indikatorSHU.findMany({
+    orderBy: { urutan: "asc" },
   })
-  if (rows.length === 0) return DEFAULT_ALOKASI
-
-  const map = new Map(rows.map((r) => [r.key, r.value]))
-  const result = { ...DEFAULT_ALOKASI }
-  for (const [key, field] of Object.entries(FIELD_MAP)) {
-    const val = map.get(key)
-    if (val) result[field] = Number(val)
-  }
-  return result
+  return rows.map((r) => ({
+    id: r.id,
+    kode: r.kode,
+    nama: r.nama,
+    persentase: Number(r.persentase),
+    kelompok: r.kelompok,
+    akunId: r.akunId,
+    urutan: r.urutan,
+    isActive: r.isActive,
+  }))
 }
 
-export async function saveAlokasiConfig(data: KonfigAlokasi) {
-  const total = Object.values(data).reduce((a, b) => a + b, 0)
+export async function saveIndikatorSHU(items: Array<{
+  kode: string
+  nama: string
+  persentase: number
+  kelompok: string
+  akunId: string | null
+  urutan: number
+}>) {
+  const total = items.reduce((a, b) => a + b.persentase, 0)
   if (Math.abs(total - 100) > 0.01) throw new Error("Total persentase harus 100%")
 
-  for (const [field, key] of Object.entries(KEY_MAP)) {
-    const val = data[field as keyof KonfigAlokasi]
-    const labels: Record<string, string> = {
-      jmPersen: "Jasa Modal (%)",
-      juPersen: "Jasa Usaha (%)",
-      cadPersen: "Cadangan (%)",
-      pengurusPersen: "Pengurus (%)",
-      pengawasPersen: "Pengawas (%)",
-      sosialPersen: "Pendidikan & Sosial (%)",
-    }
-    await prisma.konfigurasi.upsert({
-      where: { key },
-      create: { key, value: String(val), tipeData: "DECIMAL", keterangan: labels[field] ?? "" },
-      update: { value: String(val) },
+  const kodes = items.map((i) => i.kode)
+
+  await prisma.$transaction(async (tx) => {
+    await tx.alokasiSHU.deleteMany({
+      where: { indikator: { kode: { notIn: kodes } } },
     })
-  }
+    await tx.indikatorSHU.deleteMany({
+      where: { kode: { notIn: kodes } },
+    })
+
+    for (const item of items) {
+      await tx.indikatorSHU.upsert({
+        where: { kode: item.kode },
+        create: item,
+        update: { ...item },
+      })
+    }
+  })
+}
+
+export async function deleteIndikatorSHU(kode: string) {
+  await prisma.indikatorSHU.delete({ where: { kode } })
 }
 
 export async function getTotalPendapatanBeban(tahun: number) {
@@ -153,16 +142,12 @@ export async function hitungSHU(tahun: number) {
     throw new Error("SHU tidak bisa dihitung karena laba bersih <= 0")
   }
 
-  const alokasi = await getAlokasiConfig()
+  const indikator = (await getIndikatorSHU()).filter((i) => i.isActive)
+  if (indikator.length === 0) throw new Error("Belum ada indikator SHU yang aktif")
+
+  const anggotaIndikator = indikator.filter((i) => i.kelompok === "ANGGOTA")
   const { totalSimpanan, perAnggota: saldoPerAnggota } = await getSaldoPerAnggota()
   const totalAngsuran = await getTotalAngsuranAnggota(tahun)
-
-  const jmDana = keuangan.totalSHU * (alokasi.jmPersen / 100)
-  const juDana = keuangan.totalSHU * (alokasi.juPersen / 100)
-  const cadDana = keuangan.totalSHU * (alokasi.cadPersen / 100)
-  const pengurusDana = keuangan.totalSHU * (alokasi.pengurusPersen / 100)
-  const pengawasDana = keuangan.totalSHU * (alokasi.pengawasPersen / 100)
-  const sosialDana = keuangan.totalSHU * (alokasi.sosialPersen / 100)
 
   const anggotaList = await prisma.anggota.findMany({
     where: { status: "AKTIF" },
@@ -182,8 +167,18 @@ export async function hitungSHU(tahun: number) {
     const saldo = saldoPerAnggota.get(anggota.id) ?? 0
     const angsuranPokok = totalAngsuran.perAnggota.get(anggota.id) ?? 0
 
-    const jm = totalSimpanan > 0 ? jmDana * (saldo / totalSimpanan) : 0
-    const ju = totalAngsuran.total > 0 ? juDana * (angsuranPokok / totalAngsuran.total) : 0
+    let jm = 0
+    let ju = 0
+
+    for (const ind of anggotaIndikator) {
+      const dana = keuangan.totalSHU * (ind.persentase / 100)
+      if (ind.kode === "JM") {
+        jm = totalSimpanan > 0 ? dana * (saldo / totalSimpanan) : 0
+      } else if (ind.kode === "JU") {
+        ju = totalAngsuran.total > 0 ? dana * (angsuranPokok / totalAngsuran.total) : 0
+      }
+    }
+
     const total = Math.round((jm + ju) * 100) / 100
 
     perAnggota.push({
@@ -196,22 +191,19 @@ export async function hitungSHU(tahun: number) {
     })
   }
 
+  const alokasiMap: Record<string, { persentase: number; nominal: number }> = {}
+  for (const ind of indikator) {
+    const nominal = keuangan.totalSHU * (ind.persentase / 100)
+    alokasiMap[ind.kode] = {
+      persentase: ind.persentase,
+      nominal: Math.round(nominal * 100) / 100,
+    }
+  }
+
   return {
     keuangan,
-    alokasi: {
-      jmPersen: alokasi.jmPersen,
-      juPersen: alokasi.juPersen,
-      cadPersen: alokasi.cadPersen,
-      pengurusPersen: alokasi.pengurusPersen,
-      pengawasPersen: alokasi.pengawasPersen,
-      sosialPersen: alokasi.sosialPersen,
-      jmDana: Math.round(jmDana * 100) / 100,
-      juDana: Math.round(juDana * 100) / 100,
-      cadDana: Math.round(cadDana * 100) / 100,
-      pengurusDana: Math.round(pengurusDana * 100) / 100,
-      pengawasDana: Math.round(pengawasDana * 100) / 100,
-      sosialDana: Math.round(sosialDana * 100) / 100,
-    },
+    indikator,
+    alokasi: alokasiMap,
     perAnggota,
     totalAnggota: anggotaList.length,
   }

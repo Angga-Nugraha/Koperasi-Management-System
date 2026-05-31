@@ -2,7 +2,27 @@
 
 import { prisma } from "@/lib/prisma"
 
-export async function getDashboardPengurus() {
+function tahunRange(tahun: number) {
+  return {
+    gte: new Date(`${tahun}-01-01T00:00:00+07:00`),
+    lte: new Date(`${tahun}-12-31T23:59:59+07:00`),
+  }
+}
+
+export async function getTahunList() {
+  const years = await prisma.jurnalUmum.findMany({
+    select: { tanggal: true },
+    distinct: ["tanggal"],
+    orderBy: { tanggal: "desc" },
+  })
+  const set = new Set<number>()
+  for (const j of years) {
+    set.add(j.tanggal.getFullYear())
+  }
+  return Array.from(set).sort((a, b) => b - a)
+}
+
+export async function getDashboardPengurus(tahun: number) {
   const totalAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
 
   const totalSimpananAgg = await prisma.simpanan.aggregate({ _sum: { saldo: true } })
@@ -14,22 +34,22 @@ export async function getDashboardPengurus() {
   })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
-  const shuTerakhir = await prisma.sHU.findFirst({
-    orderBy: { createdAt: "desc" },
+  const shuTahun = await prisma.sHU.findFirst({
+    where: { tahun },
     select: { totalSHU: true },
   })
-  const totalSHU = Number(shuTerakhir?.totalSHU ?? 0)
+  const totalSHU = Number(shuTahun?.totalSHU ?? 0)
 
-  const transaksi6Bulan = await prisma.transaksiSimpanan.findMany({
-    where: {
-      createdAt: { gte: new Date(new Date().setMonth(new Date().getMonth() - 6)) },
-    },
+  const range = tahunRange(tahun)
+
+  const transaksiTahun = await prisma.transaksiSimpanan.findMany({
+    where: { createdAt: range },
     select: { nominal: true, tipe: true, createdAt: true },
     orderBy: { createdAt: "asc" },
   })
 
   const chartData: Record<string, { setoran: number; penarikan: number }> = {}
-  for (const t of transaksi6Bulan) {
+  for (const t of transaksiTahun) {
     const month = t.createdAt.toLocaleString("id-ID", { month: "short", year: "2-digit" })
     if (!chartData[month]) chartData[month] = { setoran: 0, penarikan: 0 }
     if (t.tipe === "SETORAN") chartData[month].setoran += Number(t.nominal)
@@ -48,6 +68,46 @@ export async function getDashboardPengurus() {
     _sum: { jumlah: true },
   })
 
+  const akunKas = await prisma.akun.findFirst({ where: { kode: "1.1.1" } })
+  const kasId = akunKas?.id
+
+  const detailKasTahun = kasId
+    ? await prisma.detailJurnal.findMany({
+        where: {
+          akunId: kasId,
+          jurnal: { tanggal: range },
+        },
+        include: { jurnal: { select: { tanggal: true } } },
+        orderBy: { jurnal: { tanggal: "asc" } },
+      })
+    : []
+
+  const flowData: Record<string, { masuk: number; keluar: number }> = {}
+  for (const d of detailKasTahun) {
+    const month = d.jurnal.tanggal.toLocaleString("id-ID", { month: "short", year: "2-digit" })
+    if (!flowData[month]) flowData[month] = { masuk: 0, keluar: 0 }
+    flowData[month].masuk += Number(d.debit)
+    flowData[month].keluar += Number(d.kredit)
+  }
+
+  const trendChart = Object.entries(flowData).map(([bulan, data]) => ({
+    bulan,
+    masuk: data.masuk,
+    keluar: data.keluar,
+  }))
+
+  const transaksiTerbaru = await prisma.jurnalUmum.findMany({
+    where: { tanggal: range },
+    orderBy: { tanggal: "desc" },
+    take: 5,
+    include: {
+      detail: {
+        include: { akun: { select: { kode: true, nama: true } } },
+        orderBy: { debit: "desc" },
+      },
+    },
+  })
+
   return {
     totalAnggota,
     totalSimpanan,
@@ -58,6 +118,21 @@ export async function getDashboardPengurus() {
       status: p.status,
       count: p._count.id,
       total: Number(p._sum.jumlah ?? 0),
+    })),
+    trendChart,
+    transaksiTerbaru: transaksiTerbaru.map((j) => ({
+      id: j.id,
+      noJurnal: j.noJurnal,
+      tanggal: j.tanggal.toISOString(),
+      keterangan: j.keterangan,
+      totalDebit: Number(j.detail.reduce((s, d) => s + Number(d.debit), 0)),
+      totalKredit: Number(j.detail.reduce((s, d) => s + Number(d.kredit), 0)),
+      detail: j.detail.map((d) => ({
+        akunKode: d.akun.kode,
+        akunNama: d.akun.nama,
+        debit: Number(d.debit),
+        kredit: Number(d.kredit),
+      })),
     })),
   }
 }
@@ -100,7 +175,7 @@ export async function getDashboardAnggota(anggotaId: string) {
   }
 }
 
-export async function getDashboardPengawas() {
+export async function getDashboardPengawas(tahun: number) {
   const totalAuditLog = await prisma.auditLog.count()
 
   const awalBulan = new Date()
@@ -108,7 +183,7 @@ export async function getDashboardPengawas() {
   awalBulan.setHours(0, 0, 0, 0)
 
   const jurnalBulanIni = await prisma.jurnalUmum.count({
-    where: { createdAt: { gte: awalBulan } },
+    where: { tanggal: { gte: awalBulan } },
   })
 
   const totalAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
@@ -122,12 +197,14 @@ export async function getDashboardPengawas() {
   })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
+  const range = tahunRange(tahun)
+
   const saldoKas = await prisma.akun.findFirst({ where: { kode: "1.1.1" } })
   const totalPiutang = await prisma.akun.findFirst({ where: { kode: "1.2.1" } })
 
   const detailKas = saldoKas
     ? await prisma.detailJurnal.aggregate({
-        where: { akunId: saldoKas.id },
+        where: { akunId: saldoKas.id, jurnal: { tanggal: range } },
         _sum: { debit: true, kredit: true },
       })
     : null
@@ -138,7 +215,7 @@ export async function getDashboardPengawas() {
 
   const detailPiutang = totalPiutang
     ? await prisma.detailJurnal.aggregate({
-        where: { akunId: totalPiutang.id },
+        where: { akunId: totalPiutang.id, jurnal: { tanggal: range } },
         _sum: { debit: true, kredit: true },
       })
     : null

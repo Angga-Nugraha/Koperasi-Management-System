@@ -2,9 +2,8 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
-import { getKonfig, getNumber } from "@/lib/konfig"
 
-async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date) {
+async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?: Date) {
   const akunAll = await prisma.akun.findMany({
     where: { tipe: tipe as any, isActive: true },
   })
@@ -14,7 +13,9 @@ async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date) {
     akunId: { in: akunIds },
   }
   const whereJurnal: Record<string, unknown> = {}
-  if (sampaiTanggal) {
+  if (dariTanggal && sampaiTanggal) {
+    whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
+  } else if (sampaiTanggal) {
     whereJurnal.tanggal = { lte: sampaiTanggal }
   }
 
@@ -105,7 +106,7 @@ export async function exportBukuBesar(params: Param) {
     })
   }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
 
 export async function exportNeracaSaldo(params: Param) {
@@ -144,7 +145,7 @@ export async function exportNeracaSaldo(params: Param) {
     ws.addRow({ kode: a.kode, nama: a.nama, debit: s?.debit ?? 0, kredit: s?.kredit ?? 0 })
   }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
 
 export async function exportNeraca(params: Param) {
@@ -153,11 +154,26 @@ export async function exportNeraca(params: Param) {
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
-  const [aset, liabilitas, ekuitas] = await Promise.all([
+  const [aset, liabilitas, ekuitas, pendapatan, beban] = await Promise.all([
     getSaldoAkunTipe("ASET", sampaiTanggal),
     getSaldoAkunTipe("LIABILITAS", sampaiTanggal),
     getSaldoAkunTipe("EKUITAS", sampaiTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal),
   ])
+
+  const labaBersih = pendapatan.total - beban.total
+  const adjustedEkuitas = [...ekuitas.items]
+  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === "3.1.2")
+  const existingSHUSaldo = shuIdx >= 0 ? ekuitas.items[shuIdx]!.saldo : 0
+  if (labaBersih !== 0) {
+    if (shuIdx >= 0) {
+      adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
+    } else {
+      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih, saldoNormal: "KREDIT" as const })
+    }
+  }
+  const totalEkuitas = ekuitas.total + labaBersih - existingSHUSaldo
 
   const wb = new ExcelJS.Workbook()
   const ws = wb.addWorksheet("Neraca")
@@ -173,10 +189,10 @@ export async function exportNeraca(params: Param) {
   ws.addRow({ akun: "Total Kewajiban", saldo: liabilitas.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "EKUITAS", saldo: "" }).font = { bold: true }
-  for (const i of ekuitas.items) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
-  ws.addRow({ akun: "Total Ekuitas", saldo: ekuitas.total }).font = { bold: true }
+  for (const i of adjustedEkuitas) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  ws.addRow({ akun: "Total Ekuitas", saldo: totalEkuitas }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
 
 export async function exportLabaRugi(params: Param) {
@@ -184,10 +200,11 @@ export async function exportLabaRugi(params: Param) {
   if (!session?.user) throw new Error("Unauthorized")
   const ExcelJS = await import("exceljs")
 
+  const dariTanggal = params.dari ? new Date(params.dari) : undefined
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
   const [pendapatan, beban] = await Promise.all([
-    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal),
-    getSaldoAkunTipe("BEBAN", sampaiTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal),
   ])
 
   const wb = new ExcelJS.Workbook()
@@ -205,7 +222,7 @@ export async function exportLabaRugi(params: Param) {
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "Laba / Rugi Bersih", saldo: pendapatan.total - beban.total }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
 
 export async function exportArusKas(params: Param) {
@@ -252,7 +269,7 @@ export async function exportArusKas(params: Param) {
   }
   ws.addRow({ tanggal: "", noJurnal: "", keterangan: "TOTAL", masuk: totalMasuk, keluar: totalKeluar }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
 
 export async function exportSHU(params: Param) {
@@ -266,10 +283,10 @@ export async function exportSHU(params: Param) {
     getSaldoAkunTipe("BEBAN", sampaiTanggal),
   ])
   const shuKotor = pendapatan.total - beban.total
-  const konfig = await getKonfig()
-  const pctCadangan = getNumber(konfig, "alokasi_cad", 20)
-  const cadangan = Math.round(shuKotor * (pctCadangan / 100) * 100) / 100
-  const shuDibagi = shuKotor - cadangan
+  const indikator = await prisma.indikatorSHU.findMany({
+    where: { isActive: true },
+    orderBy: { urutan: "asc" },
+  })
   const jumlahAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
 
   const wb = new ExcelJS.Workbook()
@@ -280,10 +297,11 @@ export async function exportSHU(params: Param) {
   ws.addRow({ ket: "Total Pendapatan", jumlah: pendapatan.total })
   ws.addRow({ ket: "Total Beban", jumlah: beban.total })
   ws.addRow({ ket: "SHU Kotor", jumlah: shuKotor }).font = { bold: true }
-  ws.addRow({ ket: "Cadangan (" + pctCadangan + "%)", jumlah: cadangan })
-  ws.addRow({ ket: "SHU Dibagi", jumlah: shuDibagi }).font = { bold: true }
+  for (const ind of indikator) {
+    const nominal = Math.round(shuKotor * (Number(ind.persentase) / 100) * 100) / 100
+    ws.addRow({ ket: `${ind.nama} (${Number(ind.persentase)}%)`, jumlah: nominal })
+  }
   ws.addRow({ ket: "Jumlah Anggota Aktif", jumlah: jumlahAnggota })
-  ws.addRow({ ket: "SHU per Anggota", jumlah: jumlahAnggota > 0 ? Math.round((shuDibagi / jumlahAnggota) * 100) / 100 : 0 }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as Promise<Buffer>
+  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }

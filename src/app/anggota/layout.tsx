@@ -1,14 +1,13 @@
-import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { LayoutDashboard, PiggyBank, HandCoins, Scale } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
+import { auth } from "@/lib/auth"
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/anggota", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/anggota/simpanan", label: "Simpanan Saya", icon: PiggyBank },
-  { href: "/anggota/pinjaman", label: "Pinjaman Saya", icon: HandCoins },
-  { href: "/anggota/shu", label: "SHU Saya", icon: Scale },
+  { href: "/anggota", label: "Dashboard", icon: "LayoutDashboard" },
+  { href: "/anggota/simpanan", label: "Simpanan Saya", icon: "PiggyBank" },
+  { href: "/anggota/pinjaman", label: "Pinjaman Saya", icon: "HandCoins" },
+  { href: "/anggota/shu", label: "SHU Saya", icon: "Scale" },
 ]
 
 export default async function AnggotaLayout({ children }: { children: React.ReactNode }) {
