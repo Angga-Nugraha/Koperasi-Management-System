@@ -258,7 +258,8 @@ export async function getAkunList() {
 async function getSaldoAkunTipe(
   tipe: string,
   sampaiTanggal?: Date,
-  dariTanggal?: Date
+  dariTanggal?: Date,
+  excludeClosing = false
 ) {
   const akunAll = await prisma.akun.findMany({
     where: { tipe: tipe as any, isActive: true },
@@ -273,6 +274,9 @@ async function getSaldoAkunTipe(
     whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
   } else if (sampaiTanggal) {
     whereJurnal.tanggal = { lte: sampaiTanggal }
+  }
+  if (excludeClosing) {
+    whereJurnal.keterangan = { not: { contains: "Jurnal Penutup" } }
   }
 
   const detail = await prisma.detailJurnal.findMany({
@@ -352,8 +356,8 @@ export async function getLabaRugi(dari?: string, sampai?: string) {
   const sampaiTanggal = sampai ? new Date(sampai + "T23:59:59") : undefined
 
   const [pendapatan, beban] = await Promise.all([
-    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal),
-    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal, true),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal, true),
   ])
 
   const labaBersih = pendapatan.total - beban.total

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { formatTanggal } from "@/lib/format"
 
-async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?: Date) {
+async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?: Date, excludeClosing = false) {
   const akunAll = await prisma.akun.findMany({
     where: { tipe: tipe as any, isActive: true },
   })
@@ -18,6 +18,9 @@ async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?
     whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
   } else if (sampaiTanggal) {
     whereJurnal.tanggal = { lte: sampaiTanggal }
+  }
+  if (excludeClosing) {
+    whereJurnal.keterangan = { not: { contains: "Jurnal Penutup" } }
   }
 
   const detail = await prisma.detailJurnal.findMany({
@@ -204,8 +207,8 @@ export async function exportLabaRugi(params: Param) {
   const dariTanggal = params.dari ? new Date(params.dari) : undefined
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
   const [pendapatan, beban] = await Promise.all([
-    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal),
-    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal),
+    getSaldoAkunTipe("PENDAPATAN", sampaiTanggal, dariTanggal, true),
+    getSaldoAkunTipe("BEBAN", sampaiTanggal, dariTanggal, true),
   ])
 
   const wb = new ExcelJS.Workbook()
