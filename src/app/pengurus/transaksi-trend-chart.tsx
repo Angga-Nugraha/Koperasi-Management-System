@@ -14,7 +14,7 @@ export function TransaksiTrendChart({ data }: Props) {
   const formatRp = (v: number) => `Rp ${v.toLocaleString("id-ID")}`
 
   return (
-    <div className="aspect-[2/1] w-full">
+    <div className="min-h-[250px] w-full md:aspect-[2/1]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-border" />

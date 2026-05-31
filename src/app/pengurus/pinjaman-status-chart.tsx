@@ -37,7 +37,7 @@ export function PinjamanStatusChart({ data }: Props) {
   }
 
   return (
-    <ChartContainer config={CHART_CONFIG} className="aspect-[2/1]">
+    <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
       <PieChart>
         <Pie
           data={data}
@@ -45,7 +45,7 @@ export function PinjamanStatusChart({ data }: Props) {
           nameKey="status"
           cx="50%"
           cy="50%"
-          outerRadius={80}
+          outerRadius="40%"
           label={({ status, count }) => `${LABELS[status] ?? status}: ${count}`}
         >
           {data.map((entry) => (

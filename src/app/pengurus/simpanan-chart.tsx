@@ -18,7 +18,7 @@ export function SimpananChart({ data }: Props) {
   }
 
   return (
-    <ChartContainer config={CHART_CONFIG} className="aspect-[2/1]">
+    <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
       <BarChart data={data} barGap={2}>
         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />
