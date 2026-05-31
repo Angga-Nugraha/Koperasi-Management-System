@@ -20,7 +20,6 @@ export default async function ArusKasPage({ searchParams }: Props) {
           >
             Export Excel
           </a>
-          <a href="/pengurus/jurnal" className="text-sm text-primary hover:underline">← Kembali</a>
         </div>
       </div>
       <ArusKasClient dari={dari ?? ""} sampai={sampai ?? ""} {...result} />

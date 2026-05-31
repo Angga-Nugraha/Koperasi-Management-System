@@ -23,7 +23,6 @@ export default async function LabaRugiPage({ searchParams }: Props) {
           >
             Export Excel
           </a>
-          <a href="/pengurus/jurnal" className="text-sm text-primary hover:underline">← Kembali</a>
         </div>
       </div>
       <LabaRugiClient dari={dari} sampai={sampai} {...result} />

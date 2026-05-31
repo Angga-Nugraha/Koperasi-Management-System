@@ -1,5 +1,4 @@
 import { getJurnalById } from "@/actions/jurnal"
-import Link from "next/link"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
 
@@ -17,12 +16,7 @@ export default async function JurnalDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/pengurus/jurnal" className="text-sm text-primary hover:underline">
-          ← Kembali
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
 
       <div className="rounded-lg border bg-card p-6">
         <div className="grid gap-4 sm:grid-cols-2">

@@ -20,7 +20,6 @@ export default async function NeracaPage({ searchParams }: Props) {
           >
             Export Excel
           </a>
-          <a href="/pengurus/jurnal" className="text-sm text-primary hover:underline">← Kembali</a>
         </div>
       </div>
       <NeracaClient sampai={sampai ?? ""} {...result} />

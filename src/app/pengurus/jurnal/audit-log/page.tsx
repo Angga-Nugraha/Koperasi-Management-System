@@ -18,7 +18,6 @@ export default async function AuditLogPage({ searchParams }: Props) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Audit Log</h1>
-        <a href="/pengurus/jurnal" className="text-sm text-primary hover:underline">← Kembali</a>
       </div>
 
       <AuditLogTable

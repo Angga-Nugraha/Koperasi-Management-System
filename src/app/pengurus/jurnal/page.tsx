@@ -22,8 +22,6 @@ export default async function JurnalPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <AkuntansiNav />
-
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <a
@@ -55,31 +53,5 @@ export default async function JurnalPage({ searchParams }: Props) {
         search={search}
       />
     </div>
-  )
-}
-
-function AkuntansiNav() {
-  const links = [
-    { href: "/pengurus/jurnal", label: "Jurnal Umum" },
-    { href: "/pengurus/jurnal/buku-besar", label: "Buku Besar" },
-    { href: "/pengurus/jurnal/neraca-saldo", label: "Neraca Saldo" },
-    { href: "/pengurus/jurnal/neraca", label: "Neraca" },
-    { href: "/pengurus/jurnal/laba-rugi", label: "Laba / Rugi" },
-    { href: "/pengurus/jurnal/arus-kas", label: "Arus Kas" },
-    { href: "/pengurus/jurnal/audit-log", label: "Audit Log" },
-  ]
-
-  return (
-    <nav className="flex flex-wrap gap-2">
-      {links.map((l) => (
-        <a
-          key={l.href}
-          href={l.href}
-          className="rounded-md bg-muted px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-        >
-          {l.label}
-        </a>
-      ))}
-    </nav>
   )
 }
