@@ -21,6 +21,11 @@ export const bayarAngsuranSchema = z.object({
   nominal: z.number().positive("Nominal pembayaran harus lebih dari 0"),
 })
 
+export const bayarAngsuranKeSchema = z.object({
+  pinjamanId: z.string().min(1),
+  angsuranKe: z.number().int().positive(),
+})
+
 export const hapusPinjamanSchema = z.object({
   pinjamanId: z.string().min(1),
 })

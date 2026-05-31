@@ -8,6 +8,7 @@ import {
   setujuiPinjamanSchema,
   cairkanPinjamanSchema,
   bayarAngsuranSchema,
+  bayarAngsuranKeSchema,
   hapusPinjamanSchema,
 } from "@/lib/validations/pinjaman"
 import { z } from "zod"
@@ -359,7 +360,7 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
 
   const pinjaman = await prisma.pinjaman.findUnique({
     where: { id: parsed.pinjamanId },
-    include: { angsuran: { where: { status: "BELUM_LUNAS" }, orderBy: { angsuranKe: "asc" } } },
+    include: { angsuran: { where: { status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } }, orderBy: { angsuranKe: "asc" } } },
   })
   if (!pinjaman) throw new Error("Pinjaman tidak ditemukan")
   if (pinjaman.status === "LUNAS") throw new Error("Pinjaman sudah lunas")
@@ -437,6 +438,107 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
     entityType: "ANGSURAN",
     entityId: nextAngsuran.id,
     newValue: { angsuranKe: nextAngsuran.angsuranKe, pokok, jasa, denda, isLunas },
+  })
+
+  revalidatePath("/pengurus/pinjaman")
+  revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
+  return { success: true }
+}
+
+export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchema>) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const parsed = bayarAngsuranKeSchema.parse(input)
+
+  const pinjaman = await prisma.pinjaman.findUnique({
+    where: { id: parsed.pinjamanId },
+    include: {
+      angsuran: {
+        where: { angsuranKe: parsed.angsuranKe },
+      },
+    },
+  })
+  if (!pinjaman) throw new Error("Pinjaman tidak ditemukan")
+  if (pinjaman.status === "LUNAS") throw new Error("Pinjaman sudah lunas")
+
+  const angsuran = pinjaman.angsuran[0]
+  if (!angsuran) throw new Error(`Angsuran ke-${parsed.angsuranKe} tidak ditemukan`)
+  if (angsuran.status === "LUNAS") throw new Error(`Angsuran ke-${parsed.angsuranKe} sudah lunas`)
+
+  const sisaAngsuran = await prisma.angsuran.count({
+    where: { pinjamanId: parsed.pinjamanId, status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } },
+  })
+  const isLastAngsuran = sisaAngsuran === 1
+  const pokok = isLastAngsuran ? Number(pinjaman.sisaPinjaman) : Number(angsuran.pokok)
+  const jasa = Number(angsuran.jasa)
+
+  const konfig = await getKonfig()
+  const dendaPerHari = getNumber(konfig, "denda_per_hari", 0.5)
+  const gracePeriod = getNumber(konfig, "grace_period", 7)
+
+  const tglBayar = new Date()
+  const jatuhTempo = angsuran.jatuhTempo
+  const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
+  const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
+  const denda = effectiveDaysLate > 0
+    ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+    : 0
+  const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
+  const isLunas = sisaPinjamanSetelah <= 0
+
+  await prisma.$transaction(async (tx) => {
+    await tx.angsuran.update({
+      where: { id: angsuran.id },
+      data: {
+        tglBayar,
+        denda,
+        total: pokok + jasa + denda,
+        status: "LUNAS",
+      },
+    })
+
+    await tx.pinjaman.update({
+      where: { id: parsed.pinjamanId },
+      data: {
+        sisaPinjaman: Math.max(0, sisaPinjamanSetelah),
+        status: isLunas ? "LUNAS" : pinjaman.status,
+      },
+    })
+
+    const entries: Array<{ akunKode: string; debit: number; kredit: number }> = []
+    const totalBayar = pokok + jasa + denda
+    if (totalBayar > 0) {
+      entries.push({ akunKode: COA_KAS, debit: totalBayar, kredit: 0 })
+    }
+    if (pokok > 0) {
+      entries.push({ akunKode: COA_PIUTANG_PINJAMAN, debit: 0, kredit: pokok })
+    }
+    if (jasa > 0) {
+      entries.push({ akunKode: COA_PENDAPATAN_JASA, debit: 0, kredit: jasa })
+    }
+    if (denda > 0) {
+      entries.push({ akunKode: COA_PENDAPATAN_DENDA, debit: 0, kredit: denda })
+    }
+
+    if (entries.length > 0) {
+      await buatJurnal(tx, {
+        tanggal: tglBayar,
+        keterangan: `Bayar Angsuran #${angsuran.angsuranKe} Pinjaman ${parsed.pinjamanId.slice(0, 8)}`,
+        entries,
+        createdById: session.user.id,
+      })
+    }
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "PAYMENT",
+    entityType: "ANGSURAN",
+    entityId: angsuran.id,
+    newValue: { angsuranKe: angsuran.angsuranKe, pokok, jasa, denda, isLunas },
   })
 
   revalidatePath("/pengurus/pinjaman")

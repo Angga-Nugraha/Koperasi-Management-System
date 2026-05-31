@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { formatTanggal } from "@/lib/format"
 import {
   Table,
   TableBody,
@@ -125,7 +126,7 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
             {data.map((l) => (
               <TableRow key={l.id}>
                 <TableCell className="text-sm whitespace-nowrap">
-                  {new Date(l.createdAt).toLocaleString("id-ID")}
+                  {formatTanggal(l.createdAt)}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground">
                   {l.userEmail}

@@ -5,8 +5,6 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Table,
   TableBody,
@@ -19,10 +17,10 @@ import {
   setujuiPinjaman,
   tolakPinjaman,
   cairkanPinjaman,
-  bayarAngsuran,
+  bayarAngsuranKe,
   hapusPinjaman,
 } from "@/actions/pinjaman"
-import { ArrowLeft, Check, X, Banknote, Wallet, Trash2 } from "lucide-react"
+import { ArrowLeft, Check, X, Banknote, Trash2, Wallet } from "lucide-react"
 import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
@@ -82,8 +80,6 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
-  const [bayarNominal, setBayarNominal] = useState("")
-
   const status = pinjaman.status
 
   async function handleAction(action: string) {
@@ -103,10 +99,20 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
         case "hapus":
           await hapusPinjaman({ pinjamanId: pinjaman.id })
           break
-        case "bayar":
-          await bayarAngsuran({ pinjamanId: pinjaman.id, nominal: Number(bayarNominal) })
-          break
       }
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Gagal memproses")
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  async function handleBayar(angsuranKe: number) {
+    setLoading(`bayar-${angsuranKe}`)
+    setError(null)
+    try {
+      await bayarAngsuranKe({ pinjamanId: pinjaman.id, angsuranKe })
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal memproses")
@@ -196,21 +202,9 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
           </Button>
         )}
         {status === "DICAIKKAN" && (
-          <div className="flex items-end gap-4">
-            <div className="space-y-1">
-              <Label htmlFor="bayar">Nominal Bayar (Rp)</Label>
-              <Input
-                id="bayar"
-                type="number"
-                placeholder={String(pinjaman.angsuranTotal)}
-                value={bayarNominal}
-                onChange={(e) => setBayarNominal(e.target.value)}
-                className="w-48"
-              />
-            </div>
-            <Button onClick={() => handleAction("bayar")} disabled={loading !== null || !bayarNominal}>
-              <Wallet className="mr-2 h-4 w-4" /> Bayar Angsuran
-            </Button>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Wallet className="h-4 w-4" />
+            Klik tombol <strong>Bayar</strong> pada angsuran yang ingin dibayarkan
           </div>
         )}
         {(status === "PENGAJUAN" || status === "DISETUJUI") && (
@@ -235,6 +229,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead>Tgl Bayar</TableHead>
                   <TableHead>Status</TableHead>
+                  {status === "DICAIKKAN" && <TableHead>Aksi</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -249,9 +244,24 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                     <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
                     <TableCell>
                       <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
-                        {a.status === "LUNAS" ? "Lunas" : "Belum"}
+                        {a.status === "LUNAS" ? "Lunas" : a.status === "TERLAMBAT" ? "Terlambat" : "Belum"}
                       </Badge>
                     </TableCell>
+                    {status === "DICAIKKAN" && (
+                      <TableCell>
+                        {a.status !== "LUNAS" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleBayar(a.angsuranKe)}
+                            disabled={loading === `bayar-${a.angsuranKe}`}
+                          >
+                            <Wallet className="mr-1 h-3 w-3" />
+                            {loading === `bayar-${a.angsuranKe}` ? "..." : "Bayar"}
+                          </Button>
+                        )}
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
