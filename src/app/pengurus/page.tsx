@@ -47,7 +47,7 @@ export default async function PengurusDashboard({ searchParams }: Props) {
     },
     {
       title: "SHU Tahun Ini",
-      value: `Rp ${data.totalSHU.toLocaleString("id-ID")}`,
+      value: `Rp ${Math.round(data.totalSHU).toLocaleString("id-ID")}`,
       sub: `Tahun ${tahun}`,
       icon: DollarSign,
     },

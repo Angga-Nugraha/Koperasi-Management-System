@@ -41,3 +41,7 @@ next-env.d.ts
 .vscode/
 *.swp
 *.swo
+
+# SSH keys
+github
+github.pub
