@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { createJurnalManual } from "@/actions/jurnal"
 
 type AkunItem = { id: string; kode: string; nama: string; tipe: string; saldoNormal: string }
@@ -124,19 +125,19 @@ export function JurnalManualForm({ akunList }: Props) {
       </div>
 
       <div className="rounded-md border">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="border-b bg-muted/50">
-              <th className="px-4 py-2 text-left font-medium">Akun</th>
-              <th className="px-4 py-2 text-right font-medium">Debit</th>
-              <th className="px-4 py-2 text-right font-medium">Kredit</th>
-              <th className="w-12" />
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow>
+              <TableHead>Akun</TableHead>
+              <TableHead className="text-right">Debit</TableHead>
+              <TableHead className="text-right">Kredit</TableHead>
+              <TableHead className="w-12" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {entries.map((entry, i) => (
-              <tr key={i} className="border-b">
-                <td className="px-4 py-2">
+              <TableRow key={i}>
+                <TableCell>
                   <Select
                     value={entry.akunId}
                     onValueChange={(v) => updateEntry(i, "akunId", v)}
@@ -152,8 +153,8 @@ export function JurnalManualForm({ akunList }: Props) {
                       ))}
                     </SelectContent>
                   </Select>
-                </td>
-                <td className="px-4 py-2">
+                </TableCell>
+                <TableCell>
                   <Input
                     type="number"
                     min="0"
@@ -161,8 +162,8 @@ export function JurnalManualForm({ akunList }: Props) {
                     value={entry.debit}
                     onChange={(e) => updateEntry(i, "debit", e.target.value)}
                   />
-                </td>
-                <td className="px-4 py-2">
+                </TableCell>
+                <TableCell>
                   <Input
                     type="number"
                     min="0"
@@ -170,8 +171,8 @@ export function JurnalManualForm({ akunList }: Props) {
                     value={entry.kredit}
                     onChange={(e) => updateEntry(i, "kredit", e.target.value)}
                   />
-                </td>
-                <td className="px-4 py-2">
+                </TableCell>
+                <TableCell>
                   <Button
                     type="button"
                     variant="ghost"
@@ -181,26 +182,11 @@ export function JurnalManualForm({ akunList }: Props) {
                   >
                     ✕
                   </Button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-          <tfoot>
-            <tr className="font-medium border-t">
-              <td className="px-4 py-2">Total</td>
-              <td className="px-4 py-2 text-right">{fmt(totalDebit)}</td>
-              <td className="px-4 py-2 text-right">{fmt(totalKredit)}</td>
-              <td />
-            </tr>
-            <tr>
-              <td colSpan={4} className="px-4 py-2">
-                <Button type="button" variant="outline" size="sm" onClick={addEntry}>
-                  + Tambah Baris
-                </Button>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {!balance && entries.length >= 2 && (

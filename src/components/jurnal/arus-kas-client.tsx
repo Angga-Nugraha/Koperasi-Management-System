@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { formatTanggal } from "@/lib/format"
 import { Label } from "@/components/ui/label"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type ArusKasItem = {
   tanggal: string
@@ -71,39 +72,39 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
       </div>
 
       <div className="rounded-md border">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="border-b bg-muted/50">
-              <th className="px-4 py-2 text-left font-medium">Tanggal</th>
-              <th className="px-4 py-2 text-left font-medium">Jurnal</th>
-              <th className="px-4 py-2 text-left font-medium">Keterangan</th>
-              <th className="px-4 py-2 text-right font-medium">Masuk</th>
-              <th className="px-4 py-2 text-right font-medium">Keluar</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow>
+              <TableHead>Tanggal</TableHead>
+              <TableHead>Jurnal</TableHead>
+              <TableHead>Keterangan</TableHead>
+              <TableHead className="text-right">Masuk</TableHead>
+              <TableHead className="text-right">Keluar</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {items.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+              <TableRow>
+                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                   Tidak ada transaksi kas
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
             {items.map((i, idx) => (
-              <tr key={idx} className="border-b">
-                <td className="px-4 py-2">{formatTanggal(i.tanggal)}</td>
-                <td className="px-4 py-2 font-mono text-xs">{i.noJurnal}</td>
-                <td className="px-4 py-2">{i.keterangan}</td>
-                <td className="px-4 py-2 text-right text-green-700">
+              <TableRow key={idx}>
+                <TableCell>{formatTanggal(i.tanggal)}</TableCell>
+                <TableCell className="font-mono text-xs">{i.noJurnal}</TableCell>
+                <TableCell>{i.keterangan}</TableCell>
+                <TableCell className="text-right text-green-700">
                   {i.masuk > 0 ? fmt(i.masuk) : "-"}
-                </td>
-                <td className="px-4 py-2 text-right text-red-700">
+                </TableCell>
+                <TableCell className="text-right text-red-700">
                   {i.keluar > 0 ? fmt(i.keluar) : "-"}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

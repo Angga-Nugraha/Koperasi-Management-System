@@ -1,6 +1,7 @@
 import { getJurnalById } from "@/actions/jurnal"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type Props = {
   params: Promise<{ jurnalId: string }>
@@ -37,34 +38,31 @@ export default async function JurnalDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-md border">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="border-b bg-muted/50">
-              <th className="px-4 py-2 text-left font-medium">Kode Akun</th>
-              <th className="px-4 py-2 text-left font-medium">Nama Akun</th>
-              <th className="px-4 py-2 text-right font-medium">Debit</th>
-              <th className="px-4 py-2 text-right font-medium">Kredit</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow>
+              <TableHead>Kode Akun</TableHead>
+              <TableHead>Nama Akun</TableHead>
+              <TableHead className="text-right">Debit</TableHead>
+              <TableHead className="text-right">Kredit</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {jurnal.detail.map((d, i) => (
-              <tr key={i} className="border-b">
-                <td className="px-4 py-2 font-mono text-xs">{d.akunKode}</td>
-                <td className="px-4 py-2">{d.akunNama}</td>
-                <td className="px-4 py-2 text-right">{d.debit > 0 ? fmt(d.debit) : "-"}</td>
-                <td className="px-4 py-2 text-right">{d.kredit > 0 ? fmt(d.kredit) : "-"}</td>
-              </tr>
+              <TableRow key={i}>
+                <TableCell className="font-mono text-xs">{d.akunKode}</TableCell>
+                <TableCell>{d.akunNama}</TableCell>
+                <TableCell className="text-right">{d.debit > 0 ? fmt(d.debit) : "-"}</TableCell>
+                <TableCell className="text-right">{d.kredit > 0 ? fmt(d.kredit) : "-"}</TableCell>
+              </TableRow>
             ))}
-            <tr className="font-medium">
-              <td colSpan={2} className="px-4 py-2 text-right">
-                Total
-              </td>
-              <td className="px-4 py-2 text-right">{fmt(jurnal.totalDebit)}</td>
-              <td className="px-4 py-2 text-right">{fmt(jurnal.totalKredit)}</td>
-            </tr>
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end gap-8 rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
+        <span>Total Debit: <span className="font-mono">{fmt(jurnal.totalDebit)}</span></span>
+        <span>Total Kredit: <span className="font-mono">{fmt(jurnal.totalKredit)}</span></span>
       </div>
     </div>
   )

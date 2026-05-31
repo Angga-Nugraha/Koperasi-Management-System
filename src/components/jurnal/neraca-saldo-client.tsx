@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type NeracaItem = {
   akunId: string
@@ -50,33 +51,30 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
       </form>
 
       <div className="rounded-md border">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="border-b bg-muted/50">
-              <th className="px-4 py-2 text-left font-medium">Kode</th>
-              <th className="px-4 py-2 text-left font-medium">Nama Akun</th>
-              <th className="px-4 py-2 text-right font-medium">Debit</th>
-              <th className="px-4 py-2 text-right font-medium">Kredit</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow>
+              <TableHead>Kode</TableHead>
+              <TableHead>Nama Akun</TableHead>
+              <TableHead className="text-right">Debit</TableHead>
+              <TableHead className="text-right">Kredit</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {data.map((item) => (
-              <tr key={item.akunId} className="border-b">
-                <td className="px-4 py-2 font-mono text-xs">{item.kode}</td>
-                <td className="px-4 py-2">{item.nama}</td>
-                <td className="px-4 py-2 text-right">{item.debit > 0 ? fmt(item.debit) : "-"}</td>
-                <td className="px-4 py-2 text-right">{item.kredit > 0 ? fmt(item.kredit) : "-"}</td>
-              </tr>
+              <TableRow key={item.akunId}>
+                <TableCell className="font-mono text-xs">{item.kode}</TableCell>
+                <TableCell>{item.nama}</TableCell>
+                <TableCell className="text-right">{item.debit > 0 ? fmt(item.debit) : "-"}</TableCell>
+                <TableCell className="text-right">{item.kredit > 0 ? fmt(item.kredit) : "-"}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-          <tfoot>
-            <tr className="font-medium border-t">
-              <td colSpan={2} className="px-4 py-2 text-right">Total</td>
-              <td className="px-4 py-2 text-right">{fmt(totalDebit)}</td>
-              <td className="px-4 py-2 text-right">{fmt(totalKredit)}</td>
-            </tr>
-          </tfoot>
-        </table>
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end gap-8 rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
+        <span>Total Debit: <span className="font-mono">{fmt(totalDebit)}</span></span>
+        <span>Total Kredit: <span className="font-mono">{fmt(totalKredit)}</span></span>
       </div>
     </div>
   )

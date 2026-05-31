@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { formatTanggal } from "@/lib/format"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type AkunItem = { id: string; kode: string; nama: string; tipe: string; saldoNormal: string }
 
@@ -102,37 +103,37 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
           </div>
 
           <div className="rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 z-10">
-                <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-2 text-left font-medium">Tanggal</th>
-                  <th className="px-4 py-2 text-left font-medium">No Jurnal</th>
-                  <th className="px-4 py-2 text-left font-medium">Keterangan</th>
-                  <th className="px-4 py-2 text-right font-medium">Debit</th>
-                  <th className="px-4 py-2 text-right font-medium">Kredit</th>
-                  <th className="px-4 py-2 text-right font-medium">Saldo</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader className="sticky top-0 z-10">
+                <TableRow>
+                  <TableHead>Tanggal</TableHead>
+                  <TableHead>No Jurnal</TableHead>
+                  <TableHead>Keterangan</TableHead>
+                  <TableHead className="text-right">Debit</TableHead>
+                  <TableHead className="text-right">Kredit</TableHead>
+                  <TableHead className="text-right">Saldo</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {rows.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                  <TableRow>
+                    <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
                       Tidak ada transaksi untuk periode ini
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
                 {rows.map((r, i) => (
-                  <tr key={i} className="border-b">
-                    <td className="px-4 py-2">{formatTanggal(r.tanggal)}</td>
-                    <td className="px-4 py-2 font-mono text-xs">{r.noJurnal}</td>
-                    <td className="px-4 py-2">{r.keterangan}</td>
-                    <td className="px-4 py-2 text-right">{r.debit > 0 ? fmt(r.debit) : "-"}</td>
-                    <td className="px-4 py-2 text-right">{r.kredit > 0 ? fmt(r.kredit) : "-"}</td>
-                    <td className="px-4 py-2 text-right font-medium">{fmt(r.saldo)}</td>
-                  </tr>
+                  <TableRow key={i}>
+                    <TableCell>{formatTanggal(r.tanggal)}</TableCell>
+                    <TableCell className="font-mono text-xs">{r.noJurnal}</TableCell>
+                    <TableCell>{r.keterangan}</TableCell>
+                    <TableCell className="text-right">{r.debit > 0 ? fmt(r.debit) : "-"}</TableCell>
+                    <TableCell className="text-right">{r.kredit > 0 ? fmt(r.kredit) : "-"}</TableCell>
+                    <TableCell className="text-right font-medium">{fmt(r.saldo)}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </>
       )}

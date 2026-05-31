@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 type Props = {
   sampai: string
@@ -37,68 +38,59 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
       </form>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="overflow-x-auto rounded-md border">
+        <div className="rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">ASET</div>
-          <table className="w-full text-sm">
-            <tbody>
+          <Table>
+            <TableBody>
               {aset.items.map((i) => (
-                <tr key={i.kode} className="border-b">
-                  <td className="px-4 py-2 font-mono text-xs">{i.kode}</td>
-                  <td className="px-4 py-2">{i.nama}</td>
-                  <td className="px-4 py-2 text-right">{fmt(i.saldo)}</td>
-                </tr>
+                <TableRow key={i.kode}>
+                  <TableCell className="font-mono text-xs">{i.kode}</TableCell>
+                  <TableCell>{i.nama}</TableCell>
+                  <TableCell className="text-right">{fmt(i.saldo)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-            <tfoot>
-              <tr className="border-t font-medium">
-                <td colSpan={2} className="px-4 py-2 text-right">Total Aset</td>
-                <td className="px-4 py-2 text-right">{fmt(aset.total)}</td>
-              </tr>
-            </tfoot>
-          </table>
+            </TableBody>
+          </Table>
+          <div className="border-t px-4 py-2 text-right text-sm font-medium">
+            Total Aset: <span className="font-mono">{fmt(aset.total)}</span>
+          </div>
         </div>
 
         <div className="space-y-6">
-          <div className="overflow-x-auto rounded-md border">
+          <div className="rounded-md border">
             <div className="border-b bg-muted/50 px-4 py-2 font-semibold">KEWAJIBAN</div>
-            <table className="w-full text-sm">
-              <tbody>
+            <Table>
+              <TableBody>
                 {liabilitas.items.map((i) => (
-                  <tr key={i.kode} className="border-b">
-                    <td className="px-4 py-2 font-mono text-xs">{i.kode}</td>
-                    <td className="px-4 py-2">{i.nama}</td>
-                    <td className="px-4 py-2 text-right">{fmt(i.saldo)}</td>
-                  </tr>
+                  <TableRow key={i.kode}>
+                    <TableCell className="font-mono text-xs">{i.kode}</TableCell>
+                    <TableCell>{i.nama}</TableCell>
+                    <TableCell className="text-right">{fmt(i.saldo)}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-              <tfoot>
-                <tr className="border-t font-medium">
-                  <td colSpan={2} className="px-4 py-2 text-right">Total Kewajiban</td>
-                  <td className="px-4 py-2 text-right">{fmt(liabilitas.total)}</td>
-                </tr>
-              </tfoot>
-            </table>
+              </TableBody>
+            </Table>
+            <div className="border-t px-4 py-2 text-right text-sm font-medium">
+              Total Kewajiban: <span className="font-mono">{fmt(liabilitas.total)}</span>
+            </div>
           </div>
 
-          <div className="overflow-x-auto rounded-md border">
+          <div className="rounded-md border">
             <div className="border-b bg-muted/50 px-4 py-2 font-semibold">EKUITAS</div>
-            <table className="w-full text-sm">
-              <tbody>
+            <Table>
+              <TableBody>
                 {ekuitas.items.map((i) => (
-                  <tr key={i.kode} className="border-b">
-                    <td className="px-4 py-2 font-mono text-xs">{i.kode}</td>
-                    <td className="px-4 py-2">{i.nama}</td>
-                    <td className="px-4 py-2 text-right">{fmt(i.saldo)}</td>
-                  </tr>
+                  <TableRow key={i.kode}>
+                    <TableCell className="font-mono text-xs">{i.kode}</TableCell>
+                    <TableCell>{i.nama}</TableCell>
+                    <TableCell className="text-right">{fmt(i.saldo)}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-              <tfoot>
-                <tr className="border-t font-medium">
-                  <td colSpan={2} className="px-4 py-2 text-right">Total Ekuitas</td>
-                  <td className="px-4 py-2 text-right">{fmt(ekuitas.total)}</td>
-                </tr>
-              </tfoot>
-            </table>
+              </TableBody>
+            </Table>
+            <div className="border-t px-4 py-2 text-right text-sm font-medium">
+              Total Ekuitas: <span className="font-mono">{fmt(ekuitas.total)}</span>
+            </div>
           </div>
 
           <div className="rounded-md border bg-primary/5 p-4 text-center">

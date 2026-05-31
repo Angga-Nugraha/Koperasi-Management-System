@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 type Props = {
   dari: string
@@ -44,46 +45,40 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
       </form>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="overflow-x-auto rounded-md border">
+        <div className="rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">PENDAPATAN</div>
-          <table className="w-full text-sm">
-            <tbody>
+          <Table>
+            <TableBody>
               {pendapatan.items.map((i) => (
-                <tr key={i.kode} className="border-b">
-                  <td className="px-4 py-2 font-mono text-xs">{i.kode}</td>
-                  <td className="px-4 py-2">{i.nama}</td>
-                  <td className="px-4 py-2 text-right">{fmt(i.saldo)}</td>
-                </tr>
+                <TableRow key={i.kode}>
+                  <TableCell className="font-mono text-xs">{i.kode}</TableCell>
+                  <TableCell>{i.nama}</TableCell>
+                  <TableCell className="text-right">{fmt(i.saldo)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-            <tfoot>
-              <tr className="border-t font-medium">
-                <td colSpan={2} className="px-4 py-2 text-right">Total Pendapatan</td>
-                <td className="px-4 py-2 text-right">{fmt(pendapatan.total)}</td>
-              </tr>
-            </tfoot>
-          </table>
+            </TableBody>
+          </Table>
+          <div className="border-t px-4 py-2 text-right text-sm font-medium">
+            Total Pendapatan: <span className="font-mono">{fmt(pendapatan.total)}</span>
+          </div>
         </div>
 
-        <div className="overflow-x-auto rounded-md border">
+        <div className="rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">BEBAN</div>
-          <table className="w-full text-sm">
-            <tbody>
+          <Table>
+            <TableBody>
               {beban.items.map((i) => (
-                <tr key={i.kode} className="border-b">
-                  <td className="px-4 py-2 font-mono text-xs">{i.kode}</td>
-                  <td className="px-4 py-2">{i.nama}</td>
-                  <td className="px-4 py-2 text-right">{fmt(i.saldo)}</td>
-                </tr>
+                <TableRow key={i.kode}>
+                  <TableCell className="font-mono text-xs">{i.kode}</TableCell>
+                  <TableCell>{i.nama}</TableCell>
+                  <TableCell className="text-right">{fmt(i.saldo)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-            <tfoot>
-              <tr className="border-t font-medium">
-                <td colSpan={2} className="px-4 py-2 text-right">Total Beban</td>
-                <td className="px-4 py-2 text-right">{fmt(beban.total)}</td>
-              </tr>
-            </tfoot>
-          </table>
+            </TableBody>
+          </Table>
+          <div className="border-t px-4 py-2 text-right text-sm font-medium">
+            Total Beban: <span className="font-mono">{fmt(beban.total)}</span>
+          </div>
         </div>
       </div>
 
