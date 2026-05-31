@@ -237,7 +237,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                 {(() => {
                   let sisa = pinjaman.jumlah
                   return pinjaman.angsuran.map((a) => {
-                    const pokokDibayar = a.status === "LUNAS" ? a.pokok : 0
+                    const pokokDibayar = a.status === "LUNAS" || a.status === "TERLAMBAT" ? a.pokok : 0
                     sisa -= pokokDibayar
                     return (
                       <TableRow key={a.id}>

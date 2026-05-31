@@ -102,8 +102,8 @@ export async function getPinjamanById(pinjamanId: string) {
     tglCair: raw.tglCair?.toISOString() ?? null,
     keterangan: raw.keterangan,
     createdAt: raw.createdAt.toISOString(),
-    angsuran: raw.angsuran.map((a, idx, arr) => {
-      const isLastUnpaid = idx === arr.length - 1 && a.status !== "LUNAS"
+    angsuran: raw.angsuran.map((a) => {
+      const isLastUnpaid = a.status !== "LUNAS" && Number(raw.sisaPinjaman) < Number(a.pokok)
       const pokok = isLastUnpaid ? Number(raw.sisaPinjaman) : Number(a.pokok)
       return {
         id: a.id,
