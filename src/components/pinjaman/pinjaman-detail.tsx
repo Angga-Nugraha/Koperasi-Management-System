@@ -227,46 +227,52 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                   <TableHead className="text-right">Jasa</TableHead>
                   <TableHead className="text-right">Denda</TableHead>
                   <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-right">Sisa</TableHead>
                   <TableHead>Tgl Bayar</TableHead>
                   <TableHead>Status</TableHead>
                   {status === "DICAIKKAN" && <TableHead>Aksi</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(status === "DICAIKKAN"
-                  ? pinjaman.angsuran.filter((a) => a.status !== "LUNAS")
-                  : pinjaman.angsuran
-                ).map((a) => (
-                  <TableRow key={a.id}>
-                    <TableCell>{a.angsuranKe}</TableCell>
-                    <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
-                    <TableCell className="text-right font-mono">Rp{a.pokok.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-right font-mono">Rp{a.jasa.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-right font-mono">Rp{a.denda.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-right font-mono">Rp{a.total.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
-                    <TableCell>
-                      <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
-                        {a.status === "LUNAS" ? "Lunas" : a.status === "TERLAMBAT" ? "Terlambat" : "Belum"}
-                      </Badge>
-                    </TableCell>
-                    {status === "DICAIKKAN" && (
-                      <TableCell>
-                        {a.status !== "LUNAS" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleBayar(a.angsuranKe)}
-                            disabled={loading === `bayar-${a.angsuranKe}`}
-                          >
-                            <Wallet className="mr-1 h-3 w-3" />
-                            {loading === `bayar-${a.angsuranKe}` ? "..." : "Bayar"}
-                          </Button>
+                {(() => {
+                  let sisa = pinjaman.jumlah
+                  return pinjaman.angsuran.map((a) => {
+                    const pokokDibayar = a.status === "LUNAS" ? a.pokok : 0
+                    sisa -= pokokDibayar
+                    return (
+                      <TableRow key={a.id}>
+                        <TableCell>{a.angsuranKe}</TableCell>
+                        <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
+                        <TableCell className="text-right font-mono">Rp{a.pokok.toLocaleString("id-ID")}</TableCell>
+                        <TableCell className="text-right font-mono">Rp{a.jasa.toLocaleString("id-ID")}</TableCell>
+                        <TableCell className="text-right font-mono">Rp{a.denda.toLocaleString("id-ID")}</TableCell>
+                        <TableCell className="text-right font-mono">Rp{a.total.toLocaleString("id-ID")}</TableCell>
+                        <TableCell className="text-right font-mono">Rp{Math.max(0, sisa).toLocaleString("id-ID")}</TableCell>
+                        <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
+                        <TableCell>
+                          <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
+                            {a.status === "LUNAS" ? "Lunas" : a.status === "TERLAMBAT" ? "Terlambat" : "Belum"}
+                          </Badge>
+                        </TableCell>
+                        {status === "DICAIKKAN" && (
+                          <TableCell>
+                            {a.status !== "LUNAS" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleBayar(a.angsuranKe)}
+                                disabled={loading === `bayar-${a.angsuranKe}`}
+                              >
+                                <Wallet className="mr-1 h-3 w-3" />
+                                {loading === `bayar-${a.angsuranKe}` ? "..." : "Bayar"}
+                              </Button>
+                            )}
+                          </TableCell>
                         )}
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))}
+                      </TableRow>
+                    )
+                  })
+                })()}
               </TableBody>
             </Table>
           </CardContent>
