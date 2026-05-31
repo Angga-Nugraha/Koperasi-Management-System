@@ -173,7 +173,8 @@ async function main() {
   for (let pi = 0; pi < pinjamanData.length; pi++) {
     const p = pinjamanData[pi]
     const bungaBln = Number(p.jenis.bunga) / 100
-    const angsuranPokok = Math.round(p.jumlah / p.tenor)
+    const angsuranPokok = Math.floor(p.jumlah / p.tenor)
+    const angsuranPokokTerakhir = p.jumlah - angsuranPokok * (p.tenor - 1)
     const angsuranJasa = Math.round(p.jumlah * bungaBln)
     const angsuranTotal = angsuranPokok + angsuranJasa
 
@@ -243,11 +244,13 @@ async function main() {
         }
       }
 
+      const pokokAktual = a === p.tenor ? angsuranPokokTerakhir : angsuranPokok
+
       await prisma.angsuran.create({
         data: {
           pinjamanId: pinjaman.id, angsuranKe: a,
           jatuhTempo, tglBayar,
-          pokok: angsuranPokok, jasa: angsuranJasa,
+          pokok: pokokAktual, jasa: angsuranJasa,
           denda,
           total: angsuranTotal + (status === "TERLAMBAT" ? denda : 0),
           status,
@@ -255,14 +258,14 @@ async function main() {
       })
 
       if (status === "LUNAS" || status === "TERLAMBAT") {
-        totalPokokDibayar += angsuranPokok
+        totalPokokDibayar += pokokAktual
         const dendaNominal = status === "TERLAMBAT" ? denda : 0
         await buatJurnalWrapper({
           tanggal: tglBayar,
           keterangan: `Angsuran ${pinjaman.id.substring(0,8)} ke-${a}${dendaNominal > 0 ? " (telat)" : ""}`,
           entries: [
             { akunKode: "1.1.1", debit: angsuranTotal + dendaNominal, kredit: 0 },
-            { akunKode: "1.2.1", debit: 0, kredit: angsuranPokok },
+            { akunKode: "1.2.1", debit: 0, kredit: pokokAktual },
             { akunKode: "4.1.1", debit: 0, kredit: angsuranJasa },
             ...(dendaNominal > 0 ? [{ akunKode: "4.1.3", debit: 0, kredit: dendaNominal }] : []),
           ],

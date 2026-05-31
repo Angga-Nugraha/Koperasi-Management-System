@@ -102,17 +102,21 @@ export async function getPinjamanById(pinjamanId: string) {
     tglCair: raw.tglCair?.toISOString() ?? null,
     keterangan: raw.keterangan,
     createdAt: raw.createdAt.toISOString(),
-    angsuran: raw.angsuran.map((a) => ({
-      id: a.id,
-      angsuranKe: a.angsuranKe,
-      jatuhTempo: a.jatuhTempo.toISOString(),
-      tglBayar: a.tglBayar?.toISOString() ?? null,
-      pokok: Number(a.pokok),
-      jasa: Number(a.jasa),
-      denda: Number(a.denda),
-      total: Number(a.total),
-      status: a.status,
-    })),
+    angsuran: raw.angsuran.map((a, idx, arr) => {
+      const isLastUnpaid = idx === arr.length - 1 && a.status !== "LUNAS"
+      const pokok = isLastUnpaid ? Number(raw.sisaPinjaman) : Number(a.pokok)
+      return {
+        id: a.id,
+        angsuranKe: a.angsuranKe,
+        jatuhTempo: a.jatuhTempo.toISOString(),
+        tglBayar: a.tglBayar?.toISOString() ?? null,
+        pokok,
+        jasa: Number(a.jasa),
+        denda: Number(a.denda),
+        total: pokok + Number(a.jasa) + Number(a.denda),
+        status: a.status,
+      }
+    }),
   }
 }
 
@@ -313,13 +317,17 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
       const jatuhTempo = new Date(tglCair)
       jatuhTempo.setMonth(jatuhTempo.getMonth() + bulan)
 
+      const pokokBulan = bulan === pinjaman.tenor
+        ? Number(pinjaman.jumlah) - Number(pinjaman.angsuranPokok) * (pinjaman.tenor - 1)
+        : Number(pinjaman.angsuranPokok)
+
       return {
         pinjamanId: parsed.pinjamanId,
         angsuranKe: bulan,
         jatuhTempo,
-        pokok: Number(pinjaman.angsuranPokok),
+        pokok: pokokBulan,
         jasa: Number(pinjaman.angsuranJasa),
-        total: Number(pinjaman.angsuranTotal),
+        total: pokokBulan + Number(pinjaman.angsuranJasa),
         status: "BELUM_LUNAS" as const,
       }
     })
