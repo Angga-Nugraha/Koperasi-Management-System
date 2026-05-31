@@ -125,7 +125,7 @@ export function JurnalManualForm({ akunList }: Props) {
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr className="border-b bg-muted/50">
               <th className="px-4 py-2 text-left font-medium">Akun</th>
               <th className="px-4 py-2 text-right font-medium">Debit</th>

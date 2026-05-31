@@ -27,7 +27,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
   const namaKoperasi = generalInfo?.namaKoperasi ?? "Simko"
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}

@@ -72,7 +72,7 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr className="border-b bg-muted/50">
               <th className="px-4 py-2 text-left font-medium">Tanggal</th>
               <th className="px-4 py-2 text-left font-medium">Jurnal</th>
