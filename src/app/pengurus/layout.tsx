@@ -18,7 +18,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
   const session = await auth()
   const role = session?.user?.role
 
-  if (role !== "PENGURUS" && role !== "BENDAHARA" && role !== "PENGAWAS") {
+  if (role !== "PENGURUS" && role !== "BENDAHARA") {
     redirect("/login")
   }
 
@@ -33,7 +33,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}
         logoKoperasi={logoKoperasi}
-        roleLabel={role === "BENDAHARA" ? "Bendahara" : role === "PENGAWAS" ? "Pengawas" : "Pengurus"}
+        roleLabel={role === "BENDAHARA" ? "Bendahara" : "Pengurus"}
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />

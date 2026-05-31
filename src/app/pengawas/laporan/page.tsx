@@ -1,43 +1,43 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FileText, FileSpreadsheet, ArrowRight } from "lucide-react"
+import { FileText, FileSpreadsheet } from "lucide-react"
 import Link from "next/link"
 
 const REPORTS = [
   {
     title: "Neraca",
     desc: "Laporan posisi keuangan (aset, liabilitas, ekuitas)",
-    viewHref: "/pengurus/jurnal/neraca",
+    viewHref: "/pengawas/laporan/neraca",
     exportType: "neraca",
   },
   {
     title: "Laba / Rugi",
     desc: "Laporan pendapatan dan beban periode tertentu",
-    viewHref: "/pengurus/jurnal/laba-rugi",
+    viewHref: "/pengawas/laporan/laba-rugi",
     exportType: "laba-rugi",
   },
   {
     title: "Arus Kas",
     desc: "Laporan arus kas masuk dan keluar",
-    viewHref: "/pengurus/jurnal/arus-kas",
+    viewHref: "/pengawas/laporan/arus-kas",
     exportType: "arus-kas",
   },
   {
     title: "Neraca Saldo",
     desc: "Daftar saldo seluruh akun",
-    viewHref: "/pengurus/jurnal/neraca-saldo",
+    viewHref: "/pengawas/laporan/neraca-saldo",
     exportType: "neraca-saldo",
   },
   {
     title: "Buku Besar",
     desc: "Riwayat transaksi per akun",
-    viewHref: "/pengurus/jurnal/buku-besar",
+    viewHref: "/pengawas/laporan/buku-besar?akunId=",
     exportType: "buku-besar",
   },
   {
     title: "SHU",
     desc: "Sisa Hasil Usaha",
-    viewHref: "/pengurus/shu",
+    viewHref: "/pengawas/laporan/shu",
     exportType: "shu",
   },
 ]
@@ -77,19 +77,6 @@ export default function LaporanPengawasPage() {
         ))}
       </div>
 
-      <Card className="border-l-4 border-l-blue-500">
-        <CardHeader>
-          <CardTitle className="text-base">Jurnal Umum</CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">Lihat daftar seluruh jurnal dan transaksi</p>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/pengurus/jurnal">
-              Buka Jurnal <ArrowRight className="ml-1 h-3 w-3" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
     </div>
   )
 }
