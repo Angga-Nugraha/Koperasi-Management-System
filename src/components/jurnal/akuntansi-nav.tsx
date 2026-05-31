@@ -21,7 +21,7 @@ export function AkuntansiNav() {
       {tabs.map((t) => {
         const isActive = t.href === "/pengurus/jurnal"
           ? pathname === "/pengurus/jurnal"
-          : pathname.startsWith(t.href)
+          : pathname.startsWith(t.href + "/") || pathname === t.href
         return (
           <Link
             key={t.href}
