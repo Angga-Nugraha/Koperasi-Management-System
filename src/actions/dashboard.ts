@@ -40,7 +40,10 @@ export async function getDashboardPengurus(tahun: number) {
   const detailPendapatanBeban = await prisma.detailJurnal.findMany({
     where: {
       akun: { tipe: { in: ["PENDAPATAN", "BEBAN"] } },
-      jurnal: { tanggal: range },
+      jurnal: {
+        tanggal: range,
+        keterangan: { not: { contains: "Jurnal Penutup" } },
+      },
     },
     include: { akun: { select: { tipe: true } } },
   })
