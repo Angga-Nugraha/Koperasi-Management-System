@@ -9,6 +9,10 @@ function tahunRange(tahun: number) {
   }
 }
 
+function hinggaAkhirTahun(tahun: number) {
+  return { lte: new Date(`${tahun}-12-31T23:59:59+07:00`) }
+}
+
 export async function getTahunList() {
   const years = await prisma.jurnalUmum.findMany({
     select: { tanggal: true },
@@ -213,32 +217,32 @@ export async function getDashboardPengawas(tahun: number) {
   })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
-  const range = tahunRange(tahun)
+  const cumulative = hinggaAkhirTahun(tahun)
 
   const saldoKas = await prisma.akun.findFirst({ where: { kode: "1.1.1" } })
   const totalPiutang = await prisma.akun.findFirst({ where: { kode: "1.2.1" } })
 
   const detailKas = saldoKas
     ? await prisma.detailJurnal.aggregate({
-        where: { akunId: saldoKas.id, jurnal: { tanggal: range } },
+        where: { akunId: saldoKas.id, jurnal: { tanggal: cumulative } },
         _sum: { debit: true, kredit: true },
       })
     : null
 
   const debitKas = detailKas?._sum.debit ?? 0
   const kreditKas = detailKas?._sum.kredit ?? 0
-  const saldoKasAkun = Number(debitKas) - Number(kreditKas)
+  const saldoKasAkun = Math.round(Number(debitKas) - Number(kreditKas))
 
   const detailPiutang = totalPiutang
     ? await prisma.detailJurnal.aggregate({
-        where: { akunId: totalPiutang.id, jurnal: { tanggal: range } },
+        where: { akunId: totalPiutang.id, jurnal: { tanggal: cumulative } },
         _sum: { debit: true, kredit: true },
       })
     : null
 
   const debitPiutang = detailPiutang?._sum.debit ?? 0
   const kreditPiutang = detailPiutang?._sum.kredit ?? 0
-  const saldoPiutang = Number(debitPiutang) - Number(kreditPiutang)
+  const saldoPiutang = Math.round(Number(debitPiutang) - Number(kreditPiutang))
 
   return {
     totalAuditLog,
