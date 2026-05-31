@@ -37,7 +37,7 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
       </form>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">ASET</div>
           <table className="w-full text-sm">
             <tbody>
@@ -59,7 +59,7 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-md border">
+          <div className="overflow-x-auto rounded-md border">
             <div className="border-b bg-muted/50 px-4 py-2 font-semibold">KEWAJIBAN</div>
             <table className="w-full text-sm">
               <tbody>
@@ -80,7 +80,7 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
             </table>
           </div>
 
-          <div className="rounded-md border">
+          <div className="overflow-x-auto rounded-md border">
             <div className="border-b bg-muted/50 px-4 py-2 font-semibold">EKUITAS</div>
             <table className="w-full text-sm">
               <tbody>

@@ -44,7 +44,7 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
       </form>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">PENDAPATAN</div>
           <table className="w-full text-sm">
             <tbody>
@@ -65,7 +65,7 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
           </table>
         </div>
 
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">BEBAN</div>
           <table className="w-full text-sm">
             <tbody>
