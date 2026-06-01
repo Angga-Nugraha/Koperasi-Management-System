@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { getSimpananAnggota, getMutasiAnggota } from "@/actions/simpanan"
+import { getSimpananAnggota, getMutasiAnggota, getTagihanWajibAnggota, ensureTagihanWajibAnggota } from "@/actions/simpanan"
 import { AnggotaSimpananView } from "@/components/simpanan/anggota-simpanan-view"
 
 type Props = { searchParams: Promise<{ page?: string }> }
@@ -16,8 +16,12 @@ export default async function AnggotaSimpananPage({ searchParams }: Props) {
     return <p className="text-muted-foreground">Akun ini tidak terhubung ke data anggota.</p>
   }
 
-  const simpanan = await getSimpananAnggota(anggotaId)
-  const mutasi = await getMutasiAnggota(anggotaId, { page: Number(page) || 1 })
+  await ensureTagihanWajibAnggota(anggotaId)
+  const [simpanan, mutasi, tagihan] = await Promise.all([
+    getSimpananAnggota(anggotaId),
+    getMutasiAnggota(anggotaId, { page: Number(page) || 1 }),
+    getTagihanWajibAnggota(anggotaId),
+  ])
 
-  return <AnggotaSimpananView simpanan={simpanan} mutasi={mutasi} />
+  return <AnggotaSimpananView simpanan={simpanan} mutasi={mutasi} tagihan={tagihan} />
 }

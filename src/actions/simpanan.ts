@@ -3,10 +3,11 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema } from "@/lib/validations/simpanan"
+import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema, generateTagihanSchema, getTagihanListSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
+import { generateNoStrukTagihan, generateNoStrukSimpanan } from "@/lib/struk"
 
 export async function getJenisSimpananList() {
   const session = await auth()
@@ -143,6 +144,8 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
     throw new Error(`Setoran ${jenis.nama} minimal Rp${Number(jenis.minimalSetoran).toLocaleString("id-ID")}`)
   }
 
+  const noStruk = await generateNoStrukSimpanan()
+
   await prisma.$transaction(async (tx) => {
     const simpanan = await tx.simpanan.upsert({
       where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
@@ -164,6 +167,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
         nominal: parsed.nominal,
         saldoSetelah: Number(simpanan.saldo),
         keterangan: parsed.keterangan || null,
+        noStruk,
       },
     })
 
@@ -190,7 +194,19 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   revalidatePath("/pengurus/simpanan")
   revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
-  return { success: true }
+  return {
+    success: true,
+    data: {
+      noStruk,
+      nominal: parsed.nominal,
+      createdAt: new Date().toISOString(),
+      anggota: { nama: anggota.nama, noAnggota: anggota.noAnggota },
+      jenisSimpanan: { nama: jenis.nama, kode: jenis.kode },
+      tipe: "SETORAN" as const,
+      petugas: session.user.email ?? "Petugas",
+      keterangan: parsed.keterangan || null,
+    },
+  }
 }
 
 export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) {
@@ -213,6 +229,8 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   if (!simpanan) throw new Error("Simpanan tidak ditemukan")
   if (Number(simpanan.saldo) < parsed.nominal) throw new Error("Saldo tidak mencukupi")
 
+  const noStruk = await generateNoStrukSimpanan()
+
   await prisma.$transaction(async (tx) => {
     await tx.simpanan.update({
       where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
@@ -227,6 +245,7 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
         nominal: parsed.nominal,
         saldoSetelah: Number(simpanan.saldo) - parsed.nominal,
         keterangan: parsed.keterangan || null,
+        noStruk,
       },
     })
 
@@ -253,7 +272,19 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   revalidatePath("/pengurus/simpanan")
   revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
-  return { success: true }
+  return {
+    success: true,
+    data: {
+      noStruk,
+      nominal: parsed.nominal,
+      createdAt: new Date().toISOString(),
+      anggota: { nama: anggota.nama, noAnggota: anggota.noAnggota },
+      jenisSimpanan: { nama: jenis.nama, kode: jenis.kode },
+      tipe: "PENARIKAN" as const,
+      petugas: session.user.email ?? "Petugas",
+      keterangan: parsed.keterangan || null,
+    },
+  }
 }
 
 export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananSchema>) {
@@ -332,6 +363,264 @@ export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananS
   revalidatePath("/pengurus/anggota")
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
   return { success: true }
+}
+
+export async function getTagihanWajibList(params: z.infer<typeof getTagihanListSchema>) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const { bulan, tahun, status, search, page, pageSize } = getTagihanListSchema.parse(params)
+
+  const where: Record<string, unknown> = {}
+  if (bulan) where.bulan = bulan
+  if (tahun) where.tahun = tahun
+  if (status) where.status = status
+  if (search) {
+    where.anggota = {
+      OR: [
+        { nama: { contains: search, mode: "insensitive" } },
+        { noAnggota: { contains: search, mode: "insensitive" } },
+      ],
+    }
+  }
+
+  const [data, total] = await Promise.all([
+    prisma.tagihanSimpanan.findMany({
+      where,
+      include: {
+        anggota: { select: { id: true, noAnggota: true, nama: true } },
+      },
+      orderBy: [{ tahun: "desc" }, { bulan: "desc" }, { anggota: { nama: "asc" } }],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.tagihanSimpanan.count({ where }),
+  ])
+
+  return {
+    data: data.map((t) => ({
+      id: t.id,
+      anggotaId: t.anggotaId,
+      noAnggota: t.anggota.noAnggota,
+      namaAnggota: t.anggota.nama,
+      bulan: t.bulan,
+      tahun: t.tahun,
+      nominal: Number(t.nominal),
+      jatuhTempo: t.jatuhTempo.toISOString(),
+      tglBayar: t.tglBayar?.toISOString() ?? null,
+      status: t.status,
+    })),
+    total,
+    page,
+    totalPages: Math.ceil(total / pageSize),
+  }
+}
+
+export async function generateTagihanWajib(input: z.infer<typeof generateTagihanSchema>) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const parsed = generateTagihanSchema.parse(input)
+  const now = new Date()
+  const bulan = parsed.bulan ?? now.getMonth() + 1
+  const tahun = parsed.tahun ?? now.getFullYear()
+
+  const jenisWajib = await prisma.jenisSimpanan.findUnique({ where: { kode: "WAJIB" } })
+  if (!jenisWajib) throw new Error("Jenis simpanan WAJIB tidak ditemukan")
+
+  const anggota = await prisma.anggota.findMany({
+    where: { status: "AKTIF" },
+    select: { id: true },
+  })
+
+  const jatuhTempo = new Date(tahun, bulan - 1, 10)
+
+  let count = 0
+  for (const a of anggota) {
+    const existing = await prisma.tagihanSimpanan.findUnique({
+      where: {
+        anggotaId_jenisSimpananId_bulan_tahun: {
+          anggotaId: a.id,
+          jenisSimpananId: jenisWajib.id,
+          bulan,
+          tahun,
+        },
+      },
+    })
+    if (existing) continue
+
+    await prisma.tagihanSimpanan.create({
+      data: {
+        anggotaId: a.id,
+        jenisSimpananId: jenisWajib.id,
+        bulan,
+        tahun,
+        nominal: Number(jenisWajib.minimalSetoran),
+        jatuhTempo,
+        status: "BELUM_LUNAS",
+      },
+    })
+    count++
+  }
+
+  revalidatePath("/pengurus/simpanan/tagihan")
+  return { count }
+}
+
+export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema>) {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const parsed = bayarTagihanSchema.parse(input)
+
+  const tagihan = await prisma.tagihanSimpanan.findUnique({
+    where: { id: parsed.tagihanId },
+    include: {
+      anggota: { select: { id: true, noAnggota: true, nama: true } },
+      jenisSimpanan: { select: { id: true, nama: true, kode: true } },
+    },
+  })
+  if (!tagihan) throw new Error("Tagihan tidak ditemukan")
+  if (tagihan.status === "LUNAS") throw new Error("Tagihan sudah lunas")
+
+  const noStruk = await generateNoStrukTagihan()
+
+  await prisma.$transaction(async (tx) => {
+    const simpanan = await tx.simpanan.upsert({
+      where: {
+        anggotaId_jenisSimpananId: {
+          anggotaId: tagihan.anggotaId,
+          jenisSimpananId: tagihan.jenisSimpananId,
+        },
+      },
+      create: {
+        anggotaId: tagihan.anggotaId,
+        jenisSimpananId: tagihan.jenisSimpananId,
+        saldo: Number(tagihan.nominal),
+      },
+      update: {
+        saldo: { increment: Number(tagihan.nominal) },
+      },
+    })
+
+    await tx.transaksiSimpanan.create({
+      data: {
+        anggotaId: tagihan.anggotaId,
+        jenisSimpananId: tagihan.jenisSimpananId,
+        tipe: "SETORAN",
+        nominal: Number(tagihan.nominal),
+        saldoSetelah: Number(simpanan.saldo),
+        keterangan: `Pembayaran tagihan ${tagihan.jenisSimpanan.nama} periode ${tagihan.bulan}/${tagihan.tahun}`,
+        noStruk,
+      },
+    })
+
+    await tx.tagihanSimpanan.update({
+      where: { id: tagihan.id },
+      data: {
+        status: "LUNAS",
+        tglBayar: new Date(),
+        noStruk,
+      },
+    })
+
+    const akunSimpanan = getSimpananAkun(tagihan.jenisSimpanan.kode)
+    await buatJurnal(tx, {
+      tanggal: new Date(),
+      keterangan: `Pembayaran tagihan ${tagihan.jenisSimpanan.nama} ${tagihan.anggota.noAnggota} ${tagihan.bulan}/${tagihan.tahun}`,
+      entries: [
+        { akunKode: COA_KAS, debit: Number(tagihan.nominal), kredit: 0 },
+        { akunKode: akunSimpanan, debit: 0, kredit: Number(tagihan.nominal) },
+      ],
+      createdById: session.user.id,
+    })
+  })
+
+  await catatLog({
+    userId: session.user.id,
+    action: "CREATE",
+    entityType: "SETORAN_SIMPANAN",
+    entityId: tagihan.anggotaId,
+    newValue: {
+      jenisSimpananId: tagihan.jenisSimpananId,
+      nominal: Number(tagihan.nominal),
+      tagihan: `${tagihan.bulan}/${tagihan.tahun}`,
+    },
+  })
+
+  revalidatePath("/pengurus/simpanan/tagihan")
+  revalidatePath("/pengurus/simpanan")
+  revalidatePath(`/pengurus/anggota/${tagihan.anggotaId}`)
+
+  return {
+    success: true,
+    data: {
+      noStruk,
+      nominal: Number(tagihan.nominal),
+      createdAt: new Date().toISOString(),
+      anggota: { nama: tagihan.anggota.nama, noAnggota: tagihan.anggota.noAnggota },
+      petugas: session.user.email ?? "Petugas",
+      bulan: tagihan.bulan,
+      tahun: tagihan.tahun,
+    },
+  }
+}
+
+export async function getTagihanWajibAnggota(anggotaId: string) {
+  const raw = await prisma.tagihanSimpanan.findMany({
+    where: { anggotaId },
+    orderBy: [{ tahun: "desc" }, { bulan: "desc" }],
+  })
+
+  return raw.map((t) => ({
+    id: t.id,
+    bulan: t.bulan,
+    tahun: t.tahun,
+    nominal: Number(t.nominal),
+    jatuhTempo: t.jatuhTempo.toISOString(),
+    tglBayar: t.tglBayar?.toISOString() ?? null,
+    status: t.status,
+  }))
+}
+
+export async function ensureTagihanWajibAnggota(anggotaId: string) {
+  const now = new Date()
+  const bulan = now.getMonth() + 1
+  const tahun = now.getFullYear()
+
+  const jenisWajib = await prisma.jenisSimpanan.findUnique({ where: { kode: "WAJIB" } })
+  if (!jenisWajib) return
+
+  const existing = await prisma.tagihanSimpanan.findUnique({
+    where: {
+      anggotaId_jenisSimpananId_bulan_tahun: {
+        anggotaId,
+        jenisSimpananId: jenisWajib.id,
+        bulan,
+        tahun,
+      },
+    },
+  })
+  if (existing) return
+
+  const jatuhTempo = new Date(tahun, bulan - 1, 10)
+  await prisma.tagihanSimpanan.create({
+    data: {
+      anggotaId,
+      jenisSimpananId: jenisWajib.id,
+      bulan,
+      tahun,
+      nominal: Number(jenisWajib.minimalSetoran),
+      jatuhTempo,
+      status: "BELUM_LUNAS",
+    },
+  })
 }
 
 export async function cariAnggota(query: string) {

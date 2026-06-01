@@ -37,7 +37,8 @@ import {
 } from "@/components/ui/table"
 import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Download, Eye } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
+
 import Link from "next/link"
 
 type UserInfo = {

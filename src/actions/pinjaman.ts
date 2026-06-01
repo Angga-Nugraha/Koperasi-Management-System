@@ -15,6 +15,7 @@ import { z } from "zod"
 import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 import { getKonfig, getNumber } from "@/lib/konfig"
+import { generateNoStrukAngsuran } from "@/lib/struk"
 
 export async function getPinjamanList(params: {
   search?: string
@@ -464,6 +465,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
   const pinjaman = await prisma.pinjaman.findUnique({
     where: { id: parsed.pinjamanId },
     include: {
+      anggota: { select: { nama: true, noAnggota: true } },
       angsuran: {
         where: { angsuranKe: parsed.angsuranKe },
       },
@@ -496,6 +498,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
     : 0
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
   const isLunas = sisaPinjamanSetelah <= 0
+  const noStruk = await generateNoStrukAngsuran()
 
   await prisma.$transaction(async (tx) => {
     await tx.angsuran.update({
@@ -505,6 +508,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
         denda,
         total: pokok + jasa + denda,
         status: "LUNAS",
+        noStruk,
       },
     })
 
@@ -551,7 +555,21 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
-  return { success: true }
+  return {
+    success: true,
+    data: {
+      noStruk,
+      angsuranKe: angsuran.angsuranKe,
+      pokok,
+      jasa,
+      denda,
+      total: pokok + jasa + denda,
+      tglBayar: tglBayar.toISOString(),
+      anggota: { nama: pinjaman.anggota?.nama ?? "", noAnggota: pinjaman.anggota?.noAnggota ?? "" },
+      pinjaman: { id: pinjaman.id, jumlah: Number(pinjaman.jumlah), sisaPinjaman: Math.max(0, sisaPinjamanSetelah), isLunas },
+      petugas: session.user.email ?? "Petugas",
+    },
+  }
 }
 
 export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) {

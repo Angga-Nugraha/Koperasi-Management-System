@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
 
 const NAV_ITEMS: NavItem[] = [
@@ -24,16 +23,11 @@ export default async function PengurusLayout({ children }: { children: React.Rea
   }
 
   const initial = session?.user?.email?.charAt(0).toUpperCase() ?? "U"
-  const generalInfo = await prisma.generalInfo.findFirst()
-  const namaKoperasi = generalInfo?.namaKoperasi ?? "Simko"
-  const logoKoperasi = generalInfo?.logo ?? null
 
   return (
     <div className="flex h-screen overflow-hidden">
       <AppSidebar
         items={NAV_ITEMS}
-        namaKoperasi={namaKoperasi}
-        logoKoperasi={logoKoperasi}
         roleLabel={role === "ADMIN" ? "Admin" : role === "BENDAHARA" ? "Bendahara" : "Pengurus"}
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}

@@ -14,7 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
+
 import { Badge } from "@/components/ui/badge"
 
 type Angsuran = {

@@ -21,8 +21,10 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Search, ChevronLeft, ChevronRight } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
 import Link from "next/link"
+
+import { AjukanSheet } from "@/components/pinjaman/ajukan-sheet"
 
 type Pinjaman = {
   id: string
@@ -66,6 +68,7 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
 export function PinjamanTable({ data, total, page, totalPages, search: initialSearch, status: initialStatus }: Props) {
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch ?? "")
+  const [ajukanOpen, setAjukanOpen] = useState(false)
 
   function applyFilter(key: string, value: string) {
     const params = new URLSearchParams()
@@ -124,9 +127,7 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
         </Select>
 
         <div className="ml-auto">
-          <Button asChild>
-            <Link href="/pengurus/pinjaman/ajukan">+ Ajukan Pinjaman</Link>
-          </Button>
+          <Button onClick={() => setAjukanOpen(true)}>+ Ajukan Pinjaman</Button>
         </div>
       </div>
 
@@ -210,6 +211,8 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
           </div>
         </div>
       )}
+
+      <AjukanSheet open={ajukanOpen} onOpenChange={setAjukanOpen} />
     </div>
   )
 }

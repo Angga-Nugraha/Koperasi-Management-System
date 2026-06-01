@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -16,7 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
+
 import { Badge } from "@/components/ui/badge"
 
 type Simpanan = {
@@ -37,9 +39,20 @@ type Mutasi = {
   createdAt: string
 }
 
+type Tagihan = {
+  id: string
+  bulan: number
+  tahun: number
+  nominal: number
+  jatuhTempo: string
+  tglBayar: string | null
+  status: string
+}
+
 type Props = {
   simpanan: Simpanan[]
   mutasi: { data: Mutasi[]; total: number; page?: number; totalPages?: number }
+  tagihan: Tagihan[]
 }
 
 const TIPE_VARIANTS: Record<string, "default" | "destructive"> = {
@@ -52,10 +65,28 @@ const TIPE_LABEL: Record<string, string> = {
   PENARIKAN: "Penarikan",
 }
 
-export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
+const BULAN = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+
+const STATUS_LABEL: Record<string, string> = {
+  BELUM_LUNAS: "Belum",
+  LUNAS: "Lunas",
+  TERLAMBAT: "Terlambat",
+}
+
+const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
+  BELUM_LUNAS: "outline",
+  LUNAS: "default",
+  TERLAMBAT: "destructive",
+}
+
+export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
+
+  const years = [...new Set(tagihan.map((t) => t.tahun))].sort((a, b) => b - a)
+  const [filterTahun, setFilterTahun] = useState(years[0] ?? new Date().getFullYear())
+  const filteredTagihan = tagihan.filter((t) => t.tahun === filterTahun)
 
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
@@ -92,6 +123,53 @@ export function AnggotaSimpananView({ simpanan, mutasi }: Props) {
           </CardContent>
         </Card>
       </div>
+
+      {tagihan.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Tagihan Simpanan Wajib</CardTitle>
+              <select
+                value={filterTahun}
+                onChange={(e) => setFilterTahun(Number(e.target.value))}
+                className="h-8 rounded-md border bg-background px-2 text-xs"
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Periode</TableHead>
+                  <TableHead className="text-right">Nominal</TableHead>
+                  <TableHead>Jatuh Tempo</TableHead>
+                  <TableHead>Tgl Bayar</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredTagihan.map((t) => (
+                  <TableRow key={t.id}>
+                    <TableCell>{BULAN[t.bulan]} {t.tahun}</TableCell>
+                    <TableCell className="text-right font-mono">Rp{t.nominal.toLocaleString("id-ID")}</TableCell>
+                    <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
+                    <TableCell className="text-xs">{t.tglBayar ? formatTanggal(t.tglBayar) : "-"}</TableCell>
+                    <TableCell>
+                      <Badge variant={STATUS_VARIANT[t.status] ?? "outline"}>
+                        {STATUS_LABEL[t.status] ?? t.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

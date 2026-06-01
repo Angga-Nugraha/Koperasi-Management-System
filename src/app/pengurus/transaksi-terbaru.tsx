@@ -1,4 +1,5 @@
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 type TransaksiItem = {

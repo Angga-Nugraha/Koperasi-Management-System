@@ -104,6 +104,7 @@ model Anggota {
 
   simpanan          Simpanan[]
   transaksiSimpanan TransaksiSimpanan[]
+  tagihanSimpanan   TagihanSimpanan[]
   pinjaman          Pinjaman[]
   shuAnggota        SHUAnggota[]
 
@@ -124,6 +125,7 @@ model JenisSimpanan {
 
   simpanan          Simpanan[]
   transaksiSimpanan TransaksiSimpanan[]
+  tagihanSimpanan   TagihanSimpanan[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -154,6 +156,7 @@ model TransaksiSimpanan {
   tipe            String   // SETORAN / PENARIKAN
   nominal         Decimal  @db.Decimal(18, 2)
   saldoSetelah    Decimal  @db.Decimal(18, 2)
+  noStruk         String?  @unique
   keterangan      String?  @db.Text
   dibuatOlehId    String?
 
@@ -163,6 +166,28 @@ model TransaksiSimpanan {
   createdAt DateTime @default(now())
 
   @@map("transaksi_simpanan")
+}
+
+model TagihanSimpanan {
+  id              String            @id @default(uuid())
+  anggotaId       String
+  jenisSimpananId String
+  bulan           Int
+  tahun           Int
+  nominal         Decimal           @db.Decimal(18, 2)
+  jatuhTempo      DateTime
+  tglBayar        DateTime?
+  status          InstallmentStatus
+  noStruk         String?
+
+  anggota       Anggota       @relation(fields: [anggotaId], references: [id])
+  jenisSimpanan JenisSimpanan @relation(fields: [jenisSimpananId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([anggotaId, jenisSimpananId, bulan, tahun])
+  @@map("tagihan_simpanan")
 }
 
 model JenisPinjaman {
@@ -218,6 +243,7 @@ model Angsuran {
   jasa       Decimal           @db.Decimal(18, 2)
   denda      Decimal           @default(0) @db.Decimal(18, 2)
   total      Decimal           @db.Decimal(18, 2)
+  noStruk    String?
   status     InstallmentStatus
 
   pinjaman Pinjaman @relation(fields: [pinjamanId], references: [id])

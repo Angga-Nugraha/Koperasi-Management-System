@@ -43,14 +43,12 @@ export type NavItem = {
 
 type Props = {
   items: NavItem[]
-  namaKoperasi: string
-  logoKoperasi?: string | null
   roleLabel: string
   userEmail: string
   userInitial: string
 }
 
-export function AppSidebar({ items, namaKoperasi, logoKoperasi, roleLabel, userEmail, userInitial }: Props) {
+export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
 
   const navLinks = items.map((item) => {
@@ -104,12 +102,9 @@ export function AppSidebar({ items, namaKoperasi, logoKoperasi, roleLabel, userE
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center gap-3 border-b px-6">
-        {logoKoperasi && (
-          <img src={logoKoperasi} alt="Logo" className="h-8 w-8 rounded-lg object-contain" />
-        )}
-        <Link href={items[0]?.href ?? "/"} className="text-lg font-bold text-primary">
-          {namaKoperasi}
+      <div className="flex h-14 items-center border-b px-6">
+        <Link href={items[0]?.href ?? "/"}>
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg object-contain" />
         </Link>
       </div>
       <nav className="flex-1 space-y-1 p-4">{navLinks}</nav>

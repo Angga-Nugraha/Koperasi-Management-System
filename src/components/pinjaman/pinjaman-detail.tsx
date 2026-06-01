@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +26,9 @@ import {
   hapusPinjaman,
 } from "@/actions/pinjaman"
 import { ArrowLeft, Check, X, Banknote, Trash2, Wallet } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import {formatTanggal} from "@/lib/format"
+import { StrukPembayaran } from "@/components/struk-pembayaran"
+
 import Link from "next/link"
 
 type Angsuran = {
@@ -86,6 +88,24 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
+  const [receipt, setReceipt] = useState<{
+    noStruk: string
+    angsuranKe: number
+    pokok: number
+    jasa: number
+    denda: number
+    total: number
+    tglBayar: string
+    anggota: { nama: string; noAnggota: string }
+    pinjaman: { id: string; jumlah: number; sisaPinjaman: number; isLunas: boolean }
+    petugas: string
+  } | null>(null)
+
+  useEffect(() => {
+    fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
+  }, [])
+
   const status = pinjaman.status
 
   async function handleAction(action: string) {
@@ -120,7 +140,10 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
     setLoading(`bayar-${angsuranKe}`)
     setError(null)
     try {
-      await bayarAngsuranKe({ pinjamanId: pinjaman.id, angsuranKe })
+      const result = await bayarAngsuranKe({ pinjamanId: pinjaman.id, angsuranKe })
+      if (result.success && result.data) {
+        setReceipt(result.data)
+      }
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal memproses")
@@ -299,6 +322,27 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {receipt && generalInfo && (
+        <StrukPembayaran
+          open={!!receipt}
+          onOpenChange={(open) => { if (!open) setReceipt(null) }}
+          generalInfo={generalInfo}
+          data={{
+            jenis: "angsuran",
+            noStruk: receipt.noStruk,
+            angsuranKe: receipt.angsuranKe,
+            pokok: receipt.pokok,
+            jasa: receipt.jasa,
+            denda: receipt.denda,
+            total: receipt.total,
+            tglBayar: receipt.tglBayar,
+            anggota: receipt.anggota,
+            pinjaman: receipt.pinjaman,
+            petugas: receipt.petugas,
+          }}
+        />
+      )}
     </div>
   )
 }

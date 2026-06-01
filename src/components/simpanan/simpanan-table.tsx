@@ -22,8 +22,10 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, ChevronLeft, ChevronRight, ArrowUpRight, ArrowDownLeft } from "lucide-react"
+import { Search, ChevronLeft, ChevronRight, ArrowUpRight, ArrowDownLeft, FileText } from "lucide-react"
 import Link from "next/link"
+import { SetorSheet } from "@/components/simpanan/setor-sheet"
+import { TarikSheet } from "@/components/simpanan/tarik-sheet"
 
 type Simpanan = {
   id: string
@@ -54,6 +56,8 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
   const [search, setSearch] = useState(initialSearch)
   const [jenisFilter, setJenisFilter] = useState("SEMUA")
   const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
+  const [setorOpen, setSetorOpen] = useState(false)
+  const [tarikOpen, setTarikOpen] = useState(false)
 
   useEffect(() => {
     fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
@@ -79,16 +83,18 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
           <CardTitle>Daftar Simpanan</CardTitle>
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link href="/pengurus/simpanan/tarik">
-                <ArrowDownLeft className="mr-2 h-4 w-4" />
-                Tarik
+              <Link href="/pengurus/simpanan/tagihan">
+                <FileText className="mr-2 h-4 w-4" />
+                Tagihan
               </Link>
             </Button>
-            <Button asChild>
-              <Link href="/pengurus/simpanan/setor">
-                <ArrowUpRight className="mr-2 h-4 w-4" />
-                Setor
-              </Link>
+            <Button variant="outline" onClick={() => setTarikOpen(true)}>
+              <ArrowDownLeft className="mr-2 h-4 w-4" />
+              Tarik
+            </Button>
+            <Button onClick={() => setSetorOpen(true)}>
+              <ArrowUpRight className="mr-2 h-4 w-4" />
+              Setor
             </Button>
           </div>
         </div>
@@ -181,6 +187,9 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
           </div>
         )}
       </CardContent>
+
+      <SetorSheet open={setorOpen} onOpenChange={setSetorOpen} />
+      <TarikSheet open={tarikOpen} onOpenChange={setTarikOpen} />
     </Card>
   )
 }
