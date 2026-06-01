@@ -62,5 +62,5 @@ function getDashboardRoute(role: string): string {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|uploads|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|uploads|.*\\.png$|.*\\.svg$|favicon\\.ico).*)"],
 }
