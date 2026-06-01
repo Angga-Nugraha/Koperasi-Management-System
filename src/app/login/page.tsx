@@ -15,11 +15,26 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [namaKoperasi, setNamaKoperasi] = useState("Simko")
   const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   useEffect(() => {
     fetch("/api/general-info").then(r => r.json()).then(info => {
       if (info?.namaKoperasi) setNamaKoperasi(info.namaKoperasi)
-    }).catch(() => {})
+    }).catch(() => {}
+    )
+    const saved = localStorage.getItem("login_remember")
+    if (saved) {
+      try {
+        const { email, password } = JSON.parse(saved)
+        if (email) {
+          const emailInput = document.getElementById("email") as HTMLInputElement
+          const passwordInput = document.getElementById("password") as HTMLInputElement
+          if (emailInput) emailInput.value = email
+          if (password && passwordInput) passwordInput.value = password
+          setRememberMe(true)
+        }
+      } catch {}
+    }
   }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -43,6 +58,12 @@ export default function LoginPage() {
       return
     }
 
+    if (rememberMe) {
+      localStorage.setItem("login_remember", JSON.stringify({ email, password }))
+    } else {
+      localStorage.removeItem("login_remember")
+    }
+
     router.push("/")
   }
 
@@ -50,7 +71,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="items-center space-y-4 pt-8">
-          <img src="/logo.png" alt="Logo Koperasi" className="h-20 w-20 rounded-xl object-contain" />
+          <img src="/logo.png" alt="Logo Koperasi" className="h-28 w-32 rounded-xl object-contain" />
           <div className="space-y-1 text-center">
             <CardTitle className="text-2xl text-primary">{namaKoperasi}</CardTitle>
             <CardDescription>Sistem Manajemen Koperasi</CardDescription>
@@ -90,6 +111,15 @@ export default function LoginPage() {
                 </Button>
               </div>
             </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300"
+              />
+              Ingat Saya
+            </label>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Memproses..." : "Masuk"}
             </Button>
