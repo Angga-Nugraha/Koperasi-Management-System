@@ -102,9 +102,9 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center border-b px-6">
+      <div className="flex h-24 items-center justify-center border-b px-6">
         <Link href={items[0]?.href ?? "/"}>
-          <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg object-contain" />
+          <img src="/logo.png" alt="Logo" className="w-32 rounded-lg object-contain" />
         </Link>
       </div>
       <nav className="flex-1 space-y-1 p-4">{navLinks}</nav>
