@@ -11,6 +11,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/pengurus/jurnal", label: "Akuntansi", icon: "BookOpen" },
   { href: "/pengurus/shu", label: "SHU", icon: "Scale" },
   { href: "/pengurus/tutup-buku", label: "Tutup Buku", icon: "FileText" },
+  { href: "/pengurus/users", label: "Users", icon: "UserCog" },
   { href: "/pengurus/konfigurasi", label: "Pengaturan", icon: "Settings" },
 ]
 
@@ -18,7 +19,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
   const session = await auth()
   const role = session?.user?.role
 
-  if (role !== "PENGURUS" && role !== "BENDAHARA") {
+  if (role !== "ADMIN" && role !== "PENGURUS" && role !== "BENDAHARA") {
     redirect("/login")
   }
 
@@ -33,7 +34,7 @@ export default async function PengurusLayout({ children }: { children: React.Rea
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}
         logoKoperasi={logoKoperasi}
-        roleLabel={role === "BENDAHARA" ? "Bendahara" : "Pengurus"}
+        roleLabel={role === "ADMIN" ? "Admin" : role === "BENDAHARA" ? "Bendahara" : "Pengurus"}
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />

@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
 const ROLE_ROUTES: Record<string, string[]> = {
+  ADMIN: ["/pengurus", "/profile"],
   PENGURUS: ["/pengurus", "/profile"],
   BENDAHARA: ["/pengurus", "/profile"],
   ANGGOTA: ["/anggota", "/profile"],
@@ -47,6 +48,7 @@ export default auth((req) => {
 
 function getDashboardRoute(role: string): string {
   switch (role) {
+    case "ADMIN":
     case "PENGURUS":
     case "BENDAHARA":
       return "/pengurus"

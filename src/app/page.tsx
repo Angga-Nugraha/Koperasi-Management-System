@@ -6,6 +6,7 @@ export default async function Home() {
 
   if (session?.user) {
     switch (session.user.role) {
+      case "ADMIN":
       case "PENGURUS":
       case "BENDAHARA":
         redirect("/pengurus")

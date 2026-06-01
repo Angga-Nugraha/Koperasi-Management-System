@@ -23,6 +23,7 @@ async function main() {
   console.log("Menambahkan user default jika belum ada...\n")
 
   const users = [
+    { email: "admin@simko.com", password: "admin123", role: "ADMIN" as const },
     { email: "bendahara@simko.test", password: "pengurus123", role: "BENDAHARA" as const },
     { email: "pengawas@simko.test", password: "pengawas123", role: "PENGAWAS" as const },
   ]

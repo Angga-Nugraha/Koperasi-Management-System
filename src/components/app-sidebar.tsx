@@ -11,6 +11,7 @@ import {
   Settings,
   Scale,
   FileText,
+  UserCog,
   LogOut,
   Menu,
   type LucideIcon,
@@ -31,6 +32,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Settings,
   Scale,
   FileText,
+  UserCog,
 }
 
 export type NavItem = {
@@ -87,21 +89,15 @@ export function AppSidebar({ items, namaKoperasi, logoKoperasi, roleLabel, userE
             <p className="text-xs text-muted-foreground">{roleLabel}</p>
           </div>
         </div>
-        <form
-          action={async () => {
-            await signOut({ redirectTo: "/login" })
-          }}
-          className="mt-2"
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-2 w-full justify-start text-muted-foreground"
+          onClick={() => signOut({ redirectTo: "/login" })}
         >
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start text-muted-foreground"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Keluar
-          </Button>
-        </form>
+          <LogOut className="mr-2 h-4 w-4" />
+          Keluar
+        </Button>
       </div>
     </>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -40,6 +40,7 @@ type Props = {
 
 export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih, saldoAwal = 0, page = 1, totalPages = 0 }: Props) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   function handleSubmit(e: React.FormEvent) {
@@ -53,7 +54,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
     if (aId) params.set("akunId", aId)
     if (d) params.set("dari", d)
     if (s) params.set("sampai", s)
-    router.push(`/pengurus/jurnal/buku-besar?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   const fmt = (n: number) =>
@@ -72,7 +73,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("page", String(p))
-    router.push(`/pengurus/jurnal/buku-besar?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   return (
@@ -125,6 +126,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
                   <TableHead>Tanggal</TableHead>
                   <TableHead>No Jurnal</TableHead>
                   <TableHead>Keterangan</TableHead>
+                  <TableHead>Saldo Normal</TableHead>
                   <TableHead className="text-right">Debit</TableHead>
                   <TableHead className="text-right">Kredit</TableHead>
                   <TableHead className="text-right">Saldo</TableHead>
@@ -133,7 +135,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
               <TableBody>
                 {rows.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
                       Tidak ada transaksi untuk periode ini
                     </TableCell>
                   </TableRow>
@@ -143,6 +145,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
                     <TableCell>{formatTanggal(r.tanggal)}</TableCell>
                     <TableCell className="font-mono text-xs">{r.noJurnal}</TableCell>
                     <TableCell>{r.keterangan}</TableCell>
+                    <TableCell>{r.saldoNormal === "DEBIT" ? "Debit" : "Kredit"}</TableCell>
                     <TableCell className="text-right">{r.debit > 0 ? fmt(r.debit) : "-"}</TableCell>
                     <TableCell className="text-right">{r.kredit > 0 ? fmt(r.kredit) : "-"}</TableCell>
                     <TableCell className="text-right font-medium">{fmt(r.saldo)}</TableCell>

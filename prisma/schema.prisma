@@ -9,6 +9,7 @@ datasource db {
 // ========== ENUMS ==========
 
 enum Role {
+  ADMIN
   PENGURUS
   BENDAHARA
   ANGGOTA

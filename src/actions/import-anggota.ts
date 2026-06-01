@@ -16,7 +16,7 @@ export type ImportRowResult = {
 
 export async function importAnggotaFromCsv(formData: FormData) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

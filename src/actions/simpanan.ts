@@ -127,7 +127,7 @@ export async function getMutasiAnggota(
 
 export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -195,7 +195,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
 
 export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -258,7 +258,7 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
 
 export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

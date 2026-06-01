@@ -12,7 +12,7 @@ type GetAuditLogsParams = {
 
 export async function getAuditLogs(params: GetAuditLogsParams = {}) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA" && session.user.role !== "PENGAWAS")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA" && session.user.role !== "PENGAWAS")) {
     throw new Error("Unauthorized")
   }
 

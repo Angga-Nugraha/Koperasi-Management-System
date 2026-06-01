@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -29,6 +29,7 @@ type Props = {
 
 export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, saldoAkhir, page = 1, totalPages = 0 }: Props) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   function handleSubmit(e: React.FormEvent) {
@@ -39,7 +40,7 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
     const params = new URLSearchParams()
     if (d) params.set("dari", d)
     if (s) params.set("sampai", s)
-    router.push(`/pengurus/jurnal/arus-kas?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
@@ -47,7 +48,7 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("page", String(p))
-    router.push(`/pengurus/jurnal/arus-kas?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   return (

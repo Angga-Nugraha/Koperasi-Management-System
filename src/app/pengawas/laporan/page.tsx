@@ -31,7 +31,7 @@ const REPORTS = [
   {
     title: "Buku Besar",
     desc: "Riwayat transaksi per akun",
-    viewHref: "/pengawas/laporan/buku-besar?akunId=",
+    viewHref: "/pengawas/laporan/buku-besar",
     exportType: "buku-besar",
   },
   {

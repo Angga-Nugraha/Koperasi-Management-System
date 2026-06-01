@@ -163,7 +163,7 @@ export async function getPinjamanAnggota(anggotaId: string) {
 
 export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -226,7 +226,7 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
 
 export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -260,7 +260,7 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
 
 export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -290,7 +290,7 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
 
 export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -360,7 +360,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
 
 export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -455,7 +455,7 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
 
 export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -556,7 +556,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
 
 export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

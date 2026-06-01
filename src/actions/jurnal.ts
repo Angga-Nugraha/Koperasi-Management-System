@@ -31,7 +31,7 @@ export async function getJurnalList(params: {
       where,
       include: {
         detail: {
-          include: { akun: { select: { kode: true, nama: true } } },
+        include: { akun: { select: { kode: true, nama: true, saldoNormal: true } } },
         },
       },
       skip: (page - 1) * pageSize,
@@ -68,7 +68,7 @@ export async function getJurnalById(jurnalId: string) {
     where: { id: jurnalId },
     include: {
       detail: {
-        include: { akun: { select: { kode: true, nama: true } } },
+        include: { akun: { select: { kode: true, nama: true, saldoNormal: true } } },
       },
     },
   })
@@ -85,6 +85,7 @@ export async function getJurnalById(jurnalId: string) {
     detail: raw.detail.map((d) => ({
       akunKode: d.akun.kode,
       akunNama: d.akun.nama,
+      saldoNormal: d.akun.saldoNormal,
       debit: Number(d.debit),
       kredit: Number(d.kredit),
     })),
@@ -94,7 +95,7 @@ export async function getJurnalById(jurnalId: string) {
 
 export async function createJurnalManual(input: z.infer<typeof jurnalManualSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

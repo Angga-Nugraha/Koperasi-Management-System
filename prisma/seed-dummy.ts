@@ -45,9 +45,9 @@ async function main() {
   await prisma.pinjaman.deleteMany()
   await prisma.simpanan.deleteMany()
 
-  const adminUser = await prisma.user.findFirst({ where: { role: "PENGURUS" } })
+  const adminUser = await prisma.user.findFirst({ where: { OR: [{ role: "ADMIN" }, { role: "PENGURUS" }] } })
   if (adminUser) {
-    await prisma.user.deleteMany({ where: { role: { not: "PENGURUS" }, id: { not: adminUser.id } } })
+    await prisma.user.deleteMany({ where: { role: { notIn: ["ADMIN", "PENGURUS"] }, id: { not: adminUser.id } } })
   } else {
     await prisma.user.deleteMany()
   }

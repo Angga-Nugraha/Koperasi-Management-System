@@ -95,13 +95,21 @@ async function main() {
       data: {
         email: adminEmail,
         passwordHash: adminPassword,
-        role: "PENGURUS",
+        role: "ADMIN",
         isActive: true,
       },
     })
-    console.log("  ✅ Admin default: admin@simko.com / admin123")
+    console.log("  ✅ Admin default: admin@simko.com / admin123 (ADMIN)")
   } else {
-    console.log("  ⏭️  Admin sudah ada, skip")
+    if (existingAdmin.role !== "ADMIN") {
+      await prisma.user.update({
+        where: { email: adminEmail },
+        data: { role: "ADMIN" },
+      })
+      console.log("  🔄 Admin di-upgrade ke role ADMIN: admin@simko.com")
+    } else {
+      console.log("  ⏭️  Admin sudah ada, skip")
+    }
   }
 
   // ========== SEED GENERAL INFO ==========

@@ -47,6 +47,7 @@ export default async function JurnalDetailPage({ params }: Props) {
             <TableRow>
               <TableHead>Kode Akun</TableHead>
               <TableHead>Nama Akun</TableHead>
+              <TableHead>Saldo Normal</TableHead>
               <TableHead className="text-right">Debit</TableHead>
               <TableHead className="text-right">Kredit</TableHead>
             </TableRow>
@@ -56,6 +57,7 @@ export default async function JurnalDetailPage({ params }: Props) {
               <TableRow key={i}>
                 <TableCell className="font-mono text-xs">{d.akunKode}</TableCell>
                 <TableCell>{d.akunNama}</TableCell>
+                <TableCell>{d.saldoNormal === "DEBIT" ? "Debit" : "Kredit"}</TableCell>
                 <TableCell className="text-right">{d.debit > 0 ? fmt(d.debit) : "-"}</TableCell>
                 <TableCell className="text-right">{d.kredit > 0 ? fmt(d.kredit) : "-"}</TableCell>
               </TableRow>

@@ -12,9 +12,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export default async function AnggotaLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
-  const role = session?.user?.role
-
-  if (role !== "ANGGOTA") {
+  if (!session?.user || session.user.role !== "ANGGOTA") {
     redirect("/login")
   }
 
@@ -24,7 +22,7 @@ export default async function AnggotaLayout({ children }: { children: React.Reac
   const logoKoperasi = generalInfo?.logo ?? null
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}
@@ -33,7 +31,7 @@ export default async function AnggotaLayout({ children }: { children: React.Reac
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />
-      <main className="flex-1 overflow-y-auto bg-background p-6">{children}</main>
+      <main className="flex-1 overflow-auto bg-background p-6">{children}</main>
     </div>
   )
 }

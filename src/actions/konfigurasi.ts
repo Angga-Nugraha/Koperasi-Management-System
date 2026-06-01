@@ -24,7 +24,7 @@ export async function getKonfigList() {
 
 export async function updateKonfig(key: string, value: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -78,7 +78,7 @@ export async function createAkun(data: {
   saldoNormal: "DEBIT" | "KREDIT"
 }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -108,7 +108,7 @@ export async function createAkun(data: {
 
 export async function toggleAkunActive(akunId: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -160,7 +160,7 @@ export async function updateGeneralInfo(data: {
   website?: string | null
 }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -206,7 +206,7 @@ export async function getJenisPinjamanList() {
 
 export async function createJenisPinjaman(data: { nama: string; bunga: number; keterangan?: string | null }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -235,7 +235,7 @@ export async function createJenisPinjaman(data: { nama: string; bunga: number; k
 
 export async function updateJenisPinjaman(id: string, data: { nama: string; bunga: number; keterangan?: string | null }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -262,7 +262,7 @@ export async function updateJenisPinjaman(id: string, data: { nama: string; bung
 
 export async function deleteJenisPinjaman(id: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -310,7 +310,7 @@ export async function createJenisSimpanan(data: {
   keterangan?: string | null
 }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -345,7 +345,7 @@ export async function updateJenisSimpanan(id: string, data: {
   keterangan?: string | null
 }) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -373,7 +373,7 @@ export async function updateJenisSimpanan(id: string, data: {
 
 export async function toggleJenisSimpananActive(id: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

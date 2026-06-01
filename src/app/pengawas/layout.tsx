@@ -22,7 +22,7 @@ export default async function PengawasLayout({ children }: { children: React.Rea
   const logoKoperasi = generalInfo?.logo ?? null
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar
         items={NAV_ITEMS}
         namaKoperasi={namaKoperasi}
@@ -31,7 +31,7 @@ export default async function PengawasLayout({ children }: { children: React.Rea
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />
-      <main className="flex-1 overflow-y-auto bg-background p-6">{children}</main>
+      <main className="flex-1 overflow-auto bg-background p-6">{children}</main>
     </div>
   )
 }

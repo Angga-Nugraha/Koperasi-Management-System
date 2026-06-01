@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -27,6 +27,7 @@ type Props = {
 
 export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Props) {
   const router = useRouter()
+  const pathname = usePathname()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -35,7 +36,7 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
     const s = fd.get("sampai") as string
     const params = new URLSearchParams()
     if (s) params.set("sampai", s)
-    router.push(`/pengurus/jurnal/neraca-saldo?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   const fmt = (n: number) =>

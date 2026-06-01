@@ -151,7 +151,7 @@ export async function getAnggotaById(id: string) {
 
 export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -229,7 +229,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
 
 export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -305,7 +305,7 @@ async function prosesPenutupanAnggota(anggotaId: string) {
 
 export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSchema>) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -346,7 +346,7 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
 
 export async function deleteAnggota(id: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -400,7 +400,7 @@ export async function deleteAnggota(id: string) {
 
 export async function resetPasswordAnggota(userId: string, password: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 
@@ -425,7 +425,7 @@ export async function resetPasswordAnggota(userId: string, password: string) {
 
 export async function toggleUserActive(userId: string) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
   }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -17,6 +17,7 @@ type Props = {
 
 export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: Props) {
   const router = useRouter()
+  const pathname = usePathname()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -26,7 +27,7 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
     const params = new URLSearchParams()
     if (d) params.set("dari", d)
     if (s) params.set("sampai", s)
-    router.push(`/pengurus/jurnal/laba-rugi?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   }
 
   const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)

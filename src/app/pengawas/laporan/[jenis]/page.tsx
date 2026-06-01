@@ -14,7 +14,7 @@ import Link from "next/link"
 
 type Props = {
   params: Promise<{ jenis: string }>
-  searchParams: Promise<{ sampai?: string; dari?: string }>
+  searchParams: Promise<{ sampai?: string; dari?: string; akunId?: string; page?: string }>
 }
 
 const JENIS_LIST = ["neraca", "laba-rugi", "arus-kas", "neraca-saldo", "buku-besar", "shu"] as const
@@ -30,7 +30,7 @@ const LABEL: Record<string, string> = {
 
 export default async function LaporanJenisPage({ params, searchParams }: Props) {
   const { jenis } = await params
-  const { sampai, dari } = await searchParams
+  const { sampai, dari, akunId, page } = await searchParams
 
   if (!JENIS_LIST.includes(jenis as typeof JENIS_LIST[number])) {
     notFound()
@@ -60,35 +60,49 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
           Export Excel
         </a>
       </div>
-      <LaporanContent jenis={jenis} sampai={sampai ?? ""} dari={dari ?? ""} />
+      <LaporanContent jenis={jenis} sampai={sampai ?? ""} dari={dari ?? ""} akunId={akunId ?? ""} page={page ?? "1"} />
     </div>
   )
 }
 
-async function LaporanContent({ jenis, sampai, dari }: { jenis: string; sampai: string; dari: string }) {
+async function LaporanContent({ jenis, sampai, dari, akunId, page }: { jenis: string; sampai: string; dari: string; akunId?: string; page?: string }) {
+  const tahunIni = new Date().getFullYear()
+  const defaultDari = `${tahunIni}-01-01`
+  const defaultSampai = new Date().toISOString().split("T")[0]
+
   switch (jenis) {
     case "neraca": {
-      const result = await getNeraca(sampai || undefined)
-      return <NeracaClient sampai={sampai} {...result} />
+      const s = sampai || defaultSampai
+      const result = await getNeraca(s)
+      return <NeracaClient sampai={s} {...result} />
     }
     case "laba-rugi": {
-      const result = await getLabaRugi(dari || undefined, sampai || undefined)
-      return <LabaRugiClient dari={dari} sampai={sampai} {...result} />
+      const d = dari || defaultDari
+      const s = sampai || defaultSampai
+      const result = await getLabaRugi(d, s)
+      return <LabaRugiClient dari={d} sampai={s} {...result} />
     }
     case "arus-kas": {
-      const result = await getArusKas(sampai || undefined)
-      return <ArusKasClient dari={dari} sampai={sampai} {...result} />
+      const d = dari || defaultDari
+      const s = sampai || defaultSampai
+      const result = await getArusKas(s)
+      return <ArusKasClient dari={d} sampai={s} {...result} />
     }
     case "neraca-saldo": {
-      const result = await getNeracaSaldo(sampai || undefined)
-      return <NeracaSaldoClient sampai={sampai} {...result} />
+      const s = sampai || defaultSampai
+      const result = await getNeracaSaldo(s)
+      return <NeracaSaldoClient sampai={s} {...result} />
     }
     case "buku-besar": {
+      const pageNum = Number(page) || 1
+      const d = dari || defaultDari
+      const s = sampai || defaultSampai
       const [akunList, page1] = await Promise.all([
         getAkunList(),
-        getBukuBesar("", undefined, undefined, 1),
+        getBukuBesar(akunId || undefined, d, s, pageNum),
       ])
-      return <BukuBesarClient akunList={akunList} akunId="" dari={dari} sampai={sampai} detail={page1.data as any} akunTerpilih={null} page={page1.page} totalPages={page1.totalPages} />
+      const akunTerpilih = akunId ? akunList.find((a) => a.id === akunId) ?? null : null
+      return <BukuBesarClient akunList={akunList} akunId={akunId ?? ""} dari={d} sampai={s} detail={page1.data as any} akunTerpilih={akunTerpilih} page={page1.page} totalPages={page1.totalPages} />
     }
     case "shu": {
       const shuList = await getSHUList()

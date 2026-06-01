@@ -8,7 +8,7 @@ const MAX_SIZE = 2 * 1024 * 1024 // 2MB
 
 export async function POST(req: Request) {
   const session = await auth()
-  if (!session?.user || (session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
