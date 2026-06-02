@@ -30,12 +30,6 @@ export default async function JurnalPage({ searchParams }: Props) {
           >
             Export Excel
           </a>
-          <a
-            href="/api/export/jurnal-pdf"
-            className="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700"
-          >
-            Export PDF
-          </a>
         </div>
         <a
           href="/pengurus/jurnal/manual"

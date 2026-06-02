@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -8,6 +9,11 @@ import {
   PiggyBank,
   HandCoins,
   BookOpen,
+  BookText,
+  FileSpreadsheet,
+  FileChartColumn,
+  FileChartLine,
+  ArrowRightLeft,
   Settings,
   Scale,
   FileText,
@@ -15,6 +21,8 @@ import {
   ScrollText,
   LogOut,
   Menu,
+  ChevronDown,
+  ChevronRight,
   type LucideIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -30,6 +38,11 @@ const ICON_MAP: Record<string, LucideIcon> = {
   PiggyBank,
   HandCoins,
   BookOpen,
+  BookText,
+  FileSpreadsheet,
+  FileChartColumn,
+  FileChartLine,
+  ArrowRightLeft,
   Settings,
   Scale,
   FileText,
@@ -41,6 +54,7 @@ export type NavItem = {
   href: string
   label: string
   icon: string
+  children?: NavItem[]
 }
 
 type Props = {
@@ -55,6 +69,11 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
 
   const navLinks = items.map((item) => {
     const Icon = ICON_MAP[item.icon]
+
+    if (item.children) {
+      return <NavSubmenu key={item.href} item={item} pathname={pathname} />
+    }
+
     const depth = item.href.split("/").filter(Boolean).length
     const isActive = depth <= 1
       ? pathname === item.href
@@ -70,11 +89,61 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
             : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
         )}
       >
-        {Icon && <Icon className="h-4 w-4" />}
+        {Icon && <Icon className="h-4 w-4 shrink-0" />}
         {item.label}
       </Link>
     )
   })
+
+  function NavSubmenu({ item, pathname }: { item: NavItem; pathname: string }) {
+    const [open, setOpen] = useState(
+      pathname === item.href || pathname.startsWith(item.href + "/"),
+    )
+    const isActive = pathname.startsWith(item.href + "/")
+    const ParentIcon = ICON_MAP[item.icon]
+    return (
+      <div>
+        <button
+          onClick={() => setOpen(!open)}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+            isActive
+              ? "bg-primary/10 text-primary font-medium"
+              : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+          )}
+        >
+          {ParentIcon && <ParentIcon className="h-4 w-4 shrink-0" />}
+          <span className="flex-1 text-left">{item.label}</span>
+          {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        </button>
+        {open && (
+          <div className="ml-4 mt-1 space-y-1 border-l pl-2">
+            {item.children!.map((child) => {
+              const ChildIcon = ICON_MAP[child.icon]
+              const isChildActive = child.href === item.href
+                ? pathname === child.href
+                : pathname === child.href || pathname.startsWith(child.href + "/")
+              return (
+                <Link
+                  key={child.href}
+                  href={child.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                    isChildActive
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                  )}
+                >
+                  {ChildIcon && <ChildIcon className="h-3.5 w-3.5 shrink-0" />}
+                  {child.label}
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   const userSection = (
     <>

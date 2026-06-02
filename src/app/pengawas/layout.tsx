@@ -5,7 +5,18 @@ import { NotifikasiBell } from "@/components/notifikasi-bell"
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/pengawas", label: "Dashboard", icon: "LayoutDashboard" },
-  { href: "/pengawas/laporan", label: "Laporan", icon: "FileText" },
+  {
+    href: "/pengawas/laporan",
+    label: "Laporan",
+    icon: "FileText",
+    children: [
+      { href: "/pengawas/laporan/neraca", label: "Neraca", icon: "FileChartColumn" },
+      { href: "/pengawas/laporan/laba-rugi", label: "Laba / Rugi", icon: "FileChartLine" },
+      { href: "/pengawas/laporan/arus-kas", label: "Arus Kas", icon: "ArrowRightLeft" },
+      { href: "/pengawas/laporan/neraca-saldo", label: "Neraca Saldo", icon: "FileSpreadsheet" },
+      { href: "/pengawas/laporan/buku-besar", label: "Buku Besar", icon: "BookText" },
+    ],
+  },
   { href: "/pengawas/laporan/audit-log", label: "Audit Log", icon: "ScrollText" },
 ]
 

@@ -6,11 +6,12 @@ import { revalidatePath } from "next/cache"
 import { hitungSHU, getIndikatorSHU, saveIndikatorSHU, deleteIndikatorSHU } from "@/lib/shu"
 import { catatLog } from "@/lib/audit"
 
-export async function getSHUList() {
+export async function getSHUList(status?: "DRAFT" | "FINAL") {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const raw = await prisma.sHU.findMany({ orderBy: { tahun: "desc" } })
+  const where = status ? { status } : {}
+  const raw = await prisma.sHU.findMany({ where, orderBy: { tahun: "desc" } })
   return raw.map((s) => ({
     id: s.id,
     tahun: s.tahun,
