@@ -45,3 +45,13 @@ next-env.d.ts
 # SSH keys
 github
 github.pub
+
+# agents / skills
+.agents/
+
+# review & report notes
+/REPORT-REVIEW.md
+
+# raw data files
+/jurnal.json
+/fiirebase.txt
