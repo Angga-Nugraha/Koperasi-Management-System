@@ -79,9 +79,9 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Daftar Simpanan</CardTitle>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="outline" asChild>
               <Link href="/pengurus/simpanan/tagihan">
                 <FileText className="mr-2 h-4 w-4" />
@@ -100,8 +100,8 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex gap-4">
-          <div className="flex-1">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="w-full sm:flex-1">
             <Label htmlFor="search" className="sr-only">Cari</Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -115,7 +115,7 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
               />
             </div>
           </div>
-          <div className="w-40">
+          <div className="w-full sm:w-40">
             <Select value={jenisFilter} onValueChange={(v) => { setJenisFilter(v); onSearch() }}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
@@ -128,11 +128,12 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
               </SelectContent>
             </Select>
           </div>
-          <Button variant="secondary" onClick={onSearch}>Cari</Button>
+          <Button variant="secondary" onClick={onSearch} className="w-full sm:w-auto">Cari</Button>
         </div>
 
-        <Table>
-          <TableHeader>
+        <div className="overflow-x-auto rounded-md border">
+          <Table>
+            <TableHeader>
             <TableRow>
               <TableHead>No Anggota</TableHead>
               <TableHead>Nama</TableHead>
@@ -169,8 +170,9 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
 
         {totalPages > 1 && (
           <div className="mt-4 flex items-center justify-between">

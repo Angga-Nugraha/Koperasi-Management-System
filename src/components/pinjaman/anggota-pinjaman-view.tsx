@@ -143,7 +143,7 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
               </div>
 
               {p.angsuran.length > 0 && (
-                <div className="rounded-md border">
+                <div className="overflow-x-auto rounded-md border">
                   <Table>
                     <TableHeader>
                       <TableRow>

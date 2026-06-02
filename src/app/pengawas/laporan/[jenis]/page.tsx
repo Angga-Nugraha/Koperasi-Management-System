@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { getNeraca, getLabaRugi, getArusKas, getNeracaSaldo, getBukuBesar } from "@/actions/jurnal"
+import { getAuditLogs } from "@/actions/audit-log"
 import { getSHUList } from "@/actions/shu"
 import { getAkunList } from "@/actions/konfigurasi"
 import { NeracaClient } from "@/components/jurnal/neraca-client"
@@ -7,6 +8,7 @@ import { LabaRugiClient } from "@/components/jurnal/laba-rugi-client"
 import { ArusKasClient } from "@/components/jurnal/arus-kas-client"
 import { NeracaSaldoClient } from "@/components/jurnal/neraca-saldo-client"
 import { BukuBesarClient } from "@/components/jurnal/buku-besar-client"
+import { AuditLogTable } from "@/components/jurnal/audit-log-table"
 import { SHUList } from "@/components/shu/shu-list"
 import { Button } from "@/components/ui/button"
 import { FileSpreadsheet, ArrowLeft } from "lucide-react"
@@ -14,10 +16,10 @@ import Link from "next/link"
 
 type Props = {
   params: Promise<{ jenis: string }>
-  searchParams: Promise<{ sampai?: string; dari?: string; akunId?: string; page?: string }>
+  searchParams: Promise<{ sampai?: string; dari?: string; akunId?: string; page?: string; entityType?: string; action?: string }>
 }
 
-const JENIS_LIST = ["neraca", "laba-rugi", "arus-kas", "neraca-saldo", "buku-besar", "shu"] as const
+const JENIS_LIST = ["neraca", "laba-rugi", "arus-kas", "neraca-saldo", "buku-besar", "shu", "audit-log"] as const
 
 const LABEL: Record<string, string> = {
   neraca: "Neraca",
@@ -26,11 +28,12 @@ const LABEL: Record<string, string> = {
   "neraca-saldo": "Neraca Saldo",
   "buku-besar": "Buku Besar",
   shu: "SHU",
+  "audit-log": "Audit Log",
 }
 
 export default async function LaporanJenisPage({ params, searchParams }: Props) {
   const { jenis } = await params
-  const { sampai, dari, akunId, page } = await searchParams
+  const { sampai, dari, akunId, page, entityType, action } = await searchParams
 
   if (!JENIS_LIST.includes(jenis as typeof JENIS_LIST[number])) {
     notFound()
@@ -40,7 +43,7 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/pengawas/laporan">
@@ -60,12 +63,12 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
           Export Excel
         </a>
       </div>
-      <LaporanContent jenis={jenis} sampai={sampai ?? ""} dari={dari ?? ""} akunId={akunId ?? ""} page={page ?? "1"} />
+      <LaporanContent jenis={jenis} sampai={sampai ?? ""} dari={dari ?? ""} akunId={akunId ?? ""} page={page ?? "1"} entityType={entityType} action={action} />
     </div>
   )
 }
 
-async function LaporanContent({ jenis, sampai, dari, akunId, page }: { jenis: string; sampai: string; dari: string; akunId?: string; page?: string }) {
+async function LaporanContent({ jenis, sampai, dari, akunId, page, entityType, action }: { jenis: string; sampai: string; dari: string; akunId?: string; page?: string; entityType?: string; action?: string }) {
   const tahunIni = new Date().getFullYear()
   const defaultDari = `${tahunIni}-01-01`
   const defaultSampai = new Date().toISOString().split("T")[0]
@@ -107,6 +110,18 @@ async function LaporanContent({ jenis, sampai, dari, akunId, page }: { jenis: st
     case "shu": {
       const shuList = await getSHUList()
       return <SHUList data={shuList} />
+    }
+    case "audit-log": {
+      const pageNum = Number(page) || 1
+      const result = await getAuditLogs({ entityType, action, page: pageNum })
+      return <AuditLogTable
+        data={result.data}
+        total={result.total}
+        page={result.page}
+        totalPages={result.totalPages}
+        entityType={entityType ?? "SEMUA"}
+        action={action ?? "SEMUA"}
+      />
     }
     default:
       return null

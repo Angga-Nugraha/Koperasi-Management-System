@@ -18,7 +18,8 @@ type Props = {
 
 export function TransaksiTerbaru({ data }: Props) {
   return (
-    <Table>
+    <div className="overflow-x-auto rounded-md border">
+      <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Tanggal</TableHead>
@@ -54,7 +55,8 @@ export function TransaksiTerbaru({ data }: Props) {
             </TableRow>
           ))
         )}
-      </TableBody>
-    </Table>
+        </TableBody>
+      </Table>
+    </div>
   )
 }

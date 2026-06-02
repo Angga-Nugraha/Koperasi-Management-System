@@ -296,16 +296,16 @@ export function KonfigurasiPage({
       </div>
 
       <Tabs defaultValue="general">
-        <TabsList className="flex-wrap">
-          <TabsTrigger value="general">Info Koperasi</TabsTrigger>
-          <TabsTrigger value="konfig">Konfigurasi</TabsTrigger>
-          <TabsTrigger value="jenis-pinjaman">Jenis Pinjaman</TabsTrigger>
-          <TabsTrigger value="jenis-simpanan">Jenis Simpanan</TabsTrigger>
-          <TabsTrigger value="akun">Chart of Accounts</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto gap-1 justify-start">
+          <TabsTrigger value="general" className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Info Koperasi</TabsTrigger>
+          <TabsTrigger value="konfig" className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Konfigurasi</TabsTrigger>
+          <TabsTrigger value="jenis-pinjaman" className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Jenis Pinjaman</TabsTrigger>
+          <TabsTrigger value="jenis-simpanan" className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Jenis Simpanan</TabsTrigger>
+          <TabsTrigger value="akun" className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Chart of Accounts</TabsTrigger>
         </TabsList>
 
         {/* ─── General Info ─── */}
-        <TabsContent value="general">
+        <TabsContent value="general" className="pt-4">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -376,7 +376,7 @@ export function KonfigurasiPage({
         </TabsContent>
 
         {/* ─── Konfigurasi ─── */}
-        <TabsContent value="konfig" className="space-y-6">
+        <TabsContent value="konfig" className="space-y-6 pt-4">
           {KATEGORI_ORDER.map((cat) => {
             const items = grouped.get(cat)
             if (!items?.length) return null
@@ -393,8 +393,8 @@ export function KonfigurasiPage({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.key} className="grid grid-cols-3 items-center gap-4">
-                      <Label className="text-right text-sm">{GROUP_LABELS[item.key] ?? item.key}</Label>
+                    <div key={item.key} className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:items-center sm:gap-4">
+                      <Label className="text-sm sm:text-right">{GROUP_LABELS[item.key] ?? item.key}</Label>
                       <Input
                         value={values[item.key] ?? ""}
                         onChange={(e) => setValues({ ...values, [item.key]: e.target.value })}
@@ -411,7 +411,7 @@ export function KonfigurasiPage({
         </TabsContent>
 
         {/* ─── Jenis Pinjaman ─── */}
-        <TabsContent value="jenis-pinjaman">
+        <TabsContent value="jenis-pinjaman" className="pt-4">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -451,7 +451,8 @@ export function KonfigurasiPage({
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="overflow-x-auto rounded-md border">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nama</TableHead>
@@ -472,14 +473,15 @@ export function KonfigurasiPage({
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* ─── Jenis Simpanan ─── */}
-        <TabsContent value="jenis-simpanan">
+        <TabsContent value="jenis-simpanan" className="pt-4">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -523,17 +525,18 @@ export function KonfigurasiPage({
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Kode</TableHead>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>Min. Setoran</TableHead>
-                    <TableHead className="text-center">Aktif</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <div className="overflow-x-auto rounded-md border">
+                <Table className="min-w-[640px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Kode</TableHead>
+                      <TableHead>Nama</TableHead>
+                      <TableHead>Min. Setoran</TableHead>
+                      <TableHead className="text-center">Aktif</TableHead>
+                      <TableHead className="text-right">Aksi</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                   {jenisSimpanan.map((js) => (
                     <TableRow key={js.id}>
                       <TableCell className="font-mono">{js.kode}</TableCell>
@@ -556,14 +559,15 @@ export function KonfigurasiPage({
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* ─── COA ─── */}
-        <TabsContent value="akun">
+        <TabsContent value="akun" className="pt-4">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -622,17 +626,18 @@ export function KonfigurasiPage({
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Kode</TableHead>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>Tipe</TableHead>
-                    <TableHead>Saldo Normal</TableHead>
-                    <TableHead className="text-center">Aktif</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <div className="overflow-x-auto rounded-md border">
+                <Table className="min-w-[720px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Kode</TableHead>
+                      <TableHead>Nama</TableHead>
+                      <TableHead>Tipe</TableHead>
+                      <TableHead>Saldo Normal</TableHead>
+                      <TableHead className="text-center">Aktif</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                   {akun.map((a) => (
                     <TableRow key={a.id}>
                       <TableCell className="font-mono">{a.kode}</TableCell>
@@ -653,8 +658,9 @@ export function KonfigurasiPage({
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

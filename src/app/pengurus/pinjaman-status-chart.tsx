@@ -37,7 +37,8 @@ export function PinjamanStatusChart({ data }: Props) {
   }
 
   return (
-    <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
+    <div className="overflow-x-auto">
+      <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
       <PieChart>
         <Pie
           data={data}
@@ -45,7 +46,7 @@ export function PinjamanStatusChart({ data }: Props) {
           nameKey="status"
           cx="50%"
           cy="50%"
-          outerRadius="40%"
+          outerRadius="65%"
           label={({ status, count }) => `${LABELS[status] ?? status}: ${count}`}
         >
           {data.map((entry) => (
@@ -55,6 +56,7 @@ export function PinjamanStatusChart({ data }: Props) {
         <Tooltip content={<ChartTooltipContent />} />
         <Legend formatter={(value: string) => LABELS[value] ?? value} />
       </PieChart>
-    </ChartContainer>
+      </ChartContainer>
+    </div>
   )
 }

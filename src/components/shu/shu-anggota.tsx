@@ -32,7 +32,8 @@ export function SHUAnggotaCard({ data }: { data: SHUAnggota }) {
           <CardTitle>Riwayat SHU</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto rounded-md border">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Tahun</TableHead>
@@ -60,8 +61,9 @@ export function SHUAnggotaCard({ data }: { data: SHUAnggota }) {
                   <TableCell className="text-right font-bold">Rp {s.total.toLocaleString("id-ID")}</TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -37,8 +37,7 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
   return (
     <Card className="cursor-pointer transition-shadow hover:shadow-md" onClick={() => router.push(`/pengurus/shu/${shu.tahun}`)}>
       <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl">SHU {shu.tahun}</CardTitle>
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             {shu.status === "DRAFT" && (
               <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
@@ -114,12 +113,12 @@ export function SHUList({ data }: { data: SHU[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">SHU (Sisa Hasil Usaha)</h1>
           <p className="text-sm text-muted-foreground">Kelola perhitungan dan alokasi SHU tahunan</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" onClick={() => router.push("/pengurus/shu/konfigurasi")}>
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Konfigurasi Alokasi

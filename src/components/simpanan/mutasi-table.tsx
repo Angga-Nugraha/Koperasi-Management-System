@@ -78,9 +78,9 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Mutasi</CardTitle>
-          <div className="w-40">
+          <div className="w-full sm:w-40">
             <Select value={jenisFilter} onValueChange={onFilterChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
@@ -96,7 +96,8 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
+        <div className="overflow-x-auto rounded-md border">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Tanggal</TableHead>
@@ -138,8 +139,9 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
 
         {totalPages > 1 && (
           <div className="mt-4 flex items-center justify-between">

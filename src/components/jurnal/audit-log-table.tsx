@@ -29,8 +29,7 @@ type AuditItem = {
   action: string
   entityType: string
   entityId: string | null
-  oldValue: unknown
-  newValue: unknown
+  detail: string
   ipAddress: string | null
   createdAt: string
 }
@@ -65,18 +64,18 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
     router.push(`/pengurus/jurnal/audit-log?${params.toString()}`)
   }
 
-  const entityTypes = ["SEMUA", "ANGGOTA", "SETORAN_SIMPANAN", "PENARIKAN_SIMPANAN", "PENUTUPAN_SIMPANAN", "PINJAMAN", "ANGSURAN", "JURNAL_MANUAL", "SHU"]
+  const entityTypes = ["SEMUA", "USER", "ANGGOTA", "SETORAN_SIMPANAN", "PENARIKAN_SIMPANAN", "PENUTUPAN_SIMPANAN", "PINJAMAN", "ANGSURAN", "JURNAL_MANUAL", "SHU"]
   const actions = ["SEMUA", "CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "DISBURSE", "PAYMENT", "UPDATE_STATUS"]
 
   return (
     <div className="space-y-4">
       <Card>
         <CardContent className="p-4">
-        <div className="flex flex-wrap items-end gap-4">
-        <div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+        <div className="w-full lg:w-auto">
           <label className="mb-1 block text-xs text-muted-foreground">Tipe Entitas</label>
           <Select value={entityTypeVal} onValueChange={setEntityTypeVal}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -88,10 +87,10 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
             </SelectContent>
           </Select>
         </div>
-        <div>
+        <div className="w-full lg:w-auto">
           <label className="mb-1 block text-xs text-muted-foreground">Aksi</label>
           <Select value={actionVal} onValueChange={setActionVal}>
-            <SelectTrigger className="w-36">
+            <SelectTrigger className="w-full sm:w-36">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -103,12 +102,12 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={filter}>Filter</Button>
+        <Button onClick={filter} className="w-full sm:w-auto">Filter</Button>
       </div>
         </CardContent>
       </Card>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -154,6 +153,9 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
                 </TableCell>
                 <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground" title={l.entityId ?? ""}>
                   {l.entityId ?? "-"}
+                </TableCell>
+                <TableCell className="max-w-[250px] truncate text-xs text-muted-foreground" title={l.detail}>
+                  {l.detail}
                 </TableCell>
               </TableRow>
             ))}

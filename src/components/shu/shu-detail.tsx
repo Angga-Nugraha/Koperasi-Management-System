@@ -50,7 +50,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push("/pengurus/shu")}>
             <ArrowLeft className="h-5 w-5" />
@@ -69,7 +69,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {data.status === "DRAFT" && (
             <>
               <Button variant="outline" onClick={handleRegenerate} disabled={regenerating}>
@@ -146,7 +146,8 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
           <CardTitle>SHU per Anggota</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto rounded-md border">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>No Anggota</TableHead>
@@ -174,11 +175,12 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
                   </TableRow>
                 ))
               )}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
 
           {data.totalPages && data.totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
               <span>Halaman {data.page} dari {data.totalPages}</span>
               <div className="flex items-center gap-2">
                 <Button

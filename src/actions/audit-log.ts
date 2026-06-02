@@ -32,24 +32,32 @@ export async function getAuditLogs(params: GetAuditLogsParams = {}) {
     prisma.auditLog.count({ where }),
   ])
 
-  const userIds = [...new Set(raw.map((l) => l.userId).filter(Boolean) as string[])]
-  const users = userIds.length
-    ? await prisma.user.findMany({ where: { id: { in: userIds } }, select: { id: true, email: true } })
-    : []
-  const userMap = new Map(users.map((u) => [u.id, u.email]))
+  const missingEmailIds = [...new Set(raw.filter((l) => l.userId && !l.userEmail).map((l) => l.userId!))]
+  const emailMap = new Map<string, string>()
+  if (missingEmailIds.length > 0) {
+    const users = await prisma.user.findMany({
+      where: { id: { in: missingEmailIds } },
+      select: { id: true, email: true },
+    })
+    for (const u of users) {
+      emailMap.set(u.id, u.email)
+    }
+  }
 
-  const data = raw.map((l) => ({
-    id: l.id,
-    userId: l.userId,
-    userEmail: l.userId ? (userMap.get(l.userId) ?? "Unknown") : "-",
-    action: l.action,
-    entityType: l.entityType,
-    entityId: l.entityId,
-    oldValue: l.oldValue,
-    newValue: l.newValue,
-    ipAddress: l.ipAddress,
-    createdAt: l.createdAt.toISOString(),
-  }))
+  const data = raw.map((l) => {
+    const email = l.userEmail ?? (l.userId ? emailMap.get(l.userId) : undefined)
+    return {
+      id: l.id,
+      userId: l.userId,
+      userEmail: email ?? "Unknown",
+      action: l.action,
+      entityType: l.entityType,
+      entityId: l.entityId,
+      detail: [l.oldValue, l.newValue].filter(Boolean).map((v) => JSON.stringify(v)).join(" → ") || "-",
+      ipAddress: l.ipAddress,
+      createdAt: l.createdAt.toISOString(),
+    }
+  })
 
   return { data, total, page, totalPages: Math.ceil(total / pageSize) }
 }

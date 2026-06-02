@@ -94,25 +94,25 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-4">
-        <form onSubmit={handleSearch} className="flex items-center gap-2">
-          <div className="relative">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+        <form onSubmit={handleSearch} className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-auto">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Cari anggota..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-60 pl-8"
+              className="w-full pl-8 sm:w-60"
             />
           </div>
-          <Button type="submit" variant="secondary" size="sm">Cari</Button>
+          <Button type="submit" variant="secondary" size="sm" className="w-full sm:w-auto">Cari</Button>
         </form>
 
         <Select
           value={initialStatus ?? "SEMUA"}
           onValueChange={(v) => applyFilter("status", v)}
         >
-          <SelectTrigger className="w-36">
+          <SelectTrigger className="w-full sm:w-36">
             <SelectValue placeholder="Semua status" />
           </SelectTrigger>
           <SelectContent>
@@ -126,12 +126,12 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
           </SelectContent>
         </Select>
 
-        <div className="ml-auto">
-          <Button onClick={() => setAjukanOpen(true)}>+ Ajukan Pinjaman</Button>
+        <div className="w-full sm:ml-auto sm:w-auto">
+          <Button onClick={() => setAjukanOpen(true)} className="w-full sm:w-auto">+ Ajukan Pinjaman</Button>
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>

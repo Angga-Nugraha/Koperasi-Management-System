@@ -9,6 +9,11 @@ import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 import { generateNoStrukTagihan, generateNoStrukSimpanan } from "@/lib/struk"
 
+async function kirimNotif(params: { userId: string; title: string; message: string; type: string; relatedId?: string }) {
+  const { kirimNotifikasi } = await import("@/lib/notifikasi")
+  return kirimNotifikasi(params)
+}
+
 export async function getJenisSimpananList() {
   const session = await auth()
   if (!session?.user) return []
@@ -194,6 +199,30 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   revalidatePath("/pengurus/simpanan")
   revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
+
+  const admins = await prisma.user.findMany({
+    where: { role: { in: ["ADMIN", "PENGURUS", "BENDAHARA"] }, isActive: true },
+    select: { id: true },
+  })
+  for (const admin of admins) {
+    await kirimNotif({
+      userId: admin.id,
+      title: "Setoran Simpanan",
+      message: `${anggota.nama} melakukan setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")}`,
+      type: "SETORAN",
+    })
+  }
+
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: parsed.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Setoran Simpanan",
+      message: `Setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")} berhasil`,
+      type: "SETORAN",
+    })
+  }
+
   return {
     success: true,
     data: {
@@ -439,6 +468,7 @@ export async function generateTagihanWajib(input: z.infer<typeof generateTagihan
 
   const jatuhTempo = new Date(tahun, bulan - 1, 10)
 
+  const createdIds: string[] = []
   let count = 0
   for (const a of anggota) {
     const existing = await prisma.tagihanSimpanan.findUnique({
@@ -464,7 +494,23 @@ export async function generateTagihanWajib(input: z.infer<typeof generateTagihan
         status: "BELUM_LUNAS",
       },
     })
+    createdIds.push(a.id)
     count++
+  }
+
+  if (createdIds.length > 0) {
+    const users = await prisma.user.findMany({
+      where: { anggotaId: { in: createdIds } },
+      select: { id: true },
+    })
+    for (const u of users) {
+      await kirimNotif({
+        userId: u.id,
+        title: `Tagihan Wajib ${bulan}/${tahun}`,
+        message: `Tagihan simpanan wajib Rp${Number(jenisWajib.minimalSetoran).toLocaleString("id-ID")} telah diterbitkan, jatuh tempo ${jatuhTempo.toLocaleDateString("id-ID")}`,
+        type: "TAGIHAN",
+      })
+    }
   }
 
   revalidatePath("/pengurus/simpanan/tagihan")
@@ -557,6 +603,16 @@ export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema
   revalidatePath("/pengurus/simpanan/tagihan")
   revalidatePath("/pengurus/simpanan")
   revalidatePath(`/pengurus/anggota/${tagihan.anggotaId}`)
+
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: tagihan.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Pembayaran Tagihan",
+      message: `Tagihan ${tagihan.jenisSimpanan.nama} periode ${tagihan.bulan}/${tagihan.tahun} sebesar Rp${Number(tagihan.nominal).toLocaleString("id-ID")} berhasil dibayar`,
+      type: "TAGIHAN",
+    })
+  }
 
   return {
     success: true,

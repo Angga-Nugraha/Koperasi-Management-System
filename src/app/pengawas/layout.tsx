@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
 import { auth } from "@/lib/auth"
+import { NotifikasiBell } from "@/components/notifikasi-bell"
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/pengawas", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/pengawas/laporan", label: "Laporan", icon: "FileText" },
+  { href: "/pengawas/laporan/audit-log", label: "Audit Log", icon: "ScrollText" },
 ]
 
 export default async function PengawasLayout({ children }: { children: React.ReactNode }) {
@@ -25,7 +27,12 @@ export default async function PengawasLayout({ children }: { children: React.Rea
         userEmail={session?.user?.email ?? ""}
         userInitial={initial}
       />
-      <main className="flex-1 overflow-auto bg-background p-6">{children}</main>
+      <main className="flex flex-1 flex-col overflow-hidden bg-background">
+        <header className="flex shrink-0 items-center justify-end border-b bg-card px-6 py-3">
+          <NotifikasiBell />
+        </header>
+        <div className="flex-1 overflow-auto p-6">{children}</div>
+      </main>
     </div>
   )
 }

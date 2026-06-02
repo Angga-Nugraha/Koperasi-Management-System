@@ -40,6 +40,11 @@ const REPORTS = [
     viewHref: "/pengawas/laporan/shu",
     exportType: "shu",
   },
+  {
+    title: "Audit Log",
+    desc: "Catatan aktivitas dan perubahan data",
+    viewHref: "/pengawas/laporan/audit-log",
+  },
 ]
 
 export default function LaporanPengawasPage() {

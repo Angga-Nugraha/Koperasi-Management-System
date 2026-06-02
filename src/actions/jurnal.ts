@@ -289,6 +289,7 @@ async function getSaldoAkunTipe(
 ) {
   const akunAll = await prisma.akun.findMany({
     where: { tipe: tipe as any, isActive: true },
+    orderBy: { kode: "asc" },
   })
   const akunIds = akunAll.map((a) => a.id)
 

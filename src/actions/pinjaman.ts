@@ -17,6 +17,11 @@ import { catatLog } from "@/lib/audit"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { generateNoStrukAngsuran } from "@/lib/struk"
 
+async function kirimNotif(params: { userId: string; title: string; message: string; type: string; relatedId?: string }) {
+  const { kirimNotifikasi } = await import("@/lib/notifikasi")
+  return kirimNotifikasi(params)
+}
+
 export async function getPinjamanList(params: {
   search?: string
   status?: string
@@ -221,6 +226,31 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
     newValue: { anggotaId: parsed.anggotaId, jumlah: parsed.jumlah, tenor: parsed.tenor },
   })
 
+  const admins = await prisma.user.findMany({
+    where: { role: { in: ["ADMIN", "PENGURUS", "BENDAHARA"] }, isActive: true },
+    select: { id: true },
+  })
+  for (const admin of admins) {
+    await kirimNotif({
+      userId: admin.id,
+      title: "Pengajuan Pinjaman Baru",
+      message: `${anggota.nama} mengajukan pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")}`,
+      type: "PENGAJUAN",
+      relatedId: created.id,
+    })
+  }
+
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: parsed.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Pinjaman Diajukan",
+      message: `Pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")} berhasil diajukan`,
+      type: "PENGAJUAN",
+      relatedId: created.id,
+    })
+  }
+
   revalidatePath("/pengurus/pinjaman")
   return { success: true }
 }
@@ -254,6 +284,17 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
     newValue: { status: "DISETUJUI" },
   })
 
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Pinjaman Disetujui",
+      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah disetujui`,
+      type: "DISETUJUI",
+      relatedId: parsed.pinjamanId,
+    })
+  }
+
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
   return { success: true }
@@ -283,6 +324,17 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
     entityId: parsed.pinjamanId,
     newValue: { status: "DITOLAK" },
   })
+
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Pinjaman Ditolak",
+      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah ditolak`,
+      type: "DITOLAK",
+      relatedId: parsed.pinjamanId,
+    })
+  }
 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
@@ -353,6 +405,17 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
     entityId: parsed.pinjamanId,
     newValue: { status: "DICAIKKAN", jumlah: Number(pinjaman.jumlah) },
   })
+
+  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
+  if (anggotaUser) {
+    await kirimNotif({
+      userId: anggotaUser.id,
+      title: "Pinjaman Dicairkan",
+      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah dicairkan`,
+      type: "DICAIKKAN",
+      relatedId: parsed.pinjamanId,
+    })
+  }
 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
@@ -555,6 +618,18 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
+
+  const anggotaUserBayar = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
+  if (anggotaUserBayar) {
+    await kirimNotif({
+      userId: anggotaUserBayar.id,
+      title: isLunas ? "Pinjaman Lunas" : "Angsuran Dibayar",
+      message: `Angsuran ke-${angsuran.angsuranKe} pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} berhasil dibayar${isLunas ? " — Pinjaman LUNAS" : ""}`,
+      type: "DISETUJUI",
+      relatedId: parsed.pinjamanId,
+    })
+  }
+
   return {
     success: true,
     data: {

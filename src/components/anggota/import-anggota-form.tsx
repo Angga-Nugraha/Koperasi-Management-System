@@ -113,7 +113,8 @@ export function ImportAnggotaForm() {
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
+            <div className="overflow-x-auto rounded-md border">
+              <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-16">Baris</TableHead>
@@ -141,8 +142,9 @@ export function ImportAnggotaForm() {
                     </TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </div>
 
             <div className="mt-4 flex justify-between">
               <Button variant="outline" asChild>

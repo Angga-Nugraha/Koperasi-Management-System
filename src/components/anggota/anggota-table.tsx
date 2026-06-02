@@ -84,9 +84,9 @@ export function AnggotaTable({
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Daftar Anggota</CardTitle>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="outline" asChild>
               <Link href="/pengurus/anggota/impor">
                 <Upload className="mr-2 h-4 w-4" />
@@ -103,8 +103,8 @@ export function AnggotaTable({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex gap-4">
-          <div className="flex-1">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="w-full sm:flex-1">
             <Label htmlFor="search" className="sr-only">
               Cari
             </Label>
@@ -120,7 +120,7 @@ export function AnggotaTable({
               />
             </div>
           </div>
-          <div className="w-40">
+          <div className="w-full sm:w-40">
             <Select
               value={status}
               onValueChange={(v) => {
@@ -139,13 +139,14 @@ export function AnggotaTable({
               </SelectContent>
             </Select>
           </div>
-          <Button variant="secondary" onClick={onSearch}>
+          <Button variant="secondary" onClick={onSearch} className="w-full sm:w-auto">
             Cari
           </Button>
         </div>
 
-        <Table>
-          <TableHeader>
+        <div className="overflow-x-auto rounded-md border">
+          <Table>
+            <TableHeader>
             <TableRow>
               <TableHead>No Anggota</TableHead>
               <TableHead>NIK</TableHead>
@@ -182,8 +183,9 @@ export function AnggotaTable({
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
 
         {totalPages > 1 && (
           <div className="mt-4 flex items-center justify-between">

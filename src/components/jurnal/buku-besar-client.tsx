@@ -80,11 +80,11 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
       <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
-        <div className="space-y-2">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="space-y-2 w-full sm:w-auto">
           <Label>Akun</Label>
           <Select name="akunId" defaultValue={akunId}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full sm:w-72">
               <SelectValue placeholder="Pilih akun" />
             </SelectTrigger>
             <SelectContent>
@@ -96,15 +96,15 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 w-full sm:w-auto">
           <Label>Dari</Label>
-          <Input type="date" name="dari" defaultValue={dari} />
+          <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 w-full sm:w-auto">
           <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} />
+          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
         </div>
-        <Button type="submit">Tampilkan</Button>
+        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
       </form>
         </CardContent>
       </Card>
@@ -119,7 +119,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
             </CardContent>
           </Card>
 
-          <div className="rounded-md border">
+          <div className="overflow-x-auto rounded-md border">
             <Table>
               <TableHeader className="sticky top-0 z-10">
                 <TableRow>

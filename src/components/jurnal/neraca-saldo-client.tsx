@@ -46,17 +46,17 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
-        <div className="space-y-2">
-          <Label>Sampai Tanggal</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="space-y-2 w-full sm:w-auto">
+          <Label>Sampai</Label>
+          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
         </div>
-        <Button type="submit">Tampilkan</Button>
+        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
       </form>
         </CardContent>
       </Card>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader className="sticky top-0 z-10">
             <TableRow>

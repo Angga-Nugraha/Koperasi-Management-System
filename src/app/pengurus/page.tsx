@@ -83,44 +83,44 @@ export default async function PengurusDashboard({ searchParams }: Props) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle className="text-base">{tahun > 0 ? `Tren Simpanan ${tahun}` : "Tren Simpanan"}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="overflow-x-auto">
             <SimpananChart data={data.simpananChart} />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle className="text-base">Pinjaman per Status</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="overflow-x-auto">
             <PinjamanStatusChart data={data.pinjamanPerStatus} />
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-blue-500" />
               Arus Kas {tahun}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="overflow-x-auto">
             <TransaksiTrendChart data={data.trendChart} />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <History className="h-4 w-4 text-amber-500" />
               5 Transaksi Terakhir
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="p-0 overflow-x-auto">
             <TransaksiTerbaru data={data.transaksiTerbaru} />
           </CardContent>
         </Card>

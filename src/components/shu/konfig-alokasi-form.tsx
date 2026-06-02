@@ -103,7 +103,7 @@ export function KonfigAlokasiForm({
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Indikator SHU</CardTitle>
           <Button variant="outline" size="sm" onClick={addItem}>
             <Plus className="mr-2 h-4 w-4" />
@@ -112,8 +112,8 @@ export function KonfigAlokasiForm({
         </CardHeader>
         <CardContent className="space-y-4">
           {items.map((item, index) => (
-            <div key={index} className="flex items-end gap-3 rounded-lg border p-4">
-              <div className="space-y-1.5 flex-1">
+            <div key={index} className="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap sm:gap-3 rounded-lg border p-4">
+              <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Kode</Label>
                 <Input
                   placeholder="JM"
@@ -121,7 +121,7 @@ export function KonfigAlokasiForm({
                   onChange={(e) => updateItem(index, "kode", e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5 flex-1">
+              <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Nama</Label>
                 <Input
                   placeholder="Jasa Modal"
@@ -129,7 +129,7 @@ export function KonfigAlokasiForm({
                   onChange={(e) => updateItem(index, "nama", e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5 w-24">
+              <div className="space-y-1.5 w-full sm:w-24">
                 <Label className="text-xs">%</Label>
                 <Input
                   type="number"
@@ -140,7 +140,7 @@ export function KonfigAlokasiForm({
                   onChange={(e) => updateItem(index, "persentase", Number(e.target.value))}
                 />
               </div>
-              <div className="space-y-1.5 w-32">
+              <div className="space-y-1.5 w-full sm:w-32">
                 <Label className="text-xs">Kelompok</Label>
                 <Select
                   value={item.kelompok}
@@ -155,7 +155,7 @@ export function KonfigAlokasiForm({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1.5 flex-1">
+              <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Akun Jurnal</Label>
                 {item.kelompok === "ANGGOTA" && <span className="ml-1 text-xs text-muted-foreground">(otomatis ke 2.1.3)</span>}
                 <Select

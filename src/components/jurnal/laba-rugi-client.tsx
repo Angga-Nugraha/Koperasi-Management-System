@@ -36,22 +36,22 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4">
-        <div className="space-y-2">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="space-y-2 w-full sm:w-auto">
           <Label>Dari</Label>
-          <Input type="date" name="dari" defaultValue={dari} />
+          <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 w-full sm:w-auto">
           <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} />
+          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
         </div>
-        <Button type="submit">Tampilkan</Button>
+        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
       </form>
         </CardContent>
       </Card>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">PENDAPATAN</div>
           <Table>
             <TableBody>
@@ -69,7 +69,7 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
           </div>
         </div>
 
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <div className="border-b bg-muted/50 px-4 py-2 font-semibold">BEBAN</div>
           <Table>
             <TableBody>

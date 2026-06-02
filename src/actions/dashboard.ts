@@ -164,7 +164,7 @@ export async function getDashboardAnggota(anggotaId: string) {
   })
 
   const pinjamanAktif = await prisma.pinjaman.findMany({
-    where: { anggotaId, status: { notIn: ["LUNAS", "DITOLAK"] } },
+    where: { anggotaId, status: { notIn: ["LUNAS", "DITOLAK", "GAGAL"] } },
     select: { sisaPinjaman: true, jumlah: true, status: true },
   })
 

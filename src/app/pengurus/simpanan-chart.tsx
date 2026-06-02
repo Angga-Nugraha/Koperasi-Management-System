@@ -18,7 +18,8 @@ export function SimpananChart({ data }: Props) {
   }
 
   return (
-    <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
+    <div className="overflow-x-auto">
+      <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
       <BarChart data={data} barGap={2}>
         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
         <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />
@@ -28,6 +29,7 @@ export function SimpananChart({ data }: Props) {
         <Bar dataKey="setoran" fill={CHART_CONFIG.setoran.color} radius={[4, 4, 0, 0]} />
         <Bar dataKey="penarikan" fill={CHART_CONFIG.penarikan.color} radius={[4, 4, 0, 0]} />
       </BarChart>
-    </ChartContainer>
+      </ChartContainer>
+    </div>
   )
 }

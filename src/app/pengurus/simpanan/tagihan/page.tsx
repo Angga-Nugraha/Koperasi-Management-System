@@ -172,11 +172,11 @@ export default function TagihanWajibPage() {
       <Card>
         <CardHeader><CardTitle>Filter & Generate</CardTitle></CardHeader>
         <CardContent>
-          <div className="flex flex-wrap items-end gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
             <div className="space-y-1">
               <Label>Bulan</Label>
               <Select value={filterBulan} onValueChange={(v) => { setFilterBulan(v === "all" ? "" : v); setPage(1) }}>
-                <SelectTrigger className="w-28">
+                <SelectTrigger className="w-full lg:w-28">
                   <SelectValue placeholder="Semua" />
                 </SelectTrigger>
                 <SelectContent>
@@ -191,7 +191,7 @@ export default function TagihanWajibPage() {
               <Label>Tahun</Label>
               <Input
                 type="number"
-                className="w-24"
+                className="w-full lg:w-24"
                 value={filterTahun}
                 onChange={(e) => { setFilterTahun(e.target.value); setPage(1) }}
               />
@@ -199,7 +199,7 @@ export default function TagihanWajibPage() {
             <div className="space-y-1">
               <Label>Status</Label>
               <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v); setPage(1) }}>
-                <SelectTrigger className="w-28">
+                <SelectTrigger className="w-full lg:w-28">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -213,17 +213,17 @@ export default function TagihanWajibPage() {
             <div className="space-y-1">
               <Label>Cari Anggota</Label>
               <Input
-                className="w-44"
+                className="w-full lg:w-44"
                 placeholder="Nama / No Anggota"
                 value={filterSearch}
                 onChange={(e) => { setFilterSearch(e.target.value); setPage(1) }}
               />
             </div>
-            <Button variant="outline" onClick={fetchData} disabled={loading}>
+            <Button variant="outline" onClick={fetchData} disabled={loading} className="w-full sm:w-auto">
               <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
               Cari
             </Button>
-            <Button onClick={handleGenerate} disabled={generating}>
+            <Button onClick={handleGenerate} disabled={generating} className="w-full sm:w-auto">
               {generating ? "..." : "Generate Tagihan"}
             </Button>
           </div>
@@ -232,7 +232,8 @@ export default function TagihanWajibPage() {
 
       <Card>
         <CardContent className="p-0">
-          <Table>
+          <div className="overflow-x-auto">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Anggota</TableHead>
@@ -284,8 +285,9 @@ export default function TagihanWajibPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
           {totalPages > 1 && (
             <div className="flex items-center justify-between border-t px-4 py-3">
               <p className="text-sm text-muted-foreground">

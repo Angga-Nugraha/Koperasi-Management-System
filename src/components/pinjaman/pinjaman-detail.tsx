@@ -249,6 +249,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
         <Card>
           <CardHeader><CardTitle>Riwayat Angsuran</CardTitle></CardHeader>
           <CardContent>
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -306,6 +307,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                 })()}
               </TableBody>
             </Table>
+            </div>
           </CardContent>
         </Card>
       )}

@@ -67,10 +67,40 @@ model User {
 
   anggota Anggota? @relation(fields: [anggotaId], references: [id])
 
+  deviceToken DeviceToken[]
+  notifikasi  Notifikasi[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model DeviceToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("device_tokens")
+}
+
+model Notifikasi {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // PENGAJUAN, DISETUJUI, DITOLAK, DICAIKKAN, SETORAN, TAGIHAN
+  relatedId String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, isRead])
+  @@map("notifikasi")
 }
 
 model GeneralInfo {
@@ -363,6 +393,7 @@ model SHUAnggota {
 model AuditLog {
   id         String  @id @default(uuid())
   userId     String?
+  userEmail  String?
   action     String
   entityType String
   entityId   String?

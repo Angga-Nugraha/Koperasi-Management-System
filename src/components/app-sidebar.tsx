@@ -12,6 +12,7 @@ import {
   Scale,
   FileText,
   UserCog,
+  ScrollText,
   LogOut,
   Menu,
   type LucideIcon,
@@ -33,6 +34,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Scale,
   FileText,
   UserCog,
+  ScrollText,
 }
 
 export type NavItem = {

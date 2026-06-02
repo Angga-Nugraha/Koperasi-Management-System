@@ -141,7 +141,8 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
+            <div className="overflow-x-auto rounded-md border">
+              <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Periode</TableHead>
@@ -165,8 +166,9 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
                     </TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -176,7 +178,8 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
           <CardTitle>Mutasi Terbaru</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto rounded-md border">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Tanggal</TableHead>
@@ -214,8 +217,9 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
                   </TableRow>
                 ))
               )}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
 
           {mutasi.totalPages && mutasi.totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">

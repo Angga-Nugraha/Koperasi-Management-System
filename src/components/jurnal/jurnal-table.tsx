@@ -57,20 +57,20 @@ export function JurnalTable({ data, total, page, totalPages, search }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <Input
           placeholder="Cari no jurnal atau keterangan..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          className="max-w-sm"
+          className="w-full sm:max-w-sm"
         />
-        <Button variant="secondary" onClick={handleSearch}>
+        <Button variant="secondary" onClick={handleSearch} className="w-full sm:w-auto">
           Cari
         </Button>
       </div>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>

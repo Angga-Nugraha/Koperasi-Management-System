@@ -129,7 +129,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/pengurus/anggota">
@@ -146,7 +146,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
             <p className="text-sm text-muted-foreground">{anggota.noAnggota}</p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
@@ -399,7 +399,8 @@ export function AnggotaDetailClient({ anggota }: Props) {
               <CardTitle>Simpanan</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="overflow-x-auto rounded-md border">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Jenis</TableHead>
@@ -423,8 +424,9 @@ export function AnggotaDetailClient({ anggota }: Props) {
                       </TableRow>
                     ))
                   )}
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -435,7 +437,8 @@ export function AnggotaDetailClient({ anggota }: Props) {
               <CardTitle>Pinjaman</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="overflow-x-auto rounded-md border">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Jumlah</TableHead>
@@ -481,8 +484,9 @@ export function AnggotaDetailClient({ anggota }: Props) {
                       )
                     })
                   )}
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
