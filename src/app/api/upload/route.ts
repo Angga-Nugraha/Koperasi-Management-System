@@ -6,13 +6,25 @@ import path from "path"
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 const MAX_SIZE = 2 * 1024 * 1024 // 2MB
 
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+}
+
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const formData = await req.formData()
+  let formData: FormData
+  try {
+    formData = await req.formData()
+  } catch {
+    return NextResponse.json({ error: "Invalid form data" }, { status: 400 })
+  }
+
   const file = formData.get("file") as File | null
   const uploadType = formData.get("type") as string | null
 
@@ -28,8 +40,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File maksimal 2MB" }, { status: 400 })
   }
 
-  const ext = file.name.split(".").pop() ?? "jpg"
-  const filename = `${uploadType}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+  const ext = MIME_TO_EXT[file.type] ?? "jpg"
+  const filename = `${uploadType}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`
   const subDir = uploadType === "logo" ? "logo" : "anggota"
   const uploadDir = path.join(process.cwd(), "public", "uploads", subDir)
 

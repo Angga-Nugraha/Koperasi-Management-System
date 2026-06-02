@@ -64,14 +64,67 @@ type Props = {
   userInitial: string
 }
 
+function NavSubmenu({ item, pathname, onNavigate }: { item: NavItem; pathname: string; onNavigate?: () => void }) {
+  const [open, setOpen] = useState(
+    pathname === item.href || pathname.startsWith(item.href + "/"),
+  )
+  const isActive = pathname.startsWith(item.href + "/")
+  const ParentIcon = ICON_MAP[item.icon]
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        className={cn(
+          "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+          isActive
+            ? "bg-primary/10 text-primary font-medium"
+            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+        )}
+        aria-expanded={open}
+      >
+        {ParentIcon && <ParentIcon className="h-4 w-4 shrink-0" />}
+        <span className="flex-1 text-left">{item.label}</span>
+        {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+      </button>
+      {open && (
+        <div className="ml-4 mt-1 space-y-1 border-l pl-2">
+          {item.children!.map((child) => {
+            const ChildIcon = ICON_MAP[child.icon]
+            const isChildActive = child.href === item.href
+              ? pathname === child.href
+              : pathname === child.href || pathname.startsWith(child.href + "/")
+            return (
+              <Link
+                key={child.href}
+                href={child.href}
+                onClick={onNavigate}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                  isChildActive
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                )}
+              >
+                {ChildIcon && <ChildIcon className="h-3.5 w-3.5 shrink-0" />}
+                {child.label}
+              </Link>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const navLinks = items.map((item) => {
     const Icon = ICON_MAP[item.icon]
 
     if (item.children) {
-      return <NavSubmenu key={item.href} item={item} pathname={pathname} />
+      return <NavSubmenu key={item.href} item={item} pathname={pathname} onNavigate={() => setMobileOpen(false)} />
     }
 
     const depth = item.href.split("/").filter(Boolean).length
@@ -82,6 +135,7 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
       <Link
         key={item.href}
         href={item.href}
+        onClick={() => setMobileOpen(false)}
         className={cn(
           "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
           isActive
@@ -94,56 +148,6 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
       </Link>
     )
   })
-
-  function NavSubmenu({ item, pathname }: { item: NavItem; pathname: string }) {
-    const [open, setOpen] = useState(
-      pathname === item.href || pathname.startsWith(item.href + "/"),
-    )
-    const isActive = pathname.startsWith(item.href + "/")
-    const ParentIcon = ICON_MAP[item.icon]
-    return (
-      <div>
-        <button
-          onClick={() => setOpen(!open)}
-          className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-            isActive
-              ? "bg-primary/10 text-primary font-medium"
-              : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-          )}
-        >
-          {ParentIcon && <ParentIcon className="h-4 w-4 shrink-0" />}
-          <span className="flex-1 text-left">{item.label}</span>
-          {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-        </button>
-        {open && (
-          <div className="ml-4 mt-1 space-y-1 border-l pl-2">
-            {item.children!.map((child) => {
-              const ChildIcon = ICON_MAP[child.icon]
-              const isChildActive = child.href === item.href
-                ? pathname === child.href
-                : pathname === child.href || pathname.startsWith(child.href + "/")
-              return (
-                <Link
-                  key={child.href}
-                  href={child.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-1.5 text-sm transition-colors",
-                    isChildActive
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  )}
-                >
-                  {ChildIcon && <ChildIcon className="h-3.5 w-3.5 shrink-0" />}
-                  {child.label}
-                </Link>
-              )
-            })}
-          </div>
-        )}
-      </div>
-    )
-  }
 
   const userSection = (
     <>
@@ -189,12 +193,13 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
         {sidebarContent}
       </aside>
 
-      <Sheet>
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
             className="fixed left-4 top-3 z-50 md:hidden"
+            aria-label="Buka menu navigasi"
           >
             <Menu className="h-5 w-5" />
           </Button>

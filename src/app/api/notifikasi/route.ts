@@ -6,15 +6,16 @@ export async function GET() {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const data = await prisma.notifikasi.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  })
-
-  const unread = await prisma.notifikasi.count({
-    where: { userId: session.user.id, isRead: false },
-  })
+  const [data, unread] = await Promise.all([
+    prisma.notifikasi.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }),
+    prisma.notifikasi.count({
+      where: { userId: session.user.id, isRead: false },
+    }),
+  ])
 
   return NextResponse.json({ data, unread })
 }
@@ -23,14 +24,22 @@ export async function PATCH(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const { ids, all } = await req.json()
+  let body: Record<string, unknown>
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
+  }
+
+  const all = body.all === true
+  const ids = Array.isArray(body.ids) ? body.ids.filter((id: unknown) => typeof id === "string" && id.length > 0) : []
 
   if (all) {
     await prisma.notifikasi.updateMany({
       where: { userId: session.user.id, isRead: false },
       data: { isRead: true },
     })
-  } else if (Array.isArray(ids)) {
+  } else if (ids.length > 0) {
     await prisma.notifikasi.updateMany({
       where: { id: { in: ids }, userId: session.user.id },
       data: { isRead: true },

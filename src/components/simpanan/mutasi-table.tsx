@@ -22,7 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {formatTanggal} from "@/lib/format"
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 
 type Mutasi = {
   id: string
@@ -40,6 +40,7 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   anggotaId: string
 }
 
@@ -53,7 +54,7 @@ const TIPE_LABEL: Record<string, string> = {
   PENARIKAN: "Penarikan",
 }
 
-export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props) {
+export function MutasiTable({ data, total, page, totalPages, pageSize = 20, anggotaId }: Props) {
   const router = useRouter()
   const [jenisFilter, setJenisFilter] = useState("SEMUA")
   const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
@@ -72,6 +73,15 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
   function onPageChange(p: number) {
     const params = new URLSearchParams(window.location.search)
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/simpanan/${anggotaId}?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(window.location.search)
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`/pengurus/simpanan/${anggotaId}?${params.toString()}`)
   }
 
@@ -143,20 +153,14 @@ export function MutasiTable({ data, total, page, totalPages, anggotaId }: Props)
           </Table>
         </div>
 
-        {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Total {total} transaksi</p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="flex items-center text-sm text-muted-foreground">{page} / {totalPages}</span>
-              <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
+        <DataTablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
       </CardContent>
     </Card>
   )

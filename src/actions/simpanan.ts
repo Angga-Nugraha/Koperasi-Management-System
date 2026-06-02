@@ -40,7 +40,7 @@ export async function getSimpananList(params: {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const { search, jenisSimpananId, page = 1, pageSize = 15 } = params
+  const { search, jenisSimpananId, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = {}
   if (jenisSimpananId) where.jenisSimpananId = jenisSimpananId

@@ -1,13 +1,10 @@
 import { prisma } from "@/lib/prisma"
+import crypto from "crypto"
 
 type JurnalEntry = {
   akunKode: string
   debit: number
   kredit: number
-}
-
-function pad(n: number, len: number) {
-  return String(n).padStart(len, "0")
 }
 
 export async function buatJurnal(
@@ -21,15 +18,9 @@ export async function buatJurnal(
 ) {
   const { tanggal, keterangan, entries, createdById } = params
 
-  const dateStr = `${tanggal.getFullYear()}${pad(tanggal.getMonth() + 1, 2)}${pad(tanggal.getDate(), 2)}`
-
-  const count = await tx.jurnalUmum.count({
-    where: {
-      noJurnal: { startsWith: `JRN-${dateStr}` },
-    },
-  })
-
-  const noJurnal = `JRN-${dateStr}-${pad(count + 1, 4)}`
+  const dateStr = `${tanggal.getFullYear()}${String(tanggal.getMonth() + 1).padStart(2, "0")}${String(tanggal.getDate()).padStart(2, "0")}`
+  const suffix = crypto.randomBytes(2).toString("hex").toUpperCase()
+  const noJurnal = `JRN-${dateStr}-${suffix}`
 
   const akunMap = new Map<string, string>()
   const akunList = await tx.akun.findMany({
@@ -116,4 +107,58 @@ export function getSimpananAkun(jenis: string): string {
     case "SUKARELA": return COA_SIMPANAN_SUKARELA
     default: throw new Error(`Jenis simpanan tidak dikenal: ${jenis}`)
   }
+}
+
+export async function getSaldoAkunTipe(
+  tipe: string,
+  sampaiTanggal?: Date,
+  dariTanggal?: Date,
+  excludeClosing = false
+) {
+  const akunAll = await prisma.akun.findMany({
+    where: { tipe: tipe as any, isActive: true },
+    orderBy: { kode: "asc" },
+  })
+  const akunIds = akunAll.map((a) => a.id)
+
+  const whereDetail: Record<string, unknown> = {
+    akunId: { in: akunIds },
+  }
+  const whereJurnal: Record<string, unknown> = {}
+  if (dariTanggal && sampaiTanggal) {
+    whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
+  } else if (sampaiTanggal) {
+    whereJurnal.tanggal = { lte: sampaiTanggal }
+  }
+  if (excludeClosing) {
+    whereJurnal.keterangan = { not: { contains: "Jurnal Penutup" } }
+  }
+
+  const detail = await prisma.detailJurnal.findMany({
+    where: { ...whereDetail, jurnal: whereJurnal },
+  })
+
+  const saldoMap = new Map<string, number>()
+  for (const a of akunAll) saldoMap.set(a.id, 0)
+
+  for (const d of detail) {
+    const akun = akunAll.find((a) => a.id === d.akunId)
+    if (!akun) continue
+    const current = saldoMap.get(d.akunId) ?? 0
+    if (akun.saldoNormal === "DEBIT") {
+      saldoMap.set(d.akunId, current + Number(d.debit) - Number(d.kredit))
+    } else {
+      saldoMap.set(d.akunId, current + Number(d.kredit) - Number(d.debit))
+    }
+  }
+
+  let total = 0
+  const items = akunAll.map((a) => {
+    const saldo = Math.round((saldoMap.get(a.id) ?? 0) * 100) / 100
+    total += saldo
+    return { kode: a.kode, nama: a.nama, saldo }
+  })
+
+  total = Math.round(total * 100) / 100
+  return { items, total }
 }

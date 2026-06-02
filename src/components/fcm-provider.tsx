@@ -12,8 +12,6 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
     if (!userId || initialized.current) return
     if (typeof window === "undefined" || !("Notification" in window)) return
 
-    initialized.current = true
-
     async function init() {
       try {
         const permission = await Notification.requestPermission()
@@ -21,6 +19,13 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
 
         const vapidKey = process.env.NEXT_PUBLIC_VAPID_KEY
         if (!vapidKey) return
+
+        if ("serviceWorker" in navigator) {
+          const reg = await navigator.serviceWorker.getRegistration()
+          if (!reg) {
+            await navigator.serviceWorker.register("/firebase-messaging-sw.js")
+          }
+        }
 
         const { getToken, onMessage } = await import("firebase/messaging")
         const { getMessagingClient } = await import("@/lib/firebase-client")
@@ -34,13 +39,6 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
           body: JSON.stringify({ token }),
         })
 
-        if ("serviceWorker" in navigator) {
-          const reg = await navigator.serviceWorker.getRegistration()
-          if (!reg) {
-            await navigator.serviceWorker.register("/firebase-messaging-sw.js")
-          }
-        }
-
         onMessage(messaging, (payload) => {
           const { title, body } = payload.notification ?? {}
           const data = payload.data as Record<string, string> | undefined
@@ -49,15 +47,17 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
           })
           window.dispatchEvent(event)
         })
+
+        initialized.current = true
       } catch {
-        // silent
+        // silent — will retry on next mount
       }
     }
 
     init()
   }, [userId])
 
-  // Re-init on user change
+  // Reset on user change to allow re-init
   useEffect(() => {
     initialized.current = false
   }, [userId])

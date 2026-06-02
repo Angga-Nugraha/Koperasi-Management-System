@@ -2,7 +2,7 @@ import { getAnggotaList } from "@/actions/anggota"
 import { AnggotaTable } from "@/components/anggota/anggota-table"
 
 type Props = {
-  searchParams: Promise<{ search?: string; status?: string; page?: string }>
+  searchParams: Promise<{ search?: string; status?: string; page?: string; pageSize?: string }>
 }
 
 export default async function AnggotaListPage({ searchParams }: Props) {
@@ -10,8 +10,9 @@ export default async function AnggotaListPage({ searchParams }: Props) {
   const search = params.search ?? ""
   const status = params.status ?? "SEMUA"
   const page = Number(params.page) || 1
+  const pageSize = Number(params.pageSize) || 20
 
-  const result = await getAnggotaList({ search, status, page })
+  const result = await getAnggotaList({ search, status, page, pageSize })
 
   return (
     <div className="space-y-6">
@@ -25,6 +26,7 @@ export default async function AnggotaListPage({ searchParams }: Props) {
         total={result.total}
         page={result.page}
         totalPages={result.totalPages}
+        pageSize={pageSize}
         search={search}
         status={status}
       />

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatTanggal } from "@/lib/format"
 import {
@@ -39,11 +39,12 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   entityType: string
   action: string
 }
 
-export function AuditLogTable({ data, total, page, totalPages, entityType, action }: Props) {
+export function AuditLogTable({ data, total, page, totalPages, pageSize = 20, entityType, action }: Props) {
   const router = useRouter()
   const [entityTypeVal, setEntityTypeVal] = useState(entityType)
   const [actionVal, setActionVal] = useState(action)
@@ -61,6 +62,15 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
     if (entityTypeVal && entityTypeVal !== "SEMUA") params.set("entityType", entityTypeVal)
     if (actionVal && actionVal !== "SEMUA") params.set("action", actionVal)
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/jurnal/audit-log?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams()
+    if (entityTypeVal && entityTypeVal !== "SEMUA") params.set("entityType", entityTypeVal)
+    if (actionVal && actionVal !== "SEMUA") params.set("action", actionVal)
+    if (size !== 20) params.set("pageSize", String(size))
     router.push(`/pengurus/jurnal/audit-log?${params.toString()}`)
   }
 
@@ -163,30 +173,14 @@ export function AuditLogTable({ data, total, page, totalPages, entityType, actio
         </Table>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{total} log ditemukan</span>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => goPage(page - 1)}
-          >
-            Sebelumnya
-          </Button>
-          <span>
-            Halaman {page} dari {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page >= totalPages}
-            onClick={() => goPage(page + 1)}
-          >
-            Selanjutnya
-          </Button>
-        </div>
-      </div>
+      <DataTablePagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        pageSize={pageSize}
+        onPageChange={goPage}
+        onPageSizeChange={handlePageSizeChange}
+      />
     </div>
   )
 }

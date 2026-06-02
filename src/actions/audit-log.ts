@@ -16,7 +16,7 @@ export async function getAuditLogs(params: GetAuditLogsParams = {}) {
     throw new Error("Unauthorized")
   }
 
-  const { entityType, action, page = 1, pageSize = 30 } = params
+  const { entityType, action, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = {}
   if (entityType && entityType !== "SEMUA") where.entityType = entityType

@@ -2,15 +2,17 @@ import { getJurnalList } from "@/actions/jurnal"
 import { JurnalTable } from "@/components/jurnal/jurnal-table"
 
 type Props = {
-  searchParams: Promise<{ search?: string; page?: string }>
+  searchParams: Promise<{ search?: string; page?: string; pageSize?: string }>
 }
 
 export default async function JurnalPage({ searchParams }: Props) {
-  const { search, page } = await searchParams
+  const { search, page, pageSize: ps } = await searchParams
+  const pageSize = Number(ps) || 20
 
   const result = await getJurnalList({
     search,
     page: page ? Number(page) : 1,
+    pageSize,
   })
 
   return (
@@ -44,6 +46,7 @@ export default async function JurnalPage({ searchParams }: Props) {
         total={result.total}
         page={result.page}
         totalPages={result.totalPages}
+        pageSize={pageSize}
         search={search}
       />
     </div>

@@ -9,7 +9,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { currentPassword, newPassword } = await req.json()
+  let body: Record<string, unknown>
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
+  }
+
+  const currentPassword = typeof body.currentPassword === "string" ? body.currentPassword : ""
+  const newPassword = typeof body.newPassword === "string" ? body.newPassword : ""
 
   if (!currentPassword || !newPassword) {
     return NextResponse.json({ error: "Semua field wajib diisi" }, { status: 400 })
@@ -24,7 +32,7 @@ export async function POST(req: Request) {
   })
 
   if (!user) {
-    return NextResponse.json({ error: "User tidak ditemukan" }, { status: 404 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const isValid = await bcrypt.compare(currentPassword, user.passwordHash)

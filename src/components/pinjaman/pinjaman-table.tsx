@@ -20,7 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Search, ChevronLeft, ChevronRight } from "lucide-react"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { Search } from "lucide-react"
 import {formatTanggal} from "@/lib/format"
 import Link from "next/link"
 
@@ -43,6 +44,7 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   search?: string
   status?: string
 }
@@ -65,7 +67,7 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   GAGAL: "destructive",
 }
 
-export function PinjamanTable({ data, total, page, totalPages, search: initialSearch, status: initialStatus }: Props) {
+export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch, status: initialStatus }: Props) {
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch ?? "")
   const [ajukanOpen, setAjukanOpen] = useState(false)
@@ -84,6 +86,15 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
     if (search) params.set("search", search)
     if (initialStatus && initialStatus !== "SEMUA") params.set("status", initialStatus)
     if (p > 1) params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/pinjaman?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams()
+    if (search) params.set("search", search)
+    if (initialStatus && initialStatus !== "SEMUA") params.set("status", initialStatus)
+    if (size !== 20) params.set("pageSize", String(size))
     router.push(`/pengurus/pinjaman?${params.toString()}`)
   }
 
@@ -186,31 +197,14 @@ export function PinjamanTable({ data, total, page, totalPages, search: initialSe
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Total {total} data — Halaman {page} dari {totalPages}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page <= 1}
-              onClick={() => goToPage(page - 1)}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page >= totalPages}
-              onClick={() => goToPage(page + 1)}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <DataTablePagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        pageSize={pageSize}
+        onPageChange={goToPage}
+        onPageSizeChange={handlePageSizeChange}
+      />
 
       <AjukanSheet open={ajukanOpen} onOpenChange={setAjukanOpen} />
     </div>

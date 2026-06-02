@@ -2,16 +2,18 @@ import { getAuditLogs } from "@/actions/audit-log"
 import { AuditLogTable } from "@/components/jurnal/audit-log-table"
 
 type Props = {
-  searchParams: Promise<{ entityType?: string; action?: string; page?: string }>
+  searchParams: Promise<{ entityType?: string; action?: string; page?: string; pageSize?: string }>
 }
 
 export default async function AuditLogPage({ searchParams }: Props) {
-  const { entityType, action, page } = await searchParams
+  const { entityType, action, page, pageSize: ps } = await searchParams
+  const pageSize = Number(ps) || 20
 
   const result = await getAuditLogs({
     entityType,
     action,
     page: page ? Number(page) : 1,
+    pageSize,
   })
 
   return (
@@ -25,6 +27,7 @@ export default async function AuditLogPage({ searchParams }: Props) {
         total={result.total}
         page={result.page}
         totalPages={result.totalPages}
+        pageSize={pageSize}
         entityType={entityType ?? "SEMUA"}
         action={action ?? "SEMUA"}
       />

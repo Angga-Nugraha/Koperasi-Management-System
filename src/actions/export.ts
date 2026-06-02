@@ -1,8 +1,15 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { formatTanggal } from "@/lib/format"
+
+function sanitizeCellValue(value: string | number | null | undefined): string | number {
+  if (typeof value === "string" && /^[=+\-@]/.test(value)) {
+    return `'${value}`
+  }
+  return value ?? ""
+}
 
 export async function exportJurnalExcel(params: {
   search?: string
@@ -11,6 +18,7 @@ export async function exportJurnalExcel(params: {
 }) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const ExcelJS = await import("exceljs")
 
@@ -56,11 +64,11 @@ export async function exportJurnalExcel(params: {
   for (const j of data) {
     for (const d of j.detail) {
       ws.addRow({
-        noJurnal: j.noJurnal,
-        tanggal: formatTanggal(j.tanggal),
-        keterangan: j.keterangan,
-        kodeAkun: d.akun.kode,
-        namaAkun: d.akun.nama,
+        noJurnal: sanitizeCellValue(j.noJurnal),
+        tanggal: sanitizeCellValue(formatTanggal(j.tanggal)),
+        keterangan: sanitizeCellValue(j.keterangan),
+        kodeAkun: sanitizeCellValue(d.akun.kode),
+        namaAkun: sanitizeCellValue(d.akun.nama),
         debit: Number(d.debit),
         kredit: Number(d.kredit),
       })

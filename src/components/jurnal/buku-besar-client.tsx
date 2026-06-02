@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -36,9 +37,10 @@ type Props = {
   saldoAwal?: number
   page?: number
   totalPages?: number
+  pageSize?: number
 }
 
-export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih, saldoAwal = 0, page = 1, totalPages = 0 }: Props) {
+export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih, saldoAwal = 0, page = 1, totalPages = 0, pageSize = 20 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -73,6 +75,15 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`${pathname}?${params.toString()}`)
   }
 
@@ -155,20 +166,14 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
             </Table>
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>{rows.length} dari {detail.length > 0 ? `${(page - 1) * detail.length + rows.length}` : 0} transaksi</span>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goPage(page - 1)}>
-                  Sebelumnya
-                </Button>
-                <span>Halaman {page} dari {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goPage(page + 1)}>
-                  Selanjutnya
-                </Button>
-              </div>
-            </div>
-          )}
+          <DataTablePagination
+            page={page}
+            totalPages={totalPages}
+            total={detail.length}
+            pageSize={pageSize}
+            onPageChange={goPage}
+            onPageSizeChange={handlePageSizeChange}
+          />
         </>
       )}
     </div>

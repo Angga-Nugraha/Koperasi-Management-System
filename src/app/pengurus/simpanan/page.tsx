@@ -3,7 +3,7 @@ import { SimpananTable } from "@/components/simpanan/simpanan-table"
 import { prisma } from "@/lib/prisma"
 
 type Props = {
-  searchParams: Promise<{ search?: string; jenis?: string; page?: string }>
+  searchParams: Promise<{ search?: string; jenis?: string; page?: string; pageSize?: string }>
 }
 
 export default async function SimpananListPage({ searchParams }: Props) {
@@ -11,6 +11,7 @@ export default async function SimpananListPage({ searchParams }: Props) {
   const search = params.search ?? ""
   const jenisCode = params.jenis ?? ""
   const page = Number(params.page) || 1
+  const pageSize = Number(params.pageSize) || 20
 
   let jenisSimpananId: string | undefined
   if (jenisCode && jenisCode !== "SEMUA") {
@@ -18,7 +19,7 @@ export default async function SimpananListPage({ searchParams }: Props) {
     if (jenis) jenisSimpananId = jenis.id
   }
 
-  const result = await getSimpananList({ search, jenisSimpananId, page })
+  const result = await getSimpananList({ search, jenisSimpananId, page, pageSize })
 
   return (
     <div className="space-y-6">
@@ -32,6 +33,7 @@ export default async function SimpananListPage({ searchParams }: Props) {
         total={result.total}
         page={result.page}
         totalPages={result.totalPages}
+        pageSize={pageSize}
         search={search}
       />
     </div>

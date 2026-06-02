@@ -20,6 +20,7 @@ import {
 import {formatTanggal} from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 
 type Simpanan = {
   id: string
@@ -53,6 +54,7 @@ type Props = {
   simpanan: Simpanan[]
   mutasi: { data: Mutasi[]; total: number; page?: number; totalPages?: number }
   tagihan: Tagihan[]
+  pageSize?: number
 }
 
 const TIPE_VARIANTS: Record<string, "default" | "destructive"> = {
@@ -79,7 +81,7 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   TERLAMBAT: "destructive",
 }
 
-export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
+export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
@@ -91,6 +93,15 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/anggota/simpanan?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`/anggota/simpanan?${params.toString()}`)
   }
 
@@ -221,29 +232,14 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan }: Props) {
             </Table>
           </div>
 
-          {mutasi.totalPages && mutasi.totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
-              <span>Halaman {mutasi.page} dari {mutasi.totalPages}</span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={(mutasi.page ?? 1) <= 1}
-                  onClick={() => goPage((mutasi.page ?? 1) - 1)}
-                >
-                  Sebelumnya
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={(mutasi.page ?? 1) >= (mutasi.totalPages ?? 1)}
-                  onClick={() => goPage((mutasi.page ?? 1) + 1)}
-                >
-                  Selanjutnya
-                </Button>
-              </div>
-            </div>
-          )}
+          <DataTablePagination
+            page={mutasi.page ?? 1}
+            totalPages={mutasi.totalPages ?? 0}
+            total={mutasi.total}
+            pageSize={pageSize}
+            onPageChange={goPage}
+            onPageSizeChange={handlePageSizeChange}
+          />
         </CardContent>
       </Card>
     </div>

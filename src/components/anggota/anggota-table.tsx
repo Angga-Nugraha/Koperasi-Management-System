@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Plus, ChevronLeft, ChevronRight, Upload } from "lucide-react"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { Search, Plus, Upload } from "lucide-react"
 import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
@@ -40,6 +41,7 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   search: string
   status: string
 }
@@ -61,6 +63,7 @@ export function AnggotaTable({
   total,
   page,
   totalPages,
+  pageSize = 20,
   search: initialSearch,
   status: initialStatus,
 }: Props) {
@@ -78,6 +81,15 @@ export function AnggotaTable({
   function onPageChange(p: number) {
     const params = new URLSearchParams(window.location.search)
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/anggota?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(window.location.search)
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`/pengurus/anggota?${params.toString()}`)
   }
 
@@ -125,7 +137,10 @@ export function AnggotaTable({
               value={status}
               onValueChange={(v) => {
                 setStatus(v)
-                onSearch()
+                const params = new URLSearchParams()
+                if (search) params.set("search", search)
+                if (v && v !== "SEMUA") params.set("status", v)
+                router.push(`/pengurus/anggota?${params.toString()}`)
               }}
             >
               <SelectTrigger>
@@ -187,32 +202,14 @@ export function AnggotaTable({
           </Table>
         </div>
 
-        {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Total {total} anggota</p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page <= 1}
-                onClick={() => onPageChange(page - 1)}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="flex items-center text-sm text-muted-foreground">
-                {page} / {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page >= totalPages}
-                onClick={() => onPageChange(page + 1)}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
+        <DataTablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
       </CardContent>
     </Card>
   )

@@ -96,8 +96,8 @@ export default async function AnggotaDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {data.pinjamanAktif.map((p, i) => (
-                <div key={i} className="flex items-center justify-between rounded-lg border border-l-4 border-l-amber-500 p-3">
+              {data.pinjamanAktif.map((p) => (
+                <div key={`pinjaman-${p.jumlah}-${p.status}`} className="flex items-center justify-between rounded-lg border border-l-4 border-l-amber-500 p-3">
                   <div>
                     <p className="text-sm font-medium">
                       Pinjaman Rp {p.jumlah.toLocaleString("id-ID")}

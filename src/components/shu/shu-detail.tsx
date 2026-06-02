@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -15,6 +16,7 @@ type SHUDetail = NonNullable<Awaited<ReturnType<typeof getSHUByTahun>>>
 export function SHUDetailCard({ data }: { data: SHUDetail }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const pageSize = Number(searchParams.get("pageSize")) || 20
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState("")
@@ -179,37 +181,25 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
             </Table>
           </div>
 
-          {data.totalPages && data.totalPages > 1 && (
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
-              <span>Halaman {data.page} dari {data.totalPages}</span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={(data.page ?? 1) <= 1}
-                  onClick={() => {
-                    const params = new URLSearchParams(searchParams.toString())
-                    params.set("page", String((data.page ?? 1) - 1))
-                    router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
-                  }}
-                >
-                  Sebelumnya
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={(data.page ?? 1) >= (data.totalPages ?? 1)}
-                  onClick={() => {
-                    const params = new URLSearchParams(searchParams.toString())
-                    params.set("page", String((data.page ?? 1) + 1))
-                    router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
-                  }}
-                >
-                  Selanjutnya
-                </Button>
-              </div>
-            </div>
-          )}
+          <DataTablePagination
+            page={data.page ?? 1}
+            totalPages={data.totalPages ?? 0}
+            total={data.shuAnggota.length}
+            pageSize={pageSize}
+            onPageChange={(p) => {
+              const params = new URLSearchParams(searchParams.toString())
+              params.set("page", String(p))
+              if (pageSize !== 20) params.set("pageSize", String(pageSize))
+              router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
+            }}
+            onPageSizeChange={(size) => {
+              const params = new URLSearchParams(searchParams.toString())
+              if (size !== 20) params.set("pageSize", String(size))
+              else params.delete("pageSize")
+              params.delete("page")
+              router.push(`/pengurus/shu/${data.tahun}?${params.toString()}`)
+            }}
+          />
         </CardContent>
       </Card>
     </div>

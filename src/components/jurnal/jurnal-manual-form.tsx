@@ -139,7 +139,7 @@ export function JurnalManualForm({ akunList }: Props) {
           </TableHeader>
           <TableBody>
             {entries.map((entry, i) => (
-              <TableRow key={i}>
+              <TableRow key={`entry-${i}-${entry.akunId || "empty"}`}>
                 <TableCell>
                   <Select
                     value={entry.akunId}
@@ -182,6 +182,7 @@ export function JurnalManualForm({ akunList }: Props) {
                     size="sm"
                     disabled={entries.length <= 2}
                     onClick={() => removeEntry(i)}
+                    aria-label="Hapus entry"
                   >
                     ✕
                   </Button>

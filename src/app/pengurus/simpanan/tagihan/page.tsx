@@ -27,6 +27,7 @@ import {
   AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { StrukPembayaran } from "@/components/struk-pembayaran"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ArrowLeft, RefreshCw, Wallet } from "lucide-react"
 import {formatTanggal} from "@/lib/format"
 
@@ -65,6 +66,7 @@ export default function TagihanWajibPage() {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
   const [loading, setLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -94,7 +96,7 @@ export default function TagihanWajibPage() {
         status: filterStatus !== "SEMUA" ? filterStatus : undefined,
         search: filterSearch || undefined,
         page,
-        pageSize: 20,
+        pageSize,
       })
       setData(result.data as Tagihan[])
       setTotal(result.total)
@@ -104,7 +106,7 @@ export default function TagihanWajibPage() {
     } finally {
       setLoading(false)
     }
-  }, [filterBulan, filterTahun, filterStatus, filterSearch, page])
+  }, [filterBulan, filterTahun, filterStatus, filterSearch, page, pageSize])
 
   useEffect(() => {
     fetchData()
@@ -288,31 +290,14 @@ export default function TagihanWajibPage() {
               </TableBody>
             </Table>
           </div>
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t px-4 py-3">
-              <p className="text-sm text-muted-foreground">
-                Halaman {page} dari {totalPages}
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                >
-                  Sebelumnya
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page >= totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  Selanjutnya
-                </Button>
-              </div>
-            </div>
-          )}
+          <DataTablePagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            onPageChange={(p) => setPage(p)}
+            onPageSizeChange={(s) => { setPageSize(s); setPage(1) }}
+          />
         </CardContent>
       </Card>
 

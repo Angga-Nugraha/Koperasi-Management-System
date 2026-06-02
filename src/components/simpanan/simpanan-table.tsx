@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, ChevronLeft, ChevronRight, ArrowUpRight, ArrowDownLeft, FileText } from "lucide-react"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { Search, ArrowUpRight, ArrowDownLeft, FileText } from "lucide-react"
 import Link from "next/link"
 import { SetorSheet } from "@/components/simpanan/setor-sheet"
 import { TarikSheet } from "@/components/simpanan/tarik-sheet"
@@ -42,6 +43,7 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   search: string
 }
 
@@ -51,7 +53,7 @@ const JENIS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
   SUKARELA: "outline",
 }
 
-export function SimpananTable({ data, total, page, totalPages, search: initialSearch }: Props) {
+export function SimpananTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch }: Props) {
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch)
   const [jenisFilter, setJenisFilter] = useState("SEMUA")
@@ -73,6 +75,15 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
   function onPageChange(p: number) {
     const params = new URLSearchParams(window.location.search)
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/simpanan?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(window.location.search)
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`/pengurus/simpanan?${params.toString()}`)
   }
 
@@ -116,7 +127,13 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
             </div>
           </div>
           <div className="w-full sm:w-40">
-            <Select value={jenisFilter} onValueChange={(v) => { setJenisFilter(v); onSearch() }}>
+            <Select value={jenisFilter} onValueChange={(v) => {
+              setJenisFilter(v)
+              const params = new URLSearchParams()
+              if (search) params.set("search", search)
+              if (v && v !== "SEMUA") params.set("jenis", v)
+              router.push(`/pengurus/simpanan?${params.toString()}`)
+            }}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
               </SelectTrigger>
@@ -174,20 +191,14 @@ export function SimpananTable({ data, total, page, totalPages, search: initialSe
           </Table>
         </div>
 
-        {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Total {total} simpanan</p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="flex items-center text-sm text-muted-foreground">{page} / {totalPages}</span>
-              <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
+        <DataTablePagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
       </CardContent>
 
       <SetorSheet open={setorOpen} onOpenChange={setSetorOpen} />

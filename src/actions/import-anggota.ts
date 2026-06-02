@@ -116,37 +116,39 @@ export async function importAnggotaFromCsv(formData: FormData) {
     dateGroups.set(key, group)
   }
 
-  for (const [, group] of dateGroups) {
-    const tgl = group[0]!.tglMasuk
-    tgl.setHours(0, 0, 0, 0)
-    const nextDay = new Date(tgl)
-    nextDay.setDate(nextDay.getDate() + 1)
+  await prisma.$transaction(async (tx) => {
+    for (const [, group] of dateGroups) {
+      const tgl = group[0]!.tglMasuk
+      tgl.setHours(0, 0, 0, 0)
+      const nextDay = new Date(tgl)
+      nextDay.setDate(nextDay.getDate() + 1)
 
-    let urutan = (await prisma.anggota.count({
-      where: { tglMasuk: { gte: tgl, lt: nextDay } },
-    })) + 1
+      let urutan = (await tx.anggota.count({
+        where: { tglMasuk: { gte: tgl, lt: nextDay } },
+      })) + 1
 
-    for (const row of group) {
-      try {
-        const noAnggota = generateNoAnggota(row.tglMasuk, urutan++)
-        await prisma.anggota.create({
-          data: {
-            nik: row.nik,
-            noAnggota,
-            nama: row.nama,
-            alamat: row.alamat,
-            pekerjaan: row.pekerjaan || null,
-            penghasilan: row.penghasilan,
-            tglMasuk: row.tglMasuk,
-            status: "AKTIF",
-          },
-        })
-        results.push({ row: row.row, nik: row.nik, nama: row.nama, success: true })
-      } catch {
-        results.push({ row: row.row, nik: row.nik, nama: row.nama, success: false, error: "Gagal menyimpan data" })
+      for (const row of group) {
+        try {
+          const noAnggota = generateNoAnggota(row.tglMasuk, urutan++)
+          await tx.anggota.create({
+            data: {
+              nik: row.nik,
+              noAnggota,
+              nama: row.nama,
+              alamat: row.alamat,
+              pekerjaan: row.pekerjaan || null,
+              penghasilan: row.penghasilan,
+              tglMasuk: row.tglMasuk,
+              status: "AKTIF",
+            },
+          })
+          results.push({ row: row.row, nik: row.nik, nama: row.nama, success: true })
+        } catch {
+          results.push({ row: row.row, nik: row.nik, nama: row.nama, success: false, error: "Gagal menyimpan data" })
+        }
       }
     }
-  }
+  })
 
   revalidatePath("/pengurus/anggota")
   return results

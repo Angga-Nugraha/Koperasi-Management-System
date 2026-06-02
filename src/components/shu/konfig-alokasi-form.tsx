@@ -112,7 +112,7 @@ export function KonfigAlokasiForm({
         </CardHeader>
         <CardContent className="space-y-4">
           {items.map((item, index) => (
-            <div key={index} className="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap sm:gap-3 rounded-lg border p-4">
+            <div key={item.kode || `indikator-${index}`} className="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap sm:gap-3 rounded-lg border p-4">
               <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Kode</Label>
                 <Input
@@ -174,7 +174,7 @@ export function KonfigAlokasiForm({
                   </SelectContent>
                 </Select>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => removeItem(index)} disabled={items.length <= 1}>
+              <Button variant="ghost" size="icon" onClick={() => removeItem(index)} disabled={items.length <= 1} aria-label="Hapus indikator">
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
             </div>

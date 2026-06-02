@@ -11,7 +11,7 @@ import { prisma } from "@/lib/prisma"
 
 type Props = {
   params: Promise<{ anggotaId: string }>
-  searchParams: Promise<{ jenis?: string; page?: string }>
+  searchParams: Promise<{ jenis?: string; page?: string; pageSize?: string }>
 }
 
 export default async function SimpananAnggotaPage({ params, searchParams }: Props) {
@@ -19,12 +19,13 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
   const sp = await searchParams
   const jenisCode = sp.jenis ?? "SEMUA"
   const page = Number(sp.page) || 1
+  const pageSize = Number(sp.pageSize) || 20
 
   const anggota = await getAnggotaById(anggotaId)
   if (!anggota) notFound()
 
   const simpanan = await getSimpananAnggota(anggotaId)
-  const mutasi = await getMutasiAnggota(anggotaId, { jenisSimpananId: jenisCode !== "SEMUA" ? (await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } }))?.id : undefined, page })
+  const mutasi = await getMutasiAnggota(anggotaId, { jenisSimpananId: jenisCode !== "SEMUA" ? (await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } }))?.id : undefined, page, pageSize })
 
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
 
@@ -75,6 +76,7 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
         total={mutasi.total}
         page={mutasi.page}
         totalPages={mutasi.totalPages}
+        pageSize={pageSize}
         anggotaId={anggotaId}
       />
 

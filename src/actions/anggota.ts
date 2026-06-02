@@ -16,7 +16,7 @@ export async function getAnggotaList(params: {
   page?: number
   pageSize?: number
 }) {
-  const { search, status, page = 1, pageSize = 10 } = params
+  const { search, status, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = {}
 

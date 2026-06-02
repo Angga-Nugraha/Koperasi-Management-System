@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import Link from "next/link"
 import { formatTanggal } from "@/lib/format"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -30,10 +31,11 @@ type Props = {
   total: number
   page: number
   totalPages: number
+  pageSize?: number
   search?: string
 }
 
-export function JurnalTable({ data, total, page, totalPages, search }: Props) {
+export function JurnalTable({ data, total, page, totalPages, pageSize = 20, search }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [searchValue, setSearchValue] = useState(search ?? "")
@@ -49,6 +51,15 @@ export function JurnalTable({ data, total, page, totalPages, search }: Props) {
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("page", String(p))
+    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    router.push(`/pengurus/jurnal?${params.toString()}`)
+  }
+
+  function handlePageSizeChange(size: number) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (size !== 20) params.set("pageSize", String(size))
+    else params.delete("pageSize")
+    params.delete("page")
     router.push(`/pengurus/jurnal?${params.toString()}`)
   }
 
@@ -111,30 +122,14 @@ export function JurnalTable({ data, total, page, totalPages, search }: Props) {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{total} jurnal ditemukan</span>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => goPage(page - 1)}
-          >
-            Sebelumnya
-          </Button>
-          <span>
-            Halaman {page} dari {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page >= totalPages}
-            onClick={() => goPage(page + 1)}
-          >
-            Selanjutnya
-          </Button>
-        </div>
-      </div>
+      <DataTablePagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        pageSize={pageSize}
+        onPageChange={goPage}
+        onPageSizeChange={handlePageSizeChange}
+      />
     </div>
   )
 }

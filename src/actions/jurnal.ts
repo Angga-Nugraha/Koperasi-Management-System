@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
-import { buatJurnal } from "@/lib/jurnal"
+import { buatJurnal, getSaldoAkunTipe } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 
 export async function getJurnalList(params: {
@@ -279,62 +279,6 @@ export async function getAkunList() {
     orderBy: { kode: "asc" },
     select: { id: true, kode: true, nama: true, tipe: true, saldoNormal: true },
   })
-}
-
-async function getSaldoAkunTipe(
-  tipe: string,
-  sampaiTanggal?: Date,
-  dariTanggal?: Date,
-  excludeClosing = false
-) {
-  const akunAll = await prisma.akun.findMany({
-    where: { tipe: tipe as any, isActive: true },
-    orderBy: { kode: "asc" },
-  })
-  const akunIds = akunAll.map((a) => a.id)
-
-  const whereDetail: Record<string, unknown> = {
-    akunId: { in: akunIds },
-  }
-  const whereJurnal: Record<string, unknown> = {}
-  if (dariTanggal && sampaiTanggal) {
-    whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
-  } else if (sampaiTanggal) {
-    whereJurnal.tanggal = { lte: sampaiTanggal }
-  }
-  if (excludeClosing) {
-    whereJurnal.keterangan = { not: { contains: "Jurnal Penutup" } }
-  }
-
-  const detail = await prisma.detailJurnal.findMany({
-    where: { ...whereDetail, jurnal: whereJurnal },
-  })
-
-  const saldoMap = new Map<string, number>()
-  for (const a of akunAll) {
-    saldoMap.set(a.id, 0)
-  }
-
-  for (const d of detail) {
-    const akun = akunAll.find((a) => a.id === d.akunId)
-    if (!akun) continue
-    const current = saldoMap.get(d.akunId) ?? 0
-    if (akun.saldoNormal === "DEBIT") {
-      saldoMap.set(d.akunId, current + Number(d.debit) - Number(d.kredit))
-    } else {
-      saldoMap.set(d.akunId, current + Number(d.kredit) - Number(d.debit))
-    }
-  }
-
-  let total = 0
-  const items = akunAll.map((a) => {
-    const saldo = Math.round((saldoMap.get(a.id) ?? 0) * 100) / 100
-    total += saldo
-    return { kode: a.kode, nama: a.nama, saldo }
-  })
-
-  total = Math.round(total * 100) / 100
-  return { items, total }
 }
 
 export async function getNeraca(sampai?: string) {

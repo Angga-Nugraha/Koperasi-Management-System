@@ -32,6 +32,8 @@ export function AnggotaSelect({ value, onChange, name, required }: Props) {
     if (!value) return
     getAnggotaBasic(value).then((a) => {
       if (a) setSelected(a)
+    }).catch(() => {
+      // silent — component handles empty state
     })
   }, [value])
 

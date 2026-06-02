@@ -2,15 +2,16 @@ import { getAkunList, getBukuBesar } from "@/actions/jurnal"
 import { BukuBesarClient } from "@/components/jurnal/buku-besar-client"
 
 type Props = {
-  searchParams: Promise<{ akunId?: string; dari?: string; sampai?: string; page?: string }>
+  searchParams: Promise<{ akunId?: string; dari?: string; sampai?: string; page?: string; pageSize?: string }>
 }
 
 export default async function BukuBesarPage({ searchParams }: Props) {
-  const { akunId, dari, sampai, page } = await searchParams
+  const { akunId, dari, sampai, page, pageSize: ps } = await searchParams
+  const pageSize = Number(ps) || 20
   const akunList = await getAkunList()
 
   const result = akunId
-    ? await getBukuBesar(akunId, dari ?? undefined, sampai ?? undefined, Number(page) || 1)
+    ? await getBukuBesar(akunId, dari ?? undefined, sampai ?? undefined, Number(page) || 1, pageSize)
     : { data: [], total: 0, page: 1, totalPages: 0, saldoAwal: 0 }
 
   const akunTerpilih = akunId ? akunList.find((a) => a.id === akunId) : null
@@ -41,6 +42,7 @@ export default async function BukuBesarPage({ searchParams }: Props) {
         saldoAwal={result.saldoAwal}
         page={result.page}
         totalPages={result.totalPages}
+        pageSize={pageSize}
       />
     </div>
   )

@@ -31,7 +31,7 @@ export async function getPinjamanList(params: {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
-  const { search, status, page = 1, pageSize = 15 } = params
+  const { search, status, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = {}
   if (status && status !== "SEMUA") where.status = status

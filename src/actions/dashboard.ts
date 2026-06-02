@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
+import { auth, assertRole } from "@/lib/auth"
 
 function tahunRange(tahun: number) {
   return {
@@ -14,6 +15,8 @@ function hinggaAkhirTahun(tahun: number) {
 }
 
 export async function getTahunList() {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
   const years = await prisma.jurnalUmum.findMany({
     select: { tanggal: true },
     distinct: ["tanggal"],
@@ -27,6 +30,7 @@ export async function getTahunList() {
 }
 
 export async function getDashboardPengurus(tahun: number) {
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const totalAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
 
   const totalSimpananAgg = await prisma.simpanan.aggregate({ _sum: { saldo: true } })
@@ -158,6 +162,10 @@ export async function getDashboardPengurus(tahun: number) {
 }
 
 export async function getDashboardAnggota(anggotaId: string) {
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "ANGGOTA")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
   const simpanan = await prisma.simpanan.findMany({
     where: { anggotaId },
     include: { jenisSimpanan: { select: { kode: true, nama: true } } },
@@ -196,6 +204,7 @@ export async function getDashboardAnggota(anggotaId: string) {
 }
 
 export async function getDashboardPengawas(tahun: number) {
+  await assertRole("PENGAWAS")
   const totalAuditLog = await prisma.auditLog.count()
 
   const awalBulan = new Date()

@@ -1,53 +1,15 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { formatTanggal } from "@/lib/format"
+import { getSaldoAkunTipe } from "@/lib/jurnal"
 
-async function getSaldoAkunTipe(tipe: string, sampaiTanggal?: Date, dariTanggal?: Date, excludeClosing = false) {
-  const akunAll = await prisma.akun.findMany({
-    where: { tipe: tipe as any, isActive: true },
-  })
-  const akunIds = akunAll.map((a) => a.id)
-
-  const whereDetail: Record<string, unknown> = {
-    akunId: { in: akunIds },
+function sanitizeCellValue(value: string | number | null | undefined): string | number {
+  if (typeof value === "string" && /^[=+\-@]/.test(value)) {
+    return `'${value}`
   }
-  const whereJurnal: Record<string, unknown> = {}
-  if (dariTanggal && sampaiTanggal) {
-    whereJurnal.tanggal = { gte: dariTanggal, lte: sampaiTanggal }
-  } else if (sampaiTanggal) {
-    whereJurnal.tanggal = { lte: sampaiTanggal }
-  }
-  if (excludeClosing) {
-    whereJurnal.keterangan = { not: { contains: "Jurnal Penutup" } }
-  }
-
-  const detail = await prisma.detailJurnal.findMany({
-    where: { ...whereDetail, jurnal: whereJurnal },
-  })
-
-  const saldoMap = new Map<string, number>()
-  for (const a of akunAll) saldoMap.set(a.id, 0)
-
-  for (const d of detail) {
-    const akun = akunAll.find((a) => a.id === d.akunId)
-    if (!akun) continue
-    const current = saldoMap.get(d.akunId) ?? 0
-    if (akun.saldoNormal === "DEBIT") {
-      saldoMap.set(d.akunId, current + Number(d.debit) - Number(d.kredit))
-    } else {
-      saldoMap.set(d.akunId, current + Number(d.kredit) - Number(d.debit))
-    }
-  }
-
-  let total = 0
-  const items = akunAll.map((a) => {
-    const saldo = Math.round((saldoMap.get(a.id) ?? 0) * 100) / 100
-    total += saldo
-    return { kode: a.kode, nama: a.nama, saldo, saldoNormal: a.saldoNormal }
-  })
-  return { items, total: Math.round(total * 100) / 100 }
+  return value ?? ""
 }
 
 type Param = { dari?: string; sampai?: string; akunId?: string }
@@ -55,6 +17,7 @@ type Param = { dari?: string; sampai?: string; akunId?: string }
 export async function exportBukuBesar(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const { dari, sampai, akunId } = params
   const ExcelJS = await import("exceljs")
@@ -91,7 +54,7 @@ export async function exportBukuBesar(params: Param) {
   ws.getRow(1).font = { bold: true }
 
   if (akun) {
-    ws.addRow({ tanggal: "", noJurnal: "", keterangan: `Akun: ${akun.kode} - ${akun.nama}`, debit: "", kredit: "", saldo: "" })
+    ws.addRow({ tanggal: "", noJurnal: "", keterangan: sanitizeCellValue(`Akun: ${akun.kode} - ${akun.nama}`), debit: "", kredit: "", saldo: "" })
   }
 
   let saldo = 0
@@ -101,9 +64,9 @@ export async function exportBukuBesar(params: Param) {
       : Math.round((saldo + Number(d.kredit) - Number(d.debit)) * 100) / 100
     saldo = s
     ws.addRow({
-      tanggal: formatTanggal(d.jurnal.tanggal),
-      noJurnal: d.jurnal.noJurnal,
-      keterangan: d.jurnal.keterangan,
+      tanggal: sanitizeCellValue(formatTanggal(d.jurnal.tanggal)),
+      noJurnal: sanitizeCellValue(d.jurnal.noJurnal),
+      keterangan: sanitizeCellValue(d.jurnal.keterangan),
       debit: Number(d.debit),
       kredit: Number(d.kredit),
       saldo: s,
@@ -116,6 +79,7 @@ export async function exportBukuBesar(params: Param) {
 export async function exportNeracaSaldo(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -146,7 +110,7 @@ export async function exportNeracaSaldo(params: Param) {
   const akunAll = await prisma.akun.findMany({ orderBy: { kode: "asc" } })
   for (const a of akunAll) {
     const s = saldoMap.get(a.id)
-    ws.addRow({ kode: a.kode, nama: a.nama, debit: s?.debit ?? 0, kredit: s?.kredit ?? 0 })
+    ws.addRow({ kode: sanitizeCellValue(a.kode), nama: sanitizeCellValue(a.nama), debit: s?.debit ?? 0, kredit: s?.kredit ?? 0 })
   }
 
   return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
@@ -155,6 +119,7 @@ export async function exportNeracaSaldo(params: Param) {
 export async function exportNeraca(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -185,15 +150,15 @@ export async function exportNeraca(params: Param) {
   ws.getRow(1).font = { bold: true }
 
   ws.addRow({ akun: "ASET", saldo: "" }).font = { bold: true }
-  for (const i of aset.items) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  for (const i of aset.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Aset", saldo: aset.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "KEWAJIBAN", saldo: "" }).font = { bold: true }
-  for (const i of liabilitas.items) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  for (const i of liabilitas.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Kewajiban", saldo: liabilitas.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "EKUITAS", saldo: "" }).font = { bold: true }
-  for (const i of adjustedEkuitas) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  for (const i of adjustedEkuitas) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Ekuitas", saldo: totalEkuitas }).font = { bold: true }
 
   return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
@@ -202,6 +167,7 @@ export async function exportNeraca(params: Param) {
 export async function exportLabaRugi(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const ExcelJS = await import("exceljs")
 
   const dariTanggal = params.dari ? new Date(params.dari) : undefined
@@ -217,11 +183,11 @@ export async function exportLabaRugi(params: Param) {
   ws.getRow(1).font = { bold: true }
 
   ws.addRow({ akun: "PENDAPATAN", saldo: "" }).font = { bold: true }
-  for (const i of pendapatan.items) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  for (const i of pendapatan.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Pendapatan", saldo: pendapatan.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "BEBAN", saldo: "" }).font = { bold: true }
-  for (const i of beban.items) ws.addRow({ akun: `  ${i.kode} ${i.nama}`, saldo: i.saldo })
+  for (const i of beban.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Beban", saldo: beban.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "Laba / Rugi Bersih", saldo: pendapatan.total - beban.total }).font = { bold: true }
@@ -232,6 +198,7 @@ export async function exportLabaRugi(params: Param) {
 export async function exportArusKas(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const ExcelJS = await import("exceljs")
 
   const tanggalMulai = params.dari ? new Date(params.dari) : new Date("2020-01-01")
@@ -264,11 +231,11 @@ export async function exportArusKas(params: Param) {
     totalMasuk += masuk
     totalKeluar += keluar
     ws.addRow({
-      tanggal: formatTanggal(d.jurnal.tanggal),
-      noJurnal: d.jurnal.noJurnal,
-      keterangan: d.jurnal.keterangan,
-      masuk,
-      keluar,
+      tanggal: sanitizeCellValue(formatTanggal(d.jurnal.tanggal)),
+      noJurnal: sanitizeCellValue(d.jurnal.noJurnal),
+      keterangan: sanitizeCellValue(d.jurnal.keterangan),
+      masuk: masuk,
+      keluar: keluar,
     })
   }
   ws.addRow({ tanggal: "", noJurnal: "", keterangan: "TOTAL", masuk: totalMasuk, keluar: totalKeluar }).font = { bold: true }
@@ -279,6 +246,7 @@ export async function exportArusKas(params: Param) {
 export async function exportSHU(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -298,14 +266,14 @@ export async function exportSHU(params: Param) {
   ws.columns = [{ header: "Keterangan", key: "ket", width: 40 }, { header: "Jumlah", key: "jumlah", width: 20 }]
   ws.getRow(1).font = { bold: true }
 
-  ws.addRow({ ket: "Total Pendapatan", jumlah: pendapatan.total })
-  ws.addRow({ ket: "Total Beban", jumlah: beban.total })
-  ws.addRow({ ket: "SHU Kotor", jumlah: shuKotor }).font = { bold: true }
+  ws.addRow({ ket: sanitizeCellValue("Total Pendapatan"), jumlah: pendapatan.total })
+  ws.addRow({ ket: sanitizeCellValue("Total Beban"), jumlah: beban.total })
+  ws.addRow({ ket: sanitizeCellValue("SHU Kotor"), jumlah: shuKotor }).font = { bold: true }
   for (const ind of indikator) {
     const nominal = Math.round(shuKotor * (Number(ind.persentase) / 100) * 100) / 100
-    ws.addRow({ ket: `${ind.nama} (${Number(ind.persentase)}%)`, jumlah: nominal })
+    ws.addRow({ ket: sanitizeCellValue(`${ind.nama} (${Number(ind.persentase)}%)`), jumlah: nominal })
   }
-  ws.addRow({ ket: "Jumlah Anggota Aktif", jumlah: jumlahAnggota })
+  ws.addRow({ ket: sanitizeCellValue("Jumlah Anggota Aktif"), jumlah: jumlahAnggota })
 
   return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
 }
