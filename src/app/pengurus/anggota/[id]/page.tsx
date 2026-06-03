@@ -19,6 +19,7 @@ export default async function DetailAnggotaPage({ params }: Props) {
         nik: anggota.nik,
         noAnggota: anggota.noAnggota,
         nama: anggota.nama,
+        noHp: anggota.noHp,
         alamat: anggota.alamat,
         pekerjaan: anggota.pekerjaan,
         penghasilan: anggota.penghasilan,

@@ -39,10 +39,6 @@ export function JurnalManualForm({ akunList }: Props) {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  function addEntry() {
-    setEntries([...entries, { akunId: "", debit: "0", kredit: "0" }])
-  }
-
   function removeEntry(i: number) {
     if (entries.length <= 2) return
     setEntries(entries.filter((_, idx) => idx !== i))
@@ -50,7 +46,7 @@ export function JurnalManualForm({ akunList }: Props) {
 
   function updateEntry(i: number, field: keyof Entry, value: string) {
     const next = [...entries]
-    next[i] = { ...next[i], [field]: value }
+    next[i] = { ...next[i], [field]: value } as Entry
     setEntries(next)
   }
 

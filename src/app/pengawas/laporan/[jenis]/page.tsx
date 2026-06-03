@@ -64,32 +64,32 @@ async function LaporanContent({ jenis, sampai, dari, akunId, page, pageSize, ent
 
   switch (jenis) {
     case "neraca": {
-      const s = sampai || defaultSampai
+      const s = (sampai || defaultSampai) as string
       const result = await getNeraca(s)
-      return <NeracaClient sampai={s} {...result} />
+      return <NeracaClient sampai={s!} {...result} />
     }
     case "laba-rugi": {
-      const d = dari || defaultDari
-      const s = sampai || defaultSampai
+      const d = (dari || defaultDari) as string
+      const s = (sampai || defaultSampai) as string
       const result = await getLabaRugi(d, s)
       return <LabaRugiClient dari={d} sampai={s} {...result} />
     }
     case "arus-kas": {
-      const d = dari || defaultDari
-      const s = sampai || defaultSampai
+      const d = (dari || defaultDari) as string
+      const s = (sampai || defaultSampai) as string
       const pageNum = Number(page) || 1
       const result = await getArusKas(d, s, pageNum, pageSize)
       return <ArusKasClient dari={d} sampai={s} {...result} pageSize={pageSize} />
     }
     case "neraca-saldo": {
-      const s = sampai || defaultSampai
+      const s = (sampai || defaultSampai) as string
       const result = await getNeracaSaldo(s)
       return <NeracaSaldoClient sampai={s} {...result} />
     }
     case "buku-besar": {
       const pageNum = Number(page) || 1
-      const d = dari || defaultDari
-      const s = sampai || defaultSampai
+      const d = (dari || defaultDari) as string
+      const s = (sampai || defaultSampai) as string
       const [akunList, page1] = await Promise.all([
         getAkunList(),
         getBukuBesar(akunId || undefined, d, s, pageNum, pageSize),

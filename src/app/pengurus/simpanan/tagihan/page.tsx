@@ -31,7 +31,7 @@ import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ArrowLeft, RefreshCw, Wallet } from "lucide-react"
 import {formatTanggal} from "@/lib/format"
 
-import { generateTagihanWajib, bayarTagihanWajib, getTagihanWajibList } from "@/actions/simpanan"
+import { generateTagihanWajib, bayarTagihanWajib, getTagihanWajibList, getJenisSimpananList } from "@/actions/simpanan"
 import Link from "next/link"
 
 type Tagihan = {
@@ -39,6 +39,8 @@ type Tagihan = {
   anggotaId: string
   noAnggota: string
   namaAnggota: string
+  jenisKode: string
+  jenisNama: string
   bulan: number
   tahun: number
   nominal: number
@@ -72,8 +74,10 @@ export default function TagihanWajibPage() {
   const [error, setError] = useState<string | null>(null)
   const [filterBulan, setFilterBulan] = useState<string>("")
   const [filterTahun, setFilterTahun] = useState<string>(String(new Date().getFullYear()))
+  const [filterJenis, setFilterJenis] = useState<string>("")
   const [filterStatus, setFilterStatus] = useState<string>("SEMUA")
   const [filterSearch, setFilterSearch] = useState("")
+  const [jenisList, setJenisList] = useState<{ kode: string; nama: string }[]>([])
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
   const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
   const [receipt, setReceipt] = useState<{
@@ -93,6 +97,7 @@ export default function TagihanWajibPage() {
       const result = await getTagihanWajibList({
         bulan: filterBulan ? Number(filterBulan) : undefined,
         tahun: filterTahun ? Number(filterTahun) : undefined,
+        jenis: filterJenis || undefined,
         status: filterStatus !== "SEMUA" ? filterStatus : undefined,
         search: filterSearch || undefined,
         page,
@@ -106,11 +111,12 @@ export default function TagihanWajibPage() {
     } finally {
       setLoading(false)
     }
-  }, [filterBulan, filterTahun, filterStatus, filterSearch, page, pageSize])
+  }, [filterBulan, filterTahun, filterJenis, filterStatus, filterSearch, page, pageSize])
 
   useEffect(() => {
     fetchData()
     fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
+    getJenisSimpananList().then(setJenisList).catch(() => {})
   }, [fetchData])
 
   async function handleGenerate() {
@@ -160,9 +166,9 @@ export default function TagihanWajibPage() {
           </Link>
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">Tagihan Simpanan Wajib</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Tagihan Simpanan</h1>
           <p className="text-sm text-muted-foreground">
-            Total: {total} tagihan
+            Tagihan simpanan Pokok (1x) dan Wajib (bulanan) — Total: {total} tagihan
           </p>
         </div>
       </div>
@@ -213,6 +219,20 @@ export default function TagihanWajibPage() {
               </Select>
             </div>
             <div className="space-y-1">
+              <Label>Jenis</Label>
+              <Select value={filterJenis} onValueChange={(v) => { setFilterJenis(v === "all" ? "" : v); setPage(1) }}>
+                <SelectTrigger className="w-full lg:w-32">
+                  <SelectValue placeholder="Semua" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua</SelectItem>
+                  {jenisList.filter((j) => j.kode !== "SUKARELA").map((j) => (
+                    <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
               <Label>Cari Anggota</Label>
               <Input
                 className="w-full lg:w-44"
@@ -239,6 +259,7 @@ export default function TagihanWajibPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Anggota</TableHead>
+                <TableHead>Jenis</TableHead>
                 <TableHead>Periode</TableHead>
                 <TableHead className="text-right">Nominal</TableHead>
                 <TableHead>Jatuh Tempo</TableHead>
@@ -250,7 +271,7 @@ export default function TagihanWajibPage() {
             <TableBody>
               {data.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center text-muted-foreground">
                     {loading ? "Memuat..." : "Tidak ada tagihan"}
                   </TableCell>
                 </TableRow>
@@ -261,6 +282,7 @@ export default function TagihanWajibPage() {
                     <div className="text-sm font-medium">{t.namaAnggota}</div>
                     <div className="text-xs text-muted-foreground">{t.noAnggota}</div>
                   </TableCell>
+                  <TableCell><Badge variant="secondary" className="text-xs">{t.jenisNama}</Badge></TableCell>
                   <TableCell>{BULAN[t.bulan]} {t.tahun}</TableCell>
                   <TableCell className="text-right font-mono">Rp{t.nominal.toLocaleString("id-ID")}</TableCell>
                   <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
@@ -277,7 +299,7 @@ export default function TagihanWajibPage() {
                         variant="outline"
                         onClick={() => setConfirm({
                           title: `Bayar Tagihan ${BULAN[t.bulan]} ${t.tahun}`,
-                          desc: `Bayar tagihan simpanan wajib ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar Rp${t.nominal.toLocaleString("id-ID")}?`,
+                          desc: `Bayar tagihan ${t.jenisNama} ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar Rp${t.nominal.toLocaleString("id-ID")}?`,
                           onConfirm: () => handleBayar(t),
                         })}
                       >

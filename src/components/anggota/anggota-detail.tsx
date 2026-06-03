@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
+import { EditAnggotaSheet } from "./edit-anggota-sheet"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Download, Eye } from "lucide-react"
 import {formatTanggal} from "@/lib/format"
 
@@ -54,6 +55,7 @@ type AnggotaDetail = {
   nik: string
   noAnggota: string
   nama: string
+  noHp: string | null
   alamat: string
   pekerjaan: string | null
   penghasilan: number | null
@@ -96,6 +98,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [newStatus, setNewStatus] = useState(anggota.status)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
+  const [editSheetOpen, setEditSheetOpen] = useState(false)
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   async function handleStatusChange() {
@@ -179,11 +182,9 @@ export function AnggotaDetailClient({ anggota }: Props) {
             </DialogContent>
           </Dialog>
 
-          <Button variant="outline" asChild>
-            <Link href={`/pengurus/anggota/${anggota.id}/edit`}>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Link>
+          <Button variant="outline" onClick={() => setEditSheetOpen(true)}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit
           </Button>
 
           <Button variant="outline" asChild>
@@ -320,6 +321,10 @@ export function AnggotaDetailClient({ anggota }: Props) {
               <div>
                 <p className="text-sm text-muted-foreground">Nama</p>
                 <p className="font-medium">{anggota.nama}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">No. HP</p>
+                <p className="font-medium">{anggota.noHp ?? "-"}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Alamat</p>
@@ -491,6 +496,8 @@ export function AnggotaDetailClient({ anggota }: Props) {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <EditAnggotaSheet open={editSheetOpen} onOpenChange={setEditSheetOpen} anggota={anggota} />
 
       <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
         <AlertDialogContent>

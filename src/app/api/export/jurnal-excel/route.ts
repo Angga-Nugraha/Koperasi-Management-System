@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       sampai: searchParams.get("sampai") ?? undefined,
     })
 
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer as any, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": `attachment; filename="jurnal-umum-${new Date().toISOString().slice(0, 10)}.xlsx"`,

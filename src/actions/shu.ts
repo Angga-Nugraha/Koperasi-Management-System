@@ -266,5 +266,5 @@ export async function exportSHUExcel(tahun: number) {
     })
   }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }

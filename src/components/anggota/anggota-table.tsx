@@ -26,12 +26,14 @@ import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Search, Plus, Upload } from "lucide-react"
 import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
+import { TambahAnggotaSheet } from "@/components/anggota/tambah-anggota-sheet"
 
 type Anggota = {
   id: string
   nik: string
   noAnggota: string
   nama: string
+  noHp: string | null
   status: string
   tglMasuk: string
 }
@@ -70,6 +72,7 @@ export function AnggotaTable({
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch)
   const [status, setStatus] = useState(initialStatus)
+  const [tambahOpen, setTambahOpen] = useState(false)
 
   function onSearch() {
     const params = new URLSearchParams()
@@ -94,7 +97,8 @@ export function AnggotaTable({
   }
 
   return (
-    <Card>
+    <>
+      <Card>
       <CardHeader>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Daftar Anggota</CardTitle>
@@ -105,12 +109,10 @@ export function AnggotaTable({
                 Import
               </Link>
             </Button>
-            <Button asChild>
-              <Link href="/pengurus/anggota/tambah">
+            <Button onClick={() => setTambahOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Tambah Anggota
-              </Link>
-            </Button>
+              </Button>
           </div>
         </div>
       </CardHeader>
@@ -166,6 +168,7 @@ export function AnggotaTable({
               <TableHead>No Anggota</TableHead>
               <TableHead>NIK</TableHead>
               <TableHead>Nama</TableHead>
+              <TableHead>No. HP</TableHead>
               <TableHead>Tgl Masuk</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
@@ -184,6 +187,7 @@ export function AnggotaTable({
                   <TableCell className="font-mono text-sm">{a.noAnggota}</TableCell>
                   <TableCell className="font-mono text-sm">{a.nik}</TableCell>
                   <TableCell>{a.nama}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{a.noHp || "-"}</TableCell>
                   <TableCell>{formatTanggal(a.tglMasuk)}</TableCell>
                   <TableCell>
                     <Badge variant={STATUS_VARIANTS[a.status] ?? "secondary"}>
@@ -210,7 +214,9 @@ export function AnggotaTable({
           onPageChange={onPageChange}
           onPageSizeChange={handlePageSizeChange}
         />
-      </CardContent>
-    </Card>
-  )
+        </CardContent>
+      </Card>
+
+      <TambahAnggotaSheet open={tambahOpen} onOpenChange={setTambahOpen} />
+    </>)
 }

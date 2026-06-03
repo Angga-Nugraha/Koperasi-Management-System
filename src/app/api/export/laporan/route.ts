@@ -8,7 +8,7 @@ import {
   exportSHU,
 } from "@/actions/export-laporan"
 
-const EXPORTERS: Record<string, (p: { dari?: string; sampai?: string; akunId?: string }) => Promise<Buffer>> = {
+const EXPORTERS: Record<string, (p: { dari?: string; sampai?: string; akunId?: string }) => Promise<Uint8Array>> = {
   "buku-besar": exportBukuBesar,
   "neraca-saldo": exportNeracaSaldo,
   neraca: exportNeraca,
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     const buffer = await EXPORTERS[type]({ dari, sampai, akunId })
     const name = FILE_NAMES[type] ?? type
 
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer as any, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": `attachment; filename="${name}-${new Date().toISOString().slice(0, 10)}.xlsx"`,

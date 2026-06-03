@@ -400,17 +400,18 @@ export async function getTagihanWajibList(params: z.infer<typeof getTagihanListS
     throw new Error("Unauthorized")
   }
 
-  const { bulan, tahun, status, search, page, pageSize } = getTagihanListSchema.parse(params)
+  const { bulan, tahun, status, jenis, search, page, pageSize } = getTagihanListSchema.parse(params)
 
   const where: Record<string, unknown> = {}
   if (bulan) where.bulan = bulan
   if (tahun) where.tahun = tahun
   if (status) where.status = status
+  if (jenis) where.jenisSimpanan = { kode: jenis }
   if (search) {
     where.anggota = {
       OR: [
-        { nama: { contains: search, mode: "insensitive" } },
-        { noAnggota: { contains: search, mode: "insensitive" } },
+        { nama: { contains: search } },
+        { noAnggota: { contains: search } },
       ],
     }
   }
@@ -420,6 +421,7 @@ export async function getTagihanWajibList(params: z.infer<typeof getTagihanListS
       where,
       include: {
         anggota: { select: { id: true, noAnggota: true, nama: true } },
+        jenisSimpanan: { select: { kode: true, nama: true } },
       },
       orderBy: [{ tahun: "desc" }, { bulan: "desc" }, { anggota: { nama: "asc" } }],
       skip: (page - 1) * pageSize,
@@ -434,6 +436,8 @@ export async function getTagihanWajibList(params: z.infer<typeof getTagihanListS
       anggotaId: t.anggotaId,
       noAnggota: t.anggota.noAnggota,
       namaAnggota: t.anggota.nama,
+      jenisKode: t.jenisSimpanan.kode,
+      jenisNama: t.jenisSimpanan.nama,
       bulan: t.bulan,
       tahun: t.tahun,
       nominal: Number(t.nominal),
@@ -699,6 +703,75 @@ export async function cariAnggota(query: string) {
   })
 
   return anggota
+}
+
+export async function generateTagihanAnggotaBaru(anggotaId: string, tglMasuk: Date) {
+  const [jenisPokok, jenisWajib] = await Promise.all([
+    prisma.jenisSimpanan.findUnique({ where: { kode: "POKOK" } }),
+    prisma.jenisSimpanan.findUnique({ where: { kode: "WAJIB" } }),
+  ])
+  if (!jenisPokok || !jenisWajib) return
+
+  const bulanMulai = tglMasuk.getMonth() + 1
+  const tahun = tglMasuk.getFullYear()
+  const nominalPokok = Number(jenisPokok.minimalSetoran)
+  const nominalWajib = Number(jenisWajib.minimalSetoran)
+
+  // Pokok — 1x, bulan pertama
+  if (nominalPokok > 0) {
+    const existing = await prisma.tagihanSimpanan.findUnique({
+      where: {
+        anggotaId_jenisSimpananId_bulan_tahun: {
+          anggotaId,
+          jenisSimpananId: jenisPokok.id,
+          bulan: bulanMulai,
+          tahun,
+        },
+      },
+    })
+    if (!existing) {
+      await prisma.tagihanSimpanan.create({
+        data: {
+          anggotaId,
+          jenisSimpananId: jenisPokok.id,
+          bulan: bulanMulai,
+          tahun,
+          nominal: nominalPokok,
+          jatuhTempo: new Date(tahun, bulanMulai - 1, 10),
+          status: "BELUM_LUNAS",
+        },
+      })
+    }
+  }
+
+  // Wajib — 1x, bulan pertama
+  if (nominalWajib > 0) {
+    const existing = await prisma.tagihanSimpanan.findUnique({
+      where: {
+        anggotaId_jenisSimpananId_bulan_tahun: {
+          anggotaId,
+          jenisSimpananId: jenisWajib.id,
+          bulan: bulanMulai,
+          tahun,
+        },
+      },
+    })
+    if (!existing) {
+      await prisma.tagihanSimpanan.create({
+        data: {
+          anggotaId,
+          jenisSimpananId: jenisWajib.id,
+          bulan: bulanMulai,
+          tahun,
+          nominal: nominalWajib,
+          jatuhTempo: new Date(tahun, bulanMulai - 1, 10),
+          status: "BELUM_LUNAS",
+        },
+      })
+    }
+  }
+
+  revalidatePath("/pengurus/simpanan/tagihan")
 }
 
 export async function getAnggotaBasic(id: string) {

@@ -31,8 +31,8 @@ export async function catatLog(params: CatatLogParams) {
       action: params.action,
       entityType: params.entityType,
       entityId: params.entityId ?? null,
-      oldValue: params.oldValue ?? null,
-      newValue: params.newValue ?? null,
+      oldValue: params.oldValue as any,
+      newValue: params.newValue as any,
     },
   })
 }

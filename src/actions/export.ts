@@ -76,5 +76,5 @@ export async function exportJurnalExcel(params: {
   }
 
   const buffer = await wb.xlsx.writeBuffer()
-  return buffer as Buffer
+  return new Uint8Array(buffer)
 }

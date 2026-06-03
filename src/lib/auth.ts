@@ -65,8 +65,6 @@ const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
 export { handlers, signIn, signOut }
 export const auth = cache(rawAuth)
 
-const ALLOWED_ROLES = ["ADMIN", "PENGURUS", "BENDAHARA", "ANGGOTA", "PENGAWAS"] as const
-
 export async function assertRole(...roles: string[]) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")

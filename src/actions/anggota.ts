@@ -8,6 +8,7 @@ import { z } from "zod"
 import { generateNoAnggota } from "@/lib/utils/anggota"
 import { deleteOrphanFiles } from "@/lib/utils/file"
 import { catatLog } from "@/lib/audit"
+import { generateTagihanAnggotaBaru } from "@/actions/simpanan"
 import bcrypt from "bcryptjs"
 
 export async function getAnggotaList(params: {
@@ -47,6 +48,7 @@ export async function getAnggotaList(params: {
     nik: a.nik,
     noAnggota: a.noAnggota,
     nama: a.nama,
+    noHp: a.noHp,
     alamat: a.alamat,
     pekerjaan: a.pekerjaan,
     penghasilan: a.penghasilan ? Number(a.penghasilan) : null,
@@ -83,6 +85,7 @@ export async function getAnggotaById(id: string) {
     nik: raw.nik,
     noAnggota: raw.noAnggota,
     nama: raw.nama,
+    noHp: raw.noHp,
     alamat: raw.alamat,
     pekerjaan: raw.pekerjaan,
     penghasilan: raw.penghasilan ? Number(raw.penghasilan) : null,
@@ -178,6 +181,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
       nik: parsed.nik,
       noAnggota,
       nama: parsed.nama,
+      noHp: parsed.noHp || null,
       alamat: parsed.alamat,
       pekerjaan: parsed.pekerjaan || null,
       penghasilan: parsed.penghasilan ?? null,
@@ -225,6 +229,8 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
   })
 
   revalidatePath("/pengurus/anggota")
+
+  await generateTagihanAnggotaBaru(created.id, tglMasuk).catch(() => {})
 }
 
 export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) {
@@ -248,6 +254,7 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
     where: { id: parsed.id },
     data: {
       nama: parsed.nama,
+      noHp: parsed.noHp || null,
       alamat: parsed.alamat,
       pekerjaan: parsed.pekerjaan || null,
       penghasilan: parsed.penghasilan ?? null,

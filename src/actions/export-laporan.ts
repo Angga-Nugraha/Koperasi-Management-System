@@ -73,7 +73,7 @@ export async function exportBukuBesar(params: Param) {
     })
   }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }
 
 export async function exportNeracaSaldo(params: Param) {
@@ -113,7 +113,7 @@ export async function exportNeracaSaldo(params: Param) {
     ws.addRow({ kode: sanitizeCellValue(a.kode), nama: sanitizeCellValue(a.nama), debit: s?.debit ?? 0, kredit: s?.kredit ?? 0 })
   }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }
 
 export async function exportNeraca(params: Param) {
@@ -139,7 +139,7 @@ export async function exportNeraca(params: Param) {
     if (shuIdx >= 0) {
       adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
     } else {
-      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih, saldoNormal: "KREDIT" as const })
+      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih })
     }
   }
   const totalEkuitas = ekuitas.total + labaBersih - existingSHUSaldo
@@ -161,7 +161,7 @@ export async function exportNeraca(params: Param) {
   for (const i of adjustedEkuitas) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Ekuitas", saldo: totalEkuitas }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }
 
 export async function exportLabaRugi(params: Param) {
@@ -192,7 +192,7 @@ export async function exportLabaRugi(params: Param) {
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "Laba / Rugi Bersih", saldo: pendapatan.total - beban.total }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }
 
 export async function exportArusKas(params: Param) {
@@ -240,7 +240,7 @@ export async function exportArusKas(params: Param) {
   }
   ws.addRow({ tanggal: "", noJurnal: "", keterangan: "TOTAL", masuk: totalMasuk, keluar: totalKeluar }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }
 
 export async function exportSHU(params: Param) {
@@ -275,5 +275,5 @@ export async function exportSHU(params: Param) {
   }
   ws.addRow({ ket: sanitizeCellValue("Jumlah Anggota Aktif"), jumlah: jumlahAnggota })
 
-  return wb.xlsx.writeBuffer() as unknown as Promise<Buffer>
+  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
 }

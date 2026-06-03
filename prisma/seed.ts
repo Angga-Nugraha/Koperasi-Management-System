@@ -124,8 +124,8 @@ async function main() {
 
   // ========== SEED JENIS SIMPANAN ==========
   const jenisSimpanan = [
-    { kode: "POKOK", nama: "Simpanan Pokok", minimalSetoran: 100000, urutan: 1, keterangan: "Setoran sekali seumur keanggotaan" },
-    { kode: "WAJIB", nama: "Simpanan Wajib", minimalSetoran: 50000, urutan: 2, keterangan: "Setoran wajib setiap bulan" },
+    { kode: "POKOK", nama: "Simpanan Pokok", minimalSetoran: 25000, urutan: 1, keterangan: "Setoran sekali seumur keanggotaan" },
+    { kode: "WAJIB", nama: "Simpanan Wajib", minimalSetoran: 10000, urutan: 2, keterangan: "Setoran wajib setiap bulan" },
     { kode: "SUKARELA", nama: "Simpanan Sukarela", minimalSetoran: 0, urutan: 3, keterangan: "Setoran sukareala kapan saja" },
   ]
   for (const js of jenisSimpanan) {
@@ -178,7 +178,7 @@ async function main() {
   // ========== SEED DEFAULT KONFIGURASI ==========
   const konfigurasi = [
     { key: "plafon_max_saldo", value: "3", tipeData: "DECIMAL", keterangan: "Plafon maksimal pinjaman (kelipatan saldo simpanan)" },
-    { key: "denda_per_hari", value: "0.5", tipeData: "DECIMAL", keterangan: "Denda keterlambatan per hari (%)" },
+    { key: "denda_per_hari", value: "0.01", tipeData: "DECIMAL", keterangan: "Denda keterlambatan per hari (%)" },
     { key: "grace_period", value: "7", tipeData: "NUMBER", keterangan: "Tenggang waktu keterlambatan (hari)" },
     { key: "tenor_min", value: "3", tipeData: "NUMBER", keterangan: "Tenor minimal pinjaman (bulan)" },
     { key: "tenor_max", value: "36", tipeData: "NUMBER", keterangan: "Tenor maksimal pinjaman (bulan)" },

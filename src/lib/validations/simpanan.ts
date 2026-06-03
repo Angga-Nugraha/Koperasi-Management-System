@@ -28,6 +28,7 @@ export const getTagihanListSchema = z.object({
   bulan: z.number().int().min(1).max(12).optional(),
   tahun: z.number().int().min(2020).max(2100).optional(),
   status: z.string().optional(),
+  jenis: z.string().optional(),
   search: z.string().optional(),
   page: z.number().int().min(1).default(1),
   pageSize: z.number().int().min(1).max(100).default(20),

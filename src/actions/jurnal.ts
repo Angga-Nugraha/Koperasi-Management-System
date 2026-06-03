@@ -31,7 +31,8 @@ export async function getJurnalList(params: {
       where,
       include: {
         detail: {
-        include: { akun: { select: { kode: true, nama: true, saldoNormal: true } } },
+          include: { akun: { select: { kode: true, nama: true, saldoNormal: true } } },
+          orderBy: { akun: { kode: "asc" } },
         },
       },
       skip: (page - 1) * pageSize,
@@ -45,7 +46,7 @@ export async function getJurnalList(params: {
     id: j.id,
     noJurnal: j.noJurnal,
     tanggal: j.tanggal.toISOString(),
-    keterangan: j.keterangan,
+    keterangan: j.keterangan ?? "",
     totalDebit: j.detail.reduce((s, d) => s + Number(d.debit), 0),
     totalKredit: j.detail.reduce((s, d) => s + Number(d.kredit), 0),
     detail: j.detail.map((d) => ({
@@ -69,6 +70,7 @@ export async function getJurnalById(jurnalId: string) {
     include: {
       detail: {
         include: { akun: { select: { kode: true, nama: true, saldoNormal: true } } },
+        orderBy: { akun: { kode: "asc" } },
       },
     },
   })
@@ -159,10 +161,6 @@ export async function getBukuBesar(
     whereJurnal.tanggal = filter
   }
 
-  const akun = akunId
-    ? await prisma.akun.findUnique({ where: { id: akunId } })
-    : null
-
   const where = { ...whereDetail, jurnal: whereJurnal }
 
   const [total, allBefore, detail] = await Promise.all([
@@ -200,7 +198,7 @@ export async function getBukuBesar(
     jurnalId: d.jurnalId,
     noJurnal: d.jurnal.noJurnal,
     tanggal: d.jurnal.tanggal.toISOString(),
-    keterangan: d.jurnal.keterangan,
+    keterangan: d.jurnal.keterangan ?? "",
     akunId: d.akunId,
     akunKode: d.akun.kode,
     akunNama: d.akun.nama,
@@ -378,7 +376,7 @@ export async function getArusKas(dari?: string, sampai?: string, page = 1, pageS
   const items = detail.map((d) => ({
     tanggal: d.jurnal.tanggal.toISOString(),
     noJurnal: d.jurnal.noJurnal,
-    keterangan: d.jurnal.keterangan,
+    keterangan: d.jurnal.keterangan ?? "",
     masuk: Number(d.debit),
     keluar: Number(d.kredit),
   }))

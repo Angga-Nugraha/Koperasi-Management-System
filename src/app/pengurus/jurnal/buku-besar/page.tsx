@@ -14,7 +14,7 @@ export default async function BukuBesarPage({ searchParams }: Props) {
     ? await getBukuBesar(akunId, dari ?? undefined, sampai ?? undefined, Number(page) || 1, pageSize)
     : { data: [], total: 0, page: 1, totalPages: 0, saldoAwal: 0 }
 
-  const akunTerpilih = akunId ? akunList.find((a) => a.id === akunId) : null
+  const akunTerpilih = akunId ? akunList.find((a) => a.id === akunId) ?? null : null
 
   return (
     <div className="space-y-6">
