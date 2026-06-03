@@ -14,11 +14,6 @@ export const tarikSimpananSchema = z.object({
   keterangan: z.string().nullable().optional(),
 })
 
-export const penutupanSimpananSchema = z.object({
-  anggotaId: z.string().min(1, "Anggota harus dipilih"),
-  keterangan: z.string().nullable().optional(),
-})
-
 export const generateTagihanSchema = z.object({
   bulan: z.number().int().min(1).max(12).optional(),
   tahun: z.number().int().min(2020).max(2100).optional(),
@@ -40,7 +35,6 @@ export const bayarTagihanSchema = z.object({
 
 export type SetorSimpananInput = z.infer<typeof setorSimpananSchema>
 export type TarikSimpananInput = z.infer<typeof tarikSimpananSchema>
-export type PenutupanSimpananInput = z.infer<typeof penutupanSimpananSchema>
 export type GenerateTagihanInput = z.infer<typeof generateTagihanSchema>
 export type GetTagihanListInput = z.infer<typeof getTagihanListSchema>
 export type BayarTagihanInput = z.infer<typeof bayarTagihanSchema>

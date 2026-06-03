@@ -117,9 +117,10 @@ export function KonfigurasiPage({
     setConfirm(null)
     setSaving(cat)
     try {
-      const items = konfig.filter((k) => GROUP_CATEGORY[k.key] === cat)
+      const items = grouped.get(cat) ?? []
       for (const item of items) {
-        await updateKonfig(item.key, values[item.key] ?? "")
+        const val = values[item.key] ?? ""
+        await updateKonfig(item.key, val, DEFAULT_TIPE[item.key] ?? item.tipeData)
       }
       router.refresh()
     } catch (e) {

@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

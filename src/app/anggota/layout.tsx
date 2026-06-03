@@ -28,7 +28,7 @@ export default async function AnggotaLayout({ children }: { children: React.Reac
       />
       <main className="flex flex-1 flex-col overflow-hidden bg-background">
         <header className="flex shrink-0 items-center justify-end border-b bg-card px-6 py-3">
-          <NotifikasiBell />
+          <NotifikasiBell role="ANGGOTA" />
         </header>
         <div className="flex-1 overflow-auto p-6">{children}</div>
       </main>

@@ -88,6 +88,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [verifKet, setVerifKet] = useState("")
   const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
   const [receipt, setReceipt] = useState<{
     noStruk: string
@@ -115,10 +116,10 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
     try {
       switch (action) {
         case "setujui":
-          await setujuiPinjaman({ pinjamanId: pinjaman.id })
+          await setujuiPinjaman({ pinjamanId: pinjaman.id, keterangan: verifKet || null })
           break
         case "tolak":
-          await tolakPinjaman({ pinjamanId: pinjaman.id })
+          await tolakPinjaman({ pinjamanId: pinjaman.id, keterangan: verifKet || null })
           break
         case "cairkan":
           await cairkanPinjaman({ pinjamanId: pinjaman.id })
@@ -209,12 +210,33 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
             <div><dt className="text-muted-foreground">Jenis Pinjaman</dt><dd>{pinjaman.jenisPinjaman}</dd></div>
             <div><dt className="text-muted-foreground">Tgl Dicairkan</dt><dd>{pinjaman.tglCair ? formatTanggal(pinjaman.tglCair) : "-"}</dd></div>
             <div><dt className="text-muted-foreground">Bunga</dt><dd>{pinjaman.bunga}% / bulan</dd></div>
-            {pinjaman.keterangan && (
-              <div className="col-span-2"><dt className="text-muted-foreground">Keterangan</dt><dd>{pinjaman.keterangan}</dd></div>
-            )}
           </dl>
         </CardContent>
       </Card>
+
+      {status === "PENGAJUAN" && (
+        <Card>
+          <CardHeader><CardTitle>Verifikasi Pinjaman</CardTitle></CardHeader>
+          <CardContent>
+            <textarea
+              className="w-full rounded-md border p-2 text-sm"
+              rows={3}
+              placeholder="Catatan verifikasi (opsional) — alasan penolakan atau informasi tambahan persetujuan"
+              value={verifKet}
+              onChange={(e) => setVerifKet(e.target.value)}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {pinjaman.keterangan && (
+        <Card>
+          <CardHeader><CardTitle>Catatan</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-sm whitespace-pre-wrap">{pinjaman.keterangan}</p>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-wrap gap-2">
         {status === "PENGAJUAN" && (

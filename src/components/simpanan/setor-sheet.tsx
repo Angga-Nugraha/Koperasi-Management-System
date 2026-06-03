@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { setorSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
+import { StrukPembayaran } from "@/components/struk-pembayaran"
 import Link from "next/link"
 
 type JenisSimpanan = { id: string; kode: string; nama: string; minimalSetoran: number }
@@ -44,9 +45,21 @@ export function SetorSheet({ open, onOpenChange }: Props) {
   const [selectedJenis, setSelectedJenis] = useState<string>("")
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
   const [anggotaId, setAnggotaId] = useState("")
+  const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
+  const [receipt, setReceipt] = useState<{
+    noStruk: string
+    tipe: "SETORAN"
+    nominal: number
+    keterangan: string | null
+    createdAt: string
+    anggota: { nama: string; noAnggota: string }
+    jenisSimpanan: { nama: string; kode: string }
+    petugas: string
+  } | null>(null)
 
   useEffect(() => {
     fetch("/api/jenis-simpanan").then(r => r.json()).then((list: JenisSimpanan[]) => setJenisList(list.filter((j) => j.kode !== "WAJIB"))).catch(() => {})
+    fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -70,12 +83,24 @@ export function SetorSheet({ open, onOpenChange }: Props) {
     const formData = new FormData(form)
 
     try {
-      await setorSimpanan({
+      const result = await setorSimpanan({
         anggotaId: formData.get("anggotaId") as string,
         jenisSimpananId: formData.get("jenisSimpananId") as string,
         nominal: Number(formData.get("nominal")),
         keterangan: (formData.get("keterangan") as string) || null,
       })
+      if (result.success && result.data) {
+        setReceipt({
+          noStruk: result.data.noStruk,
+          tipe: "SETORAN",
+          nominal: result.data.nominal,
+          keterangan: result.data.keterangan,
+          createdAt: result.data.createdAt,
+          anggota: result.data.anggota,
+          jenisSimpanan: result.data.jenisSimpanan,
+          petugas: result.data.petugas,
+        })
+      }
       onOpenChange(false)
       router.refresh()
     } catch (err) {
@@ -168,6 +193,15 @@ export function SetorSheet({ open, onOpenChange }: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {receipt && generalInfo && (
+        <StrukPembayaran
+          open={!!receipt}
+          onOpenChange={() => setReceipt(null)}
+          generalInfo={generalInfo}
+          data={{ ...receipt, jenis: "simpanan" as const }}
+        />
+      )}
     </>
   )
 }

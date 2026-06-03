@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { setorSimpananSchema, tarikSimpananSchema, penutupanSimpananSchema, generateTagihanSchema, getTagihanListSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
+import { setorSimpananSchema, tarikSimpananSchema, generateTagihanSchema, getTagihanListSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
@@ -179,7 +179,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
     const akunSimpanan = getSimpananAkun(jenis.kode)
     await buatJurnal(tx, {
       tanggal: new Date(),
-      keterangan: `Setoran ${jenis.nama} ${anggota.noAnggota}`,
+      keterangan: `Setoran ${jenis.nama} ${anggota.noAnggota} - ${anggota.nama}`,
       entries: [
         { akunKode: COA_KAS, debit: parsed.nominal, kredit: 0 },
         { akunKode: akunSimpanan, debit: 0, kredit: parsed.nominal },
@@ -281,7 +281,7 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
     const akunSimpanan = getSimpananAkun(jenis.kode)
     await buatJurnal(tx, {
       tanggal: new Date(),
-      keterangan: `Penarikan ${jenis.nama} ${anggota.noAnggota}`,
+      keterangan: `Penarikan ${jenis.nama} ${anggota.noAnggota} - ${anggota.nama}`,
       entries: [
         { akunKode: akunSimpanan, debit: parsed.nominal, kredit: 0 },
         { akunKode: COA_KAS, debit: 0, kredit: parsed.nominal },
@@ -316,83 +316,6 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   }
 }
 
-export async function penutupanSimpanan(input: z.infer<typeof penutupanSimpananSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
-
-  const parsed = penutupanSimpananSchema.parse(input)
-
-  const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
-  if (!anggota) throw new Error("Anggota tidak ditemukan")
-  if (anggota.status === "KELUAR") throw new Error("Anggota sudah keluar")
-
-  const jenisPokokWajib = await prisma.jenisSimpanan.findMany({
-    where: { kode: { in: ["POKOK", "WAJIB"] } },
-  })
-  const jenisIds = jenisPokokWajib.map((j) => j.id)
-
-  const simpananList = await prisma.simpanan.findMany({
-    where: { anggotaId: parsed.anggotaId, jenisSimpananId: { in: jenisIds } },
-    include: { jenisSimpanan: true },
-  })
-
-  if (simpananList.length === 0) throw new Error("Tidak ada simpanan pokok atau wajib")
-
-  await prisma.$transaction(async (tx) => {
-    for (const simpanan of simpananList) {
-      const saldo = Number(simpanan.saldo)
-      if (saldo <= 0) continue
-
-      await tx.simpanan.update({
-        where: { id: simpanan.id },
-        data: { saldo: { decrement: saldo } },
-      })
-
-      await tx.transaksiSimpanan.create({
-        data: {
-          anggotaId: parsed.anggotaId,
-          jenisSimpananId: simpanan.jenisSimpananId,
-          tipe: "PENARIKAN",
-          nominal: saldo,
-          saldoSetelah: 0,
-          keterangan: parsed.keterangan || "Penutupan keanggotaan",
-        },
-      })
-
-      const akunSimpanan = getSimpananAkun(simpanan.jenisSimpanan.kode)
-      await buatJurnal(tx, {
-        tanggal: new Date(),
-        keterangan: `Penutupan ${simpanan.jenisSimpanan.nama} ${anggota.noAnggota}`,
-        entries: [
-          { akunKode: akunSimpanan, debit: saldo, kredit: 0 },
-          { akunKode: COA_KAS, debit: 0, kredit: saldo },
-        ],
-        createdById: session.user.id,
-      })
-    }
-
-    await tx.anggota.update({
-      where: { id: parsed.anggotaId },
-      data: { status: "KELUAR" },
-    })
-  })
-
-  await catatLog({
-    userId: session.user.id,
-    action: "UPDATE",
-    entityType: "PENUTUPAN_SIMPANAN",
-    entityId: parsed.anggotaId,
-    newValue: { status: "KELUAR" },
-  })
-
-  revalidatePath("/pengurus/simpanan")
-  revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
-  revalidatePath("/pengurus/anggota")
-  revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
-  return { success: true }
-}
 
 export async function getTagihanWajibList(params: z.infer<typeof getTagihanListSchema>) {
   const session = await auth()
@@ -583,7 +506,7 @@ export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema
     const akunSimpanan = getSimpananAkun(tagihan.jenisSimpanan.kode)
     await buatJurnal(tx, {
       tanggal: new Date(),
-      keterangan: `Pembayaran tagihan ${tagihan.jenisSimpanan.nama} ${tagihan.anggota.noAnggota} ${tagihan.bulan}/${tagihan.tahun}`,
+      keterangan: `Pembayaran tagihan ${tagihan.jenisSimpanan.nama} ${tagihan.anggota.noAnggota} - ${tagihan.anggota.nama} ${tagihan.bulan}/${tagihan.tahun}`,
       entries: [
         { akunKode: COA_KAS, debit: Number(tagihan.nominal), kredit: 0 },
         { akunKode: akunSimpanan, debit: 0, kredit: Number(tagihan.nominal) },

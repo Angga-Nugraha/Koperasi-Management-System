@@ -10,10 +10,12 @@ export const ajukanPinjamanSchema = z.object({
 
 export const setujuiPinjamanSchema = z.object({
   pinjamanId: z.string().min(1),
+  keterangan: z.string().optional().nullable(),
 })
 
 export const cairkanPinjamanSchema = z.object({
   pinjamanId: z.string().min(1),
+  keterangan: z.string().optional().nullable(),
 })
 
 export const bayarAngsuranSchema = z.object({

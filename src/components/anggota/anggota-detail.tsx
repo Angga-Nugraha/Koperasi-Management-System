@@ -37,7 +37,8 @@ import {
 } from "@/components/ui/table"
 import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { EditAnggotaSheet } from "./edit-anggota-sheet"
-import { ArrowLeft, Edit, Trash2, ShieldAlert, Download, Eye } from "lucide-react"
+import { KartuAnggotaCard } from "./kartu-anggota-card"
+import { ArrowLeft, Edit, Trash2, ShieldAlert, Eye, CreditCard } from "lucide-react"
 import {formatTanggal} from "@/lib/format"
 
 import Link from "next/link"
@@ -99,6 +100,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
   const [editSheetOpen, setEditSheetOpen] = useState(false)
+  const [kartuOpen, setKartuOpen] = useState(false)
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
 
   async function handleStatusChange() {
@@ -187,11 +189,9 @@ export function AnggotaDetailClient({ anggota }: Props) {
             Edit
           </Button>
 
-          <Button variant="outline" asChild>
-            <a href={`/api/anggota/${anggota.id}/kartu`} target="_blank">
-              <Download className="mr-2 h-4 w-4" />
-              Kartu
-            </a>
+          <Button variant="outline" onClick={() => setKartuOpen(true)}>
+            <CreditCard className="mr-2 h-4 w-4" />
+            Kartu
           </Button>
 
           <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -498,6 +498,20 @@ export function AnggotaDetailClient({ anggota }: Props) {
       </Tabs>
 
       <EditAnggotaSheet open={editSheetOpen} onOpenChange={setEditSheetOpen} anggota={anggota} />
+
+      <KartuAnggotaCard
+        open={kartuOpen}
+        onOpenChange={setKartuOpen}
+        anggota={{
+          noAnggota: anggota.noAnggota,
+          nama: anggota.nama,
+          nik: anggota.nik,
+          alamat: anggota.alamat,
+          pekerjaan: anggota.pekerjaan,
+          tglMasuk: anggota.tglMasuk,
+          foto: anggota.foto,
+        }}
+      />
 
       <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
         <AlertDialogContent>

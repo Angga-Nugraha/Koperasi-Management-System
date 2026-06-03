@@ -14,6 +14,11 @@ export async function kirimNotifikasi({ userId, title, message, type, relatedId 
     data: { userId, title, message, type, relatedId },
   })
 
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  })
+
   const tokens = await prisma.deviceToken.findMany({
     where: { userId },
     select: { token: true },
@@ -26,7 +31,7 @@ export async function kirimNotifikasi({ userId, title, message, type, relatedId 
     await fcm.sendEachForMulticast({
       tokens: registrationTokens,
       notification: { title, body: message },
-      data: { type: type ?? "", relatedId: relatedId ?? "" },
+      data: { type: type ?? "", relatedId: relatedId ?? "", role: user?.role ?? "" },
     })
   } catch {
     // silent — token may be invalid/expired

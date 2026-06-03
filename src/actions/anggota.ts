@@ -9,6 +9,7 @@ import { generateNoAnggota } from "@/lib/utils/anggota"
 import { deleteOrphanFiles } from "@/lib/utils/file"
 import { catatLog } from "@/lib/audit"
 import { generateTagihanAnggotaBaru } from "@/actions/simpanan"
+import { buatJurnal, getSimpananAkun, COA_KAS } from "@/lib/jurnal"
 import bcrypt from "bcryptjs"
 
 export async function getAnggotaList(params: {
@@ -276,38 +277,46 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   revalidatePath("/pengurus/anggota")
 }
 
-async function prosesPenutupanAnggota(anggotaId: string) {
-  const jenisPokokWajib = await prisma.jenisSimpanan.findMany({
-    where: { kode: { in: ["POKOK", "WAJIB"] } },
+async function prosesPenutupanAnggota(
+  anggotaId: string,
+  anggota: { noAnggota: string; nama: string },
+  tx: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">,
+) {
+  const simpananList = await tx.simpanan.findMany({
+    where: { anggotaId },
+    include: { jenisSimpanan: true },
   })
-  const jenisIds = jenisPokokWajib.map((j) => j.id)
 
-  const simpananList = await prisma.simpanan.findMany({
-    where: { anggotaId, jenisSimpananId: { in: jenisIds } },
-  })
+  for (const simpanan of simpananList) {
+    const saldo = Number(simpanan.saldo)
+    if (saldo <= 0) continue
 
-  await prisma.$transaction(async (tx) => {
-    for (const simpanan of simpananList) {
-      const saldo = Number(simpanan.saldo)
-      if (saldo <= 0) continue
+    await tx.simpanan.update({
+      where: { id: simpanan.id },
+      data: { saldo: { decrement: saldo } },
+    })
 
-      await tx.simpanan.update({
-        where: { id: simpanan.id },
-        data: { saldo: { decrement: saldo } },
-      })
+    await tx.transaksiSimpanan.create({
+      data: {
+        anggotaId,
+        jenisSimpananId: simpanan.jenisSimpananId,
+        tipe: "PENARIKAN",
+        nominal: saldo,
+        saldoSetelah: 0,
+        keterangan: "Penutupan keanggotaan",
+      },
+    })
 
-      await tx.transaksiSimpanan.create({
-        data: {
-          anggotaId,
-          jenisSimpananId: simpanan.jenisSimpananId,
-          tipe: "PENARIKAN",
-          nominal: saldo,
-          saldoSetelah: 0,
-          keterangan: "Penutupan keanggotaan",
-        },
-      })
-    }
-  })
+    const akunSimpanan = getSimpananAkun(simpanan.jenisSimpanan.kode)
+    await buatJurnal(tx, {
+      tanggal: new Date(),
+      keterangan: `Penutupan ${simpanan.jenisSimpanan.nama} ${anggota.noAnggota} - ${anggota.nama}`,
+      entries: [
+        { akunKode: akunSimpanan, debit: saldo, kredit: 0 },
+        { akunKode: COA_KAS, debit: 0, kredit: saldo },
+      ],
+    })
+  }
 }
 
 export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSchema>) {
@@ -327,16 +336,35 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
     }
   }
 
-  if (parsed.status === "KELUAR") {
-    await prosesPenutupanAnggota(parsed.id)
-  }
-
   const before = await prisma.anggota.findUnique({ where: { id: parsed.id }, select: { status: true } })
 
-  await prisma.anggota.update({
-    where: { id: parsed.id },
-    data: { status: parsed.status },
-  })
+  if (parsed.status === "KELUAR") {
+    const anggota = await prisma.anggota.findUnique({
+      where: { id: parsed.id },
+      select: { noAnggota: true, nama: true },
+    })
+    if (!anggota) throw new Error("Anggota tidak ditemukan")
+
+    const activeLoans = await prisma.pinjaman.count({
+      where: { anggotaId: parsed.id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+    })
+    if (activeLoans > 0) {
+      throw new Error("Anggota memiliki pinjaman aktif, tidak bisa ditutup")
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await prosesPenutupanAnggota(parsed.id, anggota, tx)
+      await tx.anggota.update({
+        where: { id: parsed.id },
+        data: { status: "KELUAR" },
+      })
+    })
+  } else {
+    await prisma.anggota.update({
+      where: { id: parsed.id },
+      data: { status: parsed.status },
+    })
+  }
 
   await catatLog({
     userId: session.user.id,
@@ -375,10 +403,25 @@ export async function deleteAnggota(id: string) {
   })
 
   if (hasRelations?.simpanan.length || hasRelations?.pinjaman.length) {
-    await prosesPenutupanAnggota(id)
-    await prisma.anggota.update({
+    const anggota = await prisma.anggota.findUnique({
       where: { id },
-      data: { status: "KELUAR" },
+      select: { noAnggota: true, nama: true },
+    })
+    if (!anggota) throw new Error("Anggota tidak ditemukan")
+
+    const activeLoans = await prisma.pinjaman.count({
+      where: { anggotaId: id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+    })
+    if (activeLoans > 0) {
+      throw new Error("Anggota memiliki pinjaman aktif, tidak bisa ditutup")
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await prosesPenutupanAnggota(id, anggota, tx)
+      await tx.anggota.update({
+        where: { id },
+        data: { status: "KELUAR" },
+      })
     })
     await catatLog({
       userId: session.user.id,

@@ -25,7 +25,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { ajukanPinjaman, getJenisPinjamanList } from "@/actions/pinjaman"
+import { ajukanPinjaman, getJenisPinjamanList, getPlafonAnggota } from "@/actions/pinjaman"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 
 type JenisPinjaman = { id: string; nama: string; bunga: number }
@@ -46,14 +46,28 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
   const [tenorMax, setTenorMax] = useState(36)
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
   const [anggotaId, setAnggotaId] = useState("")
+  const [plafon, setPlafon] = useState<{ maxPlafon: number; totalSimpanan: number; plafonMaxSaldo: number } | null>(null)
+  const [loadingPlafon, setLoadingPlafon] = useState(false)
 
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
     fetch("/api/konfig").then(r => r.json()).then(konfig => {
-      if (konfig.tenor_min) setTenorMin(Number(konfig.tenor_min))
-      if (konfig.tenor_max) setTenorMax(Number(konfig.tenor_max))
+      if (konfig.tenor_min !== undefined && konfig.tenor_min !== "") setTenorMin(Number(konfig.tenor_min))
+      if (konfig.tenor_max !== undefined && konfig.tenor_max !== "") setTenorMax(Number(konfig.tenor_max))
     }).catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!anggotaId) {
+      setPlafon(null)
+      return
+    }
+    setLoadingPlafon(true)
+    getPlafonAnggota(anggotaId)
+      .then(setPlafon)
+      .catch(() => setPlafon(null))
+      .finally(() => setLoadingPlafon(false))
+  }, [anggotaId])
 
   useEffect(() => {
     if (!open) {
@@ -63,6 +77,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
       setDefaultBunga(0)
       setConfirm(null)
       setAnggotaId("")
+      setPlafon(null)
     }
   }, [open])
 
@@ -80,11 +95,18 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
     const form = document.getElementById("ajukan-form-sheet") as HTMLFormElement
     const formData = new FormData(form)
 
+    const jumlah = Number(formData.get("jumlah"))
+    if (plafon && jumlah > plafon.maxPlafon) {
+      setError(`Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`)
+      setLoading(false)
+      return
+    }
+
     try {
       await ajukanPinjaman({
         anggotaId: formData.get("anggotaId") as string,
         jenisPinjamanId: formData.get("jenisPinjamanId") as string,
-        jumlah: Number(formData.get("jumlah")),
+        jumlah,
         tenor: Number(formData.get("tenor")),
         keterangan: (formData.get("keterangan") as string) || null,
       })
@@ -123,6 +145,21 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
                 onChange={setAnggotaId}
                 required
               />
+
+              {plafon && (
+                <div className="rounded-md bg-muted p-3 text-sm space-y-1">
+                  <p className="font-medium">Limit Pinjaman Maksimal</p>
+                  <p className="text-lg font-bold text-primary">
+                    Rp{plafon.maxPlafon.toLocaleString("id-ID")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {plafon.plafonMaxSaldo}× saldo simpanan (Rp{plafon.totalSimpanan.toLocaleString("id-ID")})
+                  </p>
+                </div>
+              )}
+              {loadingPlafon && (
+                <p className="text-xs text-muted-foreground">Memuat limit pinjaman...</p>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="jenisPinjamanId">Jenis Pinjaman *</Label>

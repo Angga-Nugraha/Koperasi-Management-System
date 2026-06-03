@@ -17,20 +17,24 @@ function hinggaAkhirTahun(tahun: number) {
 export async function getTahunList() {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+
   const years = await prisma.jurnalUmum.findMany({
     select: { tanggal: true },
     distinct: ["tanggal"],
     orderBy: { tanggal: "desc" },
   })
   const set = new Set<number>()
-  for (const j of years) {
-    set.add(j.tanggal.getFullYear())
-  }
+  for (const j of years) set.add(j.tanggal.getFullYear())
+  set.add(new Date().getFullYear())
+
   return Array.from(set).sort((a, b) => b - a)
 }
 
 export async function getDashboardPengurus(tahun: number) {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+
+  const range = tahunRange(tahun)
+
   const totalAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
 
   const totalSimpananAgg = await prisma.simpanan.aggregate({ _sum: { saldo: true } })
@@ -41,8 +45,6 @@ export async function getDashboardPengurus(tahun: number) {
     select: { sisaPinjaman: true },
   })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
-
-  const range = tahunRange(tahun)
 
   // Hitung SHU TB real-time dari PENDAPATAN - BEBAN (tidak hanya dari tabel SHU)
   const detailPendapatanBeban = await prisma.detailJurnal.findMany({
@@ -88,6 +90,7 @@ export async function getDashboardPengurus(tahun: number) {
 
   const pinjamanPerStatus = await prisma.pinjaman.groupBy({
     by: ["status"],
+    where: { tglPengajuan: range },
     _count: { id: true },
     _sum: { jumlah: true },
   })
@@ -132,11 +135,52 @@ export async function getDashboardPengurus(tahun: number) {
     },
   })
 
+  const cumulative = hinggaAkhirTahun(tahun)
+
+  const akunKasBank = await prisma.akun.findMany({
+    where: { kode: { in: ["1.1.1", "1.1.2", "1.1.3", "1.1.4"] } },
+  })
+  const kasBankIds = akunKasBank.map((a) => a.id)
+  let saldoKas = 0
+  if (kasBankIds.length > 0) {
+    const agg = await prisma.detailJurnal.aggregate({
+      where: { akunId: { in: kasBankIds }, jurnal: { tanggal: cumulative } },
+      _sum: { debit: true, kredit: true },
+    })
+    saldoKas = Math.round((Number(agg._sum.debit ?? 0) - Number(agg._sum.kredit ?? 0)) * 100) / 100
+  }
+
+  const akunKewajiban = await prisma.akun.findMany({ where: { tipe: "LIABILITAS" } })
+  const kewajibanIds = akunKewajiban.map((a) => a.id)
+  let kewajibanLancar = 0
+  if (kewajibanIds.length > 0) {
+    const agg = await prisma.detailJurnal.aggregate({
+      where: { akunId: { in: kewajibanIds }, jurnal: { tanggal: cumulative } },
+      _sum: { debit: true, kredit: true },
+    })
+    kewajibanLancar = Math.round((Number(agg._sum.kredit ?? 0) - Number(agg._sum.debit ?? 0)) * 100) / 100
+  }
+
+  const cashRatio = kewajibanLancar > 0
+    ? Math.round((saldoKas / kewajibanLancar) * 100) / 100
+    : 0
+
+  let cashRatioStatus: string
+  if (cashRatio >= 2.0) cashRatioStatus = "Sangat Baik"
+  else if (cashRatio >= 1.75) cashRatioStatus = "Baik"
+  else if (cashRatio >= 1.5) cashRatioStatus = "Cukup Baik"
+  else if (cashRatio >= 1.25) cashRatioStatus = "Kurang Baik"
+  else cashRatioStatus = "Buruk"
+
   return {
     totalAnggota,
     totalSimpanan,
     totalPinjaman,
     totalSHU,
+    cashRatio,
+    cashRatioStatus,
+    saldoKas,
+    kewajibanLancar,
     simpananChart,
     pinjamanPerStatus: pinjamanPerStatus.map((p) => ({
       status: p.status,

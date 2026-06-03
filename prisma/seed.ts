@@ -115,9 +115,9 @@ async function main() {
   // ========== SEED GENERAL INFO ==========
   await prisma.generalInfo.create({
     data: {
-      namaKoperasi: "Koperasi Dharma Mitra Persada",
-      alamat: "Cibinong, Bogor",
-      noAhu: "",
+      namaKoperasi: "Koperasi Desa Merah Putih Cibunar",
+      alamat: "Jln. Desa Cibunar No 2021 RT 014 RW 004 Desa Cibunar, Kec. Tarogong Kidul, Kab. Garut, 44151",
+      noAhu: "AHU-0036770.AH.01.29.TAHUN 2025",
     },
   })
   console.log("  ✅ General info tersimpan")

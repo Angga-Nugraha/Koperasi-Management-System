@@ -37,10 +37,14 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close()
   const relatedId = event.notification.data?.relatedId
   const type = event.notification.data?.type
+  const role = event.notification.data?.role
+  const isAnggota = role === "ANGGOTA"
   let url = "/"
-  if (type === "SETORAN" || type === "TAGIHAN") url = "/anggota/simpanan"
-  else if (["PENGAJUAN","DISETUJUI","DITOLAK","DICAIKKAN"].includes(type ?? ""))
-    url = relatedId ? "/pengurus/pinjaman/" + relatedId : "/pengurus/pinjaman"
+  if (type === "SETORAN" || type === "TAGIHAN") {
+    url = isAnggota ? "/anggota/simpanan" : "/pengurus/simpanan"
+  } else if (["PENGAJUAN","DISETUJUI","DITOLAK","DICAIKKAN"].includes(type ?? "")) {
+    url = isAnggota ? "/anggota/pinjaman" : (relatedId ? "/pengurus/pinjaman/" + relatedId : "/pengurus/pinjaman")
+  }
   event.waitUntil(clients.openWindow(url))
 })
 `.trim()

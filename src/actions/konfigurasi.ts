@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { catatLog } from "@/lib/audit"
+import { invalidateKonfigCache } from "@/lib/konfig"
 
 export async function getKonfigList() {
   const session = await auth()
@@ -22,7 +23,7 @@ export async function getKonfigList() {
   }))
 }
 
-export async function updateKonfig(key: string, value: string) {
+export async function updateKonfig(key: string, value: string, tipeData?: string) {
   const session = await auth()
   if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
@@ -33,8 +34,10 @@ export async function updateKonfig(key: string, value: string) {
   await prisma.konfigurasi.upsert({
     where: { key },
     update: { value },
-    create: { key, value, tipeData: "STRING" },
+    create: { key, value, tipeData: tipeData ?? "STRING" },
   })
+
+  invalidateKonfigCache()
 
   await catatLog({
     userId: session.user.id,

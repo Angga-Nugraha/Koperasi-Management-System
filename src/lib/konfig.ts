@@ -6,6 +6,11 @@ let konfigCache: KonfigMap | null = null
 let konfigCacheTime = 0
 const CACHE_TTL = 60_000 // 1 minute
 
+export function invalidateKonfigCache() {
+  konfigCache = null
+  konfigCacheTime = 0
+}
+
 export async function getKonfig(): Promise<KonfigMap> {
   const now = Date.now()
   if (konfigCache && now - konfigCacheTime < CACHE_TTL) {

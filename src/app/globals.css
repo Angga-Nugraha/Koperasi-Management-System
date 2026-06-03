@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -57,5 +55,31 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.print-kartu,
+.print-receipt {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-kartu,
+  .print-kartu *,
+  .print-receipt,
+  .print-receipt * {
+    visibility: visible;
+  }
+  .print-kartu,
+  .print-receipt {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background: white;
   }
 }

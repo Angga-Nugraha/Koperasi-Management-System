@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { tarikSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
+import { StrukPembayaran } from "@/components/struk-pembayaran"
 
 type Props = {
   open: boolean
@@ -33,12 +34,24 @@ export function TarikSheet({ open, onOpenChange }: Props) {
   const [jenisSukarelaId, setJenisSukarelaId] = useState<string>("")
   const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
   const [anggotaId, setAnggotaId] = useState("")
+  const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
+  const [receipt, setReceipt] = useState<{
+    noStruk: string
+    tipe: "PENARIKAN"
+    nominal: number
+    keterangan: string | null
+    createdAt: string
+    anggota: { nama: string; noAnggota: string }
+    jenisSimpanan: { nama: string; kode: string }
+    petugas: string
+  } | null>(null)
 
   useEffect(() => {
     fetch("/api/jenis-simpanan").then(r => r.json()).then((list: Array<{ id: string; kode: string }>) => {
       const sukarela = list.find((j) => j.kode === "SUKARELA")
       if (sukarela) setJenisSukarelaId(sukarela.id)
     }).catch(() => {})
+    fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -59,12 +72,24 @@ export function TarikSheet({ open, onOpenChange }: Props) {
     const formData = new FormData(form)
 
     try {
-      await tarikSimpanan({
+      const result = await tarikSimpanan({
         anggotaId: formData.get("anggotaId") as string,
         jenisSimpananId: jenisSukarelaId,
         nominal: Number(formData.get("nominal")),
         keterangan: (formData.get("keterangan") as string) || null,
       })
+      if (result.success && result.data) {
+        setReceipt({
+          noStruk: result.data.noStruk,
+          tipe: "PENARIKAN",
+          nominal: result.data.nominal,
+          keterangan: result.data.keterangan,
+          createdAt: result.data.createdAt,
+          anggota: result.data.anggota,
+          jenisSimpanan: result.data.jenisSimpanan,
+          petugas: result.data.petugas,
+        })
+      }
       onOpenChange(false)
       router.refresh()
     } catch (err) {
@@ -139,6 +164,15 @@ export function TarikSheet({ open, onOpenChange }: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {receipt && generalInfo && (
+        <StrukPembayaran
+          open={!!receipt}
+          onOpenChange={() => setReceipt(null)}
+          generalInfo={generalInfo}
+          data={{ ...receipt, jenis: "simpanan" as const }}
+        />
+      )}
     </>
   )
 }

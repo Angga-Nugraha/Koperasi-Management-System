@@ -21,7 +21,7 @@ type NotifItem = {
   createdAt: string
 }
 
-export function NotifikasiBell() {
+export function NotifikasiBell({ role }: { role?: string }) {
   const router = useRouter()
   const [list, setList] = useState<NotifItem[]>([])
   const [unread, setUnread] = useState(0)
@@ -63,10 +63,15 @@ export function NotifikasiBell() {
   function handleClick(item: NotifItem) {
     if (!item.isRead) markRead([item.id])
     setOpen(false)
+    const isAnggota = role === "ANGGOTA"
     if (["SETORAN", "TAGIHAN"].includes(item.type)) {
-      router.push("/anggota/simpanan")
+      router.push(isAnggota ? "/anggota/simpanan" : "/pengurus/simpanan")
     } else if (["PENGAJUAN", "DISETUJUI", "DITOLAK", "DICAIKKAN"].includes(item.type)) {
-      router.push(item.relatedId ? `/pengurus/pinjaman/${item.relatedId}` : "/pengurus/pinjaman")
+      if (isAnggota) {
+        router.push("/anggota/pinjaman")
+      } else {
+        router.push(item.relatedId ? `/pengurus/pinjaman/${item.relatedId}` : "/pengurus/pinjaman")
+      }
     }
   }
 

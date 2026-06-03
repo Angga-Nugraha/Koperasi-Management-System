@@ -173,10 +173,22 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
     throw new Error("Unauthorized")
   }
 
+  return _ajukanPinjaman(input, session.user.id)
+}
+
+async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, userId: string) {
   const parsed = ajukanPinjamanSchema.parse(input)
 
   const anggota = await prisma.anggota.findUnique({ where: { id: parsed.anggotaId } })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
+
+  const pinjamanAktif = await prisma.pinjaman.findFirst({
+    where: {
+      anggotaId: parsed.anggotaId,
+      status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] },
+    },
+  })
+  if (pinjamanAktif) throw new Error("Anggota masih memiliki pinjaman aktif atau pengajuan yang belum selesai")
 
   const jenis = await prisma.jenisPinjaman.findUnique({ where: { id: parsed.jenisPinjamanId } })
   if (!jenis) throw new Error("Jenis pinjaman tidak ditemukan")
@@ -219,7 +231,7 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
   })
 
   await catatLog({
-    userId: session.user.id,
+    userId,
     action: "CREATE",
     entityType: "PINJAMAN",
     entityId: created.id,
@@ -252,6 +264,7 @@ export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>
   }
 
   revalidatePath("/pengurus/pinjaman")
+  revalidatePath("/anggota/pinjaman")
   return { success: true }
 }
 
@@ -273,6 +286,11 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
       status: "DISETUJUI",
       tglDisetujui: new Date(),
       disetujuiOlehId: session.user.id,
+      keterangan: parsed.keterangan
+        ? pinjaman.keterangan
+          ? `${pinjaman.keterangan}\n\n--- Catatan Persetujuan ---\n${parsed.keterangan}`
+          : `--- Catatan Persetujuan ---\n${parsed.keterangan}`
+        : pinjaman.keterangan,
     },
   })
 
@@ -314,7 +332,15 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
 
   await prisma.pinjaman.update({
     where: { id: parsed.pinjamanId },
-    data: { status: "DITOLAK", tglDitolak: new Date() },
+    data: {
+      status: "DITOLAK",
+      tglDitolak: new Date(),
+      keterangan: parsed.keterangan
+        ? pinjaman.keterangan
+          ? `${pinjaman.keterangan}\n\n--- Alasan Penolakan ---\n${parsed.keterangan}`
+          : `--- Alasan Penolakan ---\n${parsed.keterangan}`
+        : pinjaman.keterangan,
+    },
   })
 
   await catatLog({
@@ -349,7 +375,10 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
 
   const parsed = cairkanPinjamanSchema.parse(input)
 
-  const pinjaman = await prisma.pinjaman.findUnique({ where: { id: parsed.pinjamanId } })
+  const pinjaman = await prisma.pinjaman.findUnique({
+    where: { id: parsed.pinjamanId },
+    include: { anggota: { select: { noAnggota: true, nama: true } } },
+  })
   if (!pinjaman) throw new Error("Pinjaman tidak ditemukan")
   if (pinjaman.status !== "DISETUJUI") throw new Error("Pinjaman harus disetujui terlebih dahulu")
 
@@ -389,7 +418,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
 
     await buatJurnal(tx, {
       tanggal: tglCair,
-      keterangan: `Pencairan Pinjaman ${pinjaman.id.slice(0, 8)}`,
+      keterangan: `Pencairan Pinjaman ${pinjaman.anggota.noAnggota} - ${pinjaman.anggota.nama}`,
       entries: [
         { akunKode: COA_PIUTANG_PINJAMAN, debit: Number(pinjaman.jumlah), kredit: 0 },
         { akunKode: COA_KAS, debit: 0, kredit: Number(pinjaman.jumlah) },
@@ -432,7 +461,10 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
 
   const pinjaman = await prisma.pinjaman.findUnique({
     where: { id: parsed.pinjamanId },
-    include: { angsuran: { where: { status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } }, orderBy: { angsuranKe: "asc" } } },
+    include: {
+      anggota: { select: { noAnggota: true, nama: true } },
+      angsuran: { where: { status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } }, orderBy: { angsuranKe: "asc" } },
+    },
   })
   if (!pinjaman) throw new Error("Pinjaman tidak ditemukan")
   if (pinjaman.status === "LUNAS") throw new Error("Pinjaman sudah lunas")
@@ -441,6 +473,8 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   if (!nextAngsuran) throw new Error("Semua angsuran sudah lunas")
 
   const isLastAngsuran = pinjaman.angsuran.length === 1
+
+  const tglBayar = new Date()
   const pokok = isLastAngsuran ? Number(pinjaman.sisaPinjaman) : Number(nextAngsuran.pokok)
   const jasa = Number(nextAngsuran.jasa)
 
@@ -448,7 +482,6 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const dendaPerHari = getNumber(konfig, "denda_per_hari", 0.5)
   const gracePeriod = getNumber(konfig, "grace_period", 7)
 
-  const tglBayar = new Date()
   const jatuhTempo = nextAngsuran.jatuhTempo
   const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
   const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
@@ -497,7 +530,7 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
     if (entries.length > 0) {
       await buatJurnal(tx, {
         tanggal: tglBayar,
-        keterangan: `Bayar Angsuran #${nextAngsuran.angsuranKe} Pinjaman ${parsed.pinjamanId.slice(0, 8)}`,
+        keterangan: `Bayar Angsuran #${nextAngsuran.angsuranKe} Pinjaman ${pinjaman.anggota.noAnggota} - ${pinjaman.anggota.nama}`,
         entries,
         createdById: session.user.id,
       })
@@ -601,7 +634,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
     if (entries.length > 0) {
       await buatJurnal(tx, {
         tanggal: tglBayar,
-        keterangan: `Bayar Angsuran #${angsuran.angsuranKe} Pinjaman ${parsed.pinjamanId.slice(0, 8)}`,
+        keterangan: `Bayar Angsuran #${angsuran.angsuranKe} Pinjaman ${pinjaman.anggota.noAnggota} - ${pinjaman.anggota.nama}`,
         entries,
         createdById: session.user.id,
       })
@@ -691,4 +724,44 @@ export async function getJenisPinjamanList() {
     bunga: Number(j.bunga),
     keterangan: j.keterangan,
   }))
+}
+
+export async function getPlafonAnggota(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  const konfig = await getKonfig()
+  const plafonMaxSaldo = getNumber(konfig, "plafon_max_saldo", 3)
+
+  const totalSimpanan = await prisma.simpanan.aggregate({
+    where: { anggotaId },
+    _sum: { saldo: true },
+  })
+  const totalSimpananAnggota = Number(totalSimpanan._sum.saldo ?? 0)
+  const maxPlafon = Math.round(totalSimpananAnggota * plafonMaxSaldo * 100) / 100
+
+  return {
+    maxPlafon,
+    totalSimpanan: totalSimpananAnggota,
+    plafonMaxSaldo,
+  }
+}
+
+export async function ajukanPinjamanAnggota(input: {
+  jenisPinjamanId: string
+  jumlah: number
+  tenor: number
+  keterangan?: string | null
+}) {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ANGGOTA") throw new Error("Unauthorized")
+  if (!session.user.anggotaId) throw new Error("Akun tidak terhubung ke anggota")
+
+  return _ajukanPinjaman({
+    anggotaId: session.user.anggotaId,
+    jenisPinjamanId: input.jenisPinjamanId,
+    jumlah: input.jumlah,
+    tenor: input.tenor,
+    keterangan: input.keterangan ?? null,
+  }, session.user.id)
 }

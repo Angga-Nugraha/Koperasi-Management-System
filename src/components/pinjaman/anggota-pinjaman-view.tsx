@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import {
   Card,
   CardContent,
@@ -17,6 +18,9 @@ import {
 import {formatTanggal} from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { AjukanPinjamanAnggota } from "./ajukan-pinjaman-anggota"
+import { Plus } from "lucide-react"
 
 type Angsuran = {
   id: string
@@ -65,9 +69,16 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   GAGAL: "destructive",
 }
 
-export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }) {
+type PlafonInfo = {
+  maxPlafon: number
+  totalSimpanan: number
+  plafonMaxSaldo: number
+}
+
+export function AnggotaPinjamanView({ pinjaman: data, plafon }: { pinjaman: Pinjaman[]; plafon: PlafonInfo }) {
   const aktif = data.filter((p) => p.status !== "LUNAS" && p.status !== "DITOLAK" && p.status !== "GAGAL")
   const totalSisa = aktif.reduce((sum, p) => sum + p.sisaPinjaman, 0)
+  const [showForm, setShowForm] = useState(false)
 
   return (
     <div className="space-y-6">
@@ -76,7 +87,7 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
         <p className="text-sm text-muted-foreground">Riwayat pinjaman Anda di koperasi</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total Pinjaman Aktif</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold">{aktif.length} pinjaman</p></CardContent>
@@ -93,7 +104,25 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
             </p>
           </CardContent>
         </Card>
+        <Card className="border-primary/30">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Limit Pinjaman</CardTitle></CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-primary">Rp{plafon.maxPlafon.toLocaleString("id-ID")}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {plafon.plafonMaxSaldo}× saldo simpanan (Rp{plafon.totalSimpanan.toLocaleString("id-ID")})
+            </p>
+          </CardContent>
+        </Card>
       </div>
+
+      <div className="flex justify-end">
+        <Button onClick={() => setShowForm(!showForm)}>
+          <Plus className="mr-2 h-4 w-4" />
+          {showForm ? "Tutup" : "Ajukan Pinjaman"}
+        </Button>
+      </div>
+
+      {showForm && <AjukanPinjamanAnggota plafon={plafon} onSuccess={() => setShowForm(false)} />}
 
       {data.length === 0 ? (
         <Card>
@@ -141,6 +170,13 @@ export function AnggotaPinjamanView({ pinjaman: data }: { pinjaman: Pinjaman[] }
                   <p className="font-medium">Rp{p.sisaPinjaman.toLocaleString("id-ID")}</p>
                 </div>
               </div>
+
+              {p.keterangan && (
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Catatan:</span>
+                  <p className="whitespace-pre-wrap">{p.keterangan}</p>
+                </div>
+              )}
 
               {p.angsuran.length > 0 && (
                 <div className="overflow-x-auto rounded-md border">

@@ -21,12 +21,19 @@ async function resolveImageUrl(url: string | null): Promise<string | null> {
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const anggota = await prisma.anggota.findUnique({ where: { id } })
+  const [anggota, generalInfo] = await Promise.all([
+    prisma.anggota.findUnique({ where: { id } }),
+    prisma.generalInfo.findFirst(),
+  ])
+
   if (!anggota) {
     return NextResponse.json({ error: "Anggota tidak ditemukan" }, { status: 404 })
   }
 
-  const foto = await resolveImageUrl(anggota.foto)
+  const [foto, logo] = await Promise.all([
+    resolveImageUrl(anggota.foto),
+    resolveImageUrl(generalInfo?.logo ?? null),
+  ])
 
   const stream = await renderToStream(
     <KartuAnggota
@@ -37,6 +44,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       pekerjaan={anggota.pekerjaan}
       foto={foto}
       tglMasuk={anggota.tglMasuk.toISOString()}
+      namaKoperasi={generalInfo?.namaKoperasi ?? "KOPERASI"}
+      logo={logo}
     />
   )
 
