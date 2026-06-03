@@ -99,7 +99,7 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
             </div>
           </div>
 
-          <div className="rounded-md border bg-primary/5 p-4 text-center">
+          <div className="overflow-x-auto rounded-md border bg-primary/5 p-4 text-center">
             <p className="text-sm text-muted-foreground">Kewajiban + Ekuitas</p>
             <p className="text-xl font-bold">{fmt(liabilitas.total + ekuitas.total)}</p>
           </div>

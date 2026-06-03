@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { createPortal } from "react-dom"
+import { forwardRef, useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -10,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Download, Printer, X } from "lucide-react"
+import { Download } from "lucide-react"
 import { toPng } from "html-to-image"
 
 type Props = {
@@ -27,18 +26,18 @@ type Props = {
   }
 }
 
-function CardFront({ anggota, generalInfo }: { anggota: Props["anggota"]; generalInfo: { namaKoperasi: string; alamat: string | null; logo: string | null } }) {
+const CardFront = forwardRef<HTMLDivElement, { anggota: Props["anggota"]; generalInfo: { namaKoperasi: string; alamat: string | null; logo: string | null } }>(({ anggota, generalInfo }, ref) => {
   const tgl = new Date(anggota.tglMasuk).toLocaleDateString("id-ID", {
     day: "numeric", month: "long", year: "numeric",
   })
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl shadow-xl print:shadow-none"
+    <div ref={ref} className="flex flex-col overflow-hidden rounded-xl shadow-xl print:shadow-none bg-gradient-to-b from-red-700 to-red-500"
       style={{ width: "85.6mm", height: "54mm" }}>
       <div className="flex h-full flex-col">
-        <div className="relative flex-1 bg-gradient-to-b from-red-700 to-red-500 p-4 text-white">
+        <div className="relative flex-1 p-4 text-white">
           {generalInfo.logo && (
-            <img src={generalInfo.logo} alt="" className="absolute left-1/2 top-1/2 h-50 w-40 -translate-x-1/2 -translate-y-1/2 object-contain opacity-20" />
+            <img src={generalInfo.logo} alt="" className="absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 object-contain opacity-20" />
           )}
           <div className="relative z-20 flex justify-center">
             {generalInfo.logo && (
@@ -99,28 +98,54 @@ function CardFront({ anggota, generalInfo }: { anggota: Props["anggota"]; genera
       </div>
     </div>
   )
-}
+})
+CardFront.displayName = "CardFront"
+
+const CardBack = forwardRef<HTMLDivElement, { generalInfo: { logo: string | null } }>(({ generalInfo }, ref) => {
+  return (
+    <div ref={ref} className="flex flex-col overflow-hidden rounded-xl shadow-xl print:shadow-none bg-white"
+      style={{ width: "85.6mm", height: "54mm" }}>
+      <div className="flex h-full w-full items-center justify-center">
+        {generalInfo.logo && (
+          <img
+            src={generalInfo.logo}
+            alt=""
+            className="h-32 w-32 object-contain opacity-20"
+          />
+        )}
+      </div>
+    </div>
+  )
+})
+CardBack.displayName = "CardBack"
 
 export function KartuAnggotaCard({ open, onOpenChange, anggota }: Props) {
-  const [mounted, setMounted] = useState(false)
   const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; logo: string | null } | null>(null)
   const [downloading, setDownloading] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
+  const [showBack, setShowBack] = useState(false)
+  const frontRef = useRef<HTMLDivElement>(null)
+  const backRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => setMounted(true), [])
   useEffect(() => {
     fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
   }, [])
 
+  // Reset side when dialog opens/closes
+  useEffect(() => {
+    if (!open) {
+      setShowBack(false)
+    }
+  }, [open])
+
   async function handleDownload() {
-    const el = cardRef.current
-    if (!el) return
     setDownloading(true)
     try {
+      const el = showBack ? backRef.current : frontRef.current
+      if (!el) return
       const dataUrl = await toPng(el, { quality: 1, pixelRatio: 4 })
       const a = document.createElement("a")
       a.href = dataUrl
-      a.download = `kartu-anggota-${anggota.noAnggota}.png`
+      a.download = `kartu-anggota-${showBack ? "belakang-" : "depan-"}${anggota.noAnggota}.png`
       a.click()
     } catch {
       // fallback
@@ -140,30 +165,38 @@ export function KartuAnggotaCard({ open, onOpenChange, anggota }: Props) {
             <DialogDescription>Kartu tanda anggota koperasi</DialogDescription>
           </DialogHeader>
 
-          <div className="flex justify-center" ref={cardRef}>
-            <CardFront anggota={anggota} generalInfo={generalInfo} />
+          {/* Flip Container */}
+          <div className="flex justify-center py-4">
+            <div
+              onClick={() => setShowBack(v => !v)}
+              className="cursor-pointer [perspective:1000px]"
+              style={{ width: "85.6mm", height: "54mm" }}
+            >
+              <div
+                className={`relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] ${
+                  showBack ? "[transform:rotateY(180deg)]" : ""
+                }`}
+              >
+                {/* Front Side */}
+                <div className="absolute inset-0 [backface-visibility:hidden]">
+                  <CardFront ref={frontRef} anggota={anggota} generalInfo={generalInfo} />
+                </div>
+
+                {/* Back Side */}
+                <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                  <CardBack ref={backRef} generalInfo={generalInfo} />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-center gap-3">
-            <Button variant="outline" onClick={handleDownload} disabled={downloading}>
+            <Button variant="outline" onClick={handleDownload} disabled={downloading} className="w-full">
               <Download className="mr-2 h-4 w-4" /> {downloading ? "..." : "Download"}
-            </Button>
-            <Button variant="outline" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" /> Cetak
-            </Button>
-            <Button variant="ghost" onClick={() => onOpenChange(false)}>
-              <X className="mr-2 h-4 w-4" /> Tutup
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-
-      {mounted && createPortal(
-        <div id="print-kartu" className="print-kartu">
-          <CardFront anggota={anggota} generalInfo={generalInfo} />
-        </div>,
-        document.body,
-      )}
     </>
   )
 }

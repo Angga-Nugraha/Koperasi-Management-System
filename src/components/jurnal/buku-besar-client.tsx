@@ -132,7 +132,7 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
 
           <div className="overflow-x-auto rounded-md border">
             <Table>
-              <TableHeader className="sticky top-0 z-10">
+              <TableHeader>
                 <TableRow>
                   <TableHead>Tanggal</TableHead>
                   <TableHead>No Jurnal</TableHead>

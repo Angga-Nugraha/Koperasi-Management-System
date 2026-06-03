@@ -125,7 +125,7 @@ export function JurnalManualForm({ akunList }: Props) {
 
       <div className="overflow-x-auto rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 z-10">
+          <TableHeader>
             <TableRow>
               <TableHead>Akun</TableHead>
               <TableHead className="text-right">Debit</TableHead>

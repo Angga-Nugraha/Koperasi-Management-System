@@ -43,7 +43,7 @@ export default async function JurnalDetailPage({ params }: Props) {
 
       <div className="overflow-x-auto rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 z-10">
+          <TableHeader>
             <TableRow>
               <TableHead>Kode Akun</TableHead>
               <TableHead>Nama Akun</TableHead>
@@ -65,7 +65,7 @@ export default async function JurnalDetailPage({ params }: Props) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end gap-8 rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
+      <div className="flex items-center justify-end gap-8 overflow-x-auto rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
         <span>Total Debit: <span className="font-mono">{fmt(jurnal.totalDebit)}</span></span>
         <span>Total Kredit: <span className="font-mono">{fmt(jurnal.totalKredit)}</span></span>
       </div>

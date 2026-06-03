@@ -34,6 +34,7 @@ type Anggota = {
   noAnggota: string
   nama: string
   noHp: string | null
+  jenisKelamin: string | null
   status: string
   tglMasuk: string
 }
@@ -168,6 +169,7 @@ export function AnggotaTable({
               <TableHead>No Anggota</TableHead>
               <TableHead>NIK</TableHead>
               <TableHead>Nama</TableHead>
+              <TableHead>Jenis Kelamin</TableHead>
               <TableHead>No. HP</TableHead>
               <TableHead>Tgl Masuk</TableHead>
               <TableHead>Status</TableHead>
@@ -177,7 +179,7 @@ export function AnggotaTable({
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                <TableCell colSpan={8} className="text-center text-muted-foreground">
                   Belum ada data anggota
                 </TableCell>
               </TableRow>
@@ -187,6 +189,13 @@ export function AnggotaTable({
                   <TableCell className="font-mono text-sm">{a.noAnggota}</TableCell>
                   <TableCell className="font-mono text-sm">{a.nik}</TableCell>
                   <TableCell>{a.nama}</TableCell>
+                  <TableCell className="text-sm">
+                    {a.jenisKelamin === "LAKI_LAKI"
+                      ? "Laki-laki"
+                      : a.jenisKelamin === "PEREMPUAN"
+                      ? "Perempuan"
+                      : "-"}
+                  </TableCell>
                   <TableCell className="text-xs text-muted-foreground">{a.noHp || "-"}</TableCell>
                   <TableCell>{formatTanggal(a.tglMasuk)}</TableCell>
                   <TableCell>

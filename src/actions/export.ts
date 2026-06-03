@@ -18,7 +18,7 @@ export async function exportJurnalExcel(params: {
 }) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
 
   const ExcelJS = await import("exceljs")
 

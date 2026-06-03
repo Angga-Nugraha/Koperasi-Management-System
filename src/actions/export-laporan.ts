@@ -17,7 +17,7 @@ type Param = { dari?: string; sampai?: string; akunId?: string }
 export async function exportBukuBesar(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
 
   const { dari, sampai, akunId } = params
   const ExcelJS = await import("exceljs")
@@ -79,7 +79,7 @@ export async function exportBukuBesar(params: Param) {
 export async function exportNeracaSaldo(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -119,7 +119,7 @@ export async function exportNeracaSaldo(params: Param) {
 export async function exportNeraca(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -167,7 +167,7 @@ export async function exportNeraca(params: Param) {
 export async function exportLabaRugi(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
   const ExcelJS = await import("exceljs")
 
   const dariTanggal = params.dari ? new Date(params.dari) : undefined
@@ -198,7 +198,7 @@ export async function exportLabaRugi(params: Param) {
 export async function exportArusKas(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
   const ExcelJS = await import("exceljs")
 
   const tanggalMulai = params.dari ? new Date(params.dari) : new Date("2020-01-01")
@@ -246,7 +246,7 @@ export async function exportArusKas(params: Param) {
 export async function exportSHU(params: Param) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
-  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined

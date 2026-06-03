@@ -14,6 +14,13 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
@@ -94,6 +101,7 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
         pekerjaan: (formData.get("pekerjaan") as string) || undefined,
         penghasilan: formData.get("penghasilan") ? Number(formData.get("penghasilan")) : null,
         noHp: (formData.get("noHp") as string) || undefined,
+        jenisKelamin: (formData.get("jenisKelamin") as string) || undefined,
         foto,
         ktp,
         tglMasuk: formData.get("tglMasuk") as string,
@@ -146,6 +154,19 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
               <div className="space-y-2">
                 <Label htmlFor="noHp">No. HP</Label>
                 <Input id="noHp" name="noHp" placeholder="08xxx" />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="jenisKelamin">Jenis Kelamin</Label>
+                <Select name="jenisKelamin">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="LAKI_LAKI">Laki-laki</SelectItem>
+                    <SelectItem value="PEREMPUAN">Perempuan</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

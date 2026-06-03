@@ -14,6 +14,13 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
@@ -27,6 +34,7 @@ type AnggotaData = {
   noAnggota: string
   nama: string
   noHp: string | null
+  jenisKelamin: string | null
   alamat: string
   pekerjaan: string | null
   penghasilan: number | null
@@ -106,6 +114,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
         nik: anggota.nik,
         nama: formData.get("nama") as string,
         noHp: (formData.get("noHp") as string) || undefined,
+        jenisKelamin: (formData.get("jenisKelamin") as string) || undefined,
         alamat: formData.get("alamat") as string,
         pekerjaan: (formData.get("pekerjaan") as string) || undefined,
         penghasilan: formData.get("penghasilan") ? Number(formData.get("penghasilan")) : null,
@@ -157,6 +166,19 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
               <div className="space-y-2">
                 <Label htmlFor="noHp">No. HP</Label>
                 <Input id="noHp" name="noHp" defaultValue={anggota.noHp ?? ""} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="jenisKelamin">Jenis Kelamin</Label>
+                <Select name="jenisKelamin" defaultValue={anggota.jenisKelamin ?? undefined}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="LAKI_LAKI">Laki-laki</SelectItem>
+                    <SelectItem value="PEREMPUAN">Perempuan</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -239,7 +261,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                   id="tglMasuk"
                   name="tglMasuk"
                   type="date"
-                  defaultValue={anggota.tglMasuk}
+                  defaultValue={anggota.tglMasuk.slice(0, 10)}
                   required
                 />
               </div>

@@ -6,15 +6,21 @@ import { revalidatePath } from "next/cache"
 import Papa from "papaparse"
 import { generateNoAnggota } from "@/lib/utils/anggota"
 
-export type ImportRowResult = {
+export type PreviewRowResult = {
   row: number
   nik: string
   nama: string
-  success: boolean
+  noHp?: string
+  jenisKelamin?: string
+  alamat: string
+  pekerjaan?: string
+  penghasilan: number | null
+  tglMasuk: string
+  isValid: boolean
   error?: string
 }
 
-export async function importAnggotaFromCsv(formData: FormData) {
+export async function previewImportAnggota(formData: FormData): Promise<PreviewRowResult[]> {
   const session = await auth()
   if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     throw new Error("Unauthorized")
@@ -40,8 +46,11 @@ export async function importAnggotaFromCsv(formData: FormData) {
     throw new Error("File CSV kosong")
   }
 
-  const results: ImportRowResult[] = []
-  const validRows: { row: number; nik: string; nama: string; alamat: string; pekerjaan: string; penghasilan: number | null; tglMasuk: Date }[] = []
+  const results: PreviewRowResult[] = []
+  const seenNiks = new Set<string>()
+
+  // 1st pass: basic format validation
+  const parsedRows: { row: number; nik: string; nama: string; noHp?: string; jenisKelamin?: string; alamat: string; pekerjaan?: string; penghasilan: number | null; tglMasuk: Date }[] = []
 
   for (let i = 0; i < data.length; i++) {
     const raw = data[i] as Record<string, string>
@@ -49,33 +58,155 @@ export async function importAnggotaFromCsv(formData: FormData) {
 
     const nik = raw.nik?.trim()
     const nama = raw.nama?.trim()
+    const noHp = raw.noHp?.trim()
+    const jenisKelamin = raw.jenisKelamin?.trim()
     const alamat = raw.alamat?.trim()
     const pekerjaan = raw.pekerjaan?.trim()
     const penghasilanRaw = raw.penghasilan?.trim()
     const tglMasuk = raw.tglMasuk?.trim()
 
     if (!nik || !nama || !alamat || !tglMasuk) {
-      results.push({ row: rowNum, nik: nik || "", nama: nama || "", success: false, error: "Kolom wajib (nik, nama, alamat, tglMasuk) tidak lengkap" })
+      results.push({
+        row: rowNum,
+        nik: nik || "",
+        nama: nama || "",
+        noHp,
+        jenisKelamin,
+        alamat: alamat || "",
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk: tglMasuk || "",
+        isValid: false,
+        error: "Kolom wajib (nik, nama, alamat, tglMasuk) tidak lengkap",
+      })
       continue
     }
 
+    if (seenNiks.has(nik)) {
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "NIK duplikat dalam file CSV",
+      })
+      continue
+    }
+    seenNiks.add(nik)
+
     if (!/^\d{16}$/.test(nik)) {
-      results.push({ row: rowNum, nik, nama, success: false, error: "NIK harus 16 digit angka" })
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "NIK harus 16 digit angka",
+      })
       continue
     }
 
     if (nama.length < 3 || nama.length > 100) {
-      results.push({ row: rowNum, nik, nama, success: false, error: "Nama harus 3-100 karakter" })
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "Nama harus 3-100 karakter",
+      })
       continue
     }
 
+    if (noHp && noHp.length > 20) {
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "No HP maksimal 20 karakter",
+      })
+      continue
+    }
+
+    let jkFormatted: string | undefined = undefined
+    if (jenisKelamin) {
+      const jkUpper = jenisKelamin.toUpperCase()
+      if (jkUpper === "L" || jkUpper === "LAKI-LAKI" || jkUpper === "LAKI_LAKI" || jkUpper === "LAKILAKI") {
+        jkFormatted = "LAKI_LAKI"
+      } else if (jkUpper === "P" || jkUpper === "PEREMPUAN") {
+        jkFormatted = "PEREMPUAN"
+      } else {
+        results.push({
+          row: rowNum,
+          nik,
+          nama,
+          noHp,
+          jenisKelamin,
+          alamat,
+          pekerjaan,
+          penghasilan: null,
+          tglMasuk,
+          isValid: false,
+          error: "Jenis kelamin harus Laki-laki (L) atau Perempuan (P)",
+        })
+        continue
+      }
+    }
+
     if (alamat.length < 10) {
-      results.push({ row: rowNum, nik, nama, success: false, error: "Alamat minimal 10 karakter" })
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "Alamat minimal 10 karakter",
+      })
       continue
     }
 
     if (pekerjaan && pekerjaan.length > 100) {
-      results.push({ row: rowNum, nik, nama, success: false, error: "Pekerjaan maksimal 100 karakter" })
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan: null,
+        tglMasuk,
+        isValid: false,
+        error: "Pekerjaan maksimal 100 karakter",
+      })
       continue
     }
 
@@ -83,36 +214,144 @@ export async function importAnggotaFromCsv(formData: FormData) {
     if (penghasilanRaw) {
       penghasilan = Number(penghasilanRaw)
       if (isNaN(penghasilan) || penghasilan < 0) {
-        results.push({ row: rowNum, nik, nama, success: false, error: "Penghasilan harus angka positif" })
+        results.push({
+          row: rowNum,
+          nik,
+          nama,
+          noHp,
+          jenisKelamin,
+          alamat,
+          pekerjaan,
+          penghasilan: null,
+          tglMasuk,
+          isValid: false,
+          error: "Penghasilan harus angka positif",
+        })
         continue
       }
     }
 
     const tglMasukDate = new Date(tglMasuk)
     if (isNaN(tglMasukDate.getTime())) {
-      results.push({ row: rowNum, nik, nama, success: false, error: "Tanggal masuk tidak valid (format: YYYY-MM-DD)" })
+      results.push({
+        row: rowNum,
+        nik,
+        nama,
+        noHp,
+        jenisKelamin,
+        alamat,
+        pekerjaan,
+        penghasilan,
+        tglMasuk,
+        isValid: false,
+        error: "Tanggal masuk tidak valid (format: YYYY-MM-DD)",
+      })
       continue
     }
 
-    validRows.push({ row: rowNum, nik, nama, alamat, pekerjaan: pekerjaan || "", penghasilan, tglMasuk: tglMasukDate })
+    parsedRows.push({
+      row: rowNum,
+      nik,
+      nama,
+      noHp: noHp || undefined,
+      jenisKelamin: jkFormatted,
+      alamat,
+      pekerjaan: pekerjaan || undefined,
+      penghasilan,
+      tglMasuk: tglMasukDate,
+    })
   }
 
-  const nikList = validRows.map((r) => r.nik)
+  // 2nd pass: DB duplication check
+  const nikList = parsedRows.map((r) => r.nik)
   const existingNikList = await prisma.anggota.findMany({
     where: { nik: { in: nikList } },
     select: { nik: true },
   })
   const existingNikSet = new Set(existingNikList.map((a) => a.nik))
 
-  const dateGroups = new Map<string, typeof validRows>()
-  for (const row of validRows) {
+  for (const row of parsedRows) {
     if (existingNikSet.has(row.nik)) {
-      results.push({ row: row.row, nik: row.nik, nama: row.nama, success: false, error: "NIK sudah terdaftar" })
-      continue
+      results.push({
+        row: row.row,
+        nik: row.nik,
+        nama: row.nama,
+        noHp: row.noHp,
+        jenisKelamin: row.jenisKelamin,
+        alamat: row.alamat,
+        pekerjaan: row.pekerjaan,
+        penghasilan: row.penghasilan,
+        tglMasuk: row.tglMasuk.toISOString().slice(0, 10),
+        isValid: false,
+        error: "NIK sudah terdaftar",
+      })
+    } else {
+      results.push({
+        row: row.row,
+        nik: row.nik,
+        nama: row.nama,
+        noHp: row.noHp,
+        jenisKelamin: row.jenisKelamin,
+        alamat: row.alamat,
+        pekerjaan: row.pekerjaan,
+        penghasilan: row.penghasilan,
+        tglMasuk: row.tglMasuk.toISOString().slice(0, 10),
+        isValid: true,
+      })
     }
-    const key = row.tglMasuk.toISOString().slice(0, 10)
+  }
+
+  return results.sort((a, b) => a.row - b.row)
+}
+
+export type CommitRowResult = {
+  row: number
+  nik: string
+  nama: string
+  success: boolean
+  error?: string
+}
+
+export async function commitImportAnggota(
+  rows: {
+    row: number
+    nik: string
+    nama: string
+    noHp?: string
+    jenisKelamin?: string
+    alamat: string
+    pekerjaan?: string
+    penghasilan: number | null
+    tglMasuk: string
+  }[]
+): Promise<CommitRowResult[]> {
+  const session = await auth()
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+    throw new Error("Unauthorized")
+  }
+
+  const results: CommitRowResult[] = []
+
+  const dateGroups = new Map<
+    string,
+    {
+      row: number
+      nik: string
+      nama: string
+      noHp?: string
+      jenisKelamin?: string
+      alamat: string
+      pekerjaan?: string
+      penghasilan: number | null
+      tglMasuk: Date
+    }[]
+  >()
+
+  for (const row of rows) {
+    const tglMasukDate = new Date(row.tglMasuk)
+    const key = tglMasukDate.toISOString().slice(0, 10)
     const group = dateGroups.get(key) ?? []
-    group.push(row)
+    group.push({ ...row, tglMasuk: tglMasukDate })
     dateGroups.set(key, group)
   }
 
@@ -135,6 +374,8 @@ export async function importAnggotaFromCsv(formData: FormData) {
               nik: row.nik,
               noAnggota,
               nama: row.nama,
+              noHp: row.noHp || null,
+              jenisKelamin: row.jenisKelamin || null,
               alamat: row.alamat,
               pekerjaan: row.pekerjaan || null,
               penghasilan: row.penghasilan,
@@ -143,8 +384,14 @@ export async function importAnggotaFromCsv(formData: FormData) {
             },
           })
           results.push({ row: row.row, nik: row.nik, nama: row.nama, success: true })
-        } catch {
-          results.push({ row: row.row, nik: row.nik, nama: row.nama, success: false, error: "Gagal menyimpan data" })
+        } catch (err) {
+          results.push({
+            row: row.row,
+            nik: row.nik,
+            nama: row.nama,
+            success: false,
+            error: "Gagal menyimpan data",
+          })
         }
       }
     }

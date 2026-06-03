@@ -105,7 +105,7 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
 
       <div className="overflow-x-auto rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 z-10">
+          <TableHeader>
             <TableRow>
               <TableHead>Tanggal</TableHead>
               <TableHead>Jurnal</TableHead>

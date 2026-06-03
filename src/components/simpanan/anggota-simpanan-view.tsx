@@ -142,7 +142,7 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20 }
               <select
                 value={filterTahun}
                 onChange={(e) => setFilterTahun(Number(e.target.value))}
-                className="h-8 rounded-md border bg-background px-2 text-xs"
+                className="h-8 overflow-x-auto rounded-md border bg-background px-2 text-xs"
               >
                 {years.map((y) => (
                   <option key={y} value={y}>{y}</option>

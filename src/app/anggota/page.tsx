@@ -3,6 +3,8 @@ import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PiggyBank, HandCoins, DollarSign } from "lucide-react"
 import { getDashboardAnggota } from "@/actions/dashboard"
+import { getAnggotaKartu } from "@/actions/anggota"
+import { KartuAnggotaButton } from "@/components/anggota/kartu-anggota-button"
 
 const CARD_STYLES = [
   { border: "border-l-emerald-500", icon: "text-emerald-500" },
@@ -21,6 +23,7 @@ export default async function AnggotaDashboard() {
   }
 
   const data = await getDashboardAnggota(anggotaId)
+  const anggotaKartu = await getAnggotaKartu(anggotaId)
 
   const cards = [
     {
@@ -45,9 +48,12 @@ export default async function AnggotaDashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard Anggota</h1>
-        <p className="text-sm text-muted-foreground">Selamat datang, {session?.user?.email}</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard Anggota</h1>
+          <p className="text-sm text-muted-foreground">Selamat datang, {session?.user?.email}</p>
+        </div>
+        <KartuAnggotaButton anggota={anggotaKartu} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

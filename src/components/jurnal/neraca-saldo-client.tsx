@@ -58,7 +58,7 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
 
       <div className="overflow-x-auto rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 z-10">
+          <TableHeader>
             <TableRow>
               <TableHead>Kode</TableHead>
               <TableHead>Nama Akun</TableHead>
@@ -78,7 +78,7 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end gap-8 rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
+      <div className="flex items-center justify-end gap-8 overflow-x-auto rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
         <span>Total Debit: <span className="font-mono">{fmt(totalDebit)}</span></span>
         <span>Total Kredit: <span className="font-mono">{fmt(totalKredit)}</span></span>
       </div>

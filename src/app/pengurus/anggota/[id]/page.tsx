@@ -20,6 +20,7 @@ export default async function DetailAnggotaPage({ params }: Props) {
         noAnggota: anggota.noAnggota,
         nama: anggota.nama,
         noHp: anggota.noHp,
+        jenisKelamin: anggota.jenisKelamin,
         alamat: anggota.alamat,
         pekerjaan: anggota.pekerjaan,
         penghasilan: anggota.penghasilan,

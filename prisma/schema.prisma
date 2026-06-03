@@ -123,6 +123,7 @@ model Anggota {
   noAnggota   String       @unique
   nama        String
   noHp        String?
+  jenisKelamin String?
   alamat      String       @db.Text
   pekerjaan   String?
   penghasilan Decimal?     @db.Decimal(18, 2)

@@ -13,8 +13,8 @@ export function TransaksiTrendChart({ data }: Props) {
   }
 
   return (
-    <div className="min-h-[250px] w-full overflow-x-auto md:aspect-[2/1]">
-      <ResponsiveContainer width="100%" height={250}>
+    <div className="h-[250px] w-full overflow-x-auto">
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
           <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />

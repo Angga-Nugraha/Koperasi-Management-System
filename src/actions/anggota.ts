@@ -50,6 +50,7 @@ export async function getAnggotaList(params: {
     noAnggota: a.noAnggota,
     nama: a.nama,
     noHp: a.noHp,
+    jenisKelamin: a.jenisKelamin,
     alamat: a.alamat,
     pekerjaan: a.pekerjaan,
     penghasilan: a.penghasilan ? Number(a.penghasilan) : null,
@@ -87,6 +88,7 @@ export async function getAnggotaById(id: string) {
     noAnggota: raw.noAnggota,
     nama: raw.nama,
     noHp: raw.noHp,
+    jenisKelamin: raw.jenisKelamin,
     alamat: raw.alamat,
     pekerjaan: raw.pekerjaan,
     penghasilan: raw.penghasilan ? Number(raw.penghasilan) : null,
@@ -183,6 +185,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
       noAnggota,
       nama: parsed.nama,
       noHp: parsed.noHp || null,
+      jenisKelamin: parsed.jenisKelamin || null,
       alamat: parsed.alamat,
       pekerjaan: parsed.pekerjaan || null,
       penghasilan: parsed.penghasilan ?? null,
@@ -256,6 +259,7 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
     data: {
       nama: parsed.nama,
       noHp: parsed.noHp || null,
+      jenisKelamin: parsed.jenisKelamin || null,
       alamat: parsed.alamat,
       pekerjaan: parsed.pekerjaan || null,
       penghasilan: parsed.penghasilan ?? null,
@@ -537,5 +541,29 @@ export async function getAnggotaSaldo(anggotaId: string) {
     simpanan,
     totalSimpanan: simpanan.reduce((sum, s) => sum + Number(s.saldo), 0),
     totalPinjamanOutstanding: pinjaman.reduce((sum, p) => sum + Number(p.sisaPinjaman), 0),
+  }
+}
+
+export async function getAnggotaKartu(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
+
+  const anggota = await prisma.anggota.findUnique({
+    where: { id: anggotaId },
+    select: { noAnggota: true, nama: true, nik: true, alamat: true, pekerjaan: true, tglMasuk: true, foto: true },
+  })
+  if (!anggota) throw new Error("Anggota tidak ditemukan")
+
+  return {
+    noAnggota: anggota.noAnggota,
+    nama: anggota.nama,
+    nik: anggota.nik,
+    alamat: anggota.alamat,
+    pekerjaan: anggota.pekerjaan,
+    tglMasuk: anggota.tglMasuk.toISOString(),
+    foto: anggota.foto,
   }
 }

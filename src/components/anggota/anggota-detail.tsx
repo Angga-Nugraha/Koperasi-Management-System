@@ -57,6 +57,7 @@ type AnggotaDetail = {
   noAnggota: string
   nama: string
   noHp: string | null
+  jenisKelamin: string | null
   alamat: string
   pekerjaan: string | null
   penghasilan: number | null
@@ -321,6 +322,16 @@ export function AnggotaDetailClient({ anggota }: Props) {
               <div>
                 <p className="text-sm text-muted-foreground">Nama</p>
                 <p className="font-medium">{anggota.nama}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Jenis Kelamin</p>
+                <p className="font-medium">
+                  {anggota.jenisKelamin === "LAKI_LAKI"
+                    ? "Laki-laki"
+                    : anggota.jenisKelamin === "PEREMPUAN"
+                    ? "Perempuan"
+                    : "-"}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">No. HP</p>

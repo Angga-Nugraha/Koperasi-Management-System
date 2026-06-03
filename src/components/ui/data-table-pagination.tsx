@@ -62,7 +62,7 @@ export function DataTablePagination({
   const to = Math.min(page * pageSize, total)
 
   return (
-    <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+    <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between px-4 py-4">
       <div className="flex items-center gap-4">
         <p className="text-sm text-muted-foreground whitespace-nowrap">
           {from}-{to} dari {total.toLocaleString("id-ID")}
