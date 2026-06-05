@@ -138,12 +138,11 @@ export async function getTotalAngsuranAnggota(tahun: number) {
 
 export async function hitungSHU(tahun: number) {
   const keuangan = await getTotalPendapatanBeban(tahun)
-  if (keuangan.totalSHU <= 0) {
-    throw new Error("SHU tidak bisa dihitung karena laba bersih <= 0")
-  }
 
   const indikator = (await getIndikatorSHU()).filter((i) => i.isActive)
   if (indikator.length === 0) throw new Error("Belum ada indikator SHU yang aktif")
+
+  const shuBersih = Math.max(0, keuangan.totalSHU)
 
   const anggotaIndikator = indikator.filter((i) => i.kelompok === "ANGGOTA")
   const { totalSimpanan, perAnggota: saldoPerAnggota } = await getSaldoPerAnggota()
@@ -171,7 +170,7 @@ export async function hitungSHU(tahun: number) {
     let ju = 0
 
     for (const ind of anggotaIndikator) {
-      const dana = keuangan.totalSHU * (ind.persentase / 100)
+      const dana = shuBersih * (ind.persentase / 100)
       if (ind.kode === "JM") {
         jm = totalSimpanan > 0 ? dana * (saldo / totalSimpanan) : 0
       } else if (ind.kode === "JU") {
@@ -193,7 +192,7 @@ export async function hitungSHU(tahun: number) {
 
   const alokasiMap: Record<string, { persentase: number; nominal: number }> = {}
   for (const ind of indikator) {
-    const nominal = keuangan.totalSHU * (ind.persentase / 100)
+    const nominal = shuBersih * (ind.persentase / 100)
     alokasiMap[ind.kode] = {
       persentase: ind.persentase,
       nominal: Math.round(nominal * 100) / 100,

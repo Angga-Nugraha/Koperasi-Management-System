@@ -57,7 +57,7 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                   <div>
                     <p className="font-semibold">SHU {item.tahun}</p>
                     <p className="text-sm text-muted-foreground">
-                      Total: Rp {item.totalSHU.toLocaleString("id-ID")} — {item.jumlahAnggota} anggota
+                      Total: <span className={item.totalSHU >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Rp {item.totalSHU.toLocaleString("id-ID")}</span> — {item.jumlahAnggota} anggota
                     </p>
                   </div>
                   <Dialog open={confirmTahun === item.tahun} onOpenChange={(open) => {
@@ -120,7 +120,7 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Total: Rp {item.totalSHU.toLocaleString("id-ID")} — {item.jumlahAnggota} anggota
+                      Total: <span className={item.totalSHU >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Rp {item.totalSHU.toLocaleString("id-ID")}</span> — {item.jumlahAnggota} anggota
                     </p>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => router.push(`/pengurus/shu/${item.tahun}`)}>

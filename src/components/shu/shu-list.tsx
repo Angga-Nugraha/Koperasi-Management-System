@@ -79,7 +79,7 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-3xl font-bold text-primary">
+        <p className={`text-3xl font-bold ${shu.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}>
           Rp {shu.totalSHU.toLocaleString("id-ID")}
         </p>
         <p className="text-xs text-muted-foreground mt-1">Total SHU</p>

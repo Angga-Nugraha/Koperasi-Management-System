@@ -58,13 +58,13 @@ const STATUS_LABEL: Record<string, string> = {
   GAGAL: "Gagal",
 }
 
-const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-  PENGAJUAN: "outline",
-  DISETUJUI: "secondary",
-  DITOLAK: "destructive",
-  DICAIKKAN: "default",
-  LUNAS: "default",
-  GAGAL: "destructive",
+const STATUS_STYLE: Record<string, string> = {
+  PENGAJUAN: "border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-50/80",
+  DISETUJUI: "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-50/80",
+  DITOLAK: "border-red-300 text-red-700 bg-red-50 hover:bg-red-50/80",
+  DICAIKKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
+  LUNAS: "border-green-300 text-green-700 bg-green-50 hover:bg-green-50/80",
+  GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
 }
 
 export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch, status: initialStatus }: Props) {
@@ -178,7 +178,7 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
                     Rp{Number(p.sisaPinjaman).toLocaleString("id-ID")}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={STATUS_VARIANT[p.status] ?? "outline"}>
+                    <Badge className={STATUS_STYLE[p.status]}>
                       {STATUS_LABEL[p.status] ?? p.status}
                     </Badge>
                   </TableCell>

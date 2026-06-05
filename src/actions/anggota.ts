@@ -17,8 +17,10 @@ export async function getAnggotaList(params: {
   status?: string
   page?: number
   pageSize?: number
+  sortBy?: string
+  sortOrder?: string
 }) {
-  const { search, status, page = 1, pageSize = 20 } = params
+  const { search, status, sortBy, sortOrder, page = 1, pageSize = 20 } = params
 
   const where: Record<string, unknown> = {}
 
@@ -34,12 +36,17 @@ export async function getAnggotaList(params: {
     ]
   }
 
+  const SORTABLE: Record<string, string> = { noAnggota: "noAnggota", tglMasuk: "tglMasuk" }
+  const orderBy = sortBy && SORTABLE[sortBy]
+    ? { [SORTABLE[sortBy]]: sortOrder === "asc" ? "asc" as const : "desc" as const }
+    : { createdAt: "desc" as const }
+
   const [raw, total] = await Promise.all([
     prisma.anggota.findMany({
       where,
       skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: { createdAt: "desc" },
+      orderBy,
     }),
     prisma.anggota.count({ where }),
   ])

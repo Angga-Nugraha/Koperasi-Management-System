@@ -135,7 +135,7 @@ export function JurnalManualForm({ akunList }: Props) {
           </TableHeader>
           <TableBody>
             {entries.map((entry, i) => (
-              <TableRow key={`entry-${i}-${entry.akunId || "empty"}`}>
+                <TableRow key={`entry-${i}`}>
                 <TableCell>
                   <Select
                     value={entry.akunId}
@@ -194,6 +194,24 @@ export function JurnalManualForm({ akunList }: Props) {
           Total debit ({fmt(totalDebit)}) ≠ total kredit ({fmt(totalKredit)})
         </p>
       )}
+
+      <div className="flex items-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            setEntries([...entries, { akunId: "", debit: "0", kredit: "0" }])
+          }
+        >
+          + Tambah Baris
+        </Button>
+        {entries.length > 2 && (
+          <span className="text-xs text-muted-foreground">
+            {entries.length} baris
+          </span>
+        )}
+      </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

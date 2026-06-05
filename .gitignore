@@ -53,5 +53,6 @@ github.pub
 /REPORT-REVIEW.md
 
 # raw data files
+/anggota.json
 /jurnal.json
 /fiirebase.txt

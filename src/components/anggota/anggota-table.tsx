@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -47,6 +47,8 @@ type Props = {
   pageSize?: number
   search: string
   status: string
+  sortBy: string
+  sortOrder: string
 }
 
 const STATUS_MAP: Record<string, string> = {
@@ -69,32 +71,53 @@ export function AnggotaTable({
   pageSize = 20,
   search: initialSearch,
   status: initialStatus,
+  sortBy: initialSortBy,
+  sortOrder: initialSortOrder,
 }: Props) {
   const router = useRouter()
   const [search, setSearch] = useState(initialSearch)
   const [status, setStatus] = useState(initialStatus)
   const [tambahOpen, setTambahOpen] = useState(false)
 
+  function buildParams(overrides: Record<string, string>) {
+    const params = new URLSearchParams(window.location.search)
+    for (const [k, v] of Object.entries(overrides)) {
+      if (v) params.set(k, v)
+      else params.delete(k)
+    }
+    return params
+  }
+
+  const toggleSort = useCallback((col: string) => {
+    const same = col === initialSortBy
+    const newOrder = same && initialSortOrder === "asc" ? "desc" : "asc"
+    const params = buildParams({ sortBy: col, sortOrder: newOrder, page: "" })
+    router.push(`/pengurus/anggota?${params.toString()}`)
+  }, [initialSortBy, initialSortOrder, router])
+
   function onSearch() {
-    const params = new URLSearchParams()
-    if (search) params.set("search", search)
-    if (status && status !== "SEMUA") params.set("status", status)
+    const params = buildParams({ search, status: status !== "SEMUA" ? status : "", page: "" })
     router.push(`/pengurus/anggota?${params.toString()}`)
   }
 
   function onPageChange(p: number) {
-    const params = new URLSearchParams(window.location.search)
-    params.set("page", String(p))
-    if (pageSize !== 20) params.set("pageSize", String(pageSize))
+    const params = buildParams({ page: String(p), pageSize: pageSize !== 20 ? String(pageSize) : "" })
     router.push(`/pengurus/anggota?${params.toString()}`)
   }
 
   function handlePageSizeChange(size: number) {
-    const params = new URLSearchParams(window.location.search)
-    if (size !== 20) params.set("pageSize", String(size))
-    else params.delete("pageSize")
-    params.delete("page")
+    const params = buildParams({ pageSize: size !== 20 ? String(size) : "", page: "" })
     router.push(`/pengurus/anggota?${params.toString()}`)
+  }
+
+  function SortHeader({ col, children }: { col: string; children: React.ReactNode }) {
+    const active = col === initialSortBy
+    const dir = active && initialSortOrder === "asc" ? "↑" : "↓"
+    return (
+      <TableHead className="cursor-pointer select-none" onClick={() => toggleSort(col)}>
+        {children} {active && <span className="text-muted-foreground ml-1">{dir}</span>}
+      </TableHead>
+    )
   }
 
   return (
@@ -166,12 +189,12 @@ export function AnggotaTable({
           <Table>
             <TableHeader>
             <TableRow>
-              <TableHead>No Anggota</TableHead>
+              <SortHeader col="noAnggota">No Anggota</SortHeader>
               <TableHead>NIK</TableHead>
               <TableHead>Nama</TableHead>
               <TableHead>Jenis Kelamin</TableHead>
               <TableHead>No. HP</TableHead>
-              <TableHead>Tgl Masuk</TableHead>
+              <SortHeader col="tglMasuk">Tgl Masuk</SortHeader>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
             </TableRow>

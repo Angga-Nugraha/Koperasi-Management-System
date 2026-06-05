@@ -41,6 +41,7 @@ export async function prosesTutupBuku(tahun: number) {
 
   const akunSHU = await prisma.akun.findFirst({ where: { kode: "3.1.2" } })
   if (!akunSHU) throw new Error("Akun SHU Tahun Berjalan tidak ditemukan")
+  const akunSHUDitahan = await prisma.akun.findFirst({ where: { kode: "3.1.3" } })
 
   const jenisSukarela = await prisma.jenisSimpanan.findUnique({ where: { kode: "SUKARELA" } })
   if (!jenisSukarela) throw new Error("Jenis simpanan SUKARELA tidak ditemukan")
@@ -55,7 +56,7 @@ export async function prosesTutupBuku(tahun: number) {
       data: { status: "FINAL" },
     })
 
-    // 1. JURNAL PENUTUP — reset PENDAPATAN/BEBAN → 3.1.2
+    // 1. JURNAL PENUTUP — reset PENDAPATAN/BEBAN → SHU Ditahan
     const details = await tx.detailJurnal.findMany({
       where: {
         akun: { tipe: { in: ["PENDAPATAN", "BEBAN"] } },
@@ -112,22 +113,22 @@ export async function prosesTutupBuku(tahun: number) {
           : akunSHU.kode
         tutupEntries.push({ akunKode, debit: 0, kredit: nominal })
       }
-      // Sisa rounding (jika ada) — taruh ke SHU TB
+      // Sisa rounding (jika ada) — taruh ke SHU Ditahan
       const sisa = Math.round((shuTB - anggotaTotal - danaTotal) * 100) / 100
       if (sisa !== 0) {
         tutupEntries.push({
-          akunKode: akunSHU.kode,
+          akunKode: akunSHUDitahan?.kode ?? akunSHU.kode,
           debit: sisa < 0 ? Math.abs(sisa) : 0,
           kredit: sisa > 0 ? sisa : 0,
         })
       }
     } else if (shuTB < 0) {
-      tutupEntries.push({ akunKode: akunSHU.kode, debit: Math.abs(shuTB), kredit: 0 })
+      tutupEntries.push({ akunKode: akunSHUDitahan?.kode ?? akunSHU.kode, debit: Math.abs(shuTB), kredit: 0 })
     }
 
     if (tutupEntries.length > 0) {
       await buatJurnal(tx, {
-        tanggal: new Date(),
+        tanggal: new Date(`${tahun}-12-31T23:59:59+07:00`),
         keterangan: `Jurnal Penutup Tahun ${tahun}`,
         entries: tutupEntries,
         createdById: session.user.id,

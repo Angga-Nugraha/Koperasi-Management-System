@@ -58,7 +58,7 @@ export function SHUAnggotaCard({ data }: { data: SHUAnggota }) {
                   </TableCell>
                   <TableCell className="text-right">Rp {s.jasaModal.toLocaleString("id-ID")}</TableCell>
                   <TableCell className="text-right">Rp {s.jasaUsaha.toLocaleString("id-ID")}</TableCell>
-                  <TableCell className="text-right font-bold">Rp {s.total.toLocaleString("id-ID")}</TableCell>
+                  <TableCell className={`text-right font-bold ${s.total >= 0 ? "text-green-600" : "text-red-600"}`}>Rp {s.total.toLocaleString("id-ID")}</TableCell>
                 </TableRow>
               ))}
               </TableBody>

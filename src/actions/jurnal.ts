@@ -364,7 +364,7 @@ export async function getArusKas(dari?: string, sampai?: string, page = 1, pageS
       include: {
         jurnal: { select: { tanggal: true, keterangan: true, noJurnal: true } },
       },
-      orderBy: { jurnal: { tanggal: "asc" } },
+      orderBy: { jurnal: { tanggal: "desc" } },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),

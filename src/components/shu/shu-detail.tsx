@@ -130,7 +130,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg border p-4">
               <p className="text-sm text-muted-foreground">Total SHU</p>
-              <p className="text-2xl font-bold text-primary">Rp {data.totalSHU.toLocaleString("id-ID")}</p>
+              <p className={`text-2xl font-bold ${data.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}>Rp {data.totalSHU.toLocaleString("id-ID")}</p>
             </div>
               {data.alokasi.map((a) => (
               <div key={a.pos} className="rounded-lg border p-4">
@@ -173,7 +173,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
                     <TableCell>{a.nama}</TableCell>
                     <TableCell className="text-right">Rp {a.jasaModal.toLocaleString("id-ID")}</TableCell>
                     <TableCell className="text-right">Rp {a.jasaUsaha.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-right font-medium">Rp {a.total.toLocaleString("id-ID")}</TableCell>
+                    <TableCell className={`text-right font-medium ${a.total >= 0 ? "text-green-600" : "text-red-600"}`}>Rp {a.total.toLocaleString("id-ID")}</TableCell>
                   </TableRow>
                 ))
               )}

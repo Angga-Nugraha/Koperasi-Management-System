@@ -62,6 +62,7 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
             <TableRow>
               <TableHead>Kode</TableHead>
               <TableHead>Nama Akun</TableHead>
+              <TableHead>Saldo Normal</TableHead>
               <TableHead className="text-right">Debit</TableHead>
               <TableHead className="text-right">Kredit</TableHead>
             </TableRow>
@@ -71,6 +72,7 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
               <TableRow key={item.akunId}>
                 <TableCell className="font-mono text-xs">{item.kode}</TableCell>
                 <TableCell>{item.nama}</TableCell>
+                <TableCell className="text-xs text-muted-foreground">{item.saldoNormal}</TableCell>
                 <TableCell className="text-right">{item.debit > 0 ? fmt(item.debit) : "-"}</TableCell>
                 <TableCell className="text-right">{item.kredit > 0 ? fmt(item.kredit) : "-"}</TableCell>
               </TableRow>

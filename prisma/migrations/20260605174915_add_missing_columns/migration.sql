@@ -1,0 +1,2 @@
+ALTER TABLE `angsuran` ADD COLUMN `noStruk` VARCHAR(191) NULL;
+ALTER TABLE `audit_log` ADD COLUMN `userEmail` VARCHAR(191) NULL;

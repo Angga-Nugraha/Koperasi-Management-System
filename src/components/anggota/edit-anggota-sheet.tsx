@@ -111,7 +111,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
     try {
       await updateAnggota({
         id: anggota.id,
-        nik: anggota.nik,
+        nik: formData.get("nik") as string,
         nama: formData.get("nama") as string,
         noHp: (formData.get("noHp") as string) || undefined,
         jenisKelamin: (formData.get("jenisKelamin") as string) || undefined,
@@ -153,9 +153,8 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="nik">NIK</Label>
-                <Input id="nik" value={anggota.nik} readOnly disabled />
-                <p className="text-xs text-muted-foreground">NIK tidak dapat diubah</p>
+                <Label htmlFor="nik">NIK *</Label>
+                <Input id="nik" name="nik" defaultValue={anggota.nik} required />
               </div>
 
               <div className="space-y-2">
