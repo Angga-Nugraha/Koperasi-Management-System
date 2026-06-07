@@ -1,3 +1,8 @@
+/**
+ * @file src/app/api/general-info/route.ts
+ * @description Route Handler API untuk endpoint /api/general-info/route.ts
+ */
+
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 

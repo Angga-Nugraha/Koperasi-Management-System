@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/pengurus/simpanan/tagihan/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -114,6 +119,7 @@ export default function TagihanWajibPage() {
   }, [filterBulan, filterTahun, filterJenis, filterStatus, filterSearch, page, pageSize])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData()
     fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
     getJenisSimpananList().then(setJenisList).catch(() => {})

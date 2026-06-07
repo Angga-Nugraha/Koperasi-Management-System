@@ -1,11 +1,18 @@
+/**
+ * @file src/actions/jurnal.ts
+ * @description Server Action untuk pencatatan dan pengelolaan jurnal umum secara manual maupun otomatis.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { round2 } from "@/lib/math"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
-import { buatJurnal, getSaldoAkunTipe } from "@/lib/jurnal"
+import { buatJurnal, COA_SHU_BERJALAN, getSaldoAkunTipe, COA_KAS_BANK } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 
 export async function getJurnalList(params: {
@@ -18,7 +25,7 @@ export async function getJurnalList(params: {
 
   const { search, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.JurnalUmumWhereInput = {}
   if (search) {
     where.OR = [
       { noJurnal: { contains: search } },
@@ -96,10 +103,7 @@ export async function getJurnalById(jurnalId: string) {
 }
 
 export async function createJurnalManual(input: z.infer<typeof jurnalManualSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = jurnalManualSchema.parse(input)
 
@@ -207,7 +211,7 @@ export async function getBukuBesar(
     kredit: Number(d.kredit),
   }))
 
-  return { data, total, page, totalPages: Math.ceil(total / pageSize), saldoAwal: Math.round(saldoAwal * 100) / 100 }
+  return { data, total, page, totalPages: Math.ceil(total / pageSize), saldoAwal: round2(saldoAwal) }
 }
 
 export async function getNeracaSaldo(tanggalSelesai?: string) {
@@ -297,13 +301,13 @@ export async function getNeraca(sampai?: string) {
   // meskipun jurnal penutup belum dijalankan (3.1.2 masih 0)
   const labaBersih = pendapatan.total - beban.total
   const adjustedEkuitas = [...ekuitas.items]
-  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === "3.1.2")
+  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === COA_SHU_BERJALAN)
   const existingSHUSaldo = shuIdx >= 0 ? ekuitas.items[shuIdx]!.saldo : 0
   if (labaBersih !== 0) {
     if (shuIdx >= 0) {
       adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
     } else {
-      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih })
+      adjustedEkuitas.push({ kode: COA_SHU_BERJALAN, nama: "SHU Tahun Berjalan", saldo: labaBersih })
     }
   }
 
@@ -341,13 +345,13 @@ export async function getArusKas(dari?: string, sampai?: string, page = 1, pageS
   const tanggalMulai = dari ? new Date(dari + "T00:00:00") : new Date("2020-01-01T00:00:00")
   const tanggalSelesai = sampai ? new Date(sampai + "T23:59:59") : new Date()
 
-  const kasAkun = await prisma.akun.findFirst({
-    where: { kode: "1.1.1", isActive: true },
+  const kasAkun = await prisma.akun.findMany({
+    where: { kode: { in: [...COA_KAS_BANK] }, isActive: true },
   })
-  if (!kasAkun) return { items: [], totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0, total: 0, page: 1, totalPages: 0 }
+  if (kasAkun.length === 0) return { items: [], totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0, total: 0, page: 1, totalPages: 0 }
 
   const whereKas = {
-    akunId: kasAkun.id,
+    akunId: { in: kasAkun.map((a) => a.id) },
     jurnal: {
       tanggal: { gte: tanggalMulai, lte: tanggalSelesai },
     },

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/avatar.tsx
+ * @description Komponen UI dasar (reusable): avatar.
+ */
+
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 

@@ -1,7 +1,13 @@
+/**
+ * @file src/actions/konfigurasi.ts
+ * @description Server Action untuk memperbarui konfigurasi sistem koperasi.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { catatLog } from "@/lib/audit"
 import { invalidateKonfigCache } from "@/lib/konfig"
@@ -24,10 +30,7 @@ export async function getKonfigList() {
 }
 
 export async function updateKonfig(key: string, value: string, tipeData?: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.konfigurasi.findUnique({ where: { key } })
 
@@ -56,8 +59,8 @@ export async function getAkunList(tipe?: string) {
   const session = await auth()
   if (!session?.user) return []
 
-  const where: Record<string, unknown> = {}
-  if (tipe && tipe !== "SEMUA") where.tipe = tipe
+  const where: Prisma.AkunWhereInput = {}
+  if (tipe && tipe !== "SEMUA") where.tipe = tipe as any
 
   const raw = await prisma.akun.findMany({
     where,
@@ -80,10 +83,7 @@ export async function createAkun(data: {
   tipe: "ASET" | "LIABILITAS" | "EKUITAS" | "PENDAPATAN" | "BEBAN"
   saldoNormal: "DEBIT" | "KREDIT"
 }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.akun.findUnique({ where: { kode: data.kode } })
   if (existing) throw new Error("Kode akun sudah ada")
@@ -110,10 +110,7 @@ export async function createAkun(data: {
 }
 
 export async function toggleAkunActive(akunId: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const akun = await prisma.akun.findUnique({ where: { id: akunId } })
   if (!akun) throw new Error("Akun tidak ditemukan")
@@ -162,10 +159,7 @@ export async function updateGeneralInfo(data: {
   logo?: string | null
   website?: string | null
 }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.generalInfo.findFirst()
   if (existing) {
@@ -208,10 +202,7 @@ export async function getJenisPinjamanList() {
 }
 
 export async function createJenisPinjaman(data: { nama: string; bunga: number; keterangan?: string | null }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.jenisPinjaman.findUnique({ where: { nama: data.nama } })
   if (existing) throw new Error("Nama jenis pinjaman sudah ada")
@@ -237,10 +228,7 @@ export async function createJenisPinjaman(data: { nama: string; bunga: number; k
 }
 
 export async function updateJenisPinjaman(id: string, data: { nama: string; bunga: number; keterangan?: string | null }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await prisma.jenisPinjaman.update({
     where: { id },
@@ -264,10 +252,7 @@ export async function updateJenisPinjaman(id: string, data: { nama: string; bung
 }
 
 export async function deleteJenisPinjaman(id: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const used = await prisma.pinjaman.count({ where: { jenisPinjamanId: id } })
   if (used > 0) throw new Error(`Tidak bisa dihapus, ${used} pinjaman menggunakan jenis ini`)
@@ -312,10 +297,7 @@ export async function createJenisSimpanan(data: {
   minimalSetoran: number
   keterangan?: string | null
 }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.jenisSimpanan.findUnique({ where: { kode: data.kode } })
   if (existing) throw new Error("Kode jenis simpanan sudah ada")
@@ -347,10 +329,7 @@ export async function updateJenisSimpanan(id: string, data: {
   minimalSetoran: number
   keterangan?: string | null
 }) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await prisma.jenisSimpanan.update({
     where: { id },
@@ -375,10 +354,7 @@ export async function updateJenisSimpanan(id: string, data: {
 }
 
 export async function toggleJenisSimpananActive(id: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const jenis = await prisma.jenisSimpanan.findUnique({ where: { id } })
   if (!jenis) throw new Error("Jenis simpanan tidak ditemukan")

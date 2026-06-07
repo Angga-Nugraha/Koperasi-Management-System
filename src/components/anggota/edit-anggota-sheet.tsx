@@ -1,11 +1,17 @@
 "use client"
 
+/**
+ * @file src/components/anggota/edit-anggota-sheet.tsx
+ * @description Komponen presentasional / interaktif: edit-anggota-sheet.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import Image from "next/image"
 import {
   Sheet,
   SheetContent,
@@ -100,27 +106,39 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
     }
   }
 
+  const [formValues, setFormValues] = useState({
+    nik: anggota.nik,
+    nama: anggota.nama,
+    noHp: anggota.noHp ?? "",
+    jenisKelamin: anggota.jenisKelamin ?? "",
+    alamat: anggota.alamat,
+    pekerjaan: anggota.pekerjaan ?? "",
+    penghasilan: anggota.penghasilan?.toString() ?? "",
+    tglMasuk: anggota.tglMasuk.slice(0, 10),
+  })
+
+  function handleChange(field: string, value: string) {
+    setFormValues((prev) => ({ ...prev, [field]: value }))
+  }
+
   async function handleSubmit() {
     setConfirm(null)
     setLoading(true)
     setError(null)
 
-    const form = document.getElementById("edit-anggota-form-sheet") as HTMLFormElement
-    const formData = new FormData(form)
-
     try {
       await updateAnggota({
         id: anggota.id,
-        nik: formData.get("nik") as string,
-        nama: formData.get("nama") as string,
-        noHp: (formData.get("noHp") as string) || undefined,
-        jenisKelamin: (formData.get("jenisKelamin") as string) || undefined,
-        alamat: formData.get("alamat") as string,
-        pekerjaan: (formData.get("pekerjaan") as string) || undefined,
-        penghasilan: formData.get("penghasilan") ? Number(formData.get("penghasilan")) : null,
+        nik: formValues.nik,
+        nama: formValues.nama,
+        noHp: formValues.noHp || undefined,
+        jenisKelamin: formValues.jenisKelamin || undefined,
+        alamat: formValues.alamat,
+        pekerjaan: formValues.pekerjaan || undefined,
+        penghasilan: formValues.penghasilan ? Number(formValues.penghasilan) : null,
         foto,
         ktp,
-        tglMasuk: formData.get("tglMasuk") as string,
+        tglMasuk: formValues.tglMasuk,
         buatUser: false,
       })
       onOpenChange(false)
@@ -147,29 +165,29 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
           </SheetHeader>
 
           <div className="mt-6 space-y-4">
-            <form id="edit-anggota-form-sheet" onSubmit={handleSubmitClick} className="space-y-4">
+            <form onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
                 <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
               )}
 
               <div className="space-y-2">
                 <Label htmlFor="nik">NIK *</Label>
-                <Input id="nik" name="nik" defaultValue={anggota.nik} required />
+                <Input id="nik" name="nik" value={formValues.nik} onChange={(e) => handleChange("nik", e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="nama">Nama Lengkap *</Label>
-                <Input id="nama" name="nama" defaultValue={anggota.nama} required />
+                <Input id="nama" name="nama" value={formValues.nama} onChange={(e) => handleChange("nama", e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="noHp">No. HP</Label>
-                <Input id="noHp" name="noHp" defaultValue={anggota.noHp ?? ""} />
+                <Input id="noHp" name="noHp" value={formValues.noHp} onChange={(e) => handleChange("noHp", e.target.value)} />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="jenisKelamin">Jenis Kelamin</Label>
-                <Select name="jenisKelamin" defaultValue={anggota.jenisKelamin ?? undefined}>
+                <Select name="jenisKelamin" value={formValues.jenisKelamin || undefined} onValueChange={(v) => handleChange("jenisKelamin", v)}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Pilih..." />
                   </SelectTrigger>
@@ -182,13 +200,13 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
 
               <div className="space-y-2">
                 <Label htmlFor="alamat">Alamat *</Label>
-                <Textarea id="alamat" name="alamat" defaultValue={anggota.alamat} required />
+                <Textarea id="alamat" name="alamat" value={formValues.alamat} onChange={(e) => handleChange("alamat", e.target.value)} required />
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="pekerjaan">Pekerjaan</Label>
-                  <Input id="pekerjaan" name="pekerjaan" defaultValue={anggota.pekerjaan ?? ""} />
+                  <Input id="pekerjaan" name="pekerjaan" value={formValues.pekerjaan} onChange={(e) => handleChange("pekerjaan", e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="penghasilan">Penghasilan (Rp)</Label>
@@ -196,7 +214,8 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                     id="penghasilan"
                     name="penghasilan"
                     type="number"
-                    defaultValue={anggota.penghasilan ?? ""}
+                    value={formValues.penghasilan}
+                    onChange={(e) => handleChange("penghasilan", e.target.value)}
                   />
                 </div>
               </div>
@@ -216,7 +235,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                   </div>
                   {foto && (
                     <div className="relative mt-2 inline-block">
-                      <img src={foto} alt="Foto preview" className="h-20 w-16 rounded border object-cover" />
+                      <Image src={foto} alt="Foto preview" width={64} height={80} unoptimized className="h-20 w-16 rounded border object-cover" />
                       <button
                         type="button"
                         onClick={() => setFoto(null)}
@@ -241,7 +260,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                   </div>
                   {ktp && (
                     <div className="relative mt-2 inline-block">
-                      <img src={ktp} alt="KTP preview" className="h-20 w-32 rounded border object-cover" />
+                      <Image src={ktp} alt="KTP preview" width={128} height={80} unoptimized className="h-20 w-32 rounded border object-cover" />
                       <button
                         type="button"
                         onClick={() => setKtp(null)}
@@ -258,9 +277,10 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                 <Label htmlFor="tglMasuk">Tanggal Masuk *</Label>
                 <Input
                   id="tglMasuk"
-                  name="tglMasuk"
-                  type="date"
-                  defaultValue={anggota.tglMasuk.slice(0, 10)}
+                    name="tglMasuk"
+                    type="date"
+                    value={formValues.tglMasuk}
+                    onChange={(e) => handleChange("tglMasuk", e.target.value)}
                   required
                 />
               </div>

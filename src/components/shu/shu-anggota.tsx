@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/shu/shu-anggota.tsx
+ * @description Komponen presentasional / interaktif: shu-anggota.
+ */
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"

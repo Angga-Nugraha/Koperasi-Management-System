@@ -1,7 +1,14 @@
+/**
+ * @file src/app/anggota/layout.tsx
+ * @description Halaman portal mandiri anggota untuk modul: layout.
+ */
+
 import { redirect } from "next/navigation"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
 import { auth } from "@/lib/auth"
 import { NotifikasiBell } from "@/components/notifikasi-bell"
+import { ThemeToggle } from "@/components/theme-toggle"
+import Script from "next/script"
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/anggota", label: "Dashboard", icon: "LayoutDashboard" },
@@ -27,11 +34,17 @@ export default async function AnggotaLayout({ children }: { children: React.Reac
         userInitial={initial}
       />
       <main className="flex flex-1 flex-col overflow-hidden bg-background">
-        <header className="flex shrink-0 items-center justify-end border-b bg-card px-6 py-3">
+        <header className="flex shrink-0 items-center justify-end gap-2 border-b bg-card px-6 py-3">
+          <ThemeToggle />
           <NotifikasiBell role="ANGGOTA" />
         </header>
         <div className="flex-1 overflow-auto p-6">{children}</div>
       </main>
+      <Script
+        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL ?? "https://app.sandbox.midtrans.com/snap/snap.js"}
+        data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        strategy="afterInteractive"
+      />
     </div>
   )
 }

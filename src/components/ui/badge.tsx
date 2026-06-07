@@ -1,3 +1,8 @@
+/**
+ * @file src/components/ui/badge.tsx
+ * @description Komponen UI dasar (reusable): badge.
+ */
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 

@@ -1,18 +1,15 @@
+/**
+ * @file src/actions/dashboard.ts
+ * @description Server Action untuk mengambil data statistik dan ringkasan dashboard.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
 import { auth, assertRole } from "@/lib/auth"
-
-function tahunRange(tahun: number) {
-  return {
-    gte: new Date(`${tahun}-01-01T00:00:00+07:00`),
-    lte: new Date(`${tahun}-12-31T23:59:59+07:00`),
-  }
-}
-
-function hinggaAkhirTahun(tahun: number) {
-  return { lte: new Date(`${tahun}-12-31T23:59:59+07:00`) }
-}
+import { tahunRange, hinggaAkhirTahun } from "@/lib/date"
+import { round2 } from "@/lib/math"
+import { COA_KAS, COA_PIUTANG_PINJAMAN, COA_KAS_BANK } from "@/lib/jurnal"
 
 export async function getTahunList() {
   const session = await auth()
@@ -66,7 +63,7 @@ export async function getDashboardPengurus(tahun: number) {
       totalBeban += Number(d.debit) - Number(d.kredit)
     }
   }
-  const totalSHU = Math.round((totalPendapatan - totalBeban) * 100) / 100
+  const totalSHU = round2(totalPendapatan - totalBeban)
 
   const transaksiTahun = await prisma.transaksiSimpanan.findMany({
     where: { createdAt: range },
@@ -95,7 +92,7 @@ export async function getDashboardPengurus(tahun: number) {
     _sum: { jumlah: true },
   })
 
-  const akunKas = await prisma.akun.findFirst({ where: { kode: "1.1.1" } })
+  const akunKas = await prisma.akun.findFirst({ where: { kode: COA_KAS } })
   const kasId = akunKas?.id
 
   const detailKasTahun = kasId
@@ -138,7 +135,7 @@ export async function getDashboardPengurus(tahun: number) {
   const cumulative = hinggaAkhirTahun(tahun)
 
   const akunKasBank = await prisma.akun.findMany({
-    where: { kode: { in: ["1.1.1", "1.1.2", "1.1.3", "1.1.4"] } },
+    where: { kode: { in: [...COA_KAS_BANK] } },
   })
   const kasBankIds = akunKasBank.map((a) => a.id)
   let saldoKas = 0
@@ -147,7 +144,7 @@ export async function getDashboardPengurus(tahun: number) {
       where: { akunId: { in: kasBankIds }, jurnal: { tanggal: cumulative } },
       _sum: { debit: true, kredit: true },
     })
-    saldoKas = Math.round((Number(agg._sum.debit ?? 0) - Number(agg._sum.kredit ?? 0)) * 100) / 100
+    saldoKas = round2(Number(agg._sum.debit ?? 0) - Number(agg._sum.kredit ?? 0))
   }
 
   const akunKewajiban = await prisma.akun.findMany({ where: { tipe: "LIABILITAS" } })
@@ -158,11 +155,11 @@ export async function getDashboardPengurus(tahun: number) {
       where: { akunId: { in: kewajibanIds }, jurnal: { tanggal: cumulative } },
       _sum: { debit: true, kredit: true },
     })
-    kewajibanLancar = Math.round((Number(agg._sum.kredit ?? 0) - Number(agg._sum.debit ?? 0)) * 100) / 100
+    kewajibanLancar = round2(Number(agg._sum.kredit ?? 0) - Number(agg._sum.debit ?? 0))
   }
 
   const cashRatio = kewajibanLancar > 0
-    ? Math.round((saldoKas / kewajibanLancar) * 100) / 100
+    ? round2(saldoKas / kewajibanLancar)
     : 0
 
   let cashRatioStatus: string
@@ -272,8 +269,8 @@ export async function getDashboardPengawas(tahun: number) {
 
   const cumulative = hinggaAkhirTahun(tahun)
 
-  const saldoKas = await prisma.akun.findFirst({ where: { kode: "1.1.1" } })
-  const totalPiutang = await prisma.akun.findFirst({ where: { kode: "1.2.1" } })
+  const saldoKas = await prisma.akun.findFirst({ where: { kode: COA_KAS } })
+  const totalPiutang = await prisma.akun.findFirst({ where: { kode: COA_PIUTANG_PINJAMAN } })
 
   const detailKas = saldoKas
     ? await prisma.detailJurnal.aggregate({
@@ -284,7 +281,7 @@ export async function getDashboardPengawas(tahun: number) {
 
   const debitKas = detailKas?._sum.debit ?? 0
   const kreditKas = detailKas?._sum.kredit ?? 0
-  const saldoKasAkun = Math.round(Number(debitKas) - Number(kreditKas))
+  const saldoKasAkun = round2(Number(debitKas) - Number(kreditKas))
 
   const detailPiutang = totalPiutang
     ? await prisma.detailJurnal.aggregate({
@@ -295,7 +292,7 @@ export async function getDashboardPengawas(tahun: number) {
 
   const debitPiutang = detailPiutang?._sum.debit ?? 0
   const kreditPiutang = detailPiutang?._sum.kredit ?? 0
-  const saldoPiutang = Math.round(Number(debitPiutang) - Number(kreditPiutang))
+  const saldoPiutang = round2(Number(debitPiutang) - Number(kreditPiutang))
 
   return {
     totalAuditLog,

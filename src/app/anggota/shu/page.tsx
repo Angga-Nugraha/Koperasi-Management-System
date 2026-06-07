@@ -1,3 +1,8 @@
+/**
+ * @file src/app/anggota/shu/page.tsx
+ * @description Halaman portal mandiri anggota untuk modul: page.
+ */
+
 import { getSHUAnggota } from "@/actions/shu"
 import { SHUAnggotaCard } from "@/components/shu/shu-anggota"
 import { auth } from "@/lib/auth"

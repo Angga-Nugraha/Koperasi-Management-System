@@ -1,7 +1,13 @@
+/**
+ * @file src/actions/pinjaman.ts
+ * @description Server Action untuk pengajuan, persetujuan, pencairan, dan pembayaran angsuran pinjaman.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import {
   ajukanPinjamanSchema,
@@ -16,11 +22,8 @@ import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PEN
 import { catatLog } from "@/lib/audit"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { generateNoStrukAngsuran } from "@/lib/struk"
-
-async function kirimNotif(params: { userId: string; title: string; message: string; type: string; relatedId?: string }) {
-  const { kirimNotifikasi } = await import("@/lib/notifikasi")
-  return kirimNotifikasi(params)
-}
+import { notifyAdmins, notifyMember, kirimNotifikasi as kirimNotif } from "@/lib/notifikasi"
+import { round2 } from "@/lib/math"
 
 export async function getPinjamanList(params: {
   search?: string
@@ -33,8 +36,8 @@ export async function getPinjamanList(params: {
 
   const { search, status, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = {}
-  if (status && status !== "SEMUA") where.status = status
+  const where: Prisma.PinjamanWhereInput = {}
+  if (status && status !== "SEMUA") where.status = status as any
   if (search) {
     where.anggota = { nama: { contains: search } }
   }
@@ -168,10 +171,7 @@ export async function getPinjamanAnggota(anggotaId: string) {
 }
 
 export async function ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   return _ajukanPinjaman(input, session.user.id)
 }
@@ -185,7 +185,7 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
   const pinjamanAktif = await prisma.pinjaman.findFirst({
     where: {
       anggotaId: parsed.anggotaId,
-      status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] },
+      status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] },
     },
   })
   if (pinjamanAktif) throw new Error("Anggota masih memiliki pinjaman aktif atau pengajuan yang belum selesai")
@@ -205,13 +205,13 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
     where: { anggotaId: parsed.anggotaId },
     _sum: { saldo: true },
   })
-  const maxPlafon = Math.round((Number(totalSimpanan._sum.saldo ?? 0) * plafonMaxSaldo) * 100) / 100
+  const maxPlafon = round2(Number(totalSimpanan._sum.saldo ?? 0) * plafonMaxSaldo)
   if (parsed.jumlah > maxPlafon) throw new Error(`Jumlah pinjaman melebihi plafon. Maksimal Rp${maxPlafon.toLocaleString("id-ID")} (${plafonMaxSaldo}× saldo simpanan)`)
   if (parsed.jumlah <= 0) throw new Error("Jumlah pinjaman harus lebih dari 0")
 
-  const angsuranPokok = Number((parsed.jumlah / parsed.tenor).toFixed(2))
-  const angsuranJasa = Number((parsed.jumlah * (Number(jenis.bunga) / 100)).toFixed(2))
-  const angsuranTotal = Number((angsuranPokok + angsuranJasa).toFixed(2))
+  const angsuranPokok = round2(parsed.jumlah / parsed.tenor)
+  const angsuranJasa = round2(parsed.jumlah * (Number(jenis.bunga) / 100))
+  const angsuranTotal = round2(angsuranPokok + angsuranJasa)
 
   const created = await prisma.pinjaman.create({
     data: {
@@ -238,30 +238,20 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
     newValue: { anggotaId: parsed.anggotaId, jumlah: parsed.jumlah, tenor: parsed.tenor },
   })
 
-  const admins = await prisma.user.findMany({
-    where: { role: { in: ["ADMIN", "PENGURUS", "BENDAHARA"] }, isActive: true },
-    select: { id: true },
+  await notifyAdmins({
+    title: "Pengajuan Pinjaman Baru",
+    message: `${anggota.nama} mengajukan pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")}`,
+    type: "PENGAJUAN",
+    relatedId: created.id,
   })
-  for (const admin of admins) {
-    await kirimNotif({
-      userId: admin.id,
-      title: "Pengajuan Pinjaman Baru",
-      message: `${anggota.nama} mengajukan pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")}`,
-      type: "PENGAJUAN",
-      relatedId: created.id,
-    })
-  }
 
-  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: parsed.anggotaId } })
-  if (anggotaUser) {
-    await kirimNotif({
-      userId: anggotaUser.id,
-      title: "Pinjaman Diajukan",
-      message: `Pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")} berhasil diajukan`,
-      type: "PENGAJUAN",
-      relatedId: created.id,
-    })
-  }
+  await notifyMember({
+    anggotaId: parsed.anggotaId,
+    title: "Pinjaman Diajukan",
+    message: `Pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")} berhasil diajukan`,
+    type: "PENGAJUAN",
+    relatedId: created.id,
+  })
 
   revalidatePath("/pengurus/pinjaman")
   revalidatePath("/anggota/pinjaman")
@@ -269,10 +259,7 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
 }
 
 export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = setujuiPinjamanSchema.parse(input)
 
@@ -319,10 +306,7 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
 }
 
 export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = setujuiPinjamanSchema.parse(input)
 
@@ -368,10 +352,7 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
 }
 
 export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = cairkanPinjamanSchema.parse(input)
 
@@ -388,7 +369,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
     await tx.pinjaman.update({
       where: { id: parsed.pinjamanId },
       data: {
-        status: "DICAIKKAN",
+        status: "DICAIRKAN",
         tglCair,
         sisaPinjaman: Number(pinjaman.jumlah),
       },
@@ -432,7 +413,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
     action: "DISBURSE",
     entityType: "PINJAMAN",
     entityId: parsed.pinjamanId,
-    newValue: { status: "DICAIKKAN", jumlah: Number(pinjaman.jumlah) },
+    newValue: { status: "DICAIRKAN", jumlah: Number(pinjaman.jumlah) },
   })
 
   const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
@@ -441,7 +422,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
       userId: anggotaUser.id,
       title: "Pinjaman Dicairkan",
       message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah dicairkan`,
-      type: "DICAIKKAN",
+      type: "DICAIRKAN",
       relatedId: parsed.pinjamanId,
     })
   }
@@ -452,10 +433,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
 }
 
 export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = bayarAngsuranSchema.parse(input)
 
@@ -551,10 +529,7 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
 }
 
 export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = bayarAngsuranKeSchema.parse(input)
 
@@ -681,10 +656,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
 }
 
 export async function hapusPinjaman(input: z.infer<typeof hapusPinjamanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = hapusPinjamanSchema.parse(input)
 
@@ -738,7 +710,7 @@ export async function getPlafonAnggota(anggotaId: string) {
     _sum: { saldo: true },
   })
   const totalSimpananAnggota = Number(totalSimpanan._sum.saldo ?? 0)
-  const maxPlafon = Math.round(totalSimpananAnggota * plafonMaxSaldo * 100) / 100
+  const maxPlafon = round2(totalSimpananAnggota * plafonMaxSaldo)
 
   return {
     maxPlafon,

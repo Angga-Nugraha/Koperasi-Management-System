@@ -1,3 +1,8 @@
+/**
+ * @file src/app/anggota/loading.tsx
+ * @description Halaman portal mandiri anggota untuk modul: loading.
+ */
+
 export default function AnggotaLoading() {
   return (
     <div className="flex items-center justify-center p-8">

@@ -1,3 +1,8 @@
+/**
+ * @file src/actions/users.ts
+ * @description Server Action untuk mengelola pengguna (staff, pengurus, pengawas) dan otorisasi.
+ */
+
 "use server"
 
 import { auth } from "@/lib/auth"

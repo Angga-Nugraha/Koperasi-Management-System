@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/anggota/[id]/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getAnggotaById } from "@/actions/anggota"
 import { notFound } from "next/navigation"
 import { AnggotaDetailClient } from "@/components/anggota/anggota-detail"

@@ -1,7 +1,13 @@
+/**
+ * @file src/actions/audit-log.ts
+ * @description Server Action untuk mengambil data audit log aktivitas pengguna.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { assertRole } from "@/lib/auth"
 
 type GetAuditLogsParams = {
   entityType?: string
@@ -11,14 +17,11 @@ type GetAuditLogsParams = {
 }
 
 export async function getAuditLogs(params: GetAuditLogsParams = {}) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA" && session.user.role !== "PENGAWAS")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
 
   const { entityType, action, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.AuditLogWhereInput = {}
   if (entityType && entityType !== "SEMUA") where.entityType = entityType
   if (action && action !== "SEMUA") where.action = action
 

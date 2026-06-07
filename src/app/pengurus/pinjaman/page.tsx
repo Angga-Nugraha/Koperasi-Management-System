@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/pinjaman/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getPinjamanList } from "@/actions/pinjaman"
 import { PinjamanTable } from "@/components/pinjaman/pinjaman-table"
 

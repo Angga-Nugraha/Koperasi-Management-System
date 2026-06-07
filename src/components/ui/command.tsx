@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/command.tsx
+ * @description Komponen UI dasar (reusable): command.
+ */
+
 import * as React from "react"
 import { type DialogProps } from "@radix-ui/react-dialog"
 import { Command as CommandPrimitive } from "cmdk"

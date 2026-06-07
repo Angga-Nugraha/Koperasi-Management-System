@@ -1,3 +1,8 @@
+/**
+ * @file src/app/api/export/laporan/route.ts
+ * @description Route Handler API untuk endpoint /api/export/laporan/route.ts
+ */
+
 import { NextRequest, NextResponse } from "next/server"
 import {
   exportBukuBesar,
@@ -26,6 +31,9 @@ const FILE_NAMES: Record<string, string> = {
   shu: "shu",
 }
 
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -36,6 +44,15 @@ export async function GET(request: NextRequest) {
 
     if (!type || !EXPORTERS[type]) {
       return NextResponse.json({ error: "Invalid export type" }, { status: 400 })
+    }
+    if (dari && !DATE_REGEX.test(dari)) {
+      return NextResponse.json({ error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+    }
+    if (sampai && !DATE_REGEX.test(sampai)) {
+      return NextResponse.json({ error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+    }
+    if (akunId && !UUID_REGEX.test(akunId)) {
+      return NextResponse.json({ error: "Format akunId tidak valid" }, { status: 400 })
     }
 
     const buffer = await EXPORTERS[type]({ dari, sampai, akunId })

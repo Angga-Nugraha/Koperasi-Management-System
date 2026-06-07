@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/firebase-admin.ts
+ * @description Inisialisasi Firebase Admin SDK untuk pengiriman push notification dari sisi server.
+ */
+
 import admin from "firebase-admin"
 
 if (!admin.apps.length) {

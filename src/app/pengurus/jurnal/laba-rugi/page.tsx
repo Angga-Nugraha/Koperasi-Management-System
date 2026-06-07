@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/laba-rugi/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getLabaRugi } from "@/actions/jurnal"
 import { LabaRugiClient } from "@/components/jurnal/laba-rugi-client"
 

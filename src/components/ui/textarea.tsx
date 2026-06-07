@@ -1,3 +1,8 @@
+/**
+ * @file src/components/ui/textarea.tsx
+ * @description Komponen UI dasar (reusable): textarea.
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

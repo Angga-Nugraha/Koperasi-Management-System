@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/validations/simpanan.ts
+ * @description Skema validasi Zod untuk transaksi simpanan.
+ */
+
 import { z } from "zod"
 
 export const setorSimpananSchema = z.object({

@@ -1,3 +1,8 @@
+/**
+ * @file src/app/page.tsx
+ * @description Modul fungsionalitas: page.tsx.
+ */
+
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 

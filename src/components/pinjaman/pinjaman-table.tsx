@@ -1,7 +1,12 @@
 "use client"
 
+/**
+ * @file src/components/pinjaman/pinjaman-table.tsx
+ * @description Komponen presentasional / interaktif: pinjaman-table.
+ */
+
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -53,7 +58,7 @@ const STATUS_LABEL: Record<string, string> = {
   PENGAJUAN: "Pengajuan",
   DISETUJUI: "Disetujui",
   DITOLAK: "Ditolak",
-  DICAIKKAN: "Dicairkan",
+  DICAIRKAN: "Dicairkan",
   LUNAS: "Lunas",
   GAGAL: "Gagal",
 }
@@ -62,13 +67,14 @@ const STATUS_STYLE: Record<string, string> = {
   PENGAJUAN: "border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-50/80",
   DISETUJUI: "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-50/80",
   DITOLAK: "border-red-300 text-red-700 bg-red-50 hover:bg-red-50/80",
-  DICAIKKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
+  DICAIRKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
   LUNAS: "border-green-300 text-green-700 bg-green-50 hover:bg-green-50/80",
   GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
 }
 
 export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch, status: initialStatus }: Props) {
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState(initialSearch ?? "")
   const [ajukanOpen, setAjukanOpen] = useState(false)
 
@@ -78,7 +84,9 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
     if (value && value !== "SEMUA") params.set(key, value)
     if (key === "search") params.set("search", value)
     if (page > 1) params.set("page", "1")
-    router.push(`/pengurus/pinjaman?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/pinjaman?${params.toString()}`)
+    })
   }
 
   function goToPage(p: number) {
@@ -87,7 +95,9 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
     if (initialStatus && initialStatus !== "SEMUA") params.set("status", initialStatus)
     if (p > 1) params.set("page", String(p))
     if (pageSize !== 20) params.set("pageSize", String(pageSize))
-    router.push(`/pengurus/pinjaman?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/pinjaman?${params.toString()}`)
+    })
   }
 
   function handlePageSizeChange(size: number) {
@@ -95,7 +105,9 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
     if (search) params.set("search", search)
     if (initialStatus && initialStatus !== "SEMUA") params.set("status", initialStatus)
     if (size !== 20) params.set("pageSize", String(size))
-    router.push(`/pengurus/pinjaman?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/pinjaman?${params.toString()}`)
+    })
   }
 
   function handleSearch(e: React.FormEvent) {
@@ -131,7 +143,7 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
             <SelectItem value="PENGAJUAN">Pengajuan</SelectItem>
             <SelectItem value="DISETUJUI">Disetujui</SelectItem>
             <SelectItem value="DITOLAK">Ditolak</SelectItem>
-            <SelectItem value="DICAIKKAN">Dicairkan</SelectItem>
+            <SelectItem value="DICAIRKAN">Dicairkan</SelectItem>
             <SelectItem value="LUNAS">Lunas</SelectItem>
             <SelectItem value="GAGAL">Gagal</SelectItem>
           </SelectContent>
@@ -142,8 +154,13 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-md border">
-        <Table>
+      <div className="relative overflow-x-auto rounded-md border">
+        {isPending && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground border-t-primary" />
+          </div>
+        )}
+        <Table className={isPending ? "opacity-50" : ""}>
           <TableHeader>
             <TableRow>
               <TableHead>No. Anggota</TableHead>

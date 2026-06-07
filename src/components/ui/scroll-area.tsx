@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/scroll-area.tsx
+ * @description Komponen UI dasar (reusable): scroll-area.
+ */
+
 import * as React from "react"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
 

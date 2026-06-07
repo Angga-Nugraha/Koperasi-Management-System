@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/anggota/anggota-detail.tsx
+ * @description Komponen presentasional / interaktif: anggota-detail.
+ */
+
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -130,7 +135,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
 
   const totalSimpanan = anggota.simpanan.reduce((s, x) => s + Number(x.saldo), 0)
   const totalPinjamanOutstanding = anggota.pinjaman
-    .filter((p) => ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"].includes(p.status))
+    .filter((p) => ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"].includes(p.status))
     .reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
   return (
@@ -478,7 +483,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                         PENGAJUAN: "Pengajuan",
                         DISETUJUI: "Disetujui",
                         DITOLAK: "Ditolak",
-                        DICAIKKAN: "Dicairkan",
+                        DICAIRKAN: "Dicairkan",
                         LUNAS: "Lunas",
                         GAGAL: "Gagal",
                       }
@@ -486,7 +491,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                         PENGAJUAN: "border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-50/80",
                         DISETUJUI: "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-50/80",
                         DITOLAK: "border-red-300 text-red-700 bg-red-50 hover:bg-red-50/80",
-                        DICAIKKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
+                        DICAIRKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
                         LUNAS: "border-green-300 text-green-700 bg-green-50 hover:bg-green-50/80",
                         GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
                       }

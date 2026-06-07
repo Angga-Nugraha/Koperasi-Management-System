@@ -1,6 +1,13 @@
+/**
+ * @file src/app/api/notifikasi/route.ts
+ * @description Route Handler API untuk endpoint /api/notifikasi/route.ts
+ */
+
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+
+export const dynamic = "force-dynamic"
 
 export async function GET() {
   const session = await auth()

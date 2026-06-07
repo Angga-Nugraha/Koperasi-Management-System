@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/shu/konfig-alokasi-form.tsx
+ * @description Komponen presentasional / interaktif: konfig-alokasi-form.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"

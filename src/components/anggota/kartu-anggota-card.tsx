@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/anggota/kartu-anggota-card.tsx
+ * @description Komponen presentasional / interaktif: kartu-anggota-card.
+ */
+
 import { forwardRef, useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -130,12 +135,10 @@ export function KartuAnggotaCard({ open, onOpenChange, anggota }: Props) {
     fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
   }, [])
 
-  // Reset side when dialog opens/closes
-  useEffect(() => {
-    if (!open) {
-      setShowBack(false)
-    }
-  }, [open])
+  function handleOpenChange(open: boolean) {
+    if (!open) setShowBack(false)
+    onOpenChange(open)
+  }
 
   async function handleDownload() {
     setDownloading(true)
@@ -158,7 +161,7 @@ export function KartuAnggotaCard({ open, onOpenChange, anggota }: Props) {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="w-fit max-w-none">
           <DialogHeader className="sr-only">
             <DialogTitle>Kartu Anggota</DialogTitle>

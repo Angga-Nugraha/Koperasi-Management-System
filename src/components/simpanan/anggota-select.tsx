@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/simpanan/anggota-select.tsx
+ * @description Komponen presentasional / interaktif: anggota-select.
+ */
+
 import { useState, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -32,8 +37,8 @@ export function AnggotaSelect({ value, onChange, name, required }: Props) {
     if (!value) return
     getAnggotaBasic(value).then((a) => {
       if (a) setSelected(a)
-    }).catch(() => {
-      // silent — component handles empty state
+    }).catch((err) => {
+      console.error("Failed to fetch anggota basic:", err)
     })
   }, [value])
 
@@ -47,7 +52,8 @@ export function AnggotaSelect({ value, onChange, name, required }: Props) {
       try {
         const data = await cariAnggota(query)
         setResults(data)
-      } catch {
+      } catch (err) {
+        console.error("Failed to search anggota:", err)
         setResults([])
       } finally {
         setLoading(false)

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/login/page.tsx
+ * @description Modul fungsionalitas: page.tsx.
+ */
+
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -15,7 +20,15 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [namaKoperasi, setNamaKoperasi] = useState("Simko")
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
+  const [rememberMe, setRememberMe] = useState(() => {
+    if (typeof window === "undefined") return false
+    try {
+      const saved = localStorage.getItem("login_remember")
+      if (!saved) return false
+      const p = JSON.parse(saved)
+      return !!p.email
+    } catch { return false }
+  })
 
   useEffect(() => {
     fetch("/api/general-info").then(r => r.json()).then(info => {
@@ -31,7 +44,6 @@ export default function LoginPage() {
           const passwordInput = document.getElementById("password") as HTMLInputElement
           if (emailInput) emailInput.value = email
           if (password && passwordInput) passwordInput.value = password
-          setRememberMe(true)
         }
       } catch {}
     }

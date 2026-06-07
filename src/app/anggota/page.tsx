@@ -1,3 +1,8 @@
+/**
+ * @file src/app/anggota/page.tsx
+ * @description Halaman portal mandiri anggota untuk modul: page.
+ */
+
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

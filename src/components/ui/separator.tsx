@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/separator.tsx
+ * @description Komponen UI dasar (reusable): separator.
+ */
+
 import * as React from "react"
 import * as SeparatorPrimitive from "@radix-ui/react-separator"
 

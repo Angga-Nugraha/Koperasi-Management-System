@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/label.tsx
+ * @description Komponen UI dasar (reusable): label.
+ */
+
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { cva, type VariantProps } from "class-variance-authority"

@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/validations/jurnal.ts
+ * @description Skema validasi Zod untuk pencatatan jurnal.
+ */
+
 import { z } from "zod"
 
 export const jurnalManualSchema = z.object({

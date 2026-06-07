@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/shu/[tahun]/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getSHUByTahun } from "@/actions/shu"
 import { SHUDetailCard } from "@/components/shu/shu-detail"
 import { notFound } from "next/navigation"

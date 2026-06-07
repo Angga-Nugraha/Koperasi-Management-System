@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/jurnal-manual-form.tsx
+ * @description Komponen presentasional / interaktif: jurnal-manual-form.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -135,7 +140,7 @@ export function JurnalManualForm({ akunList }: Props) {
           </TableHeader>
           <TableBody>
             {entries.map((entry, i) => (
-                <TableRow key={`entry-${i}`}>
+                <TableRow key={i}>
                 <TableCell>
                   <Select
                     value={entry.akunId}

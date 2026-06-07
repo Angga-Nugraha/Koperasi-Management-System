@@ -1,3 +1,8 @@
+/**
+ * @file src/app/layout.tsx
+ * @description Modul fungsionalitas: layout.tsx.
+ */
+
 import type { Metadata } from "next"
 import { Providers } from "@/lib/providers"
 import "./globals.css"
@@ -13,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body className="font-sans">
         <Providers>{children}</Providers>
       </body>

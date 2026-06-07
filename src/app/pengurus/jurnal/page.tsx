@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getJurnalList } from "@/actions/jurnal"
 import { JurnalTable } from "@/components/jurnal/jurnal-table"
 

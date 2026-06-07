@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/form.tsx
+ * @description Komponen UI dasar (reusable): form.
+ */
+
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"

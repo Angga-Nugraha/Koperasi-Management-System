@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/pengurus/pinjaman-status-chart.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: pinjaman-status-chart.
+ */
+
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts"
 import { ChartContainer, type ChartConfig, ChartTooltipContent } from "@/components/ui/chart"
 
@@ -8,27 +13,30 @@ type Props = {
 }
 
 const COLORS: Record<string, string> = {
-  PENGAJUAN: "#3b82f6",
+  PENGAJUAN: "#eab308",
   DISETUJUI: "#f59e0b",
-  DICAIKAN: "#10b981",
-  LUNAS: "#14b8a6",
+  DICAIRKAN: "#3b82f6",
+  LUNAS: "#22c55e",
   DITOLAK: "#ef4444",
+  GAGAL: "#4b5563",
 }
 
 const LABELS: Record<string, string> = {
   PENGAJUAN: "Pengajuan",
   DISETUJUI: "Disetujui",
-  DICAIKAN: "Dicairkan",
+  DICAIRKAN: "Dicairkan",
   LUNAS: "Lunas",
   DITOLAK: "Ditolak",
+  GAGAL: "Gagal",
 }
 
 const CHART_CONFIG: ChartConfig = {
-  pengajuan: { label: "Pengajuan", color: "#3b82f6" },
-  disetujui: { label: "Disetujui", color: "#f59e0b" },
-  dicairkan: { label: "Dicairkan", color: "#10b981" },
-  lunas: { label: "Lunas", color: "#14b8a6" },
-  ditolak: { label: "Ditolak", color: "#ef4444" },
+  PENGAJUAN: { label: "Pengajuan", color: "#eab308" },
+  DISETUJUI: { label: "Disetujui", color: "#f59e0b" },
+  DICAIRKAN: { label: "Dicairkan", color: "#3b82f6" },
+  LUNAS: { label: "Lunas", color: "#22c55e" },
+  DITOLAK: { label: "Ditolak", color: "#ef4444" },
+  GAGAL: { label: "Gagal", color: "#4b5563" },
 }
 
 export function PinjamanStatusChart({ data }: Props) {

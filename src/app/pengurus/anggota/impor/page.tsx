@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/anggota/impor/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { ImportAnggotaForm } from "@/components/anggota/import-anggota-form"
 
 export const metadata = {

@@ -1,3 +1,8 @@
+/**
+ * @file src/app/api/upload/route.ts
+ * @description Route Handler API untuk endpoint /api/upload/route.ts
+ */
+
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 import { writeFile, mkdir } from "fs/promises"
@@ -12,7 +17,28 @@ const MIME_TO_EXT: Record<string, string> = {
   "image/webp": "webp",
 }
 
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const UPLOAD_RATE_LIMIT_MAX = 10
+const UPLOAD_RATE_LIMIT_WINDOW = 60_000
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + UPLOAD_RATE_LIMIT_WINDOW })
+    return true
+  }
+  if (entry.count >= UPLOAD_RATE_LIMIT_MAX) return false
+  entry.count++
+  return true
+}
+
 export async function POST(req: Request) {
+  const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown"
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json({ error: "Terlalu banyak upload. Coba lagi dalam 1 menit." }, { status: 429 })
+  }
+
   const session = await auth()
   if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

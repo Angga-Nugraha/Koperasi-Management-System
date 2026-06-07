@@ -1,3 +1,8 @@
+/**
+ * @file src/app/loading.tsx
+ * @description Modul fungsionalitas: loading.tsx.
+ */
+
 export default function RootLoading() {
   return (
     <div className="flex min-h-screen items-center justify-center">

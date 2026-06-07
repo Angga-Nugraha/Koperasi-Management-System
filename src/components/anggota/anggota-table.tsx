@@ -1,7 +1,12 @@
 "use client"
 
+/**
+ * @file src/components/anggota/anggota-table.tsx
+ * @description Komponen presentasional / interaktif: anggota-table.
+ */
+
 import { useRouter } from "next/navigation"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -75,6 +80,7 @@ export function AnggotaTable({
   sortOrder: initialSortOrder,
 }: Props) {
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState(initialSearch)
   const [status, setStatus] = useState(initialStatus)
   const [tambahOpen, setTambahOpen] = useState(false)
@@ -92,32 +98,30 @@ export function AnggotaTable({
     const same = col === initialSortBy
     const newOrder = same && initialSortOrder === "asc" ? "desc" : "asc"
     const params = buildParams({ sortBy: col, sortOrder: newOrder, page: "" })
-    router.push(`/pengurus/anggota?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/anggota?${params.toString()}`)
+    })
   }, [initialSortBy, initialSortOrder, router])
 
   function onSearch() {
     const params = buildParams({ search, status: status !== "SEMUA" ? status : "", page: "" })
-    router.push(`/pengurus/anggota?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/anggota?${params.toString()}`)
+    })
   }
 
   function onPageChange(p: number) {
     const params = buildParams({ page: String(p), pageSize: pageSize !== 20 ? String(pageSize) : "" })
-    router.push(`/pengurus/anggota?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/anggota?${params.toString()}`)
+    })
   }
 
   function handlePageSizeChange(size: number) {
     const params = buildParams({ pageSize: size !== 20 ? String(size) : "", page: "" })
-    router.push(`/pengurus/anggota?${params.toString()}`)
-  }
-
-  function SortHeader({ col, children }: { col: string; children: React.ReactNode }) {
-    const active = col === initialSortBy
-    const dir = active && initialSortOrder === "asc" ? "↑" : "↓"
-    return (
-      <TableHead className="cursor-pointer select-none" onClick={() => toggleSort(col)}>
-        {children} {active && <span className="text-muted-foreground ml-1">{dir}</span>}
-      </TableHead>
-    )
+    startTransition(() => {
+      router.push(`/pengurus/anggota?${params.toString()}`)
+    })
   }
 
   return (
@@ -163,10 +167,10 @@ export function AnggotaTable({
               value={status}
               onValueChange={(v) => {
                 setStatus(v)
-                const params = new URLSearchParams()
-                if (search) params.set("search", search)
-                if (v && v !== "SEMUA") params.set("status", v)
-                router.push(`/pengurus/anggota?${params.toString()}`)
+                const params = buildParams({ status: v !== "SEMUA" ? v : "", page: "" })
+                startTransition(() => {
+                  router.push(`/pengurus/anggota?${params.toString()}`)
+                })
               }}
             >
               <SelectTrigger>
@@ -185,16 +189,25 @@ export function AnggotaTable({
           </Button>
         </div>
 
-        <div className="overflow-x-auto rounded-md border">
-          <Table>
+        <div className="relative overflow-x-auto rounded-md border">
+          {isPending && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground border-t-primary" />
+            </div>
+          )}
+          <Table className={isPending ? "opacity-50" : ""}>
             <TableHeader>
             <TableRow>
-              <SortHeader col="noAnggota">No Anggota</SortHeader>
+              <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('noAnggota')}>
+                No Anggota {initialSortBy === 'noAnggota' && <span className="text-muted-foreground ml-1">{initialSortOrder === "asc" ? "↑" : "↓"}</span>}
+              </TableHead>
               <TableHead>NIK</TableHead>
               <TableHead>Nama</TableHead>
               <TableHead>Jenis Kelamin</TableHead>
               <TableHead>No. HP</TableHead>
-              <SortHeader col="tglMasuk">Tgl Masuk</SortHeader>
+              <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('tglMasuk')}>
+                Tgl Masuk {initialSortBy === 'tglMasuk' && <span className="text-muted-foreground ml-1">{initialSortOrder === "asc" ? "↑" : "↓"}</span>}
+              </TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
             </TableRow>

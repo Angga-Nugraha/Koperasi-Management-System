@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/data-table-pagination.tsx
+ * @description Komponen UI dasar (reusable): data-table-pagination.
+ */
+
 import { Button } from "@/components/ui/button"
 import {
   Select,

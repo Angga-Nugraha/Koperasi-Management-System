@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/[jurnalId]/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getJurnalById } from "@/actions/jurnal"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"

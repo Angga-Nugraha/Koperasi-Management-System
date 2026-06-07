@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/manual/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getAkunList } from "@/actions/jurnal"
 import { JurnalManualForm } from "@/components/jurnal/jurnal-manual-form"
 

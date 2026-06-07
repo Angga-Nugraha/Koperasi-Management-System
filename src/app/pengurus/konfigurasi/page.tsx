@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/konfigurasi/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getKonfigList, getAkunList, getGeneralInfo, getJenisPinjamanList, getJenisSimpananList } from "@/actions/konfigurasi"
 import { KonfigurasiPage } from "@/components/konfigurasi/konfigurasi-page"
 

@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/struk.ts
+ * @description Generator nomor struk unik untuk transaksi simpanan, angsuran, dan tagihan.
+ */
+
 import { prisma } from "@/lib/prisma"
 import crypto from "crypto"
 
@@ -14,32 +19,29 @@ function todayDateStr() {
   return `${now.getFullYear()}${pad(now.getMonth() + 1, 2)}${pad(now.getDate(), 2)}`
 }
 
-export async function generateNoStrukSimpanan() {
-  const dateStr = todayDateStr()
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const noStruk = `STR-${dateStr}-${randomSuffix()}`
+type NoStrukModel = "transaksiSimpanan" | "angsuran" | "tagihanSimpanan"
+
+async function checkNoStrukExists(noStruk: string, model: NoStrukModel): Promise<boolean> {
+  if (model === "transaksiSimpanan") {
     const existing = await prisma.transaksiSimpanan.findUnique({ where: { noStruk } })
-    if (!existing) return noStruk
+    return !!existing
   }
-  throw new Error("Gagal generate noStruk simpanan setelah 10 percobaan")
+  const existing = await (model === "angsuran"
+    ? prisma.angsuran.findFirst({ where: { noStruk } })
+    : prisma.tagihanSimpanan.findFirst({ where: { noStruk } }))
+  return !!existing
 }
 
-export async function generateNoStrukAngsuran() {
+export async function generateNoStruk(model: NoStrukModel) {
   const dateStr = todayDateStr()
   for (let attempt = 0; attempt < 10; attempt++) {
     const noStruk = `STR-${dateStr}-${randomSuffix()}`
-    const existing = await prisma.angsuran.findFirst({ where: { noStruk } })
-    if (!existing) return noStruk
+    const exists = await checkNoStrukExists(noStruk, model)
+    if (!exists) return noStruk
   }
-  throw new Error("Gagal generate noStruk angsuran setelah 10 percobaan")
+  throw new Error(`Gagal generate noStruk ${model} setelah 10 percobaan`)
 }
 
-export async function generateNoStrukTagihan() {
-  const dateStr = todayDateStr()
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const noStruk = `STR-${dateStr}-${randomSuffix()}`
-    const existing = await prisma.tagihanSimpanan.findFirst({ where: { noStruk } })
-    if (!existing) return noStruk
-  }
-  throw new Error("Gagal generate noStruk tagihan setelah 10 percobaan")
-}
+export const generateNoStrukSimpanan = () => generateNoStruk("transaksiSimpanan")
+export const generateNoStrukAngsuran = () => generateNoStruk("angsuran")
+export const generateNoStrukTagihan = () => generateNoStruk("tagihanSimpanan")

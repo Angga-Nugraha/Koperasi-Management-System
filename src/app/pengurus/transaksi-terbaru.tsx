@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/transaksi-terbaru.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: transaksi-terbaru.
+ */
+
 import {formatTanggal} from "@/lib/format"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"

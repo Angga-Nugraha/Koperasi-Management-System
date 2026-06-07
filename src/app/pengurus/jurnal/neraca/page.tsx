@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/neraca/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getNeraca } from "@/actions/jurnal"
 import { NeracaClient } from "@/components/jurnal/neraca-client"
 

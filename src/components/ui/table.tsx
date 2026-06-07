@@ -1,3 +1,8 @@
+/**
+ * @file src/components/ui/table.tsx
+ * @description Komponen UI dasar (reusable): table.
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

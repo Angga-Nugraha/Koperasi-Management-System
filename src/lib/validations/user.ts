@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/validations/user.ts
+ * @description Skema validasi Zod untuk data pengguna dan password.
+ */
+
 import { z } from "zod"
 
 export const createUserSchema = z.object({

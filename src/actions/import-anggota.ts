@@ -1,10 +1,16 @@
+/**
+ * @file src/actions/import-anggota.ts
+ * @description Server Action untuk memproses impor data anggota dari file Excel.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import Papa from "papaparse"
 import { generateNoAnggota } from "@/lib/utils/anggota"
+import { Prisma } from "@prisma/client"
 
 export type PreviewRowResult = {
   row: number
@@ -21,10 +27,7 @@ export type PreviewRowResult = {
 }
 
 export async function previewImportAnggota(formData: FormData): Promise<PreviewRowResult[]> {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const file = formData.get("file") as File
   if (!file) {
@@ -325,10 +328,7 @@ export async function commitImportAnggota(
     tglMasuk: string
   }[]
 ): Promise<CommitRowResult[]> {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const results: CommitRowResult[] = []
 
@@ -368,7 +368,8 @@ export async function commitImportAnggota(
 
       for (const row of group) {
         try {
-          const noAnggota = generateNoAnggota(row.tglMasuk, urutan++)
+          const noAnggota = generateNoAnggota(row.tglMasuk, urutan)
+          urutan++
           await tx.anggota.create({
             data: {
               nik: row.nik,
@@ -395,7 +396,7 @@ export async function commitImportAnggota(
         }
       }
     }
-  })
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable })
 
   revalidatePath("/pengurus/anggota")
   return results

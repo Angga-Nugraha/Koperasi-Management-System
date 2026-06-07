@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/tooltip.tsx
+ * @description Komponen UI dasar (reusable): tooltip.
+ */
+
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 

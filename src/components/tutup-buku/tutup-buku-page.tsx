@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/tutup-buku/tutup-buku-page.tsx
+ * @description Komponen presentasional / interaktif: tutup-buku-page.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"

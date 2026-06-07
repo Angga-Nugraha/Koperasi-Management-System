@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/prisma.ts
+ * @description Inisialisasi dan konfigurasi Prisma Client untuk koneksi ke database.
+ */
+
 import { PrismaClient } from "@prisma/client"
 import { PrismaMariaDb } from "@prisma/adapter-mariadb"
 

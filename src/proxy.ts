@@ -1,3 +1,8 @@
+/**
+ * @file src/proxy.ts
+ * @description Modul fungsionalitas: proxy.ts.
+ */
+
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 

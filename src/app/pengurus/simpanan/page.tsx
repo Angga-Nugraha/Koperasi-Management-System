@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/simpanan/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getSimpananList } from "@/actions/simpanan"
 import { SimpananTable } from "@/components/simpanan/simpanan-table"
 import { prisma } from "@/lib/prisma"

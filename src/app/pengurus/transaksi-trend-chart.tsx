@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/pengurus/transaksi-trend-chart.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: transaksi-trend-chart.
+ */
+
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
 import { formatCompact } from "@/lib/format"
 

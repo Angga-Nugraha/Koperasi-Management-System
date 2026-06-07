@@ -33,7 +33,7 @@
 | IndikatorSHU | kode (JM/JU/CD/PN/PW/PS), persentase, kelompok (ANGGOTA/DANA), akunId tujuan | ✅ |
 | AuditLog | userId, action (CREATE/UPDATE/DELETE/APPROVE), entityType, old/new value | ✅ |
 
-**Enum**: `LoanStatus` = PENGAJUAN | DISETUJUI | DITOLAK | **DICAIKKAN** | LUNAS | GAGAL (bukan DICAIRKAN)
+**Enum**: `LoanStatus` = PENGAJUAN | DISETUJUI | DITOLAK | **DICAIRKAN** | LUNAS | GAGAL
 
 ---
 
@@ -81,7 +81,7 @@
 |-------|--------|--------|
 | Pengajuan (Anggota) | Form jumlah + tenor, plafon otomatis 3× saldo | ✅ |
 | Persetujuan (Pengurus) | Dasbor pengajuan pending, detail + riwayat anggota | ✅ |
-| Aksi Setujui/Tolak | Setuju → generate jadwal angsuran flat + update status DICAIKKAN | ✅ |
+| Aksi Setujui/Tolak | Setuju → generate jadwal angsuran flat + update status DICAIRKAN | ✅ |
 | Jadwal Angsuran Flat | `angsuranPokok = pokok / tenor`, `jasa = pokok × bungaBln` | ✅ |
 | Bayar Angsuran | Input nominal, deteksi kelebihan/kekurangan, auto denda | ✅ |
 | Kalkulator Denda | `denda = totalAngsuran × rateDenda` | ✅ |
@@ -196,7 +196,7 @@
 ### Catatan Seed
 - Jurnal hanya untuk angsuran LUNAS/TERLAMBAT
 - Akun `4.1.3` (Pendapatan Denda) untuk installment TERLAMBAT
-- Status pinjaman: `DICAIKKAN` (dengan sisa) atau `LUNAS`
+- Status pinjaman: `DICAIRKAN` (dengan sisa) atau `LUNAS`
 - Rounding LUNAS: `sisaPinjaman <= angsuranPokok`
 - Full tenor tanpa batas tahun — jurnal masuk sesuai tanggal pembayaran
 

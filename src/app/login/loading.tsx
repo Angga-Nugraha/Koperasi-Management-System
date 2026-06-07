@@ -1,3 +1,8 @@
+/**
+ * @file src/app/login/loading.tsx
+ * @description Modul fungsionalitas: loading.tsx.
+ */
+
 export default function LoginLoading() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">

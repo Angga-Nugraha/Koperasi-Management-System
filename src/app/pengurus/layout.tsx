@@ -1,7 +1,13 @@
+/**
+ * @file src/app/pengurus/layout.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: layout.
+ */
+
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { AppSidebar, type NavItem } from "@/components/app-sidebar"
 import { NotifikasiBell } from "@/components/notifikasi-bell"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/pengurus", label: "Dashboard", icon: "LayoutDashboard" },
@@ -47,7 +53,8 @@ export default async function PengurusLayout({ children }: { children: React.Rea
         userInitial={initial}
       />
       <main className="flex flex-1 flex-col overflow-hidden bg-background">
-        <header className="flex shrink-0 items-center justify-end border-b bg-card px-6 py-3">
+        <header className="flex shrink-0 items-center justify-end gap-2 border-b bg-card px-6 py-3">
+          <ThemeToggle />
           <NotifikasiBell role={session?.user?.role} />
         </header>
         <div className="flex-1 overflow-auto p-6">{children}</div>

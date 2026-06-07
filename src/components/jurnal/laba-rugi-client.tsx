@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/laba-rugi-client.tsx
+ * @description Komponen presentasional / interaktif: laba-rugi-client.
+ */
+
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"

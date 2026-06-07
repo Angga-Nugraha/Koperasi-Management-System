@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { auth } from "@/lib/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, PiggyBank, HandCoins, DollarSign, TrendingUp, History, Landmark } from "lucide-react"

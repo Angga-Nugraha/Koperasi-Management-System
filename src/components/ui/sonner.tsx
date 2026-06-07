@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/sonner.tsx
+ * @description Komponen UI dasar (reusable): sonner.
+ */
+
 import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Toaster as Sonner } from "sonner"

@@ -1,13 +1,30 @@
+/**
+ * @file src/app/api/export/jurnal-excel/route.ts
+ * @description Route Handler API untuk endpoint /api/export/jurnal-excel/route.ts
+ */
+
 import { exportJurnalExcel } from "@/actions/export"
 import { NextRequest, NextResponse } from "next/server"
+
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
+    const dari = searchParams.get("dari") ?? undefined
+    const sampai = searchParams.get("sampai") ?? undefined
+
+    if (dari && !DATE_REGEX.test(dari)) {
+      return NextResponse.json({ error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+    }
+    if (sampai && !DATE_REGEX.test(sampai)) {
+      return NextResponse.json({ error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+    }
+
     const buffer = await exportJurnalExcel({
       search: searchParams.get("search") ?? undefined,
-      dari: searchParams.get("dari") ?? undefined,
-      sampai: searchParams.get("sampai") ?? undefined,
+      dari,
+      sampai,
     })
 
     return new NextResponse(buffer as any, {

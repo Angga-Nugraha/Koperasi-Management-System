@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/audit-log-table.tsx
+ * @description Komponen presentasional / interaktif: audit-log-table.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"

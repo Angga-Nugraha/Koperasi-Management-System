@@ -1,6 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+/**
+ * @file src/components/app-sidebar.tsx
+ * @description Komponen presentasional / interaktif: app-sidebar.
+ */
+
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -225,12 +230,10 @@ function NavSubmenu({
 export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [collapsed, setCollapsed] = useState(false)
-
-  useEffect(() => {
-    const saved = localStorage.getItem(COLLAPSED_KEY)
-    if (saved === "true") setCollapsed(true)
-  }, [])
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false
+    return localStorage.getItem(COLLAPSED_KEY) === "true"
+  })
 
   function toggleCollapsed() {
     setCollapsed((prev) => {

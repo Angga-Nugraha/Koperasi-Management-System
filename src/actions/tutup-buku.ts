@@ -1,10 +1,17 @@
+/**
+ * @file src/actions/tutup-buku.ts
+ * @description Server Action untuk melakukan proses tutup buku tahunan koperasi.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { buatJurnal } from "@/lib/jurnal"
+import { buatJurnal, COA_SHU_BERJALAN, COA_SHU_DITAHAN, COA_SIMPANAN_SUKARELA } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
+import { tahunMulai, tahunSelesai, getTZOffset } from "@/lib/date"
+import { round2 } from "@/lib/math"
 
 export async function getSHUTutupBukuList() {
   const session = await auth()
@@ -24,10 +31,7 @@ export async function getSHUTutupBukuList() {
 }
 
 export async function prosesTutupBuku(tahun: number) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const shu = await prisma.sHU.findUnique({
     where: { tahun },
@@ -39,15 +43,15 @@ export async function prosesTutupBuku(tahun: number) {
   if (!shu) throw new Error("SHU tidak ditemukan")
   if (shu.status === "FINAL") throw new Error(`SHU tahun ${tahun} sudah ditutup`)
 
-  const akunSHU = await prisma.akun.findFirst({ where: { kode: "3.1.2" } })
+  const akunSHU = await prisma.akun.findFirst({ where: { kode: COA_SHU_BERJALAN } })
   if (!akunSHU) throw new Error("Akun SHU Tahun Berjalan tidak ditemukan")
-  const akunSHUDitahan = await prisma.akun.findFirst({ where: { kode: "3.1.3" } })
+  const akunSHUDitahan = await prisma.akun.findFirst({ where: { kode: COA_SHU_DITAHAN } })
 
   const jenisSukarela = await prisma.jenisSimpanan.findUnique({ where: { kode: "SUKARELA" } })
   if (!jenisSukarela) throw new Error("Jenis simpanan SUKARELA tidak ditemukan")
 
-  const mulai = new Date(`${tahun}-01-01T00:00:00+07:00`)
-  const selesai = new Date(`${tahun + 1}-01-01T00:00:00+07:00`)
+  const mulai = tahunMulai(tahun)
+  const selesai = tahunSelesai(tahun)
 
   await prisma.$transaction(async (tx) => {
     // 0. Ubah status jadi FINAL
@@ -81,7 +85,7 @@ export async function prosesTutupBuku(tahun: number) {
     let totalBeban = 0
 
     for (const [, akun] of saldoAkun) {
-      const s = Math.round(akun.saldo * 100) / 100
+      const s = round2(akun.saldo)
       if (s === 0) continue
       if (akun.tipe === "PENDAPATAN") {
         tutupEntries.push({ akunKode: akun.kode, debit: s, kredit: 0 })
@@ -92,14 +96,14 @@ export async function prosesTutupBuku(tahun: number) {
       }
     }
 
-    const shuTB = Math.round((totalPendapatan - totalBeban) * 100) / 100
+    const shuTB = round2(totalPendapatan - totalBeban)
 
     const anggotaTotal = shu.shuAnggota.reduce((s, a) => s + Number(a.total), 0)
     const danaAlokasi = shu.alokasi.filter((a) => a.indikator.kelompok === "DANA")
     const danaTotal = danaAlokasi.reduce((s, a) => s + Number(a.nominal), 0)
 
     if (shuTB > 0) {
-      const akunSimpanan = await tx.akun.findFirst({ where: { kode: "2.1.3" } })
+      const akunSimpanan = await tx.akun.findFirst({ where: { kode: COA_SIMPANAN_SUKARELA } })
       // ANGGOTA → langsung ke Simpanan Sukarela (2.1.3)
       if (akunSimpanan && anggotaTotal > 0) {
         tutupEntries.push({ akunKode: akunSimpanan.kode, debit: 0, kredit: anggotaTotal })
@@ -114,7 +118,7 @@ export async function prosesTutupBuku(tahun: number) {
         tutupEntries.push({ akunKode, debit: 0, kredit: nominal })
       }
       // Sisa rounding (jika ada) — taruh ke SHU Ditahan
-      const sisa = Math.round((shuTB - anggotaTotal - danaTotal) * 100) / 100
+      const sisa = round2(shuTB - anggotaTotal - danaTotal)
       if (sisa !== 0) {
         tutupEntries.push({
           akunKode: akunSHUDitahan?.kode ?? akunSHU.kode,
@@ -128,7 +132,7 @@ export async function prosesTutupBuku(tahun: number) {
 
     if (tutupEntries.length > 0) {
       await buatJurnal(tx, {
-        tanggal: new Date(`${tahun}-12-31T23:59:59+07:00`),
+        tanggal: new Date(`${tahun}-12-31T23:59:59${getTZOffset()}`),
         keterangan: `Jurnal Penutup Tahun ${tahun}`,
         entries: tutupEntries,
         createdById: session.user.id,

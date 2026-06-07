@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/pinjaman/ajukan-pinjaman-anggota.tsx
+ * @description Komponen presentasional / interaktif: ajukan-pinjaman-anggota.
+ */
+
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"

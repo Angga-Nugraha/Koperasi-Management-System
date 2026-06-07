@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/pengurus/simpanan-chart.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: simpanan-chart.
+ */
+
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts"
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
 import { formatCompact } from "@/lib/format"

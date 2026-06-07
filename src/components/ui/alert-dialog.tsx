@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/alert-dialog.tsx
+ * @description Komponen UI dasar (reusable): alert-dialog.
+ */
+
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"

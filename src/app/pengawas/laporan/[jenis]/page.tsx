@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengawas/laporan/[jenis]/page.tsx
+ * @description Halaman laporan/fitur pengawas untuk modul: page.
+ */
+
 import { notFound } from "next/navigation"
 import { getNeraca, getLabaRugi, getArusKas, getNeracaSaldo, getBukuBesar } from "@/actions/jurnal"
 import { getAuditLogs } from "@/actions/audit-log"

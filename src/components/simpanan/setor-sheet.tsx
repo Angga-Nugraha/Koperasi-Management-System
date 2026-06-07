@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/simpanan/setor-sheet.tsx
+ * @description Komponen presentasional / interaktif: setor-sheet.
+ */
+
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -62,7 +67,7 @@ export function SetorSheet({ open, onOpenChange }: Props) {
     fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
   }, [])
 
-  useEffect(() => {
+  function handleOpenChange(open: boolean) {
     if (!open) {
       setError(null)
       setLoading(false)
@@ -70,7 +75,8 @@ export function SetorSheet({ open, onOpenChange }: Props) {
       setConfirm(null)
       setAnggotaId("")
     }
-  }, [open])
+    onOpenChange(open)
+  }
 
   const selected = jenisList.find((j) => j.id === selectedJenis)
 
@@ -117,7 +123,7 @@ export function SetorSheet({ open, onOpenChange }: Props) {
 
   return (
     <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Setor Simpanan</SheetTitle>

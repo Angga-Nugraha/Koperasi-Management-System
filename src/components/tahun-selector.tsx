@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/tahun-selector.tsx
+ * @description Komponen presentasional / interaktif: tahun-selector.
+ */
+
 import { useRouter } from "next/navigation"
 import {
   Select,

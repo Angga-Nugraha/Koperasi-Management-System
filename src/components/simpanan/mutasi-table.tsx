@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/simpanan/mutasi-table.tsx
+ * @description Komponen presentasional / interaktif: mutasi-table.
+ */
+
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import {

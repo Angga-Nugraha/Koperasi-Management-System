@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/simpanan/[anggotaId]/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getSimpananAnggota, getMutasiAnggota } from "@/actions/simpanan"
 import { getAnggotaById } from "@/actions/anggota"
 import { notFound } from "next/navigation"

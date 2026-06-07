@@ -1,49 +1,34 @@
+/**
+ * @file src/actions/export.ts
+ * @description Server Action untuk menangani ekspor data umum ke berbagai format.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth, assertRole } from "@/lib/auth"
+import { assertRole } from "@/lib/auth"
 import { formatTanggal } from "@/lib/format"
-
-function sanitizeCellValue(value: string | number | null | undefined): string | number {
-  if (typeof value === "string" && /^[=+\-@]/.test(value)) {
-    return `'${value}`
-  }
-  return value ?? ""
-}
+import { sanitizeCellValue } from "@/lib/excel"
+import { jurnalFilter } from "@/lib/where"
 
 export async function exportJurnalExcel(params: {
   search?: string
   dari?: string
   sampai?: string
 }) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
 
   const ExcelJS = await import("exceljs")
 
-  const where: Record<string, unknown> = {}
-  if (params.search) {
-    where.OR = [
-      { noJurnal: { contains: params.search } },
-      { keterangan: { contains: params.search } },
-    ]
-  }
-  if (params.dari || params.sampai) {
-    const filter: Record<string, Date> = {}
-    if (params.dari) filter.gte = new Date(params.dari)
-    if (params.sampai) filter.lte = new Date(params.sampai)
-    where.tanggal = filter
-  }
-
   const data = await prisma.jurnalUmum.findMany({
-    where,
+    where: jurnalFilter(params),
     include: {
       detail: {
         include: { akun: { select: { kode: true, nama: true } } },
       },
     },
     orderBy: { tanggal: "asc" },
+    take: 10_000,
   })
 
   const wb = new ExcelJS.Workbook()

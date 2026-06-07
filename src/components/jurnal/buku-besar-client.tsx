@@ -1,5 +1,11 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/buku-besar-client.tsx
+ * @description Komponen presentasional / interaktif: buku-besar-client.
+ */
+
+import { useMemo } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
@@ -62,15 +68,16 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
   const fmt = (n: number) =>
     new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
-  let saldo = saldoAwal
-  const rows = detail.map((d) => {
-    if (d.saldoNormal === "DEBIT") {
-      saldo += d.debit - d.kredit
-    } else {
-      saldo += d.kredit - d.debit
-    }
-    return { ...d, saldo: Math.round(saldo * 100) / 100 }
-  })
+  const rows = useMemo(() => {
+    const runningBalances: number[] = []
+    detail.reduce((acc, d) => {
+      const diff = d.saldoNormal === "DEBIT" ? d.debit - d.kredit : d.kredit - d.debit
+      const next = Math.round((acc + diff) * 100) / 100
+      runningBalances.push(next)
+      return next
+    }, saldoAwal)
+    return detail.map((d, i) => ({ ...d, saldo: runningBalances[i]! }))
+  }, [detail, saldoAwal])
 
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())

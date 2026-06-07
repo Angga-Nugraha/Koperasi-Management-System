@@ -1,4 +1,13 @@
+/**
+ * @file src/lib/shu.ts
+ * @description Logika perhitungan Sisa Hasil Usaha (SHU) jasa modal dan jasa anggota.
+ */
+
 import { prisma } from "@/lib/prisma"
+import Decimal from "decimal.js"
+import { tahunMulai, tahunSelesai } from "@/lib/date"
+import { assertRole } from "@/lib/auth"
+import { round2 } from "@/lib/math"
 
 export type IndikatorSHUData = {
   id: string
@@ -12,6 +21,7 @@ export type IndikatorSHUData = {
 }
 
 export async function getIndikatorSHU(): Promise<IndikatorSHUData[]> {
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const rows = await prisma.indikatorSHU.findMany({
     orderBy: { urutan: "asc" },
   })
@@ -35,6 +45,7 @@ export async function saveIndikatorSHU(items: Array<{
   akunId: string | null
   urutan: number
 }>) {
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const total = items.reduce((a, b) => a + b.persentase, 0)
   if (Math.abs(total - 100) > 0.01) throw new Error("Total persentase harus 100%")
 
@@ -59,14 +70,20 @@ export async function saveIndikatorSHU(items: Array<{
 }
 
 export async function deleteIndikatorSHU(kode: string) {
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   await prisma.indikatorSHU.delete({ where: { kode } })
 }
 
-export async function getTotalPendapatanBeban(tahun: number) {
-  const mulai = new Date(`${tahun}-01-01T00:00:00+07:00`)
-  const selesai = new Date(`${tahun + 1}-01-01T00:00:00+07:00`)
+export async function getTotalPendapatanBeban(
+  tahun: number,
+  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+) {
+  if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  const client = tx ?? prisma
+  const mulai = tahunMulai(tahun)
+  const selesai = tahunSelesai(tahun)
 
-  const detail = await prisma.detailJurnal.findMany({
+  const detail = await client.detailJurnal.findMany({
     where: {
       jurnal: {
         tanggal: { gte: mulai, lt: selesai },
@@ -80,22 +97,26 @@ export async function getTotalPendapatanBeban(tahun: number) {
 
   for (const d of detail) {
     if (d.akun.tipe === "PENDAPATAN") {
-      totalPendapatan += Number(d.kredit) - Number(d.debit)
+      totalPendapatan = new Decimal(totalPendapatan).plus(Number(d.kredit)).minus(Number(d.debit)).toNumber()
     }
     if (d.akun.tipe === "BEBAN") {
-      totalBeban += Number(d.debit) - Number(d.kredit)
+      totalBeban = new Decimal(totalBeban).plus(Number(d.debit)).minus(Number(d.kredit)).toNumber()
     }
   }
 
   return {
-    totalPendapatan: Math.round(totalPendapatan * 100) / 100,
-    totalBeban: Math.round(totalBeban * 100) / 100,
-    totalSHU: Math.round((totalPendapatan - totalBeban) * 100) / 100,
+    totalPendapatan: round2(totalPendapatan),
+    totalBeban: round2(totalBeban),
+    totalSHU: round2(totalPendapatan - totalBeban),
   }
 }
 
-export async function getSaldoPerAnggota() {
-  const simpanan = await prisma.simpanan.findMany({
+export async function getSaldoPerAnggota(
+  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+) {
+  if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  const client = tx ?? prisma
+  const simpanan = await client.simpanan.findMany({
     select: { anggotaId: true, saldo: true },
   })
 
@@ -107,14 +128,19 @@ export async function getSaldoPerAnggota() {
   let total = 0
   for (const v of perAnggota.values()) total += v
 
-  return { perAnggota, totalSimpanan: Math.round(total * 100) / 100 }
+  return { perAnggota, totalSimpanan: round2(total) }
 }
 
-export async function getTotalAngsuranAnggota(tahun: number) {
-  const mulai = new Date(`${tahun}-01-01T00:00:00+07:00`)
-  const selesai = new Date(`${tahun + 1}-01-01T00:00:00+07:00`)
+export async function getTotalAngsuranAnggota(
+  tahun: number,
+  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+) {
+  if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
+  const client = tx ?? prisma
+  const mulai = tahunMulai(tahun)
+  const selesai = tahunSelesai(tahun)
 
-  const angsuran = await prisma.angsuran.findMany({
+  const angsuran = await client.angsuran.findMany({
     where: {
       tglBayar: { gte: mulai, lt: selesai },
       status: "LUNAS",
@@ -133,10 +159,11 @@ export async function getTotalAngsuranAnggota(tahun: number) {
   let total = 0
   for (const v of perAnggota.values()) total += v
 
-  return { perAnggota, total: Math.round(total * 100) / 100 }
+  return { perAnggota, total: round2(total) }
 }
 
 export async function hitungSHU(tahun: number) {
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const keuangan = await getTotalPendapatanBeban(tahun)
 
   const indikator = (await getIndikatorSHU()).filter((i) => i.isActive)
@@ -178,14 +205,14 @@ export async function hitungSHU(tahun: number) {
       }
     }
 
-    const total = Math.round((jm + ju) * 100) / 100
+    const total = round2(jm + ju)
 
     perAnggota.push({
       anggotaId: anggota.id,
       noAnggota: anggota.noAnggota,
       nama: anggota.nama,
-      jasaModal: Math.round(jm * 100) / 100,
-      jasaUsaha: Math.round(ju * 100) / 100,
+      jasaModal: round2(jm),
+      jasaUsaha: round2(ju),
       total,
     })
   }
@@ -195,7 +222,7 @@ export async function hitungSHU(tahun: number) {
     const nominal = shuBersih * (ind.persentase / 100)
     alokasiMap[ind.kode] = {
       persentase: ind.persentase,
-      nominal: Math.round(nominal * 100) / 100,
+      nominal: round2(nominal),
     }
   }
 

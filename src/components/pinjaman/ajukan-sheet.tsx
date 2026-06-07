@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/pinjaman/ajukan-sheet.tsx
+ * @description Komponen presentasional / interaktif: ajukan-sheet.
+ */
+
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -49,6 +54,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
   const [plafon, setPlafon] = useState<{ maxPlafon: number; totalSimpanan: number; plafonMaxSaldo: number } | null>(null)
   const [loadingPlafon, setLoadingPlafon] = useState(false)
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
     fetch("/api/konfig").then(r => r.json()).then(konfig => {
@@ -56,7 +62,9 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
       if (konfig.tenor_max !== undefined && konfig.tenor_max !== "") setTenorMax(Number(konfig.tenor_max))
     }).catch(() => {})
   }, [])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!anggotaId) {
       setPlafon(null)
@@ -68,8 +76,9 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
       .catch(() => setPlafon(null))
       .finally(() => setLoadingPlafon(false))
   }, [anggotaId])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  useEffect(() => {
+  function handleOpenChange(open: boolean) {
     if (!open) {
       setError(null)
       setLoading(false)
@@ -79,7 +88,8 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
       setAnggotaId("")
       setPlafon(null)
     }
-  }, [open])
+    onOpenChange(open)
+  }
 
   function handleJenisChange(value: string) {
     setSelectedJenis(value)
@@ -126,7 +136,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
 
   return (
     <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Ajukan Pinjaman</SheetTitle>

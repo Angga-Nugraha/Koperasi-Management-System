@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/anggota/kartu-anggota-button.tsx
+ * @description Komponen presentasional / interaktif: kartu-anggota-button.
+ */
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CreditCard } from "lucide-react"

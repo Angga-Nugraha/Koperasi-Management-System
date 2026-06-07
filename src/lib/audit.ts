@@ -1,3 +1,9 @@
+/**
+ * @file src/lib/audit.ts
+ * @description Utilitas untuk mencatat log audit aktivitas pengguna ke database.
+ */
+
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 
@@ -10,7 +16,7 @@ type CatatLogParams = {
   newValue?: Record<string, unknown> | null
 }
 
-export async function catatLog(params: CatatLogParams) {
+export async function catatLog(params: CatatLogParams, tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">) {
   if (!params.userId) return
 
   let userEmail: string | null = null
@@ -19,20 +25,22 @@ export async function catatLog(params: CatatLogParams) {
     userEmail = session?.user?.email ?? null
   } catch {
     try {
-      const user = await prisma.user.findUnique({ where: { id: params.userId }, select: { email: true } })
+      const client = tx ?? prisma
+      const user = await client.user.findUnique({ where: { id: params.userId }, select: { email: true } })
       userEmail = user?.email ?? null
     } catch {}
   }
 
-  await prisma.auditLog.create({
+  const client = tx ?? prisma
+  await client.auditLog.create({
     data: {
       userId: params.userId,
       userEmail,
       action: params.action,
       entityType: params.entityType,
       entityId: params.entityId ?? null,
-      oldValue: params.oldValue as any,
-      newValue: params.newValue as any,
+      oldValue: (params.oldValue ?? Prisma.DbNull) as Prisma.InputJsonValue,
+      newValue: (params.newValue ?? Prisma.DbNull) as Prisma.InputJsonValue,
     },
   })
 }

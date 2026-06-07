@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/pengurus/users/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -94,6 +99,7 @@ export default function UsersPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadUsers()
     getAllowedRoles().then(setAvailableRoles).catch(() => {})
   }, [search])
@@ -191,8 +197,10 @@ export default function UsersPage() {
 
   async function handleToggle(userId: string) {
     try {
-      await toggleUserActive(userId)
-      loadUsers()
+      const result = await toggleUserActive(userId)
+      if (result?.success) {
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, isActive: result.isActive } : u)))
+      }
     } catch (e) {
       alert((e as Error).message)
     }

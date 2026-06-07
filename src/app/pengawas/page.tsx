@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengawas/page.tsx
+ * @description Halaman laporan/fitur pengawas untuk modul: page.
+ */
+
 import { auth } from "@/lib/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, Users, PiggyBank, HandCoins, Landmark, Wallet } from "lucide-react"

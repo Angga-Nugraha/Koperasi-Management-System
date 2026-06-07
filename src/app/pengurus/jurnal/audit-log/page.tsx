@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/audit-log/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getAuditLogs } from "@/actions/audit-log"
 import { AuditLogTable } from "@/components/jurnal/audit-log-table"
 

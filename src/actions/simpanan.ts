@@ -1,18 +1,20 @@
+/**
+ * @file src/actions/simpanan.ts
+ * @description Server Action untuk pencatatan setoran, penarikan, dan tagihan simpanan anggota.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { setorSimpananSchema, tarikSimpananSchema, generateTagihanSchema, getTagihanListSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 import { generateNoStrukTagihan, generateNoStrukSimpanan } from "@/lib/struk"
-
-async function kirimNotif(params: { userId: string; title: string; message: string; type: string; relatedId?: string }) {
-  const { kirimNotifikasi } = await import("@/lib/notifikasi")
-  return kirimNotifikasi(params)
-}
+import { notifyAdmins, notifyMember, kirimNotifikasi as kirimNotif } from "@/lib/notifikasi"
 
 export async function getJenisSimpananList() {
   const session = await auth()
@@ -42,7 +44,7 @@ export async function getSimpananList(params: {
 
   const { search, jenisSimpananId, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.SimpananWhereInput = {}
   if (jenisSimpananId) where.jenisSimpananId = jenisSimpananId
   if (search) {
     where.anggota = { nama: { contains: search } }
@@ -102,7 +104,7 @@ export async function getMutasiAnggota(
 ) {
   const { jenisSimpananId, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = { anggotaId }
+  const where: Prisma.TransaksiSimpananWhereInput = { anggotaId }
   if (jenisSimpananId) where.jenisSimpananId = jenisSimpananId
 
   const [raw, total] = await Promise.all([
@@ -132,10 +134,7 @@ export async function getMutasiAnggota(
 }
 
 export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = setorSimpananSchema.parse(input)
 
@@ -200,28 +199,18 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   revalidatePath(`/pengurus/simpanan/${parsed.anggotaId}`)
   revalidatePath(`/pengurus/anggota/${parsed.anggotaId}`)
 
-  const admins = await prisma.user.findMany({
-    where: { role: { in: ["ADMIN", "PENGURUS", "BENDAHARA"] }, isActive: true },
-    select: { id: true },
+  await notifyAdmins({
+    title: "Setoran Simpanan",
+    message: `${anggota.nama} melakukan setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")}`,
+    type: "SETORAN",
   })
-  for (const admin of admins) {
-    await kirimNotif({
-      userId: admin.id,
-      title: "Setoran Simpanan",
-      message: `${anggota.nama} melakukan setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")}`,
-      type: "SETORAN",
-    })
-  }
 
-  const anggotaUser = await prisma.user.findUnique({ where: { anggotaId: parsed.anggotaId } })
-  if (anggotaUser) {
-    await kirimNotif({
-      userId: anggotaUser.id,
-      title: "Setoran Simpanan",
-      message: `Setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")} berhasil`,
-      type: "SETORAN",
-    })
-  }
+  await notifyMember({
+    anggotaId: parsed.anggotaId,
+    title: "Setoran Simpanan",
+    message: `Setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")} berhasil`,
+    type: "SETORAN",
+  })
 
   return {
     success: true,
@@ -239,10 +228,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
 }
 
 export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = tarikSimpananSchema.parse(input)
 
@@ -318,17 +304,14 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
 
 
 export async function getTagihanWajibList(params: z.infer<typeof getTagihanListSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const { bulan, tahun, status, jenis, search, page, pageSize } = getTagihanListSchema.parse(params)
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.TagihanSimpananWhereInput = {}
   if (bulan) where.bulan = bulan
   if (tahun) where.tahun = tahun
-  if (status) where.status = status
+  if (status) where.status = status as any
   if (jenis) where.jenisSimpanan = { kode: jenis }
   if (search) {
     where.anggota = {
@@ -375,10 +358,7 @@ export async function getTagihanWajibList(params: z.infer<typeof getTagihanListS
 }
 
 export async function generateTagihanWajib(input: z.infer<typeof generateTagihanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = generateTagihanSchema.parse(input)
   const now = new Date()
@@ -445,10 +425,7 @@ export async function generateTagihanWajib(input: z.infer<typeof generateTagihan
 }
 
 export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = bayarTagihanSchema.parse(input)
 

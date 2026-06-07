@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/konfigurasi/konfigurasi-page.tsx
+ * @description Komponen presentasional / interaktif: konfigurasi-page.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"

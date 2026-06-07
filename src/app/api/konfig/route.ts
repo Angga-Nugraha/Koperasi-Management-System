@@ -1,3 +1,8 @@
+/**
+ * @file src/app/api/konfig/route.ts
+ * @description Route Handler API untuk endpoint /api/konfig/route.ts
+ */
+
 import { NextResponse } from "next/server"
 import { getKonfig } from "@/lib/konfig"
 

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/shu/shu-list.tsx
+ * @description Komponen presentasional / interaktif: shu-list.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
@@ -168,7 +173,7 @@ export function SHUList({ data }: { data: SHU[] }) {
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-12">
             <p className="text-sm text-muted-foreground">Belum ada data SHU</p>
-            <p className="text-xs text-muted-foreground">Klik "Generate SHU" untuk memulai</p>
+            <p className="text-xs text-muted-foreground">Klik &ldquo;Generate SHU&rdquo; untuk memulai</p>
           </CardContent>
         </Card>
       ) : (

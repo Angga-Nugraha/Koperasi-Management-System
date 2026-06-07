@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengawas/loading.tsx
+ * @description Halaman laporan/fitur pengawas untuk modul: loading.
+ */
+
 export default function PengawasLoading() {
   return (
     <div className="flex items-center justify-center p-8">

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/shu/shu-detail.tsx
+ * @description Komponen presentasional / interaktif: shu-detail.
+ */
+
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"

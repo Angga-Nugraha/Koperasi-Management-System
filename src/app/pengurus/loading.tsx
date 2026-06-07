@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/loading.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: loading.
+ */
+
 export default function PengurusLoading() {
   return (
     <div className="flex items-center justify-center p-8">

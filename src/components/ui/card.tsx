@@ -1,3 +1,8 @@
+/**
+ * @file src/components/ui/card.tsx
+ * @description Komponen UI dasar (reusable): card.
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

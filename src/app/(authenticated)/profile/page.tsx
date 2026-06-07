@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/app/(authenticated)/profile/page.tsx
+ * @description Modul fungsionalitas: page.tsx.
+ */
+
 import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"

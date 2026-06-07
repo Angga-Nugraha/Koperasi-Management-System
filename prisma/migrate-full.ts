@@ -38,9 +38,9 @@ async function main() {
   // 1a. COA
   const coa: Array<{ kode: string; nama: string; tipe: AccountType; saldoNormal: NormalBalance }> = [
     { kode: "1.1.1", nama: "Kas", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.2", nama: "Bank BRI", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.3", nama: "Bank BNI", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.4", nama: "Bank Syariah", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.2", nama: "Bank", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.3", nama: "Bank BRI", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.4", nama: "Bank Mandiri", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.1", nama: "Piutang Pinjaman Anggota", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.2", nama: "Piutang Pinjaman Karyawan", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.3", nama: "Piutang Lain-lain", tipe: "ASET", saldoNormal: "DEBIT" },
@@ -180,16 +180,18 @@ async function main() {
     return a.nama.localeCompare(b.nama)
   })
 
-  // Build name→members map (for duplicate handling)
-  const nameToMembers = new Map<string, Array<{ nama: string; NIK: string; tglMasuk: string }>>()
-  for (const m of anggotaData) {
-    if (!nameToMembers.has(m.nama)) nameToMembers.set(m.nama, [])
-    nameToMembers.get(m.nama)!.push(m)
+  // Manual mapping: old member codes from tabeljurnal.txt → NIK (for duplicate-name disambiguation)
+  const OLD_KODE_TO_NIK: Record<string, string> = {
+    "A040008": "3205056001800004",
+    "A060039": "3205056512740001",
+    "A030007": "3205055611650002",
+    "A060041": "3205055807780001",
+    "A040015": "3205055002720003", // Jaja/Karyati → Jaja
   }
 
   const memberIdByNameNik = new Map<string, string>() // "name|nik" → anggotaId
+  const memberIdByNik = new Map<string, string>() // nik → anggotaId
   const memberIdByName = new Map<string, string>() // name → anggotaId (last created)
-  const memberIdMap = new Map<string, string>() // anggota.noAnggota → anggotaId
   let memberCount = 0
   let seq = 1
 
@@ -215,14 +217,14 @@ async function main() {
       },
     })
 
-    const passwordHash = await bcrypt.hash(m.nama.toLowerCase().replace(/\s+/g, ""), 12)
+    const passwordHash = await bcrypt.hash(m.nama.toLowerCase().replace(/\s+/g, ""), 4)
     await prisma.user.create({
-      data: { email: `${noAnggota}@anggota.simko.com`, passwordHash, role: "ANGGOTA", anggotaId: anggota.id },
+      data: { email: `${noAnggota}@cibunar.com`, passwordHash, role: "ANGGOTA", anggotaId: anggota.id },
     })
 
     memberIdByNameNik.set(`${m.nama}|${nik}`, anggota.id)
+    memberIdByNik.set(nik, anggota.id)
     memberIdByName.set(m.nama, anggota.id)
-    memberIdMap.set(noAnggota, anggota.id)
     memberCount++
   }
   console.log(`  ${memberCount} members created`)
@@ -249,57 +251,41 @@ async function main() {
   for (const [tgl, dayEntries] of byTanggal) {
     const tglDate = new Date(tgl + "T00:00:00+07:00")
 
-    // Aggregate account balances
-    const accountBalances = new Map<string, number>()
+    // Track member savings from this day's entries
     const memberSavings = new Map<string, { pokok: number; wajib: number; sukarela: number; nik?: string }>()
 
     for (const e of dayEntries) {
-      const debit = e.debit ?? 0
-      const kredit = e.kredit ?? 0
-      const current = accountBalances.get(e.nama_akun) ?? 0
-      accountBalances.set(e.nama_akun, current + kredit - debit)
-
       if (e.nama_anggota && ["Simpanan Pokok", "Simpanan Wajib", "Simpanan Sukarela"].includes(e.nama_akun)) {
         const key = `${e.nama_anggota}|${e.nik || ""}`
         if (!memberSavings.has(key)) memberSavings.set(key, { pokok: 0, wajib: 0, sukarela: 0, nik: e.nik })
         const m = memberSavings.get(key)!
+        const kredit = e.kredit ?? 0
         if (e.nama_akun === "Simpanan Pokok") m.pokok += kredit
         if (e.nama_akun === "Simpanan Wajib") m.wajib += kredit
         if (e.nama_akun === "Simpanan Sukarela") m.sukarela += kredit
       }
     }
 
-    // Balance check & auto-balance
-    let totalD = 0, totalK = 0
-    for (const [, bal] of accountBalances) {
-      if (bal > 0) totalK += bal; else totalD += Math.abs(bal)
-    }
-    const diff = Math.round((totalK - totalD) * 100) / 100
-    if (Math.abs(diff) > 0.01) {
-      // Only use Kas for auto-balance (no Sukarela inflation)
-      if (diff > 0) accountBalances.set("Kas", (accountBalances.get("Kas") ?? 0) - diff)
-      else accountBalances.set("Kas", (accountBalances.get("Kas") ?? 0) + Math.abs(diff))
-    }
-
-    // Build detail entries
+    // Build detail entries — skip fake balancing Kas entries (no keterangan)
     const detailEntries: Array<{ akunKode: string; debit: number; kredit: number }> = []
-    for (const [nama, bal] of accountBalances) {
-      if (Math.abs(bal) < 0.01) continue
-      const kode = AKUN_MAP[nama]
-      if (!kode) { console.warn(`  ⚠ Skipping unknown account: ${nama}`); continue }
-      if (bal > 0) detailEntries.push({ akunKode: kode, debit: 0, kredit: bal })
-      else detailEntries.push({ akunKode: kode, debit: Math.abs(bal), kredit: 0 })
+    for (const e of dayEntries) {
+      const debit = e.debit ?? 0
+      const kredit = e.kredit ?? 0
+      if (debit === 0 && kredit === 0) continue
+      // Skip Kas entries without keterangan — these are auto-balancing artifacts
+      if (e.nama_akun === "Kas" && !(e.keterangan ?? "").trim()) continue
+      const kode = AKUN_MAP[e.nama_akun]
+      if (!kode) { console.warn(`  ⚠ Skipping unknown account: ${e.nama_akun}`); continue }
+      detailEntries.push({ akunKode: kode, debit, kredit })
     }
 
-    // Final balance check
+    // Create journal for ALL days (balanced or not) to preserve Kas entries
     const jD = detailEntries.reduce((s, e) => s + e.debit, 0)
     const jK = detailEntries.reduce((s, e) => s + e.kredit, 0)
     if (Math.abs(jD - jK) > 0.01) {
-      console.warn(`  ⚠ Journal ${tgl} still unbalanced (D:${jD} K:${jK}), skipping`)
-      continue
+      console.warn(`  ⚠ Journal ${tgl} unbalanced (D:${jD} K:${jK} diff:${jD - jK}), creating anyway`)
     }
 
-    // Create journal
     const dateStr = `${tglDate.getFullYear()}${String(tglDate.getMonth() + 1).padStart(2, "0")}${String(tglDate.getDate()).padStart(2, "0")}`
     const noJurnal = `JRN-${dateStr}-${crypto.randomBytes(2).toString("hex").toUpperCase()}`
 
@@ -321,16 +307,18 @@ async function main() {
     totalJurnal++
     totalLines += dayEntries.length
 
-    // Create/update member savings
+    // Create/update member savings (regardless of journal balance)
     for (const [key, sim] of memberSavings) {
-      const [nama, nik] = key.split("|")
+      const [nama, oldKode] = key.split("|")
       let anggotaId: string | undefined
 
-      if (nik) {
-        anggotaId = memberIdByNameNik.get(`${nama}|${nik}`)
+      if (oldKode && OLD_KODE_TO_NIK[oldKode]) {
+        const realNik = OLD_KODE_TO_NIK[oldKode]
+        anggotaId = memberIdByNameNik.get(`${nama}|${realNik}`)
+        if (!anggotaId) anggotaId = memberIdByNik.get(realNik)
       }
       if (!anggotaId) {
-        anggotaId = memberIdByName.get(nama)
+        anggotaId = memberIdByName.get(nama || "")
       }
       if (!anggotaId) continue
 

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/sheet.tsx
+ * @description Komponen UI dasar (reusable): sheet.
+ */
+
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva, type VariantProps } from "class-variance-authority"

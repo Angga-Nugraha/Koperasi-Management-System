@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/arus-kas/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getArusKas } from "@/actions/jurnal"
 import { ArusKasClient } from "@/components/jurnal/arus-kas-client"
 

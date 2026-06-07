@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/shu/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getSHUList } from "@/actions/shu"
 import { SHUList } from "@/components/shu/shu-list"
 

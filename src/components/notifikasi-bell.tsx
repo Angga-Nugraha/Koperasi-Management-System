@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/notifikasi-bell.tsx
+ * @description Komponen presentasional / interaktif: notifikasi-bell.
+ */
+
 import { useState, useEffect, useCallback } from "react"
 import { Bell, BellRing, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -38,8 +43,9 @@ export function NotifikasiBell({ role }: { role?: string }) {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotif()
-    const interval = setInterval(fetchNotif, 30000) // poll every 30s
+    const interval = setInterval(fetchNotif, 30000)
     return () => clearInterval(interval)
   }, [fetchNotif])
 
@@ -65,8 +71,12 @@ export function NotifikasiBell({ role }: { role?: string }) {
     setOpen(false)
     const isAnggota = role === "ANGGOTA"
     if (["SETORAN", "TAGIHAN"].includes(item.type)) {
-      router.push(isAnggota ? "/anggota/simpanan" : "/pengurus/simpanan")
-    } else if (["PENGAJUAN", "DISETUJUI", "DITOLAK", "DICAIKKAN"].includes(item.type)) {
+      if (isAnggota) {
+        router.push("/anggota/simpanan")
+      } else {
+        router.push(item.relatedId ? `/pengurus/simpanan/${item.relatedId}` : "/pengurus/simpanan")
+      }
+    } else if (["ANGSURAN", "PENGAJUAN", "DISETUJUI", "DITOLAK", "DICAIRKAN"].includes(item.type)) {
       if (isAnggota) {
         router.push("/anggota/pinjaman")
       } else {

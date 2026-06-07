@@ -1,43 +1,52 @@
+/**
+ * @file src/actions/export-laporan.ts
+ * @description Server Action untuk mengekspor laporan keuangan dan operasional.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { auth, assertRole } from "@/lib/auth"
+import { assertRole } from "@/lib/auth"
 import { formatTanggal } from "@/lib/format"
-import { getSaldoAkunTipe } from "@/lib/jurnal"
-
-function sanitizeCellValue(value: string | number | null | undefined): string | number {
-  if (typeof value === "string" && /^[=+\-@]/.test(value)) {
-    return `'${value}`
-  }
-  return value ?? ""
-}
+import { COA_KAS, COA_SHU_BERJALAN, getSaldoAkunTipe } from "@/lib/jurnal"
+import { sanitizeCellValue } from "@/lib/excel"
+import { round2 } from "@/lib/math"
 
 type Param = { dari?: string; sampai?: string; akunId?: string }
 
+const MAX_EXPORT_ROWS = 10_000
+
+function validateDateRange(dari?: string, sampai?: string) {
+  const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
+  if (dari && !DATE_REGEX.test(dari)) throw new Error("Format tanggal 'dari' tidak valid (YYYY-MM-DD)")
+  if (sampai && !DATE_REGEX.test(sampai)) throw new Error("Format tanggal 'sampai' tidak valid (YYYY-MM-DD)")
+}
+
+function dateFilter(dari?: string, sampai?: string) {
+  const filter: Record<string, Date> = {}
+  if (dari) filter.gte = new Date(dari)
+  if (sampai) filter.lte = new Date(sampai)
+  return filter
+}
+
 export async function exportBukuBesar(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
 
   const { dari, sampai, akunId } = params
   const ExcelJS = await import("exceljs")
 
   const akun = akunId ? await prisma.akun.findUnique({ where: { id: akunId } }) : null
-  const whereJurnal: Record<string, unknown> = {}
-  if (dari || sampai) {
-    const filter: Record<string, Date> = {}
-    if (dari) filter.gte = new Date(dari)
-    if (sampai) filter.lte = new Date(sampai)
-    whereJurnal.tanggal = filter
-  }
+  const jurnalFilter = dari || sampai ? { tanggal: dateFilter(dari, sampai) } : {}
 
   const detail = akunId
     ? await prisma.detailJurnal.findMany({
-        where: { akunId, jurnal: whereJurnal },
+        where: { akunId, jurnal: jurnalFilter },
         include: {
           jurnal: { select: { noJurnal: true, tanggal: true, keterangan: true } },
         },
         orderBy: [{ jurnal: { tanggal: "asc" } }, { jurnal: { noJurnal: "asc" } }],
+        take: MAX_EXPORT_ROWS,
       })
     : []
 
@@ -60,8 +69,8 @@ export async function exportBukuBesar(params: Param) {
   let saldo = 0
   for (const d of detail) {
     const s = akun?.saldoNormal === "DEBIT"
-      ? Math.round((saldo + Number(d.debit) - Number(d.kredit)) * 100) / 100
-      : Math.round((saldo + Number(d.kredit) - Number(d.debit)) * 100) / 100
+      ? round2(saldo + Number(d.debit) - Number(d.kredit))
+      : round2(saldo + Number(d.kredit) - Number(d.debit))
     saldo = s
     ws.addRow({
       tanggal: sanitizeCellValue(formatTanggal(d.jurnal.tanggal)),
@@ -77,15 +86,15 @@ export async function exportBukuBesar(params: Param) {
 }
 
 export async function exportNeracaSaldo(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
   const detail = await prisma.detailJurnal.findMany({
     where: { jurnal: sampaiTanggal ? { tanggal: { lte: sampaiTanggal } } : {} },
     include: { akun: true },
+    take: MAX_EXPORT_ROWS,
   })
 
   const saldoMap = new Map<string, { kode: string; nama: string; debit: number; kredit: number }>()
@@ -117,9 +126,8 @@ export async function exportNeracaSaldo(params: Param) {
 }
 
 export async function exportNeraca(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -133,13 +141,13 @@ export async function exportNeraca(params: Param) {
 
   const labaBersih = pendapatan.total - beban.total
   const adjustedEkuitas = [...ekuitas.items]
-  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === "3.1.2")
+  const shuIdx = adjustedEkuitas.findIndex((i) => i.kode === COA_SHU_BERJALAN)
   const existingSHUSaldo = shuIdx >= 0 ? ekuitas.items[shuIdx]!.saldo : 0
   if (labaBersih !== 0) {
     if (shuIdx >= 0) {
       adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
     } else {
-      adjustedEkuitas.push({ kode: "3.1.2", nama: "SHU Tahun Berjalan", saldo: labaBersih })
+      adjustedEkuitas.push({ kode: COA_SHU_BERJALAN, nama: "SHU Tahun Berjalan", saldo: labaBersih })
     }
   }
   const totalEkuitas = ekuitas.total + labaBersih - existingSHUSaldo
@@ -165,9 +173,8 @@ export async function exportNeraca(params: Param) {
 }
 
 export async function exportLabaRugi(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
   const ExcelJS = await import("exceljs")
 
   const dariTanggal = params.dari ? new Date(params.dari) : undefined
@@ -196,15 +203,14 @@ export async function exportLabaRugi(params: Param) {
 }
 
 export async function exportArusKas(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
   const ExcelJS = await import("exceljs")
 
   const tanggalMulai = params.dari ? new Date(params.dari) : new Date("2020-01-01")
   const tanggalSelesai = params.sampai ? new Date(params.sampai) : new Date()
 
-  const kasAkun = await prisma.akun.findFirst({ where: { kode: "1.1.1", isActive: true } })
+  const kasAkun = await prisma.akun.findFirst({ where: { kode: COA_KAS, isActive: true } })
   const detail = kasAkun
     ? await prisma.detailJurnal.findMany({
         where: { akunId: kasAkun.id, jurnal: { tanggal: { gte: tanggalMulai, lte: tanggalSelesai } } },
@@ -244,9 +250,8 @@ export async function exportArusKas(params: Param) {
 }
 
 export async function exportSHU(params: Param) {
-  const session = await auth()
-  if (!session?.user) throw new Error("Unauthorized")
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA", "PENGAWAS")
+  validateDateRange(params.dari, params.sampai)
   const ExcelJS = await import("exceljs")
 
   const sampaiTanggal = params.sampai ? new Date(params.sampai) : undefined
@@ -270,7 +275,7 @@ export async function exportSHU(params: Param) {
   ws.addRow({ ket: sanitizeCellValue("Total Beban"), jumlah: beban.total })
   ws.addRow({ ket: sanitizeCellValue("SHU Kotor"), jumlah: shuKotor }).font = { bold: true }
   for (const ind of indikator) {
-    const nominal = Math.round(shuKotor * (Number(ind.persentase) / 100) * 100) / 100
+    const nominal = round2(shuKotor * (Number(ind.persentase) / 100))
     ws.addRow({ ket: sanitizeCellValue(`${ind.nama} (${Number(ind.persentase)}%)`), jumlah: nominal })
   }
   ws.addRow({ ket: sanitizeCellValue("Jumlah Anggota Aktif"), jumlah: jumlahAnggota })

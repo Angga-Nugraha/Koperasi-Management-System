@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/arus-kas-client.tsx
+ * @description Komponen presentasional / interaktif: arus-kas-client.
+ */
+
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"

@@ -1,7 +1,13 @@
+/**
+ * @file src/actions/shu.ts
+ * @description Server Action untuk perhitungan dan alokasi Sisa Hasil Usaha (SHU) anggota.
+ */
+
 "use server"
 
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { hitungSHU, getIndikatorSHU, saveIndikatorSHU, deleteIndikatorSHU } from "@/lib/shu"
 import { catatLog } from "@/lib/audit"
@@ -73,10 +79,7 @@ export async function getSHUByTahun(tahun: number, page = 1, pageSize = 20) {
 }
 
 export async function generateSHU(tahun: number) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.sHU.findUnique({ where: { tahun } })
   if (existing) throw new Error(`SHU tahun ${tahun} sudah ada`)
@@ -128,7 +131,7 @@ export async function getSHUAnggota(anggotaId?: string) {
   const userId = anggotaId ?? (session.user.role === "ANGGOTA" ? session.user.anggotaId : null)
   if (!userId && !anggotaId) throw new Error("Anggota tidak ditemukan")
 
-  const where: Record<string, unknown> = {}
+  const where: Prisma.SHUAnggotaWhereInput = {}
   if (anggotaId) where.anggotaId = anggotaId
   else if (userId) where.anggotaId = userId
 
@@ -164,10 +167,7 @@ export async function saveAllIndikatorSHU(data: Array<{
   akunId: string | null
   urutan: number
 }>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await saveIndikatorSHU(data)
   revalidatePath("/pengurus/shu/konfigurasi")
@@ -175,10 +175,7 @@ export async function saveAllIndikatorSHU(data: Array<{
 }
 
 export async function removeIndikatorSHU(kode: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await deleteIndikatorSHU(kode)
   revalidatePath("/pengurus/shu/konfigurasi")
@@ -186,10 +183,7 @@ export async function removeIndikatorSHU(kode: string) {
 }
 
 export async function hapusSHU(tahun: number) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const shu = await prisma.sHU.findUnique({ where: { tahun } })
   if (!shu) throw new Error("SHU tidak ditemukan")

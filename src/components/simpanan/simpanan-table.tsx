@@ -1,7 +1,12 @@
 "use client"
 
+/**
+ * @file src/components/simpanan/simpanan-table.tsx
+ * @description Komponen presentasional / interaktif: simpanan-table.
+ */
+
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -55,6 +60,7 @@ const JENIS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
 
 export function SimpananTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch }: Props) {
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState(initialSearch)
   const [jenisFilter, setJenisFilter] = useState("SEMUA")
   const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
@@ -69,14 +75,18 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (jenisFilter && jenisFilter !== "SEMUA") params.set("jenis", jenisFilter)
-    router.push(`/pengurus/simpanan?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/simpanan?${params.toString()}`)
+    })
   }
 
   function onPageChange(p: number) {
     const params = new URLSearchParams(window.location.search)
     params.set("page", String(p))
     if (pageSize !== 20) params.set("pageSize", String(pageSize))
-    router.push(`/pengurus/simpanan?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/simpanan?${params.toString()}`)
+    })
   }
 
   function handlePageSizeChange(size: number) {
@@ -84,7 +94,9 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
     if (size !== 20) params.set("pageSize", String(size))
     else params.delete("pageSize")
     params.delete("page")
-    router.push(`/pengurus/simpanan?${params.toString()}`)
+    startTransition(() => {
+      router.push(`/pengurus/simpanan?${params.toString()}`)
+    })
   }
 
   return (
@@ -132,7 +144,9 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
               const params = new URLSearchParams()
               if (search) params.set("search", search)
               if (v && v !== "SEMUA") params.set("jenis", v)
-              router.push(`/pengurus/simpanan?${params.toString()}`)
+              startTransition(() => {
+                router.push(`/pengurus/simpanan?${params.toString()}`)
+              })
             }}>
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
@@ -148,8 +162,13 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
           <Button variant="secondary" onClick={onSearch} className="w-full sm:w-auto">Cari</Button>
         </div>
 
-        <div className="overflow-x-auto rounded-md border">
-          <Table>
+        <div className="relative overflow-x-auto rounded-md border">
+          {isPending && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground border-t-primary" />
+            </div>
+          )}
+          <Table className={isPending ? "opacity-50" : ""}>
             <TableHeader>
             <TableRow>
               <TableHead>No Anggota</TableHead>

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/jurnal/jurnal-table.tsx
+ * @description Komponen presentasional / interaktif: jurnal-table.
+ */
+
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"

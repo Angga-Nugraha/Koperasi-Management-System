@@ -1,8 +1,14 @@
 "use client"
 
+/**
+ * @file src/components/struk-pembayaran.tsx
+ * @description Komponen presentasional / interaktif: struk-pembayaran.
+ */
+
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import {
   Dialog,
   DialogContent,
@@ -76,7 +82,7 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
     <div className="space-y-2 text-[10px]">
       <div className="flex flex-col items-center gap-1 text-center">
         {generalInfo.logo && (
-          <img src={generalInfo.logo} alt="" className="h-10 w-10 shrink-0 rounded object-contain" />
+          <Image src={generalInfo.logo} alt="" width={40} height={40} unoptimized className="h-10 w-10 shrink-0 rounded object-contain" />
         )}
         <div>
           <h2 className="text-xs font-bold leading-tight">{generalInfo.namaKoperasi}</h2>
@@ -203,7 +209,10 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
 
 export function StrukPembayaran({ open, onOpenChange, generalInfo, data }: Props) {
   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true)
+  }, [])
 
   return (
     <>

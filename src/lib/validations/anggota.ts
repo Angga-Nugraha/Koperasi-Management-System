@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/validations/anggota.ts
+ * @description Skema validasi Zod untuk data anggota.
+ */
+
 import { z } from "zod"
 
 export const anggotaSchema = z.object({

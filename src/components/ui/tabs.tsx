@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/tabs.tsx
+ * @description Komponen UI dasar (reusable): tabs.
+ */
+
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 

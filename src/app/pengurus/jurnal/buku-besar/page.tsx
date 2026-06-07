@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/jurnal/buku-besar/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getAkunList, getBukuBesar } from "@/actions/jurnal"
 import { BukuBesarClient } from "@/components/jurnal/buku-besar-client"
 

@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/anggota/tambah-anggota-sheet.tsx
+ * @description Komponen presentasional / interaktif: tambah-anggota-sheet.
+ */
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"

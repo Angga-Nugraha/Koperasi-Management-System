@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/dialog.tsx
+ * @description Komponen UI dasar (reusable): dialog.
+ */
+
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"

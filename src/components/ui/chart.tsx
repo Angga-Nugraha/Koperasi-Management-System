@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/chart.tsx
+ * @description Komponen UI dasar (reusable): chart.
+ */
+
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 

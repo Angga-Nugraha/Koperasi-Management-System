@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/format.ts
+ * @description Helper untuk memformat mata uang (Rupiah), tanggal, dan angka.
+ */
+
 export function formatTanggal(date: string | Date): string {
   const d = typeof date === "string" ? new Date(date) : date
   const day = String(d.getDate()).padStart(2, "0")

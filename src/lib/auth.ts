@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/auth.ts
+ * @description Konfigurasi autentikasi dan otorisasi menggunakan NextAuth.
+ */
+
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"

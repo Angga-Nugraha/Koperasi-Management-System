@@ -1,16 +1,23 @@
+/**
+ * @file src/actions/anggota.ts
+ * @description Server Action untuk mengelola operasi CRUD dan data Anggota Koperasi.
+ */
+
 "use server"
 
 import { prisma } from "@/lib/prisma"
 import { anggotaSchema, anggotaUpdateSchema, anggotaStatusSchema } from "@/lib/validations/anggota"
-import { auth } from "@/lib/auth"
+import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { z } from "zod"
+import { Prisma } from "@prisma/client"
 import { generateNoAnggota } from "@/lib/utils/anggota"
 import { deleteOrphanFiles } from "@/lib/utils/file"
+import { anggotaFilter, anggotaTanggalFilter } from "@/lib/where"
 import { catatLog } from "@/lib/audit"
 import { generateTagihanAnggotaBaru } from "@/actions/simpanan"
 import { buatJurnal, getSimpananAkun, COA_KAS } from "@/lib/jurnal"
 import bcrypt from "bcryptjs"
+import { z } from "zod"
 
 export async function getAnggotaList(params: {
   search?: string
@@ -22,19 +29,7 @@ export async function getAnggotaList(params: {
 }) {
   const { search, status, sortBy, sortOrder, page = 1, pageSize = 20 } = params
 
-  const where: Record<string, unknown> = {}
-
-  if (status && status !== "SEMUA") {
-    where.status = status
-  }
-
-  if (search) {
-    where.OR = [
-      { nama: { contains: search } },
-      { nik: { contains: search } },
-      { noAnggota: { contains: search } },
-    ]
-  }
+  const where = anggotaFilter({ search, status })
 
   const SORTABLE: Record<string, string> = { noAnggota: "noAnggota", tglMasuk: "tglMasuk" }
   const orderBy = sortBy && SORTABLE[sortBy]
@@ -163,10 +158,7 @@ export async function getAnggotaById(id: string) {
 }
 
 export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = anggotaSchema.parse(input)
 
@@ -177,31 +169,32 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
 
   const tglMasuk = new Date(parsed.tglMasuk)
   tglMasuk.setHours(0, 0, 0, 0)
-  const nextDay = new Date(tglMasuk)
-  nextDay.setDate(nextDay.getDate() + 1)
+  const tglFilter = anggotaTanggalFilter(tglMasuk)
 
-  const urutan = (await prisma.anggota.count({
-    where: { tglMasuk: { gte: tglMasuk, lt: nextDay } },
-  })) + 1
+  const created = await prisma.$transaction(async (tx) => {
+    const count = await tx.anggota.count({
+      where: { tglMasuk: tglFilter },
+    })
+    const u = count + 1
+    const noAnggota = generateNoAnggota(tglMasuk, u)
 
-  const noAnggota = generateNoAnggota(tglMasuk, urutan)
-
-  const created = await prisma.anggota.create({
-    data: {
-      nik: parsed.nik,
-      noAnggota,
-      nama: parsed.nama,
-      noHp: parsed.noHp || null,
-      jenisKelamin: parsed.jenisKelamin || null,
-      alamat: parsed.alamat,
-      pekerjaan: parsed.pekerjaan || null,
-      penghasilan: parsed.penghasilan ?? null,
-      foto: parsed.foto ?? null,
-      ktp: parsed.ktp ?? null,
-      tglMasuk,
-      status: "AKTIF",
-    },
-  })
+    return tx.anggota.create({
+      data: {
+        nik: parsed.nik,
+        noAnggota,
+        nama: parsed.nama,
+        noHp: parsed.noHp || null,
+        jenisKelamin: parsed.jenisKelamin || null,
+        alamat: parsed.alamat,
+        pekerjaan: parsed.pekerjaan || null,
+        penghasilan: parsed.penghasilan ?? null,
+        foto: parsed.foto ?? null,
+        ktp: parsed.ktp ?? null,
+        tglMasuk,
+        status: "AKTIF",
+      },
+    })
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable })
 
   if (parsed.buatUser) {
     if (!parsed.email || !parsed.password) {
@@ -236,7 +229,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
     action: "CREATE",
     entityType: "ANGGOTA",
     entityId: created.id,
-    newValue: { nik: parsed.nik, noAnggota, nama: parsed.nama },
+    newValue: { nik: parsed.nik, noAnggota: created.noAnggota, nama: parsed.nama },
   })
 
   revalidatePath("/pengurus/anggota")
@@ -245,10 +238,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
 }
 
 export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = anggotaUpdateSchema.parse(input)
 
@@ -331,16 +321,13 @@ async function prosesPenutupanAnggota(
 }
 
 export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSchema>) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const parsed = anggotaStatusSchema.parse(input)
 
   if (parsed.status === "NONAKTIF") {
     const activeLoans = await prisma.pinjaman.count({
-      where: { anggotaId: parsed.id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+      where: { anggotaId: parsed.id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] } },
     })
     if (activeLoans > 0) {
       throw new Error("Anggota memiliki pinjaman aktif, tidak bisa dinonaktifkan")
@@ -357,7 +344,7 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
     if (!anggota) throw new Error("Anggota tidak ditemukan")
 
     const activeLoans = await prisma.pinjaman.count({
-      where: { anggotaId: parsed.id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+      where: { anggotaId: parsed.id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] } },
     })
     if (activeLoans > 0) {
       throw new Error("Anggota memiliki pinjaman aktif, tidak bisa ditutup")
@@ -391,10 +378,7 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
 }
 
 export async function deleteAnggota(id: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const anggota = await prisma.anggota.findUnique({
     where: { id },
@@ -421,7 +405,7 @@ export async function deleteAnggota(id: string) {
     if (!anggota) throw new Error("Anggota tidak ditemukan")
 
     const activeLoans = await prisma.pinjaman.count({
-      where: { anggotaId: id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+      where: { anggotaId: id, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] } },
     })
     if (activeLoans > 0) {
       throw new Error("Anggota memiliki pinjaman aktif, tidak bisa ditutup")
@@ -460,10 +444,7 @@ export async function deleteAnggota(id: string) {
 }
 
 export async function resetPasswordAnggota(userId: string, password: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const user = await prisma.user.findUnique({ where: { id: userId } })
   if (!user) throw new Error("User tidak ditemukan")
@@ -485,10 +466,7 @@ export async function resetPasswordAnggota(userId: string, password: string) {
 }
 
 export async function toggleUserActive(userId: string) {
-  const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
-    throw new Error("Unauthorized")
-  }
+  const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const user = await prisma.user.findUnique({ where: { id: userId } })
   if (!user) throw new Error("User tidak ditemukan")
@@ -541,7 +519,7 @@ export async function getAnggotaSaldo(anggotaId: string) {
   })
 
   const pinjaman = await prisma.pinjaman.findMany({
-    where: { anggotaId, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIKKAN"] } },
+    where: { anggotaId, status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] } },
   })
 
   return {

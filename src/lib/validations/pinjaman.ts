@@ -1,3 +1,8 @@
+/**
+ * @file src/lib/validations/pinjaman.ts
+ * @description Skema validasi Zod untuk pengajuan pinjaman.
+ */
+
 import { z } from "zod"
 
 export const ajukanPinjamanSchema = z.object({

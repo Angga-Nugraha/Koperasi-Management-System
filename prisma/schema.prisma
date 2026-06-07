@@ -26,7 +26,7 @@ enum LoanStatus {
   PENGAJUAN
   DISETUJUI
   DITOLAK
-  DICAIKKAN
+  DICAIRKAN
   LUNAS
   GAGAL
 }
@@ -92,7 +92,7 @@ model Notifikasi {
   userId    String
   title     String
   message   String
-  type      String   // PENGAJUAN, DISETUJUI, DITOLAK, DICAIKKAN, SETORAN, TAGIHAN
+  type      String   // PENGAJUAN, DISETUJUI, DITOLAK, DICAIRKAN, SETORAN, TAGIHAN
   relatedId String?
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -139,6 +139,7 @@ model Anggota {
   tagihanSimpanan   TagihanSimpanan[]
   pinjaman          Pinjaman[]
   shuAnggota        SHUAnggota[]
+  transaksiOnline   TransaksiOnline[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -419,4 +420,24 @@ model Konfigurasi {
   updatedAt DateTime @updatedAt
 
   @@map("konfigurasi")
+}
+
+model TransaksiOnline {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  tipe          String   // TAGIHAN_WAJIB, ANGSURAN, SIMPANAN_SUKARELA
+  anggotaId     String
+  relatedId     String?  // ID dari TagihanSimpanan atau Angsuran (null untuk SIMPANAN_SUKARELA)
+  nominal       Decimal  @db.Decimal(18, 2)
+  status        String   // PENDING, SUCCESS, FAILED, EXPIRED
+  snapToken     String?
+  snapUrl       String?
+  paymentMethod String?
+  expiredAt     DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  anggota Anggota @relation(fields: [anggotaId], references: [id])
+
+  @@map("transaksi_online")
 }

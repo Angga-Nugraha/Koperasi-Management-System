@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/switch.tsx
+ * @description Komponen UI dasar (reusable): switch.
+ */
+
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 

@@ -1,3 +1,8 @@
+/**
+ * @file src/app/pengurus/anggota/page.tsx
+ * @description Halaman dashboard/fitur pengurus untuk modul: page.
+ */
+
 import { getAnggotaList } from "@/actions/anggota"
 import { AnggotaTable } from "@/components/anggota/anggota-table"
 

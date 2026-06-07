@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * @file src/components/ui/popover.tsx
+ * @description Komponen UI dasar (reusable): popover.
+ */
+
 import * as React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 
