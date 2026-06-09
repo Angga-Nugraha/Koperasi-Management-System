@@ -4,7 +4,7 @@
  */
 
 import { prisma, PrismaTx } from "@/lib/prisma"
-import { fcm } from "@/lib/firebase-admin"
+import { getFcm } from "@/lib/firebase-admin"
 
 type KirimNotifikasiParams = {
   userId: string
@@ -37,13 +37,14 @@ export async function kirimNotifikasi(
 
   const registrationTokens = tokens.map((t) => t.token)
   try {
+    const fcm = getFcm()
     await fcm.sendEachForMulticast({
       tokens: registrationTokens,
       notification: { title, body: message },
       data: { type: type ?? "", relatedId: relatedId ?? "", role: user?.role ?? "" },
     })
   } catch {
-    // silent — token may be invalid/expired
+    // silent — Firebase not configured, token invalid/expired, etc.
   }
 }
 

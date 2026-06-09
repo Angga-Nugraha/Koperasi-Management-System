@@ -1,28 +1,35 @@
 FROM node:22-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
 RUN apk add --no-cache libc6-compat
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm ci --only=production
 
-# Build the app
 FROM base AS builder
 WORKDIR /app
+
+# Copy package files first (for caching)
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+# Install ALL dependencies (devDependencies needed for build)
+# Skip postinstall (prisma generate) — schema not yet available
+RUN npm ci --ignore-scripts
+
+# Copy source files
 COPY . .
+
+# Generate Prisma client (dummy URL — generate doesn't need real DB)
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DOCKER_BUILD=true
+ENV DATABASE_URL="mysql://dummy:dummy@localhost:3306/dummy"
 RUN npx prisma generate
+
+# Build Next.js
 RUN npm run build
 
 # Production image
 FROM base AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs && \
     mkdir -p /app/.next && \
