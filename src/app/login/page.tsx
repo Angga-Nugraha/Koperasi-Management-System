@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [namaKoperasi, setNamaKoperasi] = useState("Simko")
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(() => {
     if (typeof window === "undefined") return false
@@ -33,6 +34,7 @@ export default function LoginPage() {
   useEffect(() => {
     fetch("/api/general-info").then(r => r.json()).then(info => {
       if (info?.namaKoperasi) setNamaKoperasi(info.namaKoperasi)
+      if (info?.logo) setLogoUrl(info.logo)
     }).catch(() => {}
     )
     const saved = localStorage.getItem("login_remember")
@@ -83,7 +85,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="items-center space-y-4 pt-8">
-          <img src="/logo.png" alt="Logo Koperasi" className="h-28 w-32 rounded-xl object-contain" />
+          <img src={logoUrl || "/logo.png"} alt="Logo Koperasi" className="h-28 w-32 rounded-xl object-contain p-1" />
           <div className="space-y-1 text-center">
             <CardTitle className="text-2xl text-primary">{namaKoperasi}</CardTitle>
             <CardDescription>Sistem Manajemen Koperasi</CardDescription>

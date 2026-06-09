@@ -4,7 +4,7 @@
  */
 
 import { Prisma } from "@prisma/client"
-import { prisma } from "@/lib/prisma"
+import { prisma, PrismaTx } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 
 type CatatLogParams = {
@@ -16,7 +16,7 @@ type CatatLogParams = {
   newValue?: Record<string, unknown> | null
 }
 
-export async function catatLog(params: CatatLogParams, tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">) {
+export async function catatLog(params: CatatLogParams, tx?: PrismaTx) {
   if (!params.userId) return
 
   let userEmail: string | null = null
@@ -28,7 +28,9 @@ export async function catatLog(params: CatatLogParams, tx?: Omit<typeof prisma, 
       const client = tx ?? prisma
       const user = await client.user.findUnique({ where: { id: params.userId }, select: { email: true } })
       userEmail = user?.email ?? null
-    } catch {}
+    } catch (innerErr) {
+      console.error("catatLog: failed to fetch user email:", innerErr)
+    }
   }
 
   const client = tx ?? prisma

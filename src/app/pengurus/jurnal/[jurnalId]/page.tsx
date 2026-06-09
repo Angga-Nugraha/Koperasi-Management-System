@@ -6,8 +6,11 @@
 import { getJurnalById } from "@/actions/jurnal"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ArrowLeft } from "lucide-react"
 
 type Props = {
   params: Promise<{ jurnalId: string }>
@@ -23,7 +26,14 @@ export default async function JurnalDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/pengurus/jurnal">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
+      </div>
 
       <Card>
         <CardContent className="p-6">

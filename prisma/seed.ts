@@ -25,9 +25,9 @@ async function main() {
   const coa: Array<{ kode: string; nama: string; tipe: AccountType; saldoNormal: NormalBalance }> = [
     // ASET (saldoNormal: DEBIT)
     { kode: "1.1.1", nama: "Kas", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.2", nama: "Bank BRI", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.3", nama: "Bank BNI", tipe: "ASET", saldoNormal: "DEBIT" },
-    { kode: "1.1.4", nama: "Bank Syariah", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.2", nama: "Bank", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.3", nama: "Bank BRI", tipe: "ASET", saldoNormal: "DEBIT" },
+    { kode: "1.1.4", nama: "Bank Mandiri", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.1", nama: "Piutang Pinjaman Anggota", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.2", nama: "Piutang Pinjaman Karyawan", tipe: "ASET", saldoNormal: "DEBIT" },
     { kode: "1.2.3", nama: "Piutang Lain-lain", tipe: "ASET", saldoNormal: "DEBIT" },
@@ -43,10 +43,11 @@ async function main() {
     { kode: "2.1.1", nama: "Simpanan Pokok", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.1.2", nama: "Simpanan Wajib", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.1.3", nama: "Simpanan Sukarela", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
-    { kode: "2.1.4", nama: "Dana Jasa Modal", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.1", nama: "Dana Cadangan", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.2", nama: "Dana Sosial", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.2.3", nama: "Dana Pendidikan", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
+    { kode: "2.2.4", nama: "Dana Pengurus", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
+    { kode: "2.2.5", nama: "Dana Pengawas", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.3.1", nama: "Hutang Bank", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
     { kode: "2.3.2", nama: "Hutang Lain-lain", tipe: "LIABILITAS", saldoNormal: "KREDIT" },
 
@@ -153,45 +154,55 @@ async function main() {
   console.log(`  ✅ ${jenisPinjaman.length} jenis pinjaman tersimpan`)
 
   // ========== SEED INDIKATOR SHU ==========
-  const shuAkun = await prisma.akun.findUnique({ where: { kode: "3.1.2" } })
+  const danaPengurus = await prisma.akun.findUnique({ where: { kode: "2.2.4" } })
+  const danaPengawas = await prisma.akun.findUnique({ where: { kode: "2.2.5" } })
   const cadAkun = await prisma.akun.findUnique({ where: { kode: "2.2.1" } })
   const sosialAkun = await prisma.akun.findUnique({ where: { kode: "2.2.2" } })
-  const jasaModalAkun = await prisma.akun.findUnique({ where: { kode: "2.1.4" } })
-
-  const indikatorSHU = [
-    { kode: "JM", nama: "Jasa Modal", persentase: 30, kelompok: "ANGGOTA", akunId: jasaModalAkun?.id ?? null, urutan: 1 },
-    { kode: "JU", nama: "Jasa Usaha", persentase: 30, kelompok: "ANGGOTA", akunId: null, urutan: 2 },
+  const danaPendidikan = await prisma.akun.findUnique({ where: { kode: "2.2.3" } })
+  const jasaAnggota = await prisma.akun.findUnique({ where: { kode: "2.1.3" } })
+  for (const ind of [
+    { kode: "JM", nama: "Jasa Modal", persentase: 30, kelompok: "ANGGOTA", akunId: jasaAnggota?.id ?? null, urutan: 1 },
+    { kode: "JU", nama: "Jasa Usaha", persentase: 30, kelompok: "ANGGOTA", akunId: jasaAnggota?.id ?? null, urutan: 2 },
     { kode: "CAD", nama: "Cadangan", persentase: 15, kelompok: "DANA", akunId: cadAkun?.id ?? null, urutan: 3 },
-    { kode: "PENGURUS", nama: "Pengurus", persentase: 10, kelompok: "DANA", akunId: shuAkun?.id ?? null, urutan: 4 },
-    { kode: "PENGAWAS", nama: "Pengawas", persentase: 5, kelompok: "DANA", akunId: shuAkun?.id ?? null, urutan: 5 },
-    { kode: "SOSIAL", nama: "Dana Sosial & Pendidikan", persentase: 10, kelompok: "DANA", akunId: sosialAkun?.id ?? null, urutan: 6 },
-  ]
-  for (const ind of indikatorSHU) {
-    await prisma.indikatorSHU.upsert({
-      where: { kode: ind.kode },
-      update: ind,
-      create: ind,
-    })
+    { kode: "PENGURUS", nama: "Pengurus", persentase: 10, kelompok: "DANA", akunId: danaPengurus?.id ?? null, urutan: 4 },
+    { kode: "PENGAWAS", nama: "Pengawas", persentase: 5, kelompok: "DANA", akunId: danaPengawas?.id ?? null, urutan: 5 },
+    { kode: "SOSIAL", nama: "Dana Sosial", persentase: 5, kelompok: "DANA", akunId: sosialAkun?.id ?? null, urutan: 6 },
+    { kode: "PENDIDIKAN", nama: "Dana Pendidikan", persentase: 5, kelompok: "DANA", akunId: danaPendidikan?.id ?? null, urutan: 7 },
+  ]) {
+    await prisma.indikatorSHU.upsert({ where: { kode: ind.kode }, update: ind, create: ind })
   }
-  console.log(`  ✅ ${indikatorSHU.length} indikator SHU tersimpan`)
+  console.log("  IndikatorSHU: 6 indikator")
 
   // ========== SEED DEFAULT KONFIGURASI ==========
-  const konfigurasi = [
+  // 1g. Konfigurasi
+  for (const cfg of [
     { key: "plafon_max_saldo", value: "3", tipeData: "DECIMAL", keterangan: "Plafon maksimal pinjaman (kelipatan saldo simpanan)" },
     { key: "denda_per_hari", value: "0.01", tipeData: "DECIMAL", keterangan: "Denda keterlambatan per hari (%)" },
     { key: "grace_period", value: "7", tipeData: "NUMBER", keterangan: "Tenggang waktu keterlambatan (hari)" },
     { key: "tenor_min", value: "3", tipeData: "NUMBER", keterangan: "Tenor minimal pinjaman (bulan)" },
     { key: "tenor_max", value: "36", tipeData: "NUMBER", keterangan: "Tenor maksimal pinjaman (bulan)" },
-  ]
-
-  for (const cfg of konfigurasi) {
-    await prisma.konfigurasi.upsert({
-      where: { key: cfg.key },
-      update: cfg,
-      create: cfg,
-    })
+  ]) {
+    await prisma.konfigurasi.upsert({ where: { key: cfg.key }, update: cfg, create: cfg })
   }
-  console.log(`  ✅ ${konfigurasi.length} konfigurasi default tersimpan`)
+  console.log("  Konfigurasi: 5 items")
+
+  // ========== SEED KEPENGURUSAN ==========
+  await prisma.kepengurusan.createMany({
+    data: [
+      { jabatan: "Ketua", tipe: "PENGURUS", urutan: 1 },
+      { jabatan: "Sekretaris", tipe: "PENGURUS", urutan: 2 },
+      { jabatan: "Bendahara", tipe: "PENGURUS", urutan: 3 },
+      { jabatan: "Wakil Ketua Bidang Anggota", tipe: "PENGURUS", urutan: 4 },
+      { jabatan: "Asisten Wakil Ketua Bidang Anggota", tipe: "PENGURUS", urutan: 5 },
+      { jabatan: "Wakil Ketua Bidang Usaha", tipe: "PENGURUS", urutan: 6 },
+      { jabatan: "Asisten Wakil Ketua Bidang Usaha", tipe: "PENGURUS", urutan: 7 },
+      { jabatan: "Ketua Pengawas", tipe: "PENGAWAS", urutan: 8 },
+      { jabatan: "Anggota Pengawas 1", tipe: "PENGAWAS", urutan: 9 },
+      { jabatan: "Anggota Pengawas 2", tipe: "PENGAWAS", urutan: 10 },
+    ],
+    skipDuplicates: true,
+  })
+  console.log("  Kepengurusan: 10 posisi")
 
   console.log("🎉 Seeding selesai!")
 }

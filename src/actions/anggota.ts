@@ -5,7 +5,7 @@
 
 "use server"
 
-import { prisma } from "@/lib/prisma"
+import { prisma, PrismaTx } from "@/lib/prisma"
 import { anggotaSchema, anggotaUpdateSchema, anggotaStatusSchema } from "@/lib/validations/anggota"
 import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
@@ -235,6 +235,7 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
   revalidatePath("/pengurus/anggota")
 
   await generateTagihanAnggotaBaru(created.id, tglMasuk).catch(() => {})
+  return { success: true, data: { id: created.id, noAnggota: created.noAnggota } }
 }
 
 export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) {
@@ -254,6 +255,7 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   const updated = await prisma.anggota.update({
     where: { id: parsed.id },
     data: {
+      nik: parsed.nik,
       nama: parsed.nama,
       noHp: parsed.noHp || null,
       jenisKelamin: parsed.jenisKelamin || null,
@@ -276,12 +278,13 @@ export async function updateAnggota(input: z.infer<typeof anggotaUpdateSchema>) 
   })
 
   revalidatePath("/pengurus/anggota")
+  return { success: true }
 }
 
 async function prosesPenutupanAnggota(
   anggotaId: string,
   anggota: { noAnggota: string; nama: string },
-  tx: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">,
+  tx: PrismaTx,
 ) {
   const simpananList = await tx.simpanan.findMany({
     where: { anggotaId },
@@ -375,6 +378,7 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
 
   revalidatePath("/pengurus/anggota")
   revalidatePath("/pengurus/simpanan")
+  return { success: true }
 }
 
 export async function deleteAnggota(id: string) {
@@ -427,7 +431,7 @@ export async function deleteAnggota(id: string) {
     })
     revalidatePath("/pengurus/anggota")
     revalidatePath("/pengurus/simpanan")
-    return { message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR" }
+    return { success: true, message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR" }
   }
 
   await prisma.anggota.delete({ where: { id } })
@@ -440,7 +444,7 @@ export async function deleteAnggota(id: string) {
     newValue: { deleted: true },
   })
   revalidatePath("/pengurus/anggota")
-  return { message: "Anggota berhasil dihapus" }
+  return { success: true, message: "Anggota berhasil dihapus" }
 }
 
 export async function resetPasswordAnggota(userId: string, password: string) {

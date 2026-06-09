@@ -3,7 +3,7 @@
  * @description Helper untuk mengirim notifikasi ke database dan push notification perangkat via FCM.
  */
 
-import { prisma } from "@/lib/prisma"
+import { prisma, PrismaTx } from "@/lib/prisma"
 import { fcm } from "@/lib/firebase-admin"
 
 type KirimNotifikasiParams = {
@@ -16,7 +16,7 @@ type KirimNotifikasiParams = {
 
 export async function kirimNotifikasi(
   { userId, title, message, type, relatedId }: KirimNotifikasiParams,
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   const client = tx ?? prisma
   await client.notifikasi.create({
@@ -49,7 +49,7 @@ export async function kirimNotifikasi(
 
 export async function notifyAdmins(
   params: { title: string; message: string; type: string; relatedId?: string },
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   const client = tx ?? prisma
   const admins = await client.user.findMany({
@@ -69,7 +69,7 @@ export async function notifyAdmins(
 
 export async function notifyMember(
   params: { anggotaId: string; title: string; message: string; type: string; relatedId?: string },
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   const client = tx ?? prisma
   const anggotaUser = await client.user.findUnique({ where: { anggotaId: params.anggotaId } })

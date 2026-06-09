@@ -12,6 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 const NAV_ITEMS: NavItem[] = [
   { href: "/pengurus", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/pengurus/anggota", label: "Anggota", icon: "Users" },
+  { href: "/pengurus/struktur", label: "Struktur Organisasi", icon: "GitBranch" },
   { href: "/pengurus/simpanan", label: "Simpanan", icon: "PiggyBank" },
   { href: "/pengurus/pinjaman", label: "Pinjaman", icon: "HandCoins" },
   {

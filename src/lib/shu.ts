@@ -3,7 +3,7 @@
  * @description Logika perhitungan Sisa Hasil Usaha (SHU) jasa modal dan jasa anggota.
  */
 
-import { prisma } from "@/lib/prisma"
+import { prisma, PrismaTx } from "@/lib/prisma"
 import Decimal from "decimal.js"
 import { tahunMulai, tahunSelesai } from "@/lib/date"
 import { assertRole } from "@/lib/auth"
@@ -76,7 +76,7 @@ export async function deleteIndikatorSHU(kode: string) {
 
 export async function getTotalPendapatanBeban(
   tahun: number,
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
@@ -112,7 +112,7 @@ export async function getTotalPendapatanBeban(
 }
 
 export async function getSaldoPerAnggota(
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
@@ -133,7 +133,7 @@ export async function getSaldoPerAnggota(
 
 export async function getTotalAngsuranAnggota(
   tahun: number,
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx
 ) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma

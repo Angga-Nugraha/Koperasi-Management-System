@@ -109,12 +109,14 @@ export async function prosesTutupBuku(tahun: number) {
         tutupEntries.push({ akunKode: akunSimpanan.kode, debit: 0, kredit: anggotaTotal })
       }
       // DANA → langsung ke akun masing-masing (tanpa lewat 3.1.2)
+      const danaAkunIds = danaAlokasi.map((a) => a.indikator.akunId).filter(Boolean) as string[]
+      const danaAkunMap = danaAkunIds.length > 0
+        ? new Map((await tx.akun.findMany({ where: { id: { in: danaAkunIds } } })).map((a) => [a.id, a.kode]))
+        : new Map<string, string>()
       for (const a of danaAlokasi) {
         const nominal = Number(a.nominal)
         if (nominal <= 0) continue
-        const akunKode = a.indikator.akunId
-          ? (await tx.akun.findUnique({ where: { id: a.indikator.akunId } }))?.kode ?? akunSHU.kode
-          : akunSHU.kode
+        const akunKode = a.indikator.akunId ? (danaAkunMap.get(a.indikator.akunId) ?? akunSHU.kode) : akunSHU.kode
         tutupEntries.push({ akunKode, debit: 0, kredit: nominal })
       }
       // Sisa rounding (jika ada) — taruh ke SHU Ditahan
@@ -141,48 +143,51 @@ export async function prosesTutupBuku(tahun: number) {
 
     // 2. DISTRIBUSI ANGGOTA — tambah ke simpanan sukarela
 
-    for (const sa of shu.shuAnggota) {
-      const totalSHUAnggota = Number(sa.total)
-      if (totalSHUAnggota <= 0) continue
-
-      const existing = await tx.simpanan.findUnique({
+    const anggotaSHUAktif = shu.shuAnggota.filter((sa) => Number(sa.total) > 0)
+    if (anggotaSHUAktif.length > 0) {
+      const existingSimpanan = await tx.simpanan.findMany({
         where: {
-          anggotaId_jenisSimpananId: {
-            anggotaId: sa.anggotaId,
-            jenisSimpananId: jenisSukarela.id,
-          },
+          jenisSimpananId: jenisSukarela.id,
+          anggotaId: { in: anggotaSHUAktif.map((sa) => sa.anggotaId) },
         },
       })
+      const existingMap = new Map(existingSimpanan.map((s) => [s.anggotaId, s]))
 
-      const saldoLama = existing ? Number(existing.saldo) : 0
-      const saldoBaru = saldoLama + totalSHUAnggota
+      for (const sa of anggotaSHUAktif) {
+        const totalSHUAnggota = Number(sa.total)
+        if (totalSHUAnggota <= 0) continue
 
-      if (existing) {
-        await tx.simpanan.update({
-          where: { id: existing.id },
-          data: { saldo: saldoBaru },
-        })
-      } else {
-        await tx.simpanan.create({
+        const existing = existingMap.get(sa.anggotaId)
+        const saldoLama = existing ? Number(existing.saldo) : 0
+        const saldoBaru = saldoLama + totalSHUAnggota
+
+        if (existing) {
+          await tx.simpanan.update({
+            where: { id: existing.id },
+            data: { saldo: saldoBaru },
+          })
+        } else {
+          await tx.simpanan.create({
+            data: {
+              anggotaId: sa.anggotaId,
+              jenisSimpananId: jenisSukarela.id,
+              saldo: saldoBaru,
+            },
+          })
+        }
+
+        await tx.transaksiSimpanan.create({
           data: {
             anggotaId: sa.anggotaId,
             jenisSimpananId: jenisSukarela.id,
-            saldo: saldoBaru,
+            tipe: "SETORAN",
+            nominal: totalSHUAnggota,
+            saldoSetelah: saldoBaru,
+            keterangan: `Distribusi SHU Tahun ${tahun}`,
+            dibuatOlehId: session.user.id,
           },
         })
       }
-
-      await tx.transaksiSimpanan.create({
-        data: {
-          anggotaId: sa.anggotaId,
-          jenisSimpananId: jenisSukarela.id,
-          tipe: "SETORAN",
-          nominal: totalSHUAnggota,
-          saldoSetelah: saldoBaru,
-          keterangan: `Distribusi SHU Tahun ${tahun}`,
-          dibuatOlehId: session.user.id,
-        },
-      })
     }
 
   })

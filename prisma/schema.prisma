@@ -140,6 +140,7 @@ model Anggota {
   pinjaman          Pinjaman[]
   shuAnggota        SHUAnggota[]
   transaksiOnline   TransaksiOnline[]
+  kepengurusan      Kepengurusan[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -440,4 +441,19 @@ model TransaksiOnline {
   anggota Anggota @relation(fields: [anggotaId], references: [id])
 
   @@map("transaksi_online")
+}
+
+model Kepengurusan {
+  id        String   @id @default(uuid())
+  jabatan   String   @unique
+  tipe      String   // "PENGURUS" | "PENGAWAS"
+  anggotaId String?
+  urutan    Int      @default(0)
+
+  anggota Anggota? @relation(fields: [anggotaId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("kepengurusan")
 }

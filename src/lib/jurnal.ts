@@ -4,7 +4,7 @@
  */
 
 import { AccountType, Prisma } from "@prisma/client"
-import { prisma } from "@/lib/prisma"
+import { prisma, PrismaTx } from "@/lib/prisma"
 import { round2 } from "@/lib/math"
 import crypto from "crypto"
 import { assertRole } from "@/lib/auth"
@@ -16,7 +16,7 @@ type JurnalEntry = {
 }
 
 export async function buatJurnal(
-  tx: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">,
+  tx: PrismaTx,
   params: {
     tanggal: Date
     keterangan: string
@@ -72,7 +72,7 @@ export async function buatJurnal(
 export async function getSaldoAkun(
   akunKode: string,
   sampaiTanggal?: Date,
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx,
 ): Promise<number> {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
@@ -103,8 +103,8 @@ export async function getSaldoAkun(
 
 export const COA_KAS = "1.1.1"
 export const COA_BANK = "1.1.2"
-export const COA_BANK_BNI = "1.1.3"
-export const COA_BANK_SYARIAH = "1.1.4"
+export const COA_BANK_BRI = "1.1.3"
+export const COA_BANK_MANDIRI = "1.1.4"
 export const COA_SIMPANAN_POKOK = "2.1.1"
 export const COA_SIMPANAN_WAJIB = "2.1.2"
 export const COA_SIMPANAN_SUKARELA = "2.1.3"
@@ -114,14 +114,14 @@ export const COA_SHU_DITAHAN = "3.1.3"
 export const COA_PENDAPATAN_JASA = "4.1.1"
 export const COA_PENDAPATAN_DENDA = "4.1.3"
 
-export const COA_KAS_BANK = [COA_KAS, COA_BANK, COA_BANK_BNI, COA_BANK_SYARIAH] as const
+export const COA_KAS_BANK = [COA_KAS, COA_BANK, COA_BANK_BRI, COA_BANK_MANDIRI] as const
 
 export function getSimpananAkun(jenis: string): string {
   switch (jenis) {
     case "POKOK": return COA_SIMPANAN_POKOK
     case "WAJIB": return COA_SIMPANAN_WAJIB
     case "SUKARELA": return COA_SIMPANAN_SUKARELA
-    default: throw new Error(`Jenis simpanan tidak dikenal: ${jenis}`)
+    default: return COA_SIMPANAN_SUKARELA
   }
 }
 
@@ -130,7 +130,7 @@ export async function getSaldoAkunTipe(
   sampaiTanggal?: Date,
   dariTanggal?: Date,
   excludeClosing = false,
-  tx?: Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">
+  tx?: PrismaTx,
 ) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma

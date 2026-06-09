@@ -5,7 +5,7 @@
  * @description Komponen presentasional / interaktif: app-sidebar.
  */
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -24,6 +24,7 @@ import {
   FileText,
   UserCog,
   ScrollText,
+  GitBranch,
   LogOut,
   Menu,
   ChevronDown,
@@ -66,6 +67,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileText,
   UserCog,
   ScrollText,
+  GitBranch,
 }
 
 export type NavItem = {
@@ -230,10 +232,20 @@ function NavSubmenu({
 export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false
     return localStorage.getItem(COLLAPSED_KEY) === "true"
   })
+
+  useEffect(() => {
+    fetch("/api/general-info")
+      .then((r) => r.json())
+      .then((info) => { if (info?.logo) setLogoUrl(info.logo) })
+      .catch(() => {})
+  }, [])
+
+  const logo = logoUrl || "/logo.png"
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -301,14 +313,14 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      <div className={cn("relative flex items-center border-b", collapsed ? "h-16 justify-center" : "h-24 px-6")}>
+      <div className={cn("relative flex items-center border-b", collapsed ? "h-14 justify-center" : "h-16 justify-center px-6")}>
         <Link href={items[0]?.href ?? "/"} className={cn(collapsed && "flex items-center justify-center")}>
           <img
-            src="/logo.png"
+            src={logo}
             alt="Logo"
             className={cn(
               "rounded-lg object-contain transition-all",
-              collapsed ? "h-8 w-8" : "w-32",
+              collapsed ? "h-7 w-7" : "w-20 p-1",
             )}
           />
         </Link>
@@ -332,9 +344,9 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
 
   const collapsedSidebarContent = (
     <div className="flex h-full flex-col">
-      <div className="relative flex h-16 items-center justify-center border-b">
+      <div className="relative flex h-14 items-center justify-center border-b">
         <Link href={items[0]?.href ?? "/"} className="flex items-center justify-center">
-          <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg object-contain" />
+          <img src={logo} alt="Logo" className="h-7 w-7 rounded-lg object-contain" />
         </Link>
         <Button
           variant="ghost"
@@ -375,9 +387,9 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
         <SheetContent side="left" className="w-64 p-0">
           <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
           <div className="flex h-full flex-col">
-            <div className="flex h-24 items-center justify-center border-b px-6">
+            <div className="flex h-16 items-center justify-center border-b px-6">
               <Link href={items[0]?.href ?? "/"}>
-                <img src="/logo.png" alt="Logo" className="w-32 rounded-lg object-contain" />
+                <img src={logo} alt="Logo" className="w-20 rounded-lg object-contain p-1" />
               </Link>
             </div>
             <nav className="flex-1 space-y-1 p-4">

@@ -4,20 +4,17 @@
  */
 
 import { prisma } from "@/lib/prisma"
-import { cache } from "react"
 
 export type KonfigMap = Record<string, string>
 
-export const invalidateKonfigCache = cache(async () => {})
-
-export const getKonfig = cache(async (): Promise<KonfigMap> => {
+export async function getKonfig(): Promise<KonfigMap> {
   const rows = await prisma.konfigurasi.findMany()
   const map: KonfigMap = {}
   for (const r of rows) {
     map[r.key] = r.value
   }
   return map
-})
+}
 
 export function getNumber(konfig: KonfigMap, key: string, fallback: number): number {
   const v = konfig[key]

@@ -10,7 +10,6 @@ import { prisma } from "@/lib/prisma"
 import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { catatLog } from "@/lib/audit"
-import { invalidateKonfigCache } from "@/lib/konfig"
 
 export async function getKonfigList() {
   const session = await auth()
@@ -39,8 +38,6 @@ export async function updateKonfig(key: string, value: string, tipeData?: string
     update: { value },
     create: { key, value, tipeData: tipeData ?? "STRING" },
   })
-
-  invalidateKonfigCache()
 
   await catatLog({
     userId: session.user.id,

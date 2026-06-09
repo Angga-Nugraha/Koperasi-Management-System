@@ -17,7 +17,6 @@ export async function getTahunList() {
 
   const years = await prisma.jurnalUmum.findMany({
     select: { tanggal: true },
-    distinct: ["tanggal"],
     orderBy: { tanggal: "desc" },
   })
   const set = new Set<number>()
@@ -31,29 +30,64 @@ export async function getDashboardPengurus(tahun: number) {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const range = tahunRange(tahun)
+  const cumulative = hinggaAkhirTahun(tahun)
 
-  const totalAnggota = await prisma.anggota.count({ where: { status: "AKTIF" } })
+  const [
+    totalAnggota,
+    totalSimpananAgg,
+    pinjamanOutstanding,
+    detailPendapatanBeban,
+    transaksiTahun,
+    pinjamanPerStatus,
+    akunKas,
+    transaksiTerbaru,
+    akunKasBank,
+    akunKewajiban,
+  ] = await Promise.all([
+    prisma.anggota.count({ where: { status: "AKTIF" } }),
+    prisma.simpanan.aggregate({ _sum: { saldo: true } }),
+    prisma.pinjaman.findMany({
+      where: { status: { notIn: ["LUNAS", "DITOLAK"] } },
+      select: { sisaPinjaman: true },
+    }),
+    prisma.detailJurnal.findMany({
+      where: {
+        akun: { tipe: { in: ["PENDAPATAN", "BEBAN"] } },
+        jurnal: { tanggal: range, keterangan: { not: { contains: "Jurnal Penutup" } } },
+      },
+      include: { akun: { select: { tipe: true } } },
+    }),
+    prisma.transaksiSimpanan.findMany({
+      where: { createdAt: range },
+      select: { nominal: true, tipe: true, createdAt: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.pinjaman.groupBy({
+      by: ["status"],
+      where: { tglPengajuan: range },
+      _count: { id: true },
+      _sum: { jumlah: true },
+    }),
+    prisma.akun.findFirst({ where: { kode: COA_KAS } }),
+    prisma.jurnalUmum.findMany({
+      where: { tanggal: range },
+      orderBy: { tanggal: "desc" },
+      take: 5,
+      include: {
+        detail: {
+          include: { akun: { select: { kode: true, nama: true } } },
+          orderBy: { debit: "desc" },
+        },
+      },
+    }),
+    prisma.akun.findMany({ where: { kode: { in: [...COA_KAS_BANK] } } }),
+    prisma.akun.findMany({ where: { tipe: "LIABILITAS" } }),
+  ])
 
-  const totalSimpananAgg = await prisma.simpanan.aggregate({ _sum: { saldo: true } })
   const totalSimpanan = Number(totalSimpananAgg._sum.saldo ?? 0)
-
-  const pinjamanOutstanding = await prisma.pinjaman.findMany({
-    where: { status: { notIn: ["LUNAS", "DITOLAK"] } },
-    select: { sisaPinjaman: true },
-  })
   const totalPinjaman = pinjamanOutstanding.reduce((s, p) => s + Number(p.sisaPinjaman), 0)
 
-  // Hitung SHU TB real-time dari PENDAPATAN - BEBAN (tidak hanya dari tabel SHU)
-  const detailPendapatanBeban = await prisma.detailJurnal.findMany({
-    where: {
-      akun: { tipe: { in: ["PENDAPATAN", "BEBAN"] } },
-      jurnal: {
-        tanggal: range,
-        keterangan: { not: { contains: "Jurnal Penutup" } },
-      },
-    },
-    include: { akun: { select: { tipe: true } } },
-  })
+  // Compute SHU
   let totalPendapatan = 0
   let totalBeban = 0
   for (const d of detailPendapatanBeban) {
@@ -65,12 +99,7 @@ export async function getDashboardPengurus(tahun: number) {
   }
   const totalSHU = round2(totalPendapatan - totalBeban)
 
-  const transaksiTahun = await prisma.transaksiSimpanan.findMany({
-    where: { createdAt: range },
-    select: { nominal: true, tipe: true, createdAt: true },
-    orderBy: { createdAt: "asc" },
-  })
-
+  // Savings monthly chart
   const chartData: Record<string, { setoran: number; penarikan: number }> = {}
   for (const t of transaksiTahun) {
     const month = t.createdAt.toLocaleString("id-ID", { month: "short", year: "2-digit" })
@@ -78,34 +107,19 @@ export async function getDashboardPengurus(tahun: number) {
     if (t.tipe === "SETORAN") chartData[month].setoran += Number(t.nominal)
     else chartData[month].penarikan += Number(t.nominal)
   }
-
   const simpananChart = Object.entries(chartData).map(([bulan, data]) => ({
-    bulan,
-    setoran: data.setoran,
-    penarikan: data.penarikan,
+    bulan, setoran: data.setoran, penarikan: data.penarikan,
   }))
 
-  const pinjamanPerStatus = await prisma.pinjaman.groupBy({
-    by: ["status"],
-    where: { tglPengajuan: range },
-    _count: { id: true },
-    _sum: { jumlah: true },
-  })
-
-  const akunKas = await prisma.akun.findFirst({ where: { kode: COA_KAS } })
+  // Kas flow
   const kasId = akunKas?.id
-
   const detailKasTahun = kasId
     ? await prisma.detailJurnal.findMany({
-        where: {
-          akunId: kasId,
-          jurnal: { tanggal: range },
-        },
+        where: { akunId: kasId, jurnal: { tanggal: range } },
         include: { jurnal: { select: { tanggal: true } } },
         orderBy: { jurnal: { tanggal: "asc" } },
       })
     : []
-
   const flowData: Record<string, { masuk: number; keluar: number }> = {}
   for (const d of detailKasTahun) {
     const month = d.jurnal.tanggal.toLocaleString("id-ID", { month: "short", year: "2-digit" })
@@ -113,30 +127,11 @@ export async function getDashboardPengurus(tahun: number) {
     flowData[month].masuk += Number(d.debit)
     flowData[month].keluar += Number(d.kredit)
   }
-
   const trendChart = Object.entries(flowData).map(([bulan, data]) => ({
-    bulan,
-    masuk: data.masuk,
-    keluar: data.keluar,
+    bulan, masuk: data.masuk, keluar: data.keluar,
   }))
 
-  const transaksiTerbaru = await prisma.jurnalUmum.findMany({
-    where: { tanggal: range },
-    orderBy: { tanggal: "desc" },
-    take: 5,
-    include: {
-      detail: {
-        include: { akun: { select: { kode: true, nama: true } } },
-        orderBy: { debit: "desc" },
-      },
-    },
-  })
-
-  const cumulative = hinggaAkhirTahun(tahun)
-
-  const akunKasBank = await prisma.akun.findMany({
-    where: { kode: { in: [...COA_KAS_BANK] } },
-  })
+  // Kas balance + kewajiban
   const kasBankIds = akunKasBank.map((a) => a.id)
   let saldoKas = 0
   if (kasBankIds.length > 0) {
@@ -147,7 +142,6 @@ export async function getDashboardPengurus(tahun: number) {
     saldoKas = round2(Number(agg._sum.debit ?? 0) - Number(agg._sum.kredit ?? 0))
   }
 
-  const akunKewajiban = await prisma.akun.findMany({ where: { tipe: "LIABILITAS" } })
   const kewajibanIds = akunKewajiban.map((a) => a.id)
   let kewajibanLancar = 0
   if (kewajibanIds.length > 0) {
