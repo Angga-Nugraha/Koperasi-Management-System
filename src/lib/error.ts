@@ -2,6 +2,17 @@ import { ZodError } from "zod"
 import { Prisma } from "@prisma/client"
 import { logger } from "@/lib/logger"
 
+function capture(err: unknown, context?: string) {
+  try {
+    const Sentry = require("@sentry/nextjs")
+    if (Sentry?.captureException) {
+      Sentry.captureException(err, { tags: { context } })
+    }
+  } catch {
+    /* sentry not available */
+  }
+}
+
 const isDev = process.env.NODE_ENV === "development"
 
 export class AppError extends Error {
@@ -42,12 +53,14 @@ export function sanitizeError(err: unknown, context?: string): Error {
         return new AppError("REFERENCE", "Data masih digunakan oleh data lain")
       default:
         logger.error("Unhandled Prisma error", { code: err.code, meta: err.meta, context })
+        capture(err, context)
         return new AppError("DATABASE_ERROR", "Terjadi kesalahan database")
     }
   }
 
   if (err instanceof Error) {
     logger.error("Unhandled error", { message: err.message, context })
+    capture(err, context)
     if (isDev) return err
     return new AppError("INTERNAL_ERROR", "Terjadi kesalahan internal")
   }

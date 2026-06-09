@@ -30,7 +30,7 @@ const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
         const password = credentials.password as string
 
         const rlKey = `login:${email}`
-        const rl = rateLimit(rlKey, 5, 60_000)
+        const rl = await rateLimit(rlKey, 5, 60_000)
         if (!rl.success) {
           logger.warn("Rate limit exceeded", { email })
           throw new Error("Terlalu banyak percobaan. Silakan coba lagi dalam 1 menit.")
