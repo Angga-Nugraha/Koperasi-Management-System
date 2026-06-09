@@ -2,6 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs"
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  output: process.env.DOCKER_BUILD ? "standalone" : undefined,
   allowedDevOrigins: ["lubricate-wagon-caregiver.ngrok-free.dev"],
 }
 

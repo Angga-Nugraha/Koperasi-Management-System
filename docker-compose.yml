@@ -1,0 +1,60 @@
+volumes:
+  mysql_data:
+  backups:
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-simko_secret}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-simko}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-simko_secret}@mysql:3306/${MYSQL_DATABASE:-simko}
+      AUTH_SECRET: ${AUTH_SECRET:?required}
+      AUTH_URL: ${AUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
+      TZ_OFFSET: ${TZ_OFFSET:-+07:00}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+        npx prisma migrate deploy &&
+        npx prisma db seed --skip-generate || true &&
+        node server.js
+      "
+
+  backup:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD:-simko_secret}
+    volumes:
+      - backups:/backups
+    entrypoint: >
+      sh -c "
+        while true; do
+          sleep 86400 &&
+          mysqldump -h mysql -u root --single-transaction --routines --triggers simko > /backups/simko_\$(date +%Y%m%d).sql &&
+          find /backups -name 'simko_*.sql' -mtime +30 -delete
+        done
+      "
+    depends_on:
+      - mysql
