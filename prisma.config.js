@@ -2,7 +2,7 @@ module.exports = {
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "npx tsx prisma/seed.ts",
+    seed: "npx tsx prisma/seed.ts && npx tsx prisma/migrate.ts",
   },
   datasource: {
     url: process.env.DATABASE_URL,

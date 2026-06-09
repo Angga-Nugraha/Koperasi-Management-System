@@ -3,8 +3,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     anggota: {
-      findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(),
-      findMany: vi.fn(), count: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      findMany: vi.fn(),
+      count: vi.fn(),
     },
     user: { findUnique: vi.fn(), create: vi.fn() },
     simpanan: { findMany: vi.fn() },
@@ -44,7 +48,7 @@ describe("Anggota Flow Integration", () => {
   })
 
   describe("createAnggota", () => {
-    let createAnggota: typeof import("@/actions/anggota")["createAnggota"]
+    let createAnggota: (typeof import("@/actions/anggota"))["createAnggota"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/anggota")
@@ -53,16 +57,28 @@ describe("Anggota Flow Integration", () => {
 
     it("rejects with invalid NIK", async () => {
       await expect(
-        createAnggota({ nik: "123", nama: "Test", alamat: "Jl. Test No 123", tglMasuk: "2024-01-15" })
+        createAnggota({
+          nik: "123",
+          nama: "Test",
+          alamat: "Jl. Test No 123",
+          tglMasuk: "2024-01-15",
+        }),
       ).rejects.toThrow()
     })
 
     it("creates anggota successfully", async () => {
       prisma.anggota.findUnique.mockResolvedValue(null)
       prisma.anggota.count.mockResolvedValue(0)
-      prisma.anggota.create.mockResolvedValue({ id: "anggota-1", noAnggota: "001", nik: "1234567890123456" })
+      prisma.anggota.create.mockResolvedValue({
+        id: "anggota-1",
+        noAnggota: "001",
+        nik: "1234567890123456",
+      })
       prisma.$transaction.mockImplementation(async (fn: any) =>
-        fn({ anggota: { create: prisma.anggota.create, count: prisma.anggota.count }, $queryRawUnsafe: vi.fn() })
+        fn({
+          anggota: { create: prisma.anggota.create, count: prisma.anggota.count },
+          $queryRawUnsafe: vi.fn(),
+        }),
       )
 
       const result = await createAnggota({
@@ -103,7 +119,7 @@ describe("Anggota Flow Integration", () => {
   })
 
   describe("updateAnggota", () => {
-    let updateAnggota: typeof import("@/actions/anggota")["updateAnggota"]
+    let updateAnggota: (typeof import("@/actions/anggota"))["updateAnggota"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/anggota")
@@ -111,7 +127,13 @@ describe("Anggota Flow Integration", () => {
     })
 
     it("updates anggota successfully", async () => {
-      prisma.anggota.findUnique.mockResolvedValue({ id: "a1", nik: "1234567890123456", foto: null, ktp: null, noAnggota: "001" })
+      prisma.anggota.findUnique.mockResolvedValue({
+        id: "a1",
+        nik: "1234567890123456",
+        foto: null,
+        ktp: null,
+        noAnggota: "001",
+      })
       prisma.anggota.update.mockResolvedValue({ id: "a1" })
 
       const result = await updateAnggota({
@@ -126,7 +148,7 @@ describe("Anggota Flow Integration", () => {
   })
 
   describe("updateAnggotaStatus", () => {
-    let updateAnggotaStatus: typeof import("@/actions/anggota")["updateAnggotaStatus"]
+    let updateAnggotaStatus: (typeof import("@/actions/anggota"))["updateAnggotaStatus"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/anggota")
@@ -136,24 +158,30 @@ describe("Anggota Flow Integration", () => {
     it("rejects NONAKTIF when anggota has active loan", async () => {
       prisma.pinjaman.count.mockResolvedValue(1)
 
-      await expect(
-        updateAnggotaStatus({ id: "a1", status: "NONAKTIF" })
-      ).rejects.toThrow("pinjaman aktif")
+      await expect(updateAnggotaStatus({ id: "a1", status: "NONAKTIF" })).rejects.toThrow(
+        "pinjaman aktif",
+      )
     })
 
     it("rejects KELUAR when anggota has active loan", async () => {
       prisma.pinjaman.count.mockResolvedValue(1)
 
-      await expect(
-        updateAnggotaStatus({ id: "a1", status: "KELUAR" })
-      ).rejects.toThrow("pinjaman aktif")
+      await expect(updateAnggotaStatus({ id: "a1", status: "KELUAR" })).rejects.toThrow(
+        "pinjaman aktif",
+      )
     })
 
     it("processes KELUAR with penutupan simpanan", async () => {
       prisma.anggota.findUnique.mockResolvedValue({ id: "a1", nama: "Budi", noAnggota: "001" })
       prisma.pinjaman.count.mockResolvedValue(0)
       prisma.simpanan.findMany.mockResolvedValue([
-        { id: "s1", anggotaId: "a1", jenisSimpananId: "j1", saldo: 100000, jenisSimpanan: { kode: "WAJIB" } },
+        {
+          id: "s1",
+          anggotaId: "a1",
+          jenisSimpananId: "j1",
+          saldo: 100000,
+          jenisSimpanan: { kode: "WAJIB" },
+        },
       ])
       prisma.anggota.update.mockResolvedValue({ id: "a1" })
       prisma.akun.findMany.mockResolvedValue([
@@ -163,7 +191,18 @@ describe("Anggota Flow Integration", () => {
       prisma.jurnalUmum.create = vi.fn().mockResolvedValue({ id: "jurnal-1" })
       prisma.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
-          simpanan: { findMany: vi.fn().mockResolvedValue([{ id: "s1", anggotaId: "a1", jenisSimpananId: "j1", saldo: 100000, jenisSimpanan: { kode: "WAJIB" } }]), update: vi.fn() },
+          simpanan: {
+            findMany: vi.fn().mockResolvedValue([
+              {
+                id: "s1",
+                anggotaId: "a1",
+                jenisSimpananId: "j1",
+                saldo: 100000,
+                jenisSimpanan: { kode: "WAJIB" },
+              },
+            ]),
+            update: vi.fn(),
+          },
           transaksiSimpanan: { create: prisma.transaksiSimpanan.create },
           anggota: { update: prisma.anggota.update },
           akun: { findMany: prisma.akun.findMany },
@@ -187,7 +226,7 @@ describe("Anggota Flow Integration", () => {
   })
 
   describe("deleteAnggota", () => {
-    let deleteAnggota: typeof import("@/actions/anggota")["deleteAnggota"]
+    let deleteAnggota: (typeof import("@/actions/anggota"))["deleteAnggota"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/anggota")
@@ -213,7 +252,9 @@ describe("Anggota Flow Integration", () => {
         .mockResolvedValueOnce({ id: "a1", foto: "foto.jpg", ktp: null })
         .mockResolvedValueOnce({ id: "a1", simpanan: [{ id: "s1" }], pinjaman: [] })
         .mockResolvedValueOnce({ id: "a1", noAnggota: "001", nama: "Budi" })
-      prisma.simpanan.findMany.mockResolvedValue([{ id: "s1", anggotaId: "a1", jenisSimpananId: "j1", saldo: 50000 }])
+      prisma.simpanan.findMany.mockResolvedValue([
+        { id: "s1", anggotaId: "a1", jenisSimpananId: "j1", saldo: 50000 },
+      ])
       prisma.pinjaman.findMany.mockResolvedValue([])
       prisma.pinjaman.count.mockResolvedValue(0)
       prisma.anggota.update.mockResolvedValue({ id: "a1" })
@@ -224,7 +265,18 @@ describe("Anggota Flow Integration", () => {
       prisma.jurnalUmum.create = vi.fn().mockResolvedValue({ id: "jurnal-1" })
       prisma.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
-          simpanan: { findMany: vi.fn().mockResolvedValue([{ id: "s1", anggotaId: "a1", jenisSimpananId: "j1", saldo: 50000, jenisSimpanan: { kode: "WAJIB" } }]), update: vi.fn() },
+          simpanan: {
+            findMany: vi.fn().mockResolvedValue([
+              {
+                id: "s1",
+                anggotaId: "a1",
+                jenisSimpananId: "j1",
+                saldo: 50000,
+                jenisSimpanan: { kode: "WAJIB" },
+              },
+            ]),
+            update: vi.fn(),
+          },
           transaksiSimpanan: { create: vi.fn() },
           anggota: { update: prisma.anggota.update },
           akun: { findMany: prisma.akun.findMany },

@@ -5,13 +5,19 @@
 
 import { Prisma } from "@prisma/client"
 
-export type WhereInput<T> = T extends Prisma.$JurnalUmumPayload ? Prisma.JurnalUmumWhereInput
-  : T extends Prisma.$AnggotaPayload ? Prisma.AnggotaWhereInput
-  : T extends Prisma.$PinjamanPayload ? Prisma.PinjamanWhereInput
-  : T extends Prisma.$SimpananPayload ? Prisma.SimpananWhereInput
-  : T extends Prisma.$DetailJurnalPayload ? Prisma.DetailJurnalWhereInput
-  : T extends Prisma.$AkunPayload ? Prisma.AkunWhereInput
-  : Record<string, unknown>
+export type WhereInput<T> = T extends Prisma.$JurnalUmumPayload
+  ? Prisma.JurnalUmumWhereInput
+  : T extends Prisma.$AnggotaPayload
+    ? Prisma.AnggotaWhereInput
+    : T extends Prisma.$PinjamanPayload
+      ? Prisma.PinjamanWhereInput
+      : T extends Prisma.$SimpananPayload
+        ? Prisma.SimpananWhereInput
+        : T extends Prisma.$DetailJurnalPayload
+          ? Prisma.DetailJurnalWhereInput
+          : T extends Prisma.$AkunPayload
+            ? Prisma.AkunWhereInput
+            : Record<string, unknown>
 
 export function jurnalFilter(params: {
   search?: string

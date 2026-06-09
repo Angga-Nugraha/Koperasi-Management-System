@@ -27,7 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Search } from "lucide-react"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 import Link from "next/link"
 
 import { AjukanSheet } from "@/components/pinjaman/ajukan-sheet"
@@ -72,7 +72,15 @@ const STATUS_STYLE: Record<string, string> = {
   GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
 }
 
-export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch, status: initialStatus }: Props) {
+export function PinjamanTable({
+  data,
+  total,
+  page,
+  totalPages,
+  pageSize = 20,
+  search: initialSearch,
+  status: initialStatus,
+}: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState(initialSearch ?? "")
@@ -118,7 +126,10 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-        <form onSubmit={handleSearch} className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+        <form
+          onSubmit={handleSearch}
+          className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center"
+        >
           <div className="relative w-full sm:w-auto">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -128,13 +139,12 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
               className="w-full pl-8 sm:w-60"
             />
           </div>
-          <Button type="submit" variant="secondary" size="sm" className="w-full sm:w-auto">Cari</Button>
+          <Button type="submit" variant="secondary" size="sm" className="w-full sm:w-auto">
+            Cari
+          </Button>
         </form>
 
-        <Select
-          value={initialStatus ?? "SEMUA"}
-          onValueChange={(v) => applyFilter("status", v)}
-        >
+        <Select value={initialStatus ?? "SEMUA"} onValueChange={(v) => applyFilter("status", v)}>
           <SelectTrigger className="w-full sm:w-36">
             <SelectValue placeholder="Semua status" />
           </SelectTrigger>
@@ -150,7 +160,9 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
         </Select>
 
         <div className="w-full sm:ml-auto sm:w-auto">
-          <Button onClick={() => setAjukanOpen(true)} className="w-full sm:w-auto">+ Ajukan Pinjaman</Button>
+          <Button onClick={() => setAjukanOpen(true)} className="w-full sm:w-auto">
+            + Ajukan Pinjaman
+          </Button>
         </div>
       </div>
 
@@ -199,9 +211,7 @@ export function PinjamanTable({ data, total, page, totalPages, pageSize = 20, se
                       {STATUS_LABEL[p.status] ?? p.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-xs">
-                    {formatTanggal(p.tglPengajuan)}
-                  </TableCell>
+                  <TableCell className="text-xs">{formatTanggal(p.tglPengajuan)}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" asChild>
                       <Link href={`/pengurus/pinjaman/${p.id}`}>Detail</Link>

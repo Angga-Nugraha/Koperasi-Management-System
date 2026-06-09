@@ -71,7 +71,12 @@ export async function prosesTutupBuku(tahun: number) {
 
     const saldoAkun = new Map<string, { kode: string; nama: string; tipe: string; saldo: number }>()
     for (const d of details) {
-      const existing = saldoAkun.get(d.akunId) ?? { kode: d.akun.kode, nama: d.akun.nama, tipe: d.akun.tipe, saldo: 0 }
+      const existing = saldoAkun.get(d.akunId) ?? {
+        kode: d.akun.kode,
+        nama: d.akun.nama,
+        tipe: d.akun.tipe,
+        saldo: 0,
+      }
       if (d.akun.tipe === "PENDAPATAN") {
         existing.saldo += Number(d.kredit) - Number(d.debit)
       } else {
@@ -110,13 +115,21 @@ export async function prosesTutupBuku(tahun: number) {
       }
       // DANA → langsung ke akun masing-masing (tanpa lewat 3.1.2)
       const danaAkunIds = danaAlokasi.map((a) => a.indikator.akunId).filter(Boolean) as string[]
-      const danaAkunMap = danaAkunIds.length > 0
-        ? new Map((await tx.akun.findMany({ where: { id: { in: danaAkunIds } } })).map((a) => [a.id, a.kode]))
-        : new Map<string, string>()
+      const danaAkunMap =
+        danaAkunIds.length > 0
+          ? new Map(
+              (await tx.akun.findMany({ where: { id: { in: danaAkunIds } } })).map((a) => [
+                a.id,
+                a.kode,
+              ]),
+            )
+          : new Map<string, string>()
       for (const a of danaAlokasi) {
         const nominal = Number(a.nominal)
         if (nominal <= 0) continue
-        const akunKode = a.indikator.akunId ? (danaAkunMap.get(a.indikator.akunId) ?? akunSHU.kode) : akunSHU.kode
+        const akunKode = a.indikator.akunId
+          ? (danaAkunMap.get(a.indikator.akunId) ?? akunSHU.kode)
+          : akunSHU.kode
         tutupEntries.push({ akunKode, debit: 0, kredit: nominal })
       }
       // Sisa rounding (jika ada) — taruh ke SHU Ditahan
@@ -129,7 +142,11 @@ export async function prosesTutupBuku(tahun: number) {
         })
       }
     } else if (shuTB < 0) {
-      tutupEntries.push({ akunKode: akunSHUDitahan?.kode ?? akunSHU.kode, debit: Math.abs(shuTB), kredit: 0 })
+      tutupEntries.push({
+        akunKode: akunSHUDitahan?.kode ?? akunSHU.kode,
+        debit: Math.abs(shuTB),
+        kredit: 0,
+      })
     }
 
     if (tutupEntries.length > 0) {
@@ -189,7 +206,6 @@ export async function prosesTutupBuku(tahun: number) {
         })
       }
     }
-
   })
 
   await catatLog({

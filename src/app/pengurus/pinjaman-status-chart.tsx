@@ -47,23 +47,23 @@ export function PinjamanStatusChart({ data }: Props) {
   return (
     <div className="overflow-x-auto">
       <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
-      <PieChart>
-        <Pie
-          data={data}
-          dataKey="count"
-          nameKey="status"
-          cx="50%"
-          cy="50%"
-          outerRadius="65%"
-          label={({ status, count }) => `${LABELS[status] ?? status}: ${count}`}
-        >
-          {data.map((entry) => (
-            <Cell key={entry.status} fill={COLORS[entry.status] ?? "#6b7280"} />
-          ))}
-        </Pie>
-        <Tooltip content={<ChartTooltipContent />} />
-        <Legend formatter={(value: string) => LABELS[value] ?? value} />
-      </PieChart>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="count"
+            nameKey="status"
+            cx="50%"
+            cy="50%"
+            outerRadius="65%"
+            label={({ status, count }) => `${LABELS[status] ?? status}: ${count}`}
+          >
+            {data.map((entry) => (
+              <Cell key={entry.status} fill={COLORS[entry.status] ?? "#6b7280"} />
+            ))}
+          </Pie>
+          <Tooltip content={<ChartTooltipContent />} />
+          <Legend formatter={(value: string) => LABELS[value] ?? value} />
+        </PieChart>
       </ChartContainer>
     </div>
   )

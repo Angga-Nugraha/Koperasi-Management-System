@@ -58,7 +58,14 @@ const JENIS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
   SUKARELA: "outline",
 }
 
-export function SimpananTable({ data, total, page, totalPages, pageSize = 20, search: initialSearch }: Props) {
+export function SimpananTable({
+  data,
+  total,
+  page,
+  totalPages,
+  pageSize = 20,
+  search: initialSearch,
+}: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState(initialSearch)
@@ -68,7 +75,10 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
   const [tarikOpen, setTarikOpen] = useState(false)
 
   useEffect(() => {
-    fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
+    fetch("/api/jenis-simpanan")
+      .then((r) => r.json())
+      .then(setJenisList)
+      .catch(() => {})
   }, [])
 
   function onSearch() {
@@ -125,7 +135,9 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
       <CardContent>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="w-full sm:flex-1">
-            <Label htmlFor="search" className="sr-only">Cari</Label>
+            <Label htmlFor="search" className="sr-only">
+              Cari
+            </Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -139,27 +151,34 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
             </div>
           </div>
           <div className="w-full sm:w-40">
-            <Select value={jenisFilter} onValueChange={(v) => {
-              setJenisFilter(v)
-              const params = new URLSearchParams()
-              if (search) params.set("search", search)
-              if (v && v !== "SEMUA") params.set("jenis", v)
-              startTransition(() => {
-                router.push(`/pengurus/simpanan?${params.toString()}`)
-              })
-            }}>
+            <Select
+              value={jenisFilter}
+              onValueChange={(v) => {
+                setJenisFilter(v)
+                const params = new URLSearchParams()
+                if (search) params.set("search", search)
+                if (v && v !== "SEMUA") params.set("jenis", v)
+                startTransition(() => {
+                  router.push(`/pengurus/simpanan?${params.toString()}`)
+                })
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Semua jenis" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="SEMUA">Semua</SelectItem>
                 {jenisList.map((j) => (
-                  <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
+                  <SelectItem key={j.kode} value={j.kode}>
+                    {j.nama}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <Button variant="secondary" onClick={onSearch} className="w-full sm:w-auto">Cari</Button>
+          <Button variant="secondary" onClick={onSearch} className="w-full sm:w-auto">
+            Cari
+          </Button>
         </div>
 
         <div className="relative overflow-x-auto rounded-md border">
@@ -170,42 +189,42 @@ export function SimpananTable({ data, total, page, totalPages, pageSize = 20, se
           )}
           <Table className={isPending ? "opacity-50" : ""}>
             <TableHeader>
-            <TableRow>
-              <TableHead>No Anggota</TableHead>
-              <TableHead>Nama</TableHead>
-              <TableHead>Jenis</TableHead>
-              <TableHead className="text-right">Saldo</TableHead>
-              <TableHead className="text-right">Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  Belum ada data simpanan
-                </TableCell>
+                <TableHead>No Anggota</TableHead>
+                <TableHead>Nama</TableHead>
+                <TableHead>Jenis</TableHead>
+                <TableHead className="text-right">Saldo</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
-            ) : (
-              data.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-mono text-sm">{s.noAnggota}</TableCell>
-                  <TableCell>{s.namaAnggota}</TableCell>
-                  <TableCell>
-                    <Badge variant={JENIS_VARIANTS[s.jenisKode] ?? "secondary"}>
-                      {s.jenisNama}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right font-mono">
-                    Rp {s.saldo.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/pengurus/simpanan/${s.anggotaId}`}>Detail</Link>
-                    </Button>
+            </TableHeader>
+            <TableBody>
+              {data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                    Belum ada data simpanan
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ) : (
+                data.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell className="font-mono text-sm">{s.noAnggota}</TableCell>
+                    <TableCell>{s.namaAnggota}</TableCell>
+                    <TableCell>
+                      <Badge variant={JENIS_VARIANTS[s.jenisKode] ?? "secondary"}>
+                        {s.jenisNama}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      Rp {s.saldo.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href={`/pengurus/simpanan/${s.anggotaId}`}>Detail</Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

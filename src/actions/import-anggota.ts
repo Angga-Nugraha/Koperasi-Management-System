@@ -53,7 +53,17 @@ export async function previewImportAnggota(formData: FormData): Promise<PreviewR
   const seenNiks = new Set<string>()
 
   // 1st pass: basic format validation
-  const parsedRows: { row: number; nik: string; nama: string; noHp?: string; jenisKelamin?: string; alamat: string; pekerjaan?: string; penghasilan: number | null; tglMasuk: Date }[] = []
+  const parsedRows: {
+    row: number
+    nik: string
+    nama: string
+    noHp?: string
+    jenisKelamin?: string
+    alamat: string
+    pekerjaan?: string
+    penghasilan: number | null
+    tglMasuk: Date
+  }[] = []
 
   for (let i = 0; i < data.length; i++) {
     const raw = data[i] as Record<string, string>
@@ -157,7 +167,12 @@ export async function previewImportAnggota(formData: FormData): Promise<PreviewR
     let jkFormatted: string | undefined = undefined
     if (jenisKelamin) {
       const jkUpper = jenisKelamin.toUpperCase()
-      if (jkUpper === "L" || jkUpper === "LAKI-LAKI" || jkUpper === "LAKI_LAKI" || jkUpper === "LAKILAKI") {
+      if (
+        jkUpper === "L" ||
+        jkUpper === "LAKI-LAKI" ||
+        jkUpper === "LAKI_LAKI" ||
+        jkUpper === "LAKILAKI"
+      ) {
         jkFormatted = "LAKI_LAKI"
       } else if (jkUpper === "P" || jkUpper === "PEREMPUAN") {
         jkFormatted = "PEREMPUAN"
@@ -326,7 +341,7 @@ export async function commitImportAnggota(
     pekerjaan?: string
     penghasilan: number | null
     tglMasuk: string
-  }[]
+  }[],
 ): Promise<CommitRowResult[]> {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
@@ -355,48 +370,52 @@ export async function commitImportAnggota(
     dateGroups.set(key, group)
   }
 
-  await prisma.$transaction(async (tx) => {
-    for (const [, group] of dateGroups) {
-      const tgl = group[0]!.tglMasuk
-      tgl.setHours(0, 0, 0, 0)
-      const nextDay = new Date(tgl)
-      nextDay.setDate(nextDay.getDate() + 1)
+  await prisma.$transaction(
+    async (tx) => {
+      for (const [, group] of dateGroups) {
+        const tgl = group[0]!.tglMasuk
+        tgl.setHours(0, 0, 0, 0)
+        const nextDay = new Date(tgl)
+        nextDay.setDate(nextDay.getDate() + 1)
 
-      let urutan = (await tx.anggota.count({
-        where: { tglMasuk: { gte: tgl, lt: nextDay } },
-      })) + 1
+        let urutan =
+          (await tx.anggota.count({
+            where: { tglMasuk: { gte: tgl, lt: nextDay } },
+          })) + 1
 
-      for (const row of group) {
-        try {
-          const noAnggota = generateNoAnggota(row.tglMasuk, urutan)
-          urutan++
-          await tx.anggota.create({
-            data: {
+        for (const row of group) {
+          try {
+            const noAnggota = generateNoAnggota(row.tglMasuk, urutan)
+            urutan++
+            await tx.anggota.create({
+              data: {
+                nik: row.nik,
+                noAnggota,
+                nama: row.nama,
+                noHp: row.noHp || null,
+                jenisKelamin: row.jenisKelamin || null,
+                alamat: row.alamat,
+                pekerjaan: row.pekerjaan || null,
+                penghasilan: row.penghasilan,
+                tglMasuk: row.tglMasuk,
+                status: "AKTIF",
+              },
+            })
+            results.push({ row: row.row, nik: row.nik, nama: row.nama, success: true })
+          } catch (err) {
+            results.push({
+              row: row.row,
               nik: row.nik,
-              noAnggota,
               nama: row.nama,
-              noHp: row.noHp || null,
-              jenisKelamin: row.jenisKelamin || null,
-              alamat: row.alamat,
-              pekerjaan: row.pekerjaan || null,
-              penghasilan: row.penghasilan,
-              tglMasuk: row.tglMasuk,
-              status: "AKTIF",
-            },
-          })
-          results.push({ row: row.row, nik: row.nik, nama: row.nama, success: true })
-        } catch (err) {
-          results.push({
-            row: row.row,
-            nik: row.nik,
-            nama: row.nama,
-            success: false,
-            error: "Gagal menyimpan data",
-          })
+              success: false,
+              error: "Gagal menyimpan data",
+            })
+          }
         }
       }
-    }
-  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable })
+    },
+    { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+  )
 
   revalidatePath("/pengurus/anggota")
   return results

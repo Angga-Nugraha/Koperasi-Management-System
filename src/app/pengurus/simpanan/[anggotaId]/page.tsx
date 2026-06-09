@@ -30,7 +30,14 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
   if (!anggota) notFound()
 
   const simpanan = await getSimpananAnggota(anggotaId)
-  const mutasi = await getMutasiAnggota(anggotaId, { jenisSimpananId: jenisCode !== "SEMUA" ? (await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } }))?.id : undefined, page, pageSize })
+  const mutasi = await getMutasiAnggota(anggotaId, {
+    jenisSimpananId:
+      jenisCode !== "SEMUA"
+        ? (await prisma.jenisSimpanan.findUnique({ where: { kode: jenisCode } }))?.id
+        : undefined,
+    page,
+    pageSize,
+  })
 
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
 
@@ -57,9 +64,7 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
         {simpanan.map((s) => (
           <Card key={s.jenisKode}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                {s.jenisNama}
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">{s.jenisNama}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>

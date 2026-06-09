@@ -39,7 +39,9 @@ export async function PATCH(req: Request) {
   }
 
   const all = body.all === true
-  const ids = Array.isArray(body.ids) ? body.ids.filter((id: unknown) => typeof id === "string" && id.length > 0) : []
+  const ids = Array.isArray(body.ids)
+    ? body.ids.filter((id: unknown) => typeof id === "string" && id.length > 0)
+    : []
 
   if (all) {
     await prisma.notifikasi.updateMany({

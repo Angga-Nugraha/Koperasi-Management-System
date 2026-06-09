@@ -50,7 +50,15 @@ type Props = {
   action: string
 }
 
-export function AuditLogTable({ data, total, page, totalPages, pageSize = 20, entityType, action }: Props) {
+export function AuditLogTable({
+  data,
+  total,
+  page,
+  totalPages,
+  pageSize = 20,
+  entityType,
+  action,
+}: Props) {
   const router = useRouter()
   const [entityTypeVal, setEntityTypeVal] = useState(entityType)
   const [actionVal, setActionVal] = useState(action)
@@ -80,46 +88,69 @@ export function AuditLogTable({ data, total, page, totalPages, pageSize = 20, en
     router.push(`/pengurus/jurnal/audit-log?${params.toString()}`)
   }
 
-  const entityTypes = ["SEMUA", "USER", "ANGGOTA", "SETORAN_SIMPANAN", "PENARIKAN_SIMPANAN", "PENUTUPAN_SIMPANAN", "PINJAMAN", "ANGSURAN", "JURNAL_MANUAL", "SHU"]
-  const actions = ["SEMUA", "CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "DISBURSE", "PAYMENT", "UPDATE_STATUS"]
+  const entityTypes = [
+    "SEMUA",
+    "USER",
+    "ANGGOTA",
+    "SETORAN_SIMPANAN",
+    "PENARIKAN_SIMPANAN",
+    "PENUTUPAN_SIMPANAN",
+    "PINJAMAN",
+    "ANGSURAN",
+    "JURNAL_MANUAL",
+    "SHU",
+  ]
+  const actions = [
+    "SEMUA",
+    "CREATE",
+    "UPDATE",
+    "DELETE",
+    "APPROVE",
+    "REJECT",
+    "DISBURSE",
+    "PAYMENT",
+    "UPDATE_STATUS",
+  ]
 
   return (
     <div className="space-y-4">
       <Card>
         <CardContent className="p-4">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
-        <div className="w-full lg:w-auto">
-          <label className="mb-1 block text-xs text-muted-foreground">Tipe Entitas</label>
-          <Select value={entityTypeVal} onValueChange={setEntityTypeVal}>
-            <SelectTrigger className="w-full sm:w-44">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {entityTypes.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="w-full lg:w-auto">
-          <label className="mb-1 block text-xs text-muted-foreground">Aksi</label>
-          <Select value={actionVal} onValueChange={setActionVal}>
-            <SelectTrigger className="w-full sm:w-36">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {actions.map((a) => (
-                <SelectItem key={a} value={a}>
-                  {a}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button onClick={filter} className="w-full sm:w-auto">Filter</Button>
-      </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+            <div className="w-full lg:w-auto">
+              <label className="mb-1 block text-xs text-muted-foreground">Tipe Entitas</label>
+              <Select value={entityTypeVal} onValueChange={setEntityTypeVal}>
+                <SelectTrigger className="w-full sm:w-44">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {entityTypes.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-full lg:w-auto">
+              <label className="mb-1 block text-xs text-muted-foreground">Aksi</label>
+              <Select value={actionVal} onValueChange={setActionVal}>
+                <SelectTrigger className="w-full sm:w-36">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {actions.map((a) => (
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={filter} className="w-full sm:w-auto">
+              Filter
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -148,9 +179,7 @@ export function AuditLogTable({ data, total, page, totalPages, pageSize = 20, en
                 <TableCell className="text-sm whitespace-nowrap">
                   {formatTanggal(l.createdAt)}
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
-                  {l.userEmail}
-                </TableCell>
+                <TableCell className="text-xs text-muted-foreground">{l.userEmail}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{l.entityType}</Badge>
                 </TableCell>
@@ -167,10 +196,16 @@ export function AuditLogTable({ data, total, page, totalPages, pageSize = 20, en
                     {l.action}
                   </Badge>
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground" title={l.entityId ?? ""}>
+                <TableCell
+                  className="max-w-[200px] truncate text-xs text-muted-foreground"
+                  title={l.entityId ?? ""}
+                >
                   {l.entityId ?? "-"}
                 </TableCell>
-                <TableCell className="max-w-[250px] truncate text-xs text-muted-foreground" title={l.detail}>
+                <TableCell
+                  className="max-w-[250px] truncate text-xs text-muted-foreground"
+                  title={l.detail}
+                >
                   {l.detail}
                 </TableCell>
               </TableRow>

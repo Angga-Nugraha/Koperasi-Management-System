@@ -75,10 +75,7 @@ export function DataTablePagination({
         {onPageSizeChange && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Baris</span>
-            <Select
-              value={String(pageSize)}
-              onValueChange={(v) => onPageSizeChange(Number(v))}
-            >
+            <Select value={String(pageSize)} onValueChange={(v) => onPageSizeChange(Number(v))}>
               <SelectTrigger className="h-8 w-16">
                 <SelectValue />
               </SelectTrigger>
@@ -132,7 +129,7 @@ export function DataTablePagination({
               >
                 {p}
               </Button>
-            )
+            ),
           )}
         </div>
 

@@ -12,7 +12,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { formatTanggal } from "@/lib/format"
 import { Label } from "@/components/ui/label"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 type ArusKasItem = {
   tanggal: string
@@ -34,7 +41,17 @@ type Props = {
   pageSize?: number
 }
 
-export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, saldoAkhir, page = 1, totalPages = 0, pageSize = 20 }: Props) {
+export function ArusKasClient({
+  dari,
+  sampai,
+  items,
+  totalMasuk,
+  totalKeluar,
+  saldoAkhir,
+  page = 1,
+  totalPages = 0,
+  pageSize = 20,
+}: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -50,7 +67,8 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
   function goPage(p: number) {
     const params = new URLSearchParams(searchParams.toString())
@@ -71,17 +89,22 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Dari</Label>
-          <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
-        </div>
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
-        </div>
-        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
-      </form>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
+          >
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Dari</Label>
+              <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
+            </div>
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Sampai</Label>
+              <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
+            </div>
+            <Button type="submit" className="w-full sm:w-auto">
+              Tampilkan
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -101,7 +124,9 @@ export function ArusKasClient({ dari, sampai, items, totalMasuk, totalKeluar, sa
         <Card className="bg-blue-50">
           <CardContent className="p-4 text-center">
             <p className="text-sm text-muted-foreground">Saldo Akhir</p>
-            <p className={`text-xl font-bold ${saldoAkhir >= 0 ? "text-blue-700" : "text-red-700"}`}>
+            <p
+              className={`text-xl font-bold ${saldoAkhir >= 0 ? "text-blue-700" : "text-red-700"}`}
+            >
               {fmt(saldoAkhir)}
             </p>
           </CardContent>

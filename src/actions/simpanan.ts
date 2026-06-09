@@ -9,7 +9,13 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { setorSimpananSchema, tarikSimpananSchema, generateTagihanSchema, getTagihanListSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
+import {
+  setorSimpananSchema,
+  tarikSimpananSchema,
+  generateTagihanSchema,
+  getTagihanListSchema,
+  bayarTagihanSchema,
+} from "@/lib/validations/simpanan"
 import { z } from "zod"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
@@ -100,7 +106,7 @@ export async function getSimpananAnggota(anggotaId: string) {
 
 export async function getMutasiAnggota(
   anggotaId: string,
-  params: { jenisSimpananId?: string; page?: number; pageSize?: number }
+  params: { jenisSimpananId?: string; page?: number; pageSize?: number },
 ) {
   const { jenisSimpananId, page = 1, pageSize = 20 } = params
 
@@ -145,14 +151,21 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
   if (!jenis) throw new Error("Jenis simpanan tidak ditemukan")
 
   if (parsed.nominal < Number(jenis.minimalSetoran)) {
-    throw new Error(`Setoran ${jenis.nama} minimal Rp${Number(jenis.minimalSetoran).toLocaleString("id-ID")}`)
+    throw new Error(
+      `Setoran ${jenis.nama} minimal Rp${Number(jenis.minimalSetoran).toLocaleString("id-ID")}`,
+    )
   }
 
   const noStruk = await generateNoStrukSimpanan()
 
   await prisma.$transaction(async (tx) => {
     const simpanan = await tx.simpanan.upsert({
-      where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
+      where: {
+        anggotaId_jenisSimpananId: {
+          anggotaId: parsed.anggotaId,
+          jenisSimpananId: parsed.jenisSimpananId,
+        },
+      },
       create: {
         anggotaId: parsed.anggotaId,
         jenisSimpananId: parsed.jenisSimpananId,
@@ -239,7 +252,12 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   if (!jenis) throw new Error("Jenis simpanan tidak ditemukan")
 
   const simpanan = await prisma.simpanan.findUnique({
-    where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
+    where: {
+      anggotaId_jenisSimpananId: {
+        anggotaId: parsed.anggotaId,
+        jenisSimpananId: parsed.jenisSimpananId,
+      },
+    },
   })
   if (!simpanan) throw new Error("Simpanan tidak ditemukan")
   if (Number(simpanan.saldo) < parsed.nominal) throw new Error("Saldo tidak mencukupi")
@@ -248,7 +266,12 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
 
   await prisma.$transaction(async (tx) => {
     await tx.simpanan.update({
-      where: { anggotaId_jenisSimpananId: { anggotaId: parsed.anggotaId, jenisSimpananId: parsed.jenisSimpananId } },
+      where: {
+        anggotaId_jenisSimpananId: {
+          anggotaId: parsed.anggotaId,
+          jenisSimpananId: parsed.jenisSimpananId,
+        },
+      },
       data: { saldo: { decrement: parsed.nominal } },
     })
 
@@ -302,7 +325,6 @@ export async function tarikSimpanan(input: z.infer<typeof tarikSimpananSchema>) 
   }
 }
 
-
 export async function getTagihanWajibList(params: z.infer<typeof getTagihanListSchema>) {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
@@ -315,10 +337,7 @@ export async function getTagihanWajibList(params: z.infer<typeof getTagihanListS
   if (jenis) where.jenisSimpanan = { kode: jenis }
   if (search) {
     where.anggota = {
-      OR: [
-        { nama: { contains: search } },
-        { noAnggota: { contains: search } },
-      ],
+      OR: [{ nama: { contains: search } }, { noAnggota: { contains: search } }],
     }
   }
 
@@ -592,10 +611,7 @@ export async function cariAnggota(query: string) {
   const anggota = await prisma.anggota.findMany({
     where: {
       status: "AKTIF",
-      OR: [
-        { nama: { contains: query } },
-        { noAnggota: { contains: query } },
-      ],
+      OR: [{ nama: { contains: query } }, { noAnggota: { contains: query } }],
     },
     select: { id: true, noAnggota: true, nama: true },
     take: 20,

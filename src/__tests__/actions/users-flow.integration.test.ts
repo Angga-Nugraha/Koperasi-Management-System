@@ -2,7 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
-    user: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), count: vi.fn() },
+    user: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      count: vi.fn(),
+    },
     anggota: { findMany: vi.fn(), findUnique: vi.fn() },
   },
 }))
@@ -27,7 +33,7 @@ describe("Users Flow Integration", () => {
   })
 
   describe("createUser", () => {
-    let createUser: typeof import("@/actions/users")["createUser"]
+    let createUser: (typeof import("@/actions/users"))["createUser"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/users")
@@ -36,19 +42,33 @@ describe("Users Flow Integration", () => {
 
     it("rejects mismatched passwords", async () => {
       await expect(
-        createUser({ email: "test@mail.com", password: "secret123", confirmPassword: "different", role: "ANGGOTA" })
+        createUser({
+          email: "test@mail.com",
+          password: "secret123",
+          confirmPassword: "different",
+          role: "ANGGOTA",
+        }),
       ).rejects.toThrow()
     })
 
     it("rejects invalid email", async () => {
       await expect(
-        createUser({ email: "invalid", password: "secret123", confirmPassword: "secret123", role: "ANGGOTA" })
+        createUser({
+          email: "invalid",
+          password: "secret123",
+          confirmPassword: "secret123",
+          role: "ANGGOTA",
+        }),
       ).rejects.toThrow()
     })
 
     it("creates user successfully", async () => {
       prisma.user.findUnique.mockResolvedValue(null)
-      prisma.user.create.mockResolvedValue({ id: "user-1", email: "test@mail.com", role: "ANGGOTA" })
+      prisma.user.create.mockResolvedValue({
+        id: "user-1",
+        email: "test@mail.com",
+        role: "ANGGOTA",
+      })
 
       const result = await createUser({
         email: "test@mail.com",
@@ -78,7 +98,7 @@ describe("Users Flow Integration", () => {
   })
 
   describe("updateUser", () => {
-    let updateUser: typeof import("@/actions/users")["updateUser"]
+    let updateUser: (typeof import("@/actions/users"))["updateUser"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/users")
@@ -87,7 +107,7 @@ describe("Users Flow Integration", () => {
 
     it("rejects invalid email", async () => {
       await expect(
-        updateUser({ id: "u1", email: "invalid", role: "ANGGOTA", isActive: true })
+        updateUser({ id: "u1", email: "invalid", role: "ANGGOTA", isActive: true }),
       ).rejects.toThrow()
     })
 
@@ -97,14 +117,19 @@ describe("Users Flow Integration", () => {
         .mockResolvedValueOnce(null)
       prisma.user.update.mockResolvedValue({ id: "u1", email: "new@mail.com" })
 
-      const result = await updateUser({ id: "u1", email: "new@mail.com", role: "ANGGOTA", isActive: true })
+      const result = await updateUser({
+        id: "u1",
+        email: "new@mail.com",
+        role: "ANGGOTA",
+        isActive: true,
+      })
 
       expect(result.success).toBe(true)
     })
   })
 
   describe("resetPassword", () => {
-    let resetPassword: typeof import("@/actions/users")["resetPassword"]
+    let resetPassword: (typeof import("@/actions/users"))["resetPassword"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/users")
@@ -113,7 +138,7 @@ describe("Users Flow Integration", () => {
 
     it("rejects mismatched passwords", async () => {
       await expect(
-        resetPassword({ userId: "u1", password: "secret123", confirmPassword: "different" })
+        resetPassword({ userId: "u1", password: "secret123", confirmPassword: "different" }),
       ).rejects.toThrow()
     })
 
@@ -121,14 +146,18 @@ describe("Users Flow Integration", () => {
       prisma.user.findUnique.mockResolvedValue({ id: "u1", email: "test@mail.com" })
       prisma.user.update.mockResolvedValue({ id: "u1" })
 
-      const result = await resetPassword({ userId: "u1", password: "newpass123", confirmPassword: "newpass123" })
+      const result = await resetPassword({
+        userId: "u1",
+        password: "newpass123",
+        confirmPassword: "newpass123",
+      })
 
       expect(result.success).toBe(true)
     })
   })
 
   describe("toggleUserActive", () => {
-    let toggleUserActive: typeof import("@/actions/users")["toggleUserActive"]
+    let toggleUserActive: (typeof import("@/actions/users"))["toggleUserActive"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/users")

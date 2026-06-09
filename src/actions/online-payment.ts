@@ -8,8 +8,19 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
-import { buatJurnal, COA_BANK, getSimpananAkun, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
-import { generateNoStrukTagihan, generateNoStrukSimpanan, generateNoStrukAngsuran } from "@/lib/struk"
+import {
+  buatJurnal,
+  COA_BANK,
+  getSimpananAkun,
+  COA_PIUTANG_PINJAMAN,
+  COA_PENDAPATAN_JASA,
+  COA_PENDAPATAN_DENDA,
+} from "@/lib/jurnal"
+import {
+  generateNoStrukTagihan,
+  generateNoStrukSimpanan,
+  generateNoStrukAngsuran,
+} from "@/lib/struk"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { notifyAdmins, notifyMember } from "@/lib/notifikasi"
 import crypto from "crypto"
@@ -53,9 +64,7 @@ function getMidtransConfig() {
     ? "https://app.midtrans.com/snap/v1"
     : "https://app.sandbox.midtrans.com/snap/v1"
 
-  const coreUrl = isProd
-    ? "https://api.midtrans.com/v2"
-    : "https://api.sandbox.midtrans.com/v2"
+  const coreUrl = isProd ? "https://api.midtrans.com/v2" : "https://api.sandbox.midtrans.com/v2"
 
   return { serverKey, clientKey, snapUrl, coreUrl }
 }
@@ -119,7 +128,8 @@ export async function createOnlinePayment({
       return {
         success: false,
         code: "PENDING_PAYMENT_EXISTS",
-        message: "Anda memiliki pembayaran pending untuk tagihan ini. Silakan selesaikan pembayaran tersebut.",
+        message:
+          "Anda memiliki pembayaran pending untuk tagihan ini. Silakan selesaikan pembayaran tersebut.",
         data: {
           snapToken: existingPending.snapToken,
           snapUrl: existingPending.snapUrl,
@@ -131,7 +141,6 @@ export async function createOnlinePayment({
 
     nominal = Number(tagihan.nominal)
     description = `Bayar ${tagihan.jenisSimpanan.nama} ${tagihan.bulan}/${tagihan.tahun}`
-
   } else if (tipe === "ANGSURAN") {
     if (!relatedId) throw new Error("ID Angsuran diperlukan")
 
@@ -157,7 +166,8 @@ export async function createOnlinePayment({
       return {
         success: false,
         code: "PENDING_PAYMENT_EXISTS",
-        message: "Anda memiliki pembayaran pending untuk angsuran ini. Silakan selesaikan pembayaran tersebut.",
+        message:
+          "Anda memiliki pembayaran pending untuk angsuran ini. Silakan selesaikan pembayaran tersebut.",
         data: {
           snapToken: existingPending.snapToken,
           snapUrl: existingPending.snapUrl,
@@ -172,15 +182,24 @@ export async function createOnlinePayment({
     const dendaPerHari = getNumber(konfig, "denda_per_hari", 0.5)
     const gracePeriod = getNumber(konfig, "grace_period", 7)
     const tglBayar = new Date()
-    const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - angsuran.jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
+    const daysLate = Math.max(
+      0,
+      Math.floor((tglBayar.getTime() - angsuran.jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)),
+    )
     const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-    const denda = effectiveDaysLate > 0
-      ? Number(((Number(angsuran.pokok) + Number(angsuran.jasa)) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-      : 0
+    const denda =
+      effectiveDaysLate > 0
+        ? Number(
+            (
+              (Number(angsuran.pokok) + Number(angsuran.jasa)) *
+              (dendaPerHari / 100) *
+              effectiveDaysLate
+            ).toFixed(2),
+          )
+        : 0
 
     nominal = Number(angsuran.pokok) + Number(angsuran.jasa) + denda
     description = `Bayar Angsuran Ke-${angsuran.angsuranKe} Pinjaman`
-
   } else if (tipe === "SIMPANAN_SUKARELA") {
     if (!nominalInput || nominalInput <= 0) {
       throw new Error("Nominal setoran sukarela tidak valid")
@@ -191,7 +210,9 @@ export async function createOnlinePayment({
     })
     if (!jenisSukarela) throw new Error("Jenis simpanan Sukarela tidak ditemukan")
     if (nominalInput < Number(jenisSukarela.minimalSetoran)) {
-      throw new Error(`Minimal setoran Sukarela adalah Rp${Number(jenisSukarela.minimalSetoran).toLocaleString("id-ID")}`)
+      throw new Error(
+        `Minimal setoran Sukarela adalah Rp${Number(jenisSukarela.minimalSetoran).toLocaleString("id-ID")}`,
+      )
     }
 
     // Check if there is an active pending transaction for sukarela in the last 15 mins for the same amount (spam guard)
@@ -209,7 +230,8 @@ export async function createOnlinePayment({
       return {
         success: false,
         code: "PENDING_PAYMENT_EXISTS",
-        message: "Anda memiliki setoran sukarela pending dengan nominal yang sama. Silakan selesaikan atau tunggu.",
+        message:
+          "Anda memiliki setoran sukarela pending dengan nominal yang sama. Silakan selesaikan atau tunggu.",
         data: {
           snapToken: recentPending.snapToken,
           snapUrl: recentPending.snapUrl,
@@ -242,9 +264,9 @@ export async function createOnlinePayment({
   const response = await midtransFetch(`${snapUrl}/transactions`, {
     method: "POST",
     headers: {
-      "Authorization": basicAuth,
+      Authorization: basicAuth,
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({
       transaction_details: {
@@ -331,8 +353,8 @@ async function syncOnlinePaymentStatusImpl(orderId: string) {
   const basicAuth = "Basic " + Buffer.from(serverKey + ":").toString("base64")
   const response = await midtransFetch(`${coreUrl}/${orderId}/status`, {
     headers: {
-      "Authorization": basicAuth,
-      "Accept": "application/json",
+      Authorization: basicAuth,
+      Accept: "application/json",
     },
   })
 
@@ -415,7 +437,12 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
       const noStruk = await generateNoStrukTagihan()
 
       const simpanan = await tx.simpanan.upsert({
-        where: { anggotaId_jenisSimpananId: { anggotaId: tagihan.anggotaId, jenisSimpananId: tagihan.jenisSimpananId } },
+        where: {
+          anggotaId_jenisSimpananId: {
+            anggotaId: tagihan.anggotaId,
+            jenisSimpananId: tagihan.jenisSimpananId,
+          },
+        },
         create: {
           anggotaId: tagihan.anggotaId,
           jenisSimpananId: tagihan.jenisSimpananId,
@@ -456,7 +483,6 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
           { akunKode: akunSimpanan, debit: 0, kredit: nominalNum },
         ],
       })
-
     } else if (trxOnline.tipe === "SIMPANAN_SUKARELA") {
       notifRelatedId = trxOnline.anggotaId
       const jenisSukarela = await tx.jenisSimpanan.findFirst({ where: { kode: "SUKARELA" } })
@@ -465,7 +491,12 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
       const noStruk = await generateNoStrukSimpanan()
 
       const simpanan = await tx.simpanan.upsert({
-        where: { anggotaId_jenisSimpananId: { anggotaId: trxOnline.anggotaId, jenisSimpananId: jenisSukarela.id } },
+        where: {
+          anggotaId_jenisSimpananId: {
+            anggotaId: trxOnline.anggotaId,
+            jenisSimpananId: jenisSukarela.id,
+          },
+        },
         create: {
           anggotaId: trxOnline.anggotaId,
           jenisSimpananId: jenisSukarela.id,
@@ -497,7 +528,6 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
           { akunKode: akunSimpanan, debit: 0, kredit: nominalNum },
         ],
       })
-
     } else if (trxOnline.tipe === "ANGSURAN") {
       const angsuran = await tx.angsuran.findUnique({
         where: { id: trxOnline.relatedId! },
@@ -556,22 +586,33 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
     }
 
     // 2. Notify Members & Admins
-    const typeLabel = trxOnline.tipe === "TAGIHAN_WAJIB" ? "Simpanan Wajib" : trxOnline.tipe === "SIMPANAN_SUKARELA" ? "Simpanan Sukarela" : "Angsuran Pinjaman"
+    const typeLabel =
+      trxOnline.tipe === "TAGIHAN_WAJIB"
+        ? "Simpanan Wajib"
+        : trxOnline.tipe === "SIMPANAN_SUKARELA"
+          ? "Simpanan Sukarela"
+          : "Angsuran Pinjaman"
 
-    await notifyMember({
-      anggotaId: trxOnline.anggotaId,
-      title: "Pembayaran Online Sukses",
-      message: `Pembayaran ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans berhasil.`,
-      type: notifType,
-      relatedId: notifType === "ANGSURAN" ? notifRelatedId : undefined,
-    }, tx)
+    await notifyMember(
+      {
+        anggotaId: trxOnline.anggotaId,
+        title: "Pembayaran Online Sukses",
+        message: `Pembayaran ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans berhasil.`,
+        type: notifType,
+        relatedId: notifType === "ANGSURAN" ? notifRelatedId : undefined,
+      },
+      tx,
+    )
 
-    await notifyAdmins({
-      title: "Pembayaran Online Sukses",
-      message: `${trxOnline.anggota.nama} telah membayar ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans.`,
-      type: notifType,
-      relatedId: notifRelatedId,
-    }, tx)
+    await notifyAdmins(
+      {
+        title: "Pembayaran Online Sukses",
+        message: `${trxOnline.anggota.nama} telah membayar ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans.`,
+        type: notifType,
+        relatedId: notifRelatedId,
+      },
+      tx,
+    )
 
     // 3. Audit Log (use actual member, not random admin)
     const anggotaUser = await tx.user.findUnique({ where: { anggotaId: trxOnline.anggotaId } })

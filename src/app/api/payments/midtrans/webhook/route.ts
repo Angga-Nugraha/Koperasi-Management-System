@@ -76,7 +76,9 @@ export async function POST(req: Request) {
         where: { id: trxOnline.id },
         data: { status: transaction_status === "expire" ? "EXPIRED" : "FAILED" },
       })
-      console.log(`Webhook Failed: Order ID ${order_id} marked as ${transaction_status.toUpperCase()}.`)
+      console.log(
+        `Webhook Failed: Order ID ${order_id} marked as ${transaction_status.toUpperCase()}.`,
+      )
     }
 
     return NextResponse.json({ success: true })

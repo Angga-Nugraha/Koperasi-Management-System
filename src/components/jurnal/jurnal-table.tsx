@@ -115,9 +115,7 @@ export function JurnalTable({ data, total, page, totalPages, pageSize = 20, sear
                     {j.noJurnal}
                   </Link>
                 </TableCell>
-                <TableCell className="text-sm">
-                  {formatTanggal(j.tanggal)}
-                </TableCell>
+                <TableCell className="text-sm">{formatTanggal(j.tanggal)}</TableCell>
                 <TableCell className="text-sm">{j.keterangan}</TableCell>
                 <TableCell className="text-right text-sm">{fmt(j.totalDebit)}</TableCell>
                 <TableCell className="text-right text-sm">{fmt(j.totalKredit)}</TableCell>

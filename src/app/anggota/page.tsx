@@ -90,9 +90,7 @@ export default async function AnggotaDashboard() {
               {data.simpanan.map((s) => (
                 <div key={s.kode} className="rounded-lg border border-l-4 border-l-emerald-500 p-4">
                   <p className="text-sm text-muted-foreground">{s.nama}</p>
-                  <p className="mt-1 text-xl font-bold">
-                    Rp {s.saldo.toLocaleString("id-ID")}
-                  </p>
+                  <p className="mt-1 text-xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>
                 </div>
               ))}
             </div>
@@ -108,7 +106,10 @@ export default async function AnggotaDashboard() {
           <CardContent>
             <div className="space-y-2">
               {data.pinjamanAktif.map((p) => (
-                <div key={`pinjaman-${p.jumlah}-${p.status}`} className="flex items-center justify-between rounded-lg border border-l-4 border-l-amber-500 p-3">
+                <div
+                  key={`pinjaman-${p.jumlah}-${p.status}`}
+                  className="flex items-center justify-between rounded-lg border border-l-4 border-l-amber-500 p-3"
+                >
                   <div>
                     <p className="text-sm font-medium">
                       Pinjaman Rp {p.jumlah.toLocaleString("id-ID")}

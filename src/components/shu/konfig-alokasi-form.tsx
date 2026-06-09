@@ -11,11 +11,22 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { getIndikatorSHUList, saveAllIndikatorSHU } from "@/actions/shu"
 import { getAkunList } from "@/actions/konfigurasi"
@@ -32,7 +43,22 @@ export function KonfigAlokasiForm({
   akunList: Akun[]
 }) {
   const router = useRouter()
-  const [items, setItems] = useState(initial.length > 0 ? initial : [{ id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: null, urutan: 1, isActive: true } as Indikator])
+  const [items, setItems] = useState(
+    initial.length > 0
+      ? initial
+      : [
+          {
+            id: "",
+            kode: "",
+            nama: "",
+            persentase: 0,
+            kelompok: "ANGGOTA",
+            akunId: null,
+            urutan: 1,
+            isActive: true,
+          } as Indikator,
+        ],
+  )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [confirm, setConfirm] = useState<{ onConfirm: () => void } | null>(null)
@@ -42,11 +68,17 @@ export function KonfigAlokasiForm({
 
   function updateItem(index: number, field: keyof Indikator, value: unknown) {
     if (field === "kelompok") {
-      setItems(items.map((item, i) =>
-        i === index
-          ? { ...item, kelompok: value as string, akunId: value === "ANGGOTA" ? (akunSukarela?.id ?? null) : null }
-          : item,
-      ))
+      setItems(
+        items.map((item, i) =>
+          i === index
+            ? {
+                ...item,
+                kelompok: value as string,
+                akunId: value === "ANGGOTA" ? (akunSukarela?.id ?? null) : null,
+              }
+            : item,
+        ),
+      )
     } else {
       setItems(items.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
     }
@@ -54,7 +86,19 @@ export function KonfigAlokasiForm({
 
   function addItem() {
     const maxUrutan = items.reduce((m, i) => Math.max(m, i.urutan), 0)
-    setItems([...items, { id: "", kode: "", nama: "", persentase: 0, kelompok: "ANGGOTA", akunId: akunSukarela?.id ?? null, urutan: maxUrutan + 1, isActive: true } as Indikator])
+    setItems([
+      ...items,
+      {
+        id: "",
+        kode: "",
+        nama: "",
+        persentase: 0,
+        kelompok: "ANGGOTA",
+        akunId: akunSukarela?.id ?? null,
+        urutan: maxUrutan + 1,
+        isActive: true,
+      } as Indikator,
+    ])
   }
 
   function removeItem(index: number) {
@@ -67,14 +111,16 @@ export function KonfigAlokasiForm({
     setLoading(true)
     setError("")
     try {
-      await saveAllIndikatorSHU(items.map((i) => ({
-        kode: i.kode,
-        nama: i.nama,
-        persentase: i.persentase,
-        kelompok: i.kelompok,
-        akunId: i.akunId,
-        urutan: i.urutan,
-      })))
+      await saveAllIndikatorSHU(
+        items.map((i) => ({
+          kode: i.kode,
+          nama: i.nama,
+          persentase: i.persentase,
+          kelompok: i.kelompok,
+          akunId: i.akunId,
+          urutan: i.urutan,
+        })),
+      )
       router.push("/pengurus/shu")
     } catch (e) {
       setError((e as Error).message)
@@ -103,7 +149,9 @@ export function KonfigAlokasiForm({
         </Button>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Konfigurasi Indikator SHU</h1>
-          <p className="text-sm text-muted-foreground">Atur indikator pembagian SHU. Total persentase harus 100%.</p>
+          <p className="text-sm text-muted-foreground">
+            Atur indikator pembagian SHU. Total persentase harus 100%.
+          </p>
         </div>
       </div>
 
@@ -117,7 +165,10 @@ export function KonfigAlokasiForm({
         </CardHeader>
         <CardContent className="space-y-4">
           {items.map((item, index) => (
-            <div key={item.kode || `indikator-${index}`} className="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap sm:gap-3 rounded-lg border p-4">
+            <div
+              key={item.kode || `indikator-${index}`}
+              className="flex flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap sm:gap-3 rounded-lg border p-4"
+            >
               <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Kode</Label>
                 <Input
@@ -162,7 +213,9 @@ export function KonfigAlokasiForm({
               </div>
               <div className="space-y-1.5 w-full sm:flex-1">
                 <Label className="text-xs">Akun Jurnal</Label>
-                {item.kelompok === "ANGGOTA" && <span className="ml-1 text-xs text-muted-foreground">(otomatis ke 2.1.3)</span>}
+                {item.kelompok === "ANGGOTA" && (
+                  <span className="ml-1 text-xs text-muted-foreground">(otomatis ke 2.1.3)</span>
+                )}
                 <Select
                   value={item.akunId ?? "__none__"}
                   onValueChange={(v) => updateItem(index, "akunId", v === "__none__" ? null : v)}
@@ -174,12 +227,20 @@ export function KonfigAlokasiForm({
                   <SelectContent>
                     <SelectItem value="__none__">-- Tanpa akun --</SelectItem>
                     {akunList.map((a) => (
-                      <SelectItem key={a.id} value={a.id}>{a.kode} - {a.nama}</SelectItem>
+                      <SelectItem key={a.id} value={a.id}>
+                        {a.kode} - {a.nama}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => removeItem(index)} disabled={items.length <= 1} aria-label="Hapus indikator">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => removeItem(index)}
+                disabled={items.length <= 1}
+                aria-label="Hapus indikator"
+              >
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
             </div>
@@ -187,7 +248,9 @@ export function KonfigAlokasiForm({
 
           <div className="flex items-center justify-end gap-2 border-t pt-4">
             <span className="text-sm text-muted-foreground">Total:</span>
-            <span className={`text-lg font-bold ${Math.abs(total - 100) < 0.01 ? "text-green-600" : "text-destructive"}`}>
+            <span
+              className={`text-lg font-bold ${Math.abs(total - 100) < 0.01 ? "text-green-600" : "text-destructive"}`}
+            >
               {total}%
             </span>
           </div>
@@ -203,11 +266,18 @@ export function KonfigAlokasiForm({
         </CardContent>
       </Card>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Simpan Konfigurasi SHU</AlertDialogTitle>
-            <AlertDialogDescription>Simpan perubahan indikator SHU dan kembali ke daftar?</AlertDialogDescription>
+            <AlertDialogDescription>
+              Simpan perubahan indikator SHU dan kembali ke daftar?
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

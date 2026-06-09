@@ -8,11 +8,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Bell, BellRing, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { formatTanggal } from "@/lib/format"
 import { useRouter } from "next/navigation"
 
@@ -112,9 +108,7 @@ export function NotifikasiBell({ role }: { role?: string }) {
         </div>
         <div className="max-h-80 overflow-y-auto">
           {list.length === 0 ? (
-            <p className="p-4 text-center text-sm text-muted-foreground">
-              Tidak ada notifikasi
-            </p>
+            <p className="p-4 text-center text-sm text-muted-foreground">Tidak ada notifikasi</p>
           ) : (
             list.map((item) => (
               <button
@@ -124,7 +118,9 @@ export function NotifikasiBell({ role }: { role?: string }) {
                 onClick={() => handleClick(item)}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <span className={`font-medium ${!item.isRead ? "text-foreground" : "text-muted-foreground"}`}>
+                  <span
+                    className={`font-medium ${!item.isRead ? "text-foreground" : "text-muted-foreground"}`}
+                  >
                     {item.title}
                   </span>
                   <span className="shrink-0 text-[10px] text-muted-foreground">

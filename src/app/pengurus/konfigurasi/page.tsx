@@ -3,7 +3,13 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
-import { getKonfigList, getAkunList, getGeneralInfo, getJenisPinjamanList, getJenisSimpananList } from "@/actions/konfigurasi"
+import {
+  getKonfigList,
+  getAkunList,
+  getGeneralInfo,
+  getJenisPinjamanList,
+  getJenisSimpananList,
+} from "@/actions/konfigurasi"
 import { KonfigurasiPage } from "@/components/konfigurasi/konfigurasi-page"
 
 export default async function PengaturanPage() {

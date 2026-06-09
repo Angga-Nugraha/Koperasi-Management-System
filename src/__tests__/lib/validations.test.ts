@@ -1,9 +1,30 @@
 import { describe, it, expect } from "vitest"
-import { anggotaSchema, anggotaStatusSchema, resetPasswordSchema as anggotaResetPasswordSchema } from "@/lib/validations/anggota"
-import { setorSimpananSchema, tarikSimpananSchema, getTagihanListSchema, generateTagihanSchema, bayarTagihanSchema } from "@/lib/validations/simpanan"
-import { ajukanPinjamanSchema, cairkanPinjamanSchema, bayarAngsuranSchema, hapusPinjamanSchema, setujuiPinjamanSchema, bayarAngsuranKeSchema } from "@/lib/validations/pinjaman"
+import {
+  anggotaSchema,
+  anggotaStatusSchema,
+  resetPasswordSchema as anggotaResetPasswordSchema,
+} from "@/lib/validations/anggota"
+import {
+  setorSimpananSchema,
+  tarikSimpananSchema,
+  getTagihanListSchema,
+  generateTagihanSchema,
+  bayarTagihanSchema,
+} from "@/lib/validations/simpanan"
+import {
+  ajukanPinjamanSchema,
+  cairkanPinjamanSchema,
+  bayarAngsuranSchema,
+  hapusPinjamanSchema,
+  setujuiPinjamanSchema,
+  bayarAngsuranKeSchema,
+} from "@/lib/validations/pinjaman"
 import { jurnalManualSchema } from "@/lib/validations/jurnal"
-import { createUserSchema, updateUserSchema, resetPasswordSchema as userResetPasswordSchema } from "@/lib/validations/user"
+import {
+  createUserSchema,
+  updateUserSchema,
+  resetPasswordSchema as userResetPasswordSchema,
+} from "@/lib/validations/user"
 import { jabatanSchema, kepengurusanSchema } from "@/lib/validations/kepengurusan"
 
 describe("Validation Schemas", () => {
@@ -80,39 +101,59 @@ describe("Validation Schemas", () => {
 
   describe("resetPasswordSchema (anggota)", () => {
     it("accepts valid password", () => {
-      expect(anggotaResetPasswordSchema.safeParse({ userId: "abc", password: "secret123" }).success).toBe(true)
+      expect(
+        anggotaResetPasswordSchema.safeParse({ userId: "abc", password: "secret123" }).success,
+      ).toBe(true)
     })
 
     it("rejects short password", () => {
-      expect(anggotaResetPasswordSchema.safeParse({ userId: "abc", password: "12345" }).success).toBe(false)
+      expect(
+        anggotaResetPasswordSchema.safeParse({ userId: "abc", password: "12345" }).success,
+      ).toBe(false)
     })
   })
 
   describe("setorSimpananSchema", () => {
     it("accepts valid deposit", () => {
-      expect(setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 50000 }).success).toBe(true)
+      expect(
+        setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 50000 })
+          .success,
+      ).toBe(true)
     })
 
     it("rejects zero nominal", () => {
-      expect(setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 0 }).success).toBe(false)
+      expect(
+        setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 0 }).success,
+      ).toBe(false)
     })
 
     it("rejects negative nominal", () => {
-      expect(setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: -100 }).success).toBe(false)
+      expect(
+        setorSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: -100 })
+          .success,
+      ).toBe(false)
     })
 
     it("rejects empty anggotaId", () => {
-      expect(setorSimpananSchema.safeParse({ anggotaId: "", jenisSimpananId: "b", nominal: 50000 }).success).toBe(false)
+      expect(
+        setorSimpananSchema.safeParse({ anggotaId: "", jenisSimpananId: "b", nominal: 50000 })
+          .success,
+      ).toBe(false)
     })
   })
 
   describe("tarikSimpananSchema", () => {
     it("accepts valid withdrawal", () => {
-      expect(tarikSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 25000 }).success).toBe(true)
+      expect(
+        tarikSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 25000 })
+          .success,
+      ).toBe(true)
     })
 
     it("rejects zero nominal", () => {
-      expect(tarikSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 0 }).success).toBe(false)
+      expect(
+        tarikSimpananSchema.safeParse({ anggotaId: "a", jenisSimpananId: "b", nominal: 0 }).success,
+      ).toBe(false)
     })
   })
 
@@ -159,33 +200,56 @@ describe("Validation Schemas", () => {
 
   describe("ajukanPinjamanSchema", () => {
     it("accepts valid loan application", () => {
-      expect(ajukanPinjamanSchema.safeParse({
-        anggotaId: "a", jenisPinjamanId: "b", jumlah: 1000000, tenor: 12,
-      }).success).toBe(true)
+      expect(
+        ajukanPinjamanSchema.safeParse({
+          anggotaId: "a",
+          jenisPinjamanId: "b",
+          jumlah: 1000000,
+          tenor: 12,
+        }).success,
+      ).toBe(true)
     })
 
     it("rejects zero tenor", () => {
-      expect(ajukanPinjamanSchema.safeParse({
-        anggotaId: "a", jenisPinjamanId: "b", jumlah: 1000000, tenor: 0,
-      }).success).toBe(false)
+      expect(
+        ajukanPinjamanSchema.safeParse({
+          anggotaId: "a",
+          jenisPinjamanId: "b",
+          jumlah: 1000000,
+          tenor: 0,
+        }).success,
+      ).toBe(false)
     })
 
     it("rejects zero jumlah", () => {
-      expect(ajukanPinjamanSchema.safeParse({
-        anggotaId: "a", jenisPinjamanId: "b", jumlah: 0, tenor: 12,
-      }).success).toBe(false)
+      expect(
+        ajukanPinjamanSchema.safeParse({
+          anggotaId: "a",
+          jenisPinjamanId: "b",
+          jumlah: 0,
+          tenor: 12,
+        }).success,
+      ).toBe(false)
     })
 
     it("accepts optional keterangan", () => {
       const result = ajukanPinjamanSchema.safeParse({
-        anggotaId: "a", jenisPinjamanId: "b", jumlah: 1000000, tenor: 12, keterangan: "Test",
+        anggotaId: "a",
+        jenisPinjamanId: "b",
+        jumlah: 1000000,
+        tenor: 12,
+        keterangan: "Test",
       })
       expect(result.success).toBe(true)
     })
 
     it("accepts null keterangan", () => {
       const result = ajukanPinjamanSchema.safeParse({
-        anggotaId: "a", jenisPinjamanId: "b", jumlah: 1000000, tenor: 12, keterangan: null,
+        anggotaId: "a",
+        jenisPinjamanId: "b",
+        jumlah: 1000000,
+        tenor: 12,
+        keterangan: null,
       })
       expect(result.success).toBe(true)
     })
@@ -197,7 +261,9 @@ describe("Validation Schemas", () => {
     })
 
     it("accepts with keterangan", () => {
-      expect(setujuiPinjamanSchema.safeParse({ pinjamanId: "abc", keterangan: "Disetujui" }).success).toBe(true)
+      expect(
+        setujuiPinjamanSchema.safeParse({ pinjamanId: "abc", keterangan: "Disetujui" }).success,
+      ).toBe(true)
     })
 
     it("rejects empty pinjamanId", () => {
@@ -217,7 +283,9 @@ describe("Validation Schemas", () => {
 
   describe("bayarAngsuranSchema", () => {
     it("accepts valid payment", () => {
-      expect(bayarAngsuranSchema.safeParse({ pinjamanId: "abc", nominal: 500000 }).success).toBe(true)
+      expect(bayarAngsuranSchema.safeParse({ pinjamanId: "abc", nominal: 500000 }).success).toBe(
+        true,
+      )
     })
 
     it("rejects zero nominal", () => {
@@ -225,21 +293,29 @@ describe("Validation Schemas", () => {
     })
 
     it("rejects negative nominal", () => {
-      expect(bayarAngsuranSchema.safeParse({ pinjamanId: "abc", nominal: -100 }).success).toBe(false)
+      expect(bayarAngsuranSchema.safeParse({ pinjamanId: "abc", nominal: -100 }).success).toBe(
+        false,
+      )
     })
   })
 
   describe("bayarAngsuranKeSchema", () => {
     it("accepts valid input", () => {
-      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: 3 }).success).toBe(true)
+      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: 3 }).success).toBe(
+        true,
+      )
     })
 
     it("rejects zero angsuranKe", () => {
-      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: 0 }).success).toBe(false)
+      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: 0 }).success).toBe(
+        false,
+      )
     })
 
     it("rejects negative angsuranKe", () => {
-      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: -1 }).success).toBe(false)
+      expect(bayarAngsuranKeSchema.safeParse({ pinjamanId: "abc", angsuranKe: -1 }).success).toBe(
+        false,
+      )
     })
   })
 
@@ -484,7 +560,9 @@ describe("Validation Schemas", () => {
     })
 
     it("accepts PENGAWAS tipe", () => {
-      expect(jabatanSchema.safeParse({ jabatan: "Anggota Pengawas", tipe: "PENGAWAS" }).success).toBe(true)
+      expect(
+        jabatanSchema.safeParse({ jabatan: "Anggota Pengawas", tipe: "PENGAWAS" }).success,
+      ).toBe(true)
     })
 
     it("rejects short jabatan name", () => {
@@ -498,11 +576,15 @@ describe("Validation Schemas", () => {
 
   describe("kepengurusanSchema", () => {
     it("accepts valid assignment", () => {
-      expect(kepengurusanSchema.safeParse({ jabatan: "Ketua", anggotaId: "abc-123" }).success).toBe(true)
+      expect(kepengurusanSchema.safeParse({ jabatan: "Ketua", anggotaId: "abc-123" }).success).toBe(
+        true,
+      )
     })
 
     it("rejects empty jabatan", () => {
-      expect(kepengurusanSchema.safeParse({ jabatan: "", anggotaId: "abc-123" }).success).toBe(false)
+      expect(kepengurusanSchema.safeParse({ jabatan: "", anggotaId: "abc-123" }).success).toBe(
+        false,
+      )
     })
 
     it("rejects empty anggotaId", () => {

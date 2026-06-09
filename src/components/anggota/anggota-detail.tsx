@@ -21,9 +21,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import {
   Select,
@@ -44,7 +49,7 @@ import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { EditAnggotaSheet } from "./edit-anggota-sheet"
 import { KartuAnggotaCard } from "./kartu-anggota-card"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Eye, CreditCard } from "lucide-react"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 
 import Link from "next/link"
 
@@ -107,7 +112,11 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
   const [editSheetOpen, setEditSheetOpen] = useState(false)
   const [kartuOpen, setKartuOpen] = useState(false)
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   async function handleStatusChange() {
     setConfirm(null)
@@ -185,7 +194,17 @@ export function AnggotaDetailClient({ anggota }: Props) {
                 <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
                   Batal
                 </Button>
-                <Button onClick={() => setConfirm({ title: "Ubah Status Anggota", desc: `Ubah status ${anggota.nama} menjadi ${STATUS_MAP[newStatus] ?? newStatus}?`, onConfirm: handleStatusChange })}>Simpan</Button>
+                <Button
+                  onClick={() =>
+                    setConfirm({
+                      title: "Ubah Status Anggota",
+                      desc: `Ubah status ${anggota.nama} menjadi ${STATUS_MAP[newStatus] ?? newStatus}?`,
+                      onConfirm: handleStatusChange,
+                    })
+                  }
+                >
+                  Simpan
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -219,7 +238,16 @@ export function AnggotaDetailClient({ anggota }: Props) {
                 <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                   Batal
                 </Button>
-                <Button variant="destructive" onClick={() => setConfirm({ title: "Hapus Anggota", desc: `Yakin ingin menghapus ${anggota.nama}? Tindakan ini tidak dapat dikembalikan.`, onConfirm: handleDelete })}>
+                <Button
+                  variant="destructive"
+                  onClick={() =>
+                    setConfirm({
+                      title: "Hapus Anggota",
+                      desc: `Yakin ingin menghapus ${anggota.nama}? Tindakan ini tidak dapat dikembalikan.`,
+                      onConfirm: handleDelete,
+                    })
+                  }
+                >
                   Hapus
                 </Button>
               </DialogFooter>
@@ -310,67 +338,63 @@ export function AnggotaDetailClient({ anggota }: Props) {
                   <DialogHeader>
                     <DialogTitle>KTP - {anggota.nama}</DialogTitle>
                   </DialogHeader>
-                  {anggota.ktp && (
-                    <img src={anggota.ktp} alt="KTP" className="w-full rounded-lg" />
-                  )}
+                  {anggota.ktp && <img src={anggota.ktp} alt="KTP" className="w-full rounded-lg" />}
                 </DialogContent>
               </Dialog>
               <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <p className="text-sm text-muted-foreground">NIK</p>
-                <p className="font-medium">{anggota.nik}</p>
+                <div>
+                  <p className="text-sm text-muted-foreground">NIK</p>
+                  <p className="font-medium">{anggota.nik}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">No Anggota</p>
+                  <p className="font-medium">{anggota.noAnggota}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Nama</p>
+                  <p className="font-medium">{anggota.nama}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Jenis Kelamin</p>
+                  <p className="font-medium">
+                    {anggota.jenisKelamin === "LAKI_LAKI"
+                      ? "Laki-laki"
+                      : anggota.jenisKelamin === "PEREMPUAN"
+                        ? "Perempuan"
+                        : "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">No. HP</p>
+                  <p className="font-medium">{anggota.noHp ?? "-"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Alamat</p>
+                  <p className="font-medium">{anggota.alamat}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Pekerjaan</p>
+                  <p className="font-medium">{anggota.pekerjaan ?? "-"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Penghasilan</p>
+                  <p className="font-medium">
+                    {anggota.penghasilan
+                      ? `Rp ${Number(anggota.penghasilan).toLocaleString("id-ID")}`
+                      : "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Tanggal Masuk</p>
+                  <p className="font-medium">{formatTanggal(anggota.tglMasuk)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <Badge variant={STATUS_VARIANTS[anggota.status] ?? "secondary"}>
+                    {STATUS_MAP[anggota.status] ?? anggota.status}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">No Anggota</p>
-                <p className="font-medium">{anggota.noAnggota}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Nama</p>
-                <p className="font-medium">{anggota.nama}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Jenis Kelamin</p>
-                <p className="font-medium">
-                  {anggota.jenisKelamin === "LAKI_LAKI"
-                    ? "Laki-laki"
-                    : anggota.jenisKelamin === "PEREMPUAN"
-                    ? "Perempuan"
-                    : "-"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">No. HP</p>
-                <p className="font-medium">{anggota.noHp ?? "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Alamat</p>
-                <p className="font-medium">{anggota.alamat}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Pekerjaan</p>
-                <p className="font-medium">{anggota.pekerjaan ?? "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Penghasilan</p>
-                <p className="font-medium">
-                  {anggota.penghasilan
-                    ? `Rp ${Number(anggota.penghasilan).toLocaleString("id-ID")}`
-                    : "-"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Tanggal Masuk</p>
-                <p className="font-medium">
-                  {formatTanggal(anggota.tglMasuk)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <Badge variant={STATUS_VARIANTS[anggota.status] ?? "secondary"}>
-                  {STATUS_MAP[anggota.status] ?? anggota.status}
-                </Badge>
-              </div>
-            </div>
             </CardContent>
           </Card>
 
@@ -399,9 +423,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Dibuat</p>
-                      <p className="font-medium">
-                        {formatTanggal(anggota.user.createdAt)}
-                      </p>
+                      <p className="font-medium">{formatTanggal(anggota.user.createdAt)}</p>
                     </div>
                   </div>
                 </div>
@@ -422,29 +444,29 @@ export function AnggotaDetailClient({ anggota }: Props) {
             <CardContent>
               <div className="overflow-x-auto rounded-md border">
                 <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Jenis</TableHead>
-                    <TableHead className="text-right">Saldo</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {anggota.simpanan.length === 0 ? (
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={2} className="text-center text-muted-foreground">
-                        Belum ada simpanan
-                      </TableCell>
+                      <TableHead>Jenis</TableHead>
+                      <TableHead className="text-right">Saldo</TableHead>
                     </TableRow>
-                  ) : (
-                    anggota.simpanan.map((s) => (
-                      <TableRow key={s.jenisKode}>
-                        <TableCell className="font-medium">{s.jenisNama}</TableCell>
-                        <TableCell className="text-right font-mono">
-                          Rp {Number(s.saldo).toLocaleString("id-ID")}
+                  </TableHeader>
+                  <TableBody>
+                    {anggota.simpanan.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={2} className="text-center text-muted-foreground">
+                          Belum ada simpanan
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    ) : (
+                      anggota.simpanan.map((s) => (
+                        <TableRow key={s.jenisKode}>
+                          <TableCell className="font-medium">{s.jenisNama}</TableCell>
+                          <TableCell className="text-right font-mono">
+                            Rp {Number(s.saldo).toLocaleString("id-ID")}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -460,59 +482,63 @@ export function AnggotaDetailClient({ anggota }: Props) {
             <CardContent>
               <div className="overflow-x-auto rounded-md border">
                 <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Jumlah</TableHead>
-                    <TableHead>Sisa</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Angsuran</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {anggota.pinjaman.length === 0 ? (
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center text-muted-foreground">
-                        Belum ada pinjaman
-                      </TableCell>
+                      <TableHead>Jumlah</TableHead>
+                      <TableHead>Sisa</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Angsuran</TableHead>
                     </TableRow>
-                  ) : (
-                    anggota.pinjaman.map((p) => {
-                      const totalAngsuran = p.angsuran.length
-                      const lunas = p.angsuran.filter((a) => a.status === "LUNAS").length
-                      const statusLabel: Record<string, string> = {
-                        PENGAJUAN: "Pengajuan",
-                        DISETUJUI: "Disetujui",
-                        DITOLAK: "Ditolak",
-                        DICAIRKAN: "Dicairkan",
-                        LUNAS: "Lunas",
-                        GAGAL: "Gagal",
-                      }
-                      const statusStyle: Record<string, string> = {
-                        PENGAJUAN: "border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-50/80",
-                        DISETUJUI: "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-50/80",
-                        DITOLAK: "border-red-300 text-red-700 bg-red-50 hover:bg-red-50/80",
-                        DICAIRKAN: "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
-                        LUNAS: "border-green-300 text-green-700 bg-green-50 hover:bg-green-50/80",
-                        GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
-                      }
-                      return (
-                        <TableRow key={p.id}>
-                          <TableCell className="font-mono">
-                            Rp {Number(p.jumlah).toLocaleString("id-ID")}
-                          </TableCell>
-                          <TableCell className="font-mono">
-                            Rp {Number(p.sisaPinjaman).toLocaleString("id-ID")}
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={statusStyle[p.status] ?? ""}>{statusLabel[p.status] ?? p.status}</Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {lunas}/{totalAngsuran}
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })
-                  )}
+                  </TableHeader>
+                  <TableBody>
+                    {anggota.pinjaman.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-muted-foreground">
+                          Belum ada pinjaman
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      anggota.pinjaman.map((p) => {
+                        const totalAngsuran = p.angsuran.length
+                        const lunas = p.angsuran.filter((a) => a.status === "LUNAS").length
+                        const statusLabel: Record<string, string> = {
+                          PENGAJUAN: "Pengajuan",
+                          DISETUJUI: "Disetujui",
+                          DITOLAK: "Ditolak",
+                          DICAIRKAN: "Dicairkan",
+                          LUNAS: "Lunas",
+                          GAGAL: "Gagal",
+                        }
+                        const statusStyle: Record<string, string> = {
+                          PENGAJUAN: "border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-50/80",
+                          DISETUJUI:
+                            "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-50/80",
+                          DITOLAK: "border-red-300 text-red-700 bg-red-50 hover:bg-red-50/80",
+                          DICAIRKAN:
+                            "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-50/80",
+                          LUNAS: "border-green-300 text-green-700 bg-green-50 hover:bg-green-50/80",
+                          GAGAL: "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-50/80",
+                        }
+                        return (
+                          <TableRow key={p.id}>
+                            <TableCell className="font-mono">
+                              Rp {Number(p.jumlah).toLocaleString("id-ID")}
+                            </TableCell>
+                            <TableCell className="font-mono">
+                              Rp {Number(p.sisaPinjaman).toLocaleString("id-ID")}
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={statusStyle[p.status] ?? ""}>
+                                {statusLabel[p.status] ?? p.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {lunas}/{totalAngsuran}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -537,7 +563,12 @@ export function AnggotaDetailClient({ anggota }: Props) {
         }}
       />
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

@@ -52,8 +52,7 @@ test.describe("Login flow", () => {
 
     // Clear session and go back to login — saved creds should be there
     await page.evaluate(() => {
-      document.cookie =
-        "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+      document.cookie = "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
       document.cookie =
         "__Secure-next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
     })

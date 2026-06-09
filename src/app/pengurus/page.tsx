@@ -5,7 +5,15 @@
 
 import { auth } from "@/lib/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, PiggyBank, HandCoins, DollarSign, TrendingUp, History, Landmark } from "lucide-react"
+import {
+  Users,
+  PiggyBank,
+  HandCoins,
+  DollarSign,
+  TrendingUp,
+  History,
+  Landmark,
+} from "lucide-react"
 import { getDashboardPengurus, getTahunList } from "@/actions/dashboard"
 import { SimpananChart } from "./simpanan-chart"
 import { PinjamanStatusChart } from "./pinjaman-status-chart"
@@ -110,13 +118,19 @@ export default async function PengurusDashboard({ searchParams }: Props) {
                 <p className="text-2xl font-bold">{card.value}</p>
                 <p className="text-xs text-muted-foreground">{card.sub}</p>
                 {card.status && (
-                  <p className={`mt-1 text-xs font-medium ${
-                    card.status === "Sangat Baik" ? "text-emerald-600" :
-                    card.status === "Baik" ? "text-green-500" :
-                    card.status === "Cukup Baik" ? "text-yellow-500" :
-                    card.status === "Kurang Baik" ? "text-orange-500" :
-                    "text-red-500"
-                  }`}>
+                  <p
+                    className={`mt-1 text-xs font-medium ${
+                      card.status === "Sangat Baik"
+                        ? "text-emerald-600"
+                        : card.status === "Baik"
+                          ? "text-green-500"
+                          : card.status === "Cukup Baik"
+                            ? "text-yellow-500"
+                            : card.status === "Kurang Baik"
+                              ? "text-orange-500"
+                              : "text-red-500"
+                    }`}
+                  >
                     {card.status}
                   </p>
                 )}
@@ -129,7 +143,9 @@ export default async function PengurusDashboard({ searchParams }: Props) {
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="min-w-0">
           <CardHeader>
-            <CardTitle className="text-base">{tahun > 0 ? `Tren Simpanan ${tahun}` : "Tren Simpanan"}</CardTitle>
+            <CardTitle className="text-base">
+              {tahun > 0 ? `Tren Simpanan ${tahun}` : "Tren Simpanan"}
+            </CardTitle>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             <SimpananChart data={data.simpananChart} />
@@ -160,8 +176,7 @@ export default async function PengurusDashboard({ searchParams }: Props) {
       <Card className="min-w-0">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <History className="h-4 w-4 text-amber-500" />
-            5 Transaksi Terakhir
+            <History className="h-4 w-4 text-amber-500" />5 Transaksi Terakhir
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">

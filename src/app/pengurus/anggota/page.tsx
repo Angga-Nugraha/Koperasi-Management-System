@@ -7,7 +7,14 @@ import { getAnggotaList } from "@/actions/anggota"
 import { AnggotaTable } from "@/components/anggota/anggota-table"
 
 type Props = {
-  searchParams: Promise<{ search?: string; status?: string; page?: string; pageSize?: string; sortBy?: string; sortOrder?: string }>
+  searchParams: Promise<{
+    search?: string
+    status?: string
+    page?: string
+    pageSize?: string
+    sortBy?: string
+    sortOrder?: string
+  }>
 }
 
 export default async function AnggotaListPage({ searchParams }: Props) {

@@ -59,9 +59,7 @@ export function TambahJabatanDialog({ open, onOpenChange }: Props) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Tambah Jabatan Baru</DialogTitle>
-          <DialogDescription>
-            Tambah posisi baru untuk pengurus atau pengawas
-          </DialogDescription>
+          <DialogDescription>Tambah posisi baru untuk pengurus atau pengawas</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

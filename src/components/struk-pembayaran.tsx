@@ -17,8 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Printer, X } from "lucide-react"
-import {formatTanggal} from "@/lib/format"
-
+import { formatTanggal } from "@/lib/format"
 
 type GeneralInfo = {
   namaKoperasi: string
@@ -64,7 +63,21 @@ type StrukTagihan = {
   tahun: number
 }
 
-const BULAN = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+const BULAN = [
+  "",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+]
 
 type Props = {
   open: boolean
@@ -77,12 +90,25 @@ function formatRp(n: number) {
   return `Rp${n.toLocaleString("id-ID")}`
 }
 
-function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: StrukSimpanan | StrukAngsuran | StrukTagihan }) {
+function StrukContent({
+  generalInfo,
+  data,
+}: {
+  generalInfo: GeneralInfo
+  data: StrukSimpanan | StrukAngsuran | StrukTagihan
+}) {
   return (
     <div className="space-y-2 text-[10px]">
       <div className="flex flex-col items-center gap-1 text-center">
         {generalInfo.logo && (
-          <Image src={generalInfo.logo} alt="" width={40} height={40} unoptimized className="h-10 w-10 shrink-0 rounded object-contain" />
+          <Image
+            src={generalInfo.logo}
+            alt=""
+            width={40}
+            height={40}
+            unoptimized
+            className="h-10 w-10 shrink-0 rounded object-contain"
+          />
         )}
         <div>
           <h2 className="text-xs font-bold leading-tight">{generalInfo.namaKoperasi}</h2>
@@ -111,11 +137,15 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Anggota</span>
-            <span>{data.anggota.nama} ({data.anggota.noAnggota})</span>
+            <span>
+              {data.anggota.nama} ({data.anggota.noAnggota})
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Jenis</span>
-            <span>{data.tipe === "SETORAN" ? "Setoran" : "Penarikan"} {data.jenisSimpanan.nama}</span>
+            <span>
+              {data.tipe === "SETORAN" ? "Setoran" : "Penarikan"} {data.jenisSimpanan.nama}
+            </span>
           </div>
           <hr className="border-dashed" />
           <div className="flex justify-between font-semibold">
@@ -139,7 +169,9 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Anggota</span>
-            <span>{data.anggota.nama} ({data.anggota.noAnggota})</span>
+            <span>
+              {data.anggota.nama} ({data.anggota.noAnggota})
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Pembayaran</span>
@@ -179,7 +211,9 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Anggota</span>
-            <span>{data.anggota.nama} ({data.anggota.noAnggota})</span>
+            <span>
+              {data.anggota.nama} ({data.anggota.noAnggota})
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Jenis</span>
@@ -187,7 +221,9 @@ function StrukContent({ generalInfo, data }: { generalInfo: GeneralInfo; data: S
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Periode</span>
-            <span>{BULAN[data.bulan]} {data.tahun}</span>
+            <span>
+              {BULAN[data.bulan]} {data.tahun}
+            </span>
           </div>
           <hr className="border-dashed" />
           <div className="flex justify-between font-semibold">
@@ -236,12 +272,13 @@ export function StrukPembayaran({ open, onOpenChange, generalInfo, data }: Props
         </DialogContent>
       </Dialog>
 
-      {mounted && createPortal(
-        <div id="print-receipt" className="print-receipt">
-          <StrukContent generalInfo={generalInfo} data={data} />
-        </div>,
-        document.body
-      )}
+      {mounted &&
+        createPortal(
+          <div id="print-receipt" className="print-receipt">
+            <StrukContent generalInfo={generalInfo} data={data} />
+          </div>,
+          document.body,
+        )}
     </>
   )
 }

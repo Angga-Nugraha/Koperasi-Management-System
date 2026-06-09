@@ -12,7 +12,7 @@ export async function GET() {
   } catch (err) {
     return NextResponse.json(
       { status: "unhealthy", database: "disconnected", timestamp: new Date().toISOString() },
-      { status: 503 }
+      { status: 503 },
     )
   }
 }

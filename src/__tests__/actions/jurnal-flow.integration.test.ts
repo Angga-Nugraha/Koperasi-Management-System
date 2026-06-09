@@ -32,7 +32,7 @@ describe("Jurnal Flow Integration", () => {
   })
 
   describe("createJurnalManual", () => {
-    let createJurnalManual: typeof import("@/actions/jurnal")["createJurnalManual"]
+    let createJurnalManual: (typeof import("@/actions/jurnal"))["createJurnalManual"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/jurnal")
@@ -42,9 +42,10 @@ describe("Jurnal Flow Integration", () => {
     it("rejects invalid input (single entry)", async () => {
       await expect(
         createJurnalManual({
-          tanggal: "2024-01-15", keterangan: "Test",
+          tanggal: "2024-01-15",
+          keterangan: "Test",
           entries: [{ akunId: "akun1", debit: 50000, kredit: 50000 }],
-        })
+        }),
       ).rejects.toThrow()
     })
 
@@ -52,12 +53,13 @@ describe("Jurnal Flow Integration", () => {
       prisma.akun.findMany.mockResolvedValue([])
       await expect(
         createJurnalManual({
-          tanggal: "2024-01-15", keterangan: "Test",
+          tanggal: "2024-01-15",
+          keterangan: "Test",
           entries: [
             { akunId: "akun1", debit: 50000, kredit: 0 },
             { akunId: "akun2", debit: 0, kredit: 50000 },
           ],
-        })
+        }),
       ).rejects.toThrow()
     })
 
@@ -76,7 +78,8 @@ describe("Jurnal Flow Integration", () => {
       })
 
       const result = await createJurnalManual({
-        tanggal: "2024-01-15", keterangan: "Test Jurnal",
+        tanggal: "2024-01-15",
+        keterangan: "Test Jurnal",
         entries: [
           { akunId: "akun1", debit: 100000, kredit: 0 },
           { akunId: "akun2", debit: 0, kredit: 100000 },
@@ -87,7 +90,7 @@ describe("Jurnal Flow Integration", () => {
   })
 
   describe("getLabaRugi", () => {
-    let getLabaRugi: typeof import("@/actions/jurnal")["getLabaRugi"]
+    let getLabaRugi: (typeof import("@/actions/jurnal"))["getLabaRugi"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/jurnal")
@@ -107,7 +110,7 @@ describe("Jurnal Flow Integration", () => {
   })
 
   describe("getNeraca", () => {
-    let getNeraca: typeof import("@/actions/jurnal")["getNeraca"]
+    let getNeraca: (typeof import("@/actions/jurnal"))["getNeraca"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/jurnal")
@@ -115,8 +118,7 @@ describe("Jurnal Flow Integration", () => {
     })
 
     it("returns neraca structure", async () => {
-      mockGetSaldoAkunTipe
-        .mockResolvedValue({ items: [], total: 0 })
+      mockGetSaldoAkunTipe.mockResolvedValue({ items: [], total: 0 })
 
       const result = await getNeraca("2024-12-31")
       expect(result.aset).toBeDefined()
@@ -128,7 +130,7 @@ describe("Jurnal Flow Integration", () => {
   })
 
   describe("getAkunList", () => {
-    let getAkunList: typeof import("@/actions/jurnal")["getAkunList"]
+    let getAkunList: (typeof import("@/actions/jurnal"))["getAkunList"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/jurnal")
@@ -137,7 +139,14 @@ describe("Jurnal Flow Integration", () => {
 
     it("returns active akun list", async () => {
       prisma.akun.findMany.mockResolvedValue([
-        { id: "a1", kode: "1.1.1", nama: "Kas", tipe: "ASET", saldoNormal: "DEBIT", isActive: true },
+        {
+          id: "a1",
+          kode: "1.1.1",
+          nama: "Kas",
+          tipe: "ASET",
+          saldoNormal: "DEBIT",
+          isActive: true,
+        },
       ])
       const result = await getAkunList()
       expect(result).toHaveLength(1)

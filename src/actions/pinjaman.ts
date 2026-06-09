@@ -18,7 +18,13 @@ import {
   hapusPinjamanSchema,
 } from "@/lib/validations/pinjaman"
 import { z } from "zod"
-import { buatJurnal, COA_KAS, COA_PIUTANG_PINJAMAN, COA_PENDAPATAN_JASA, COA_PENDAPATAN_DENDA } from "@/lib/jurnal"
+import {
+  buatJurnal,
+  COA_KAS,
+  COA_PIUTANG_PINJAMAN,
+  COA_PENDAPATAN_JASA,
+  COA_PENDAPATAN_DENDA,
+} from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { generateNoStrukAngsuran } from "@/lib/struk"
@@ -188,7 +194,8 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
       status: { in: ["PENGAJUAN", "DISETUJUI", "DICAIRKAN"] },
     },
   })
-  if (pinjamanAktif) throw new Error("Anggota masih memiliki pinjaman aktif atau pengajuan yang belum selesai")
+  if (pinjamanAktif)
+    throw new Error("Anggota masih memiliki pinjaman aktif atau pengajuan yang belum selesai")
 
   const jenis = await prisma.jenisPinjaman.findUnique({ where: { id: parsed.jenisPinjamanId } })
   if (!jenis) throw new Error("Jenis pinjaman tidak ditemukan")
@@ -206,7 +213,10 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
     _sum: { saldo: true },
   })
   const maxPlafon = round2(Number(totalSimpanan._sum.saldo ?? 0) * plafonMaxSaldo)
-  if (parsed.jumlah > maxPlafon) throw new Error(`Jumlah pinjaman melebihi plafon. Maksimal Rp${maxPlafon.toLocaleString("id-ID")} (${plafonMaxSaldo}× saldo simpanan)`)
+  if (parsed.jumlah > maxPlafon)
+    throw new Error(
+      `Jumlah pinjaman melebihi plafon. Maksimal Rp${maxPlafon.toLocaleString("id-ID")} (${plafonMaxSaldo}× saldo simpanan)`,
+    )
   if (parsed.jumlah <= 0) throw new Error("Jumlah pinjaman harus lebih dari 0")
 
   const angsuranPokok = round2(parsed.jumlah / parsed.tenor)
@@ -380,9 +390,10 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
       const jatuhTempo = new Date(tglCair)
       jatuhTempo.setMonth(jatuhTempo.getMonth() + bulan)
 
-      const pokokBulan = bulan === pinjaman.tenor
-        ? Number(pinjaman.jumlah) - Number(pinjaman.angsuranPokok) * (pinjaman.tenor - 1)
-        : Number(pinjaman.angsuranPokok)
+      const pokokBulan =
+        bulan === pinjaman.tenor
+          ? Number(pinjaman.jumlah) - Number(pinjaman.angsuranPokok) * (pinjaman.tenor - 1)
+          : Number(pinjaman.angsuranPokok)
 
       return {
         pinjamanId: parsed.pinjamanId,
@@ -441,7 +452,10 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
     where: { id: parsed.pinjamanId },
     include: {
       anggota: { select: { noAnggota: true, nama: true } },
-      angsuran: { where: { status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } }, orderBy: { angsuranKe: "asc" } },
+      angsuran: {
+        where: { status: { in: ["BELUM_LUNAS", "TERLAMBAT"] } },
+        orderBy: { angsuranKe: "asc" },
+      },
     },
   })
   if (!pinjaman) throw new Error("Pinjaman tidak ditemukan")
@@ -461,13 +475,20 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const gracePeriod = getNumber(konfig, "grace_period", 7)
 
   const jatuhTempo = nextAngsuran.jatuhTempo
-  const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
+  const daysLate = Math.max(
+    0,
+    Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)),
+  )
   const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-  const denda = effectiveDaysLate > 0
-    ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-    : 0
+  const denda =
+    effectiveDaysLate > 0
+      ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+      : 0
   const totalHarusDibayar = pokok + jasa + denda
-  if (parsed.nominal < totalHarusDibayar) throw new Error(`Pembayaran kurang. Total yang harus dibayar: Rp${totalHarusDibayar.toLocaleString("id-ID")} (pokok Rp${pokok.toLocaleString("id-ID")} + jasa Rp${jasa.toLocaleString("id-ID")}${denda > 0 ? ` + denda Rp${denda.toLocaleString("id-ID")}` : ""})`)
+  if (parsed.nominal < totalHarusDibayar)
+    throw new Error(
+      `Pembayaran kurang. Total yang harus dibayar: Rp${totalHarusDibayar.toLocaleString("id-ID")} (pokok Rp${pokok.toLocaleString("id-ID")} + jasa Rp${jasa.toLocaleString("id-ID")}${denda > 0 ? ` + denda Rp${denda.toLocaleString("id-ID")}` : ""})`,
+    )
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
   const isLunas = sisaPinjamanSetelah <= 0
 
@@ -562,11 +583,15 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
 
   const tglBayar = new Date()
   const jatuhTempo = angsuran.jatuhTempo
-  const daysLate = Math.max(0, Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)))
+  const daysLate = Math.max(
+    0,
+    Math.floor((tglBayar.getTime() - jatuhTempo.getTime()) / (1000 * 60 * 60 * 24)),
+  )
   const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-  const denda = effectiveDaysLate > 0
-    ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-    : 0
+  const denda =
+    effectiveDaysLate > 0
+      ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+      : 0
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
   const isLunas = sisaPinjamanSetelah <= 0
   const noStruk = await generateNoStrukAngsuran()
@@ -627,7 +652,9 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
   revalidatePath("/pengurus/pinjaman")
   revalidatePath(`/pengurus/pinjaman/${parsed.pinjamanId}`)
 
-  const anggotaUserBayar = await prisma.user.findUnique({ where: { anggotaId: pinjaman.anggotaId } })
+  const anggotaUserBayar = await prisma.user.findUnique({
+    where: { anggotaId: pinjaman.anggotaId },
+  })
   if (anggotaUserBayar) {
     await kirimNotif({
       userId: anggotaUserBayar.id,
@@ -649,7 +676,12 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
       total: pokok + jasa + denda,
       tglBayar: tglBayar.toISOString(),
       anggota: { nama: pinjaman.anggota?.nama ?? "", noAnggota: pinjaman.anggota?.noAnggota ?? "" },
-      pinjaman: { id: pinjaman.id, jumlah: Number(pinjaman.jumlah), sisaPinjaman: Math.max(0, sisaPinjamanSetelah), isLunas },
+      pinjaman: {
+        id: pinjaman.id,
+        jumlah: Number(pinjaman.jumlah),
+        sisaPinjaman: Math.max(0, sisaPinjamanSetelah),
+        isLunas,
+      },
       petugas: session.user.email ?? "Petugas",
     },
   }
@@ -729,11 +761,14 @@ export async function ajukanPinjamanAnggota(input: {
   if (!session?.user || session.user.role !== "ANGGOTA") throw new Error("Unauthorized")
   if (!session.user.anggotaId) throw new Error("Akun tidak terhubung ke anggota")
 
-  return _ajukanPinjaman({
-    anggotaId: session.user.anggotaId,
-    jenisPinjamanId: input.jenisPinjamanId,
-    jumlah: input.jumlah,
-    tenor: input.tenor,
-    keterangan: input.keterangan ?? null,
-  }, session.user.id)
+  return _ajukanPinjaman(
+    {
+      anggotaId: session.user.anggotaId,
+      jenisPinjamanId: input.jenisPinjamanId,
+      jumlah: input.jumlah,
+      tenor: input.tenor,
+      keterangan: input.keterangan ?? null,
+    },
+    session.user.id,
+  )
 }

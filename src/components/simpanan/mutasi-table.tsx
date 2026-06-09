@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 
@@ -64,7 +64,10 @@ export function MutasiTable({ data, total, page, totalPages, pageSize = 20, angg
   const [jenisList, setJenisList] = useState<Array<{ kode: string; nama: string }>>([])
 
   useEffect(() => {
-    fetch("/api/jenis-simpanan").then(r => r.json()).then(setJenisList).catch(() => {})
+    fetch("/api/jenis-simpanan")
+      .then((r) => r.json())
+      .then(setJenisList)
+      .catch(() => {})
   }, [])
 
   function onFilterChange(v: string) {
@@ -102,7 +105,9 @@ export function MutasiTable({ data, total, page, totalPages, pageSize = 20, angg
               <SelectContent>
                 <SelectItem value="SEMUA">Semua</SelectItem>
                 {jenisList.map((j) => (
-                  <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
+                  <SelectItem key={j.kode} value={j.kode}>
+                    {j.nama}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -112,47 +117,45 @@ export function MutasiTable({ data, total, page, totalPages, pageSize = 20, angg
       <CardContent>
         <div className="overflow-x-auto rounded-md border">
           <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Tanggal</TableHead>
-              <TableHead>Jenis</TableHead>
-              <TableHead>Tipe</TableHead>
-              <TableHead className="text-right">Nominal</TableHead>
-              <TableHead className="text-right">Saldo Setelah</TableHead>
-              <TableHead>Keterangan</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground">
-                  Belum ada transaksi
-                </TableCell>
+                <TableHead>Tanggal</TableHead>
+                <TableHead>Jenis</TableHead>
+                <TableHead>Tipe</TableHead>
+                <TableHead className="text-right">Nominal</TableHead>
+                <TableHead className="text-right">Saldo Setelah</TableHead>
+                <TableHead>Keterangan</TableHead>
               </TableRow>
-            ) : (
-              data.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell className="text-sm">
-                    {formatTanggal(t.createdAt)}
-                  </TableCell>
-                  <TableCell>{t.jenisNama}</TableCell>
-                  <TableCell>
-                    <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
-                      {TIPE_LABEL[t.tipe] ?? t.tipe}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right font-mono">
-                    Rp {t.nominal.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="text-right font-mono">
-                    Rp {t.saldoSetelah.toLocaleString("id-ID")}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {t.keterangan ?? "-"}
+            </TableHeader>
+            <TableBody>
+              {data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                    Belum ada transaksi
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ) : (
+                data.map((t) => (
+                  <TableRow key={t.id}>
+                    <TableCell className="text-sm">{formatTanggal(t.createdAt)}</TableCell>
+                    <TableCell>{t.jenisNama}</TableCell>
+                    <TableCell>
+                      <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
+                        {TIPE_LABEL[t.tipe] ?? t.tipe}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      Rp {t.nominal.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      Rp {t.saldoSetelah.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {t.keterangan ?? "-"}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

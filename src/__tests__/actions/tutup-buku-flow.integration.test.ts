@@ -34,7 +34,7 @@ describe("Tutup Buku Flow Integration", () => {
   })
 
   describe("prosesTutupBuku", () => {
-    let prosesTutupBuku: typeof import("@/actions/tutup-buku")["prosesTutupBuku"]
+    let prosesTutupBuku: (typeof import("@/actions/tutup-buku"))["prosesTutupBuku"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/tutup-buku")
@@ -52,7 +52,12 @@ describe("Tutup Buku Flow Integration", () => {
     })
 
     it("rejects when COA_SHU_BERJALAN not found", async () => {
-      prisma.sHU.findUnique.mockResolvedValue({ id: "shu-1", tahun: 2024, status: "DRAFT", total: 1000000 })
+      prisma.sHU.findUnique.mockResolvedValue({
+        id: "shu-1",
+        tahun: 2024,
+        status: "DRAFT",
+        total: 1000000,
+      })
       prisma.akun.findFirst.mockResolvedValue(null)
 
       await expect(prosesTutupBuku(2024)).rejects.toThrow("Akun SHU Tahun Berjalan")
@@ -60,7 +65,7 @@ describe("Tutup Buku Flow Integration", () => {
   })
 
   describe("getSHUTutupBukuList", () => {
-    let getSHUTutupBukuList: typeof import("@/actions/tutup-buku")["getSHUTutupBukuList"]
+    let getSHUTutupBukuList: (typeof import("@/actions/tutup-buku"))["getSHUTutupBukuList"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/tutup-buku")

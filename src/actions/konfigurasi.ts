@@ -198,7 +198,11 @@ export async function getJenisPinjamanList() {
   }))
 }
 
-export async function createJenisPinjaman(data: { nama: string; bunga: number; keterangan?: string | null }) {
+export async function createJenisPinjaman(data: {
+  nama: string
+  bunga: number
+  keterangan?: string | null
+}) {
   const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   const existing = await prisma.jenisPinjaman.findUnique({ where: { nama: data.nama } })
@@ -224,7 +228,10 @@ export async function createJenisPinjaman(data: { nama: string; bunga: number; k
   return { success: true }
 }
 
-export async function updateJenisPinjaman(id: string, data: { nama: string; bunga: number; keterangan?: string | null }) {
+export async function updateJenisPinjaman(
+  id: string,
+  data: { nama: string; bunga: number; keterangan?: string | null },
+) {
   const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await prisma.jenisPinjaman.update({
@@ -320,12 +327,15 @@ export async function createJenisSimpanan(data: {
   return { success: true }
 }
 
-export async function updateJenisSimpanan(id: string, data: {
-  kode: string
-  nama: string
-  minimalSetoran: number
-  keterangan?: string | null
-}) {
+export async function updateJenisSimpanan(
+  id: string,
+  data: {
+    kode: string
+    nama: string
+    minimalSetoran: number
+    keterangan?: string | null
+  },
+) {
   const session = await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await prisma.jenisSimpanan.update({

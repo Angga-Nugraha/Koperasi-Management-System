@@ -4,12 +4,7 @@
  */
 
 import { describe, it, expect } from "vitest"
-import {
-  jurnalFilter,
-  anggotaFilter,
-  detailJurnalFilter,
-  anggotaTanggalFilter,
-} from "@/lib/where"
+import { jurnalFilter, anggotaFilter, detailJurnalFilter, anggotaTanggalFilter } from "@/lib/where"
 
 describe("filter builders", () => {
   describe("jurnalFilter", () => {

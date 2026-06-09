@@ -5,10 +5,7 @@ import { logger } from "@/lib/logger"
 const MAX_RETRIES = 3
 const BASE_DELAY = 100
 
-export async function withRetry<T>(
-  fn: (tx: PrismaTx) => Promise<T>,
-  context?: string,
-): Promise<T> {
+export async function withRetry<T>(fn: (tx: PrismaTx) => Promise<T>, context?: string): Promise<T> {
   let lastError: unknown
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {

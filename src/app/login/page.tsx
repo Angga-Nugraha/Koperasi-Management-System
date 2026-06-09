@@ -28,15 +28,19 @@ export default function LoginPage() {
       if (!saved) return false
       const p = JSON.parse(saved)
       return !!p.email
-    } catch { return false }
+    } catch {
+      return false
+    }
   })
 
   useEffect(() => {
-    fetch("/api/general-info").then(r => r.json()).then(info => {
-      if (info?.namaKoperasi) setNamaKoperasi(info.namaKoperasi)
-      if (info?.logo) setLogoUrl(info.logo)
-    }).catch(() => {}
-    )
+    fetch("/api/general-info")
+      .then((r) => r.json())
+      .then((info) => {
+        if (info?.namaKoperasi) setNamaKoperasi(info.namaKoperasi)
+        if (info?.logo) setLogoUrl(info.logo)
+      })
+      .catch(() => {})
     const saved = localStorage.getItem("login_remember")
     if (saved) {
       try {
@@ -85,7 +89,11 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="items-center space-y-4 pt-8">
-          <img src={logoUrl || "/logo.png"} alt="Logo Koperasi" className="h-28 w-32 rounded-xl object-contain p-1" />
+          <img
+            src={logoUrl || "/logo.png"}
+            alt="Logo Koperasi"
+            className="h-28 w-32 rounded-xl object-contain p-1"
+          />
           <div className="space-y-1 text-center">
             <CardTitle className="text-2xl text-primary">{namaKoperasi}</CardTitle>
             <CardDescription>Sistem Manajemen Koperasi</CardDescription>

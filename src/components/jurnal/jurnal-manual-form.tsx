@@ -18,7 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { createJurnalManual } from "@/actions/jurnal"
 
 type AkunItem = { id: string; kode: string; nama: string; tipe: string; saldoNormal: string }
@@ -68,9 +75,7 @@ export function JurnalManualForm({ akunList }: Props) {
       return
     }
 
-    const nonZero = entries.filter(
-      (e) => e.akunId && (Number(e.debit) > 0 || Number(e.kredit) > 0)
-    )
+    const nonZero = entries.filter((e) => e.akunId && (Number(e.debit) > 0 || Number(e.kredit) > 0))
     if (nonZero.length < 2) {
       setError("Minimal 2 entry dengan akun dipilih")
       return
@@ -105,26 +110,26 @@ export function JurnalManualForm({ akunList }: Props) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardContent className="p-6 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label>Tanggal</Label>
-            <Input
-              type="date"
-              value={tanggal}
-              onChange={(e) => setTanggal(e.target.value)}
-              required
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Tanggal</Label>
+              <Input
+                type="date"
+                value={tanggal}
+                onChange={(e) => setTanggal(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Keterangan</Label>
+              <Input
+                value={keterangan}
+                onChange={(e) => setKeterangan(e.target.value)}
+                placeholder="Deskripsi jurnal"
+                required
+              />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label>Keterangan</Label>
-            <Input
-              value={keterangan}
-              onChange={(e) => setKeterangan(e.target.value)}
-              placeholder="Deskripsi jurnal"
-              required
-            />
-          </div>
-        </div>
         </CardContent>
       </Card>
 
@@ -140,12 +145,9 @@ export function JurnalManualForm({ akunList }: Props) {
           </TableHeader>
           <TableBody>
             {entries.map((entry, i) => (
-                <TableRow key={i}>
+              <TableRow key={i}>
                 <TableCell>
-                  <Select
-                    value={entry.akunId}
-                    onValueChange={(v) => updateEntry(i, "akunId", v)}
-                  >
+                  <Select value={entry.akunId} onValueChange={(v) => updateEntry(i, "akunId", v)}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Pilih akun" />
                     </SelectTrigger>
@@ -205,16 +207,12 @@ export function JurnalManualForm({ akunList }: Props) {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() =>
-            setEntries([...entries, { akunId: "", debit: "0", kredit: "0" }])
-          }
+          onClick={() => setEntries([...entries, { akunId: "", debit: "0", kredit: "0" }])}
         >
           + Tambah Baris
         </Button>
         {entries.length > 2 && (
-          <span className="text-xs text-muted-foreground">
-            {entries.length} baris
-          </span>
+          <span className="text-xs text-muted-foreground">{entries.length} baris</span>
         )}
       </div>
 
@@ -224,11 +222,7 @@ export function JurnalManualForm({ akunList }: Props) {
         <Button type="submit" disabled={loading}>
           {loading ? "Menyimpan..." : "Simpan Jurnal"}
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/pengurus/jurnal")}
-        >
+        <Button type="button" variant="outline" onClick={() => router.push("/pengurus/jurnal")}>
           Batal
         </Button>
       </div>

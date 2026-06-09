@@ -3,8 +3,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     kepengurusan: {
-      findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(),
-      delete: vi.fn(), count: vi.fn(), aggregate: vi.fn(),
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      count: vi.fn(),
+      aggregate: vi.fn(),
     },
     anggota: { findMany: vi.fn(), findUnique: vi.fn() },
   },
@@ -26,7 +31,7 @@ describe("Kepengurusan Flow Integration", () => {
   })
 
   describe("tambahJabatan", () => {
-    let tambahJabatan: typeof import("@/actions/kepengurusan")["tambahJabatan"]
+    let tambahJabatan: (typeof import("@/actions/kepengurusan"))["tambahJabatan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/kepengurusan")
@@ -49,13 +54,13 @@ describe("Kepengurusan Flow Integration", () => {
       const result = await tambahJabatan({ jabatan: "Ketua Baru", tipe: "PENGURUS" })
       expect(result.success).toBe(true)
       expect(prisma.kepengurusan.create).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.objectContaining({ jabatan: "Ketua Baru" }) })
+        expect.objectContaining({ data: expect.objectContaining({ jabatan: "Ketua Baru" }) }),
       )
     })
   })
 
   describe("upsertKepengurusan", () => {
-    let upsertKepengurusan: typeof import("@/actions/kepengurusan")["upsertKepengurusan"]
+    let upsertKepengurusan: (typeof import("@/actions/kepengurusan"))["upsertKepengurusan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/kepengurusan")
@@ -64,17 +69,27 @@ describe("Kepengurusan Flow Integration", () => {
 
     it("rejects when jabatan not found", async () => {
       prisma.kepengurusan.findUnique.mockResolvedValue(null)
-      await expect(upsertKepengurusan({ jabatan: "X", anggotaId: "a1" })).rejects.toThrow("Jabatan tidak ditemukan")
+      await expect(upsertKepengurusan({ jabatan: "X", anggotaId: "a1" })).rejects.toThrow(
+        "Jabatan tidak ditemukan",
+      )
     })
 
     it("rejects when anggota not found", async () => {
       prisma.kepengurusan.findUnique.mockResolvedValue({ id: "k-1", jabatan: "Ketua" })
       prisma.anggota.findUnique.mockResolvedValue(null)
-      await expect(upsertKepengurusan({ jabatan: "Ketua", anggotaId: "x" })).rejects.toThrow("Anggota tidak ditemukan")
+      await expect(upsertKepengurusan({ jabatan: "Ketua", anggotaId: "x" })).rejects.toThrow(
+        "Anggota tidak ditemukan",
+      )
     })
 
     it("assigns anggota to jabatan", async () => {
-      prisma.kepengurusan.findUnique.mockResolvedValue({ id: "k-1", jabatan: "Ketua", anggotaId: null, tipe: "PENGURUS", urutan: 1 })
+      prisma.kepengurusan.findUnique.mockResolvedValue({
+        id: "k-1",
+        jabatan: "Ketua",
+        anggotaId: null,
+        tipe: "PENGURUS",
+        urutan: 1,
+      })
       prisma.anggota.findUnique.mockResolvedValue({ id: "a1", nama: "Budi" })
       prisma.kepengurusan.update.mockResolvedValue({ id: "k-1", anggotaId: "a1" })
 
@@ -85,7 +100,7 @@ describe("Kepengurusan Flow Integration", () => {
   })
 
   describe("kosongkanJabatan", () => {
-    let kosongkanJabatan: typeof import("@/actions/kepengurusan")["kosongkanJabatan"]
+    let kosongkanJabatan: (typeof import("@/actions/kepengurusan"))["kosongkanJabatan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/kepengurusan")
@@ -93,7 +108,13 @@ describe("Kepengurusan Flow Integration", () => {
     })
 
     it("removes anggota from jabatan", async () => {
-      prisma.kepengurusan.findUnique.mockResolvedValue({ id: "k-1", jabatan: "Ketua", anggotaId: "a1", tipe: "PENGURUS", urutan: 1 })
+      prisma.kepengurusan.findUnique.mockResolvedValue({
+        id: "k-1",
+        jabatan: "Ketua",
+        anggotaId: "a1",
+        tipe: "PENGURUS",
+        urutan: 1,
+      })
       prisma.kepengurusan.update.mockResolvedValue({ id: "k-1", anggotaId: null })
       const result = await kosongkanJabatan("k-1")
       expect(result.success).toBe(true)
@@ -102,7 +123,7 @@ describe("Kepengurusan Flow Integration", () => {
   })
 
   describe("hapusJabatan", () => {
-    let hapusJabatan: typeof import("@/actions/kepengurusan")["hapusJabatan"]
+    let hapusJabatan: (typeof import("@/actions/kepengurusan"))["hapusJabatan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/kepengurusan")
@@ -110,7 +131,12 @@ describe("Kepengurusan Flow Integration", () => {
     })
 
     it("deletes jabatan", async () => {
-      prisma.kepengurusan.findUnique.mockResolvedValue({ id: "k-1", jabatan: "Ketua", tipe: "PENGURUS", urutan: 1 })
+      prisma.kepengurusan.findUnique.mockResolvedValue({
+        id: "k-1",
+        jabatan: "Ketua",
+        tipe: "PENGURUS",
+        urutan: 1,
+      })
       prisma.kepengurusan.delete.mockResolvedValue({ id: "k-1" })
       const result = await hapusJabatan("k-1")
       expect(result.success).toBe(true)
@@ -124,7 +150,7 @@ describe("Kepengurusan Flow Integration", () => {
   })
 
   describe("getKepengurusanList", () => {
-    let getKepengurusanList: typeof import("@/actions/kepengurusan")["getKepengurusanList"]
+    let getKepengurusanList: (typeof import("@/actions/kepengurusan"))["getKepengurusanList"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/kepengurusan")
@@ -133,7 +159,13 @@ describe("Kepengurusan Flow Integration", () => {
 
     it("returns ordered list with anggota data", async () => {
       prisma.kepengurusan.findMany.mockResolvedValue([
-        { id: "k-1", jabatan: "Ketua", tipe: "PENGURUS", urutan: 1, anggota: { id: "a1", nama: "Budi", noAnggota: "001", nik: "1234" } },
+        {
+          id: "k-1",
+          jabatan: "Ketua",
+          tipe: "PENGURUS",
+          urutan: 1,
+          anggota: { id: "a1", nama: "Budi", noAnggota: "001", nik: "1234" },
+        },
         { id: "k-2", jabatan: "Sekretaris", tipe: "PENGURUS", urutan: 2, anggota: null },
       ])
       const result = await getKepengurusanList()

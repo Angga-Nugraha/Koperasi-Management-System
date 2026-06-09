@@ -46,7 +46,7 @@ describe("Simpanan Flow Integration", () => {
   })
 
   describe("setorSimpanan", () => {
-    let setorSimpanan: typeof import("@/actions/simpanan")["setorSimpanan"]
+    let setorSimpanan: (typeof import("@/actions/simpanan"))["setorSimpanan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/simpanan")
@@ -57,7 +57,7 @@ describe("Simpanan Flow Integration", () => {
       prisma.anggota.findUnique.mockResolvedValue(null)
 
       await expect(
-        setorSimpanan({ anggotaId: "nonexistent", jenisSimpananId: "j1", nominal: 50000 })
+        setorSimpanan({ anggotaId: "nonexistent", jenisSimpananId: "j1", nominal: 50000 }),
       ).rejects.toThrow("Anggota tidak ditemukan")
     })
 
@@ -66,7 +66,7 @@ describe("Simpanan Flow Integration", () => {
       prisma.jenisSimpanan.findUnique.mockResolvedValue(null)
 
       await expect(
-        setorSimpanan({ anggotaId: "a1", jenisSimpananId: "nonexistent", nominal: 50000 })
+        setorSimpanan({ anggotaId: "a1", jenisSimpananId: "nonexistent", nominal: 50000 }),
       ).rejects.toThrow("Jenis simpanan tidak ditemukan")
     })
 
@@ -80,7 +80,7 @@ describe("Simpanan Flow Integration", () => {
       })
 
       await expect(
-        setorSimpanan({ anggotaId: "a1", jenisSimpananId: "j1", nominal: 10000 })
+        setorSimpanan({ anggotaId: "a1", jenisSimpananId: "j1", nominal: 10000 }),
       ).rejects.toThrow("minimal")
     })
 
@@ -114,7 +114,11 @@ describe("Simpanan Flow Integration", () => {
         return fn(tx)
       })
 
-      const result = await setorSimpanan({ anggotaId: "a1", jenisSimpananId: "j1", nominal: 100000 })
+      const result = await setorSimpanan({
+        anggotaId: "a1",
+        jenisSimpananId: "j1",
+        nominal: 100000,
+      })
 
       expect(result.success).toBe(true)
       expect(result.data.noStruk).toBe("STR-20240115-001")
@@ -159,7 +163,7 @@ describe("Simpanan Flow Integration", () => {
           data: expect.objectContaining({
             keterangan: expect.stringContaining("Simpanan Wajib"),
           }),
-        })
+        }),
       )
     })
 
@@ -177,13 +181,15 @@ describe("Simpanan Flow Integration", () => {
       ])
       prisma.jurnalUmum.create.mockResolvedValue({ id: "jurnal-1" })
       prisma.simpanan.upsert.mockResolvedValue({ id: "simpanan-1", saldo: 100000 })
-      prisma.$transaction.mockImplementation(async (fn: any) => fn({
-        simpanan: { upsert: prisma.simpanan.upsert },
-        transaksiSimpanan: { create: prisma.transaksiSimpanan.create },
-        akun: { findMany: prisma.akun.findMany },
-        jurnalUmum: { create: prisma.jurnalUmum.create },
-        detailJurnal: { create: prisma.detailJurnal.create },
-      }))
+      prisma.$transaction.mockImplementation(async (fn: any) =>
+        fn({
+          simpanan: { upsert: prisma.simpanan.upsert },
+          transaksiSimpanan: { create: prisma.transaksiSimpanan.create },
+          akun: { findMany: prisma.akun.findMany },
+          jurnalUmum: { create: prisma.jurnalUmum.create },
+          detailJurnal: { create: prisma.detailJurnal.create },
+        }),
+      )
 
       await setorSimpanan({ anggotaId: "a1", jenisSimpananId: "j1", nominal: 50000 })
 

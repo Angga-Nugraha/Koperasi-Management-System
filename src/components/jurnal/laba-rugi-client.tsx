@@ -35,23 +35,29 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
   return (
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Dari</Label>
-          <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
-        </div>
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
-        </div>
-        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
-      </form>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
+          >
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Dari</Label>
+              <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
+            </div>
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Sampai</Label>
+              <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
+            </div>
+            <Button type="submit" className="w-full sm:w-auto">
+              Tampilkan
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -96,7 +102,9 @@ export function LabaRugiClient({ dari, sampai, pendapatan, beban, labaBersih }: 
       <Card className="bg-primary/5">
         <CardContent className="p-6 text-center">
           <p className="text-sm text-muted-foreground">Laba / Rugi Bersih</p>
-          <p className={`text-2xl font-bold ${labaBersih >= 0 ? "text-green-600" : "text-red-600"}`}>
+          <p
+            className={`text-2xl font-bold ${labaBersih >= 0 ? "text-green-600" : "text-red-600"}`}
+          >
             {fmt(labaBersih)}
           </p>
         </CardContent>

@@ -35,7 +35,9 @@ export async function getAuditLogs(params: GetAuditLogsParams = {}) {
     prisma.auditLog.count({ where }),
   ])
 
-  const missingEmailIds = [...new Set(raw.filter((l) => l.userId && !l.userEmail).map((l) => l.userId!))]
+  const missingEmailIds = [
+    ...new Set(raw.filter((l) => l.userId && !l.userEmail).map((l) => l.userId!)),
+  ]
   const emailMap = new Map<string, string>()
   if (missingEmailIds.length > 0) {
     const users = await prisma.user.findMany({
@@ -56,7 +58,11 @@ export async function getAuditLogs(params: GetAuditLogsParams = {}) {
       action: l.action,
       entityType: l.entityType,
       entityId: l.entityId,
-      detail: [l.oldValue, l.newValue].filter(Boolean).map((v) => JSON.stringify(v)).join(" → ") || "-",
+      detail:
+        [l.oldValue, l.newValue]
+          .filter(Boolean)
+          .map((v) => JSON.stringify(v))
+          .join(" → ") || "-",
       ipAddress: l.ipAddress,
       createdAt: l.createdAt.toISOString(),
     }

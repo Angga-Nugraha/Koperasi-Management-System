@@ -26,15 +26,25 @@ export function SimpananChart({ data }: Props) {
   return (
     <div className="overflow-x-auto">
       <ChartContainer config={CHART_CONFIG} className="min-h-[250px] w-full md:aspect-[2/1]">
-      <BarChart data={data} barGap={2}>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-        <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />
-        <YAxis tick={{ fontSize: 12 }} className="text-muted-foreground" tickFormatter={formatCompact} />
-        <Tooltip content={<ChartTooltipContent formatter={(value: any) => `Rp ${Number(value).toLocaleString("id-ID")}`} />} />
-        <Legend />
-        <Bar dataKey="setoran" fill={CHART_CONFIG.setoran.color} radius={[4, 4, 0, 0]} />
-        <Bar dataKey="penarikan" fill={CHART_CONFIG.penarikan.color} radius={[4, 4, 0, 0]} />
-      </BarChart>
+        <BarChart data={data} barGap={2}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+          <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            className="text-muted-foreground"
+            tickFormatter={formatCompact}
+          />
+          <Tooltip
+            content={
+              <ChartTooltipContent
+                formatter={(value: any) => `Rp ${Number(value).toLocaleString("id-ID")}`}
+              />
+            }
+          />
+          <Legend />
+          <Bar dataKey="setoran" fill={CHART_CONFIG.setoran.color} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="penarikan" fill={CHART_CONFIG.penarikan.color} radius={[4, 4, 0, 0]} />
+        </BarChart>
       </ChartContainer>
     </div>
   )

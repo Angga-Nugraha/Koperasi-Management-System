@@ -11,8 +11,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { hapusSHU, generateSHU, getSHUByTahun } from "@/actions/shu"
 import { FileText, ArrowLeft, Download, Trash2, RefreshCw } from "lucide-react"
 
@@ -68,9 +83,13 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
               Status:{" "}
               <Badge variant={data.status === "FINAL" ? "default" : "secondary"}>
                 {data.status === "FINAL" ? (
-                  <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Closed</span>
+                  <span className="flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> Closed
+                  </span>
                 ) : (
-                  <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Estimasi</span>
+                  <span className="flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> Estimasi
+                  </span>
                 )}
               </Badge>
             </div>
@@ -99,7 +118,9 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
                   </DialogHeader>
                   {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>Batal</Button>
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                      Batal
+                    </Button>
                     <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
                       {deleting ? "Menghapus..." : "Hapus"}
                     </Button>
@@ -109,17 +130,22 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
             </>
           )}
           {regenError && <p className="text-sm text-destructive">{regenError}</p>}
-          <Button variant="outline" onClick={async () => {
-            const { exportSHUExcel } = await import("@/actions/shu")
-            const buf = await exportSHUExcel(data.tahun)
-            const blob = new Blob([new Uint8Array(buf)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement("a")
-            a.href = url
-            a.download = `shu-${data.tahun}.xlsx`
-            a.click()
-            URL.revokeObjectURL(url)
-          }}>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              const { exportSHUExcel } = await import("@/actions/shu")
+              const buf = await exportSHUExcel(data.tahun)
+              const blob = new Blob([new Uint8Array(buf)], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement("a")
+              a.href = url
+              a.download = `shu-${data.tahun}.xlsx`
+              a.click()
+              URL.revokeObjectURL(url)
+            }}
+          >
             <Download className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
@@ -135,11 +161,17 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg border p-4">
               <p className="text-sm text-muted-foreground">Total SHU</p>
-              <p className={`text-2xl font-bold ${data.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}>Rp {data.totalSHU.toLocaleString("id-ID")}</p>
+              <p
+                className={`text-2xl font-bold ${data.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
+                Rp {data.totalSHU.toLocaleString("id-ID")}
+              </p>
             </div>
-              {data.alokasi.map((a) => (
+            {data.alokasi.map((a) => (
               <div key={a.pos} className="rounded-lg border p-4">
-                <p className="text-sm text-muted-foreground">{a.indikatorNama} ({a.persentase}%)</p>
+                <p className="text-sm text-muted-foreground">
+                  {a.indikatorNama} ({a.persentase}%)
+                </p>
                 <p className="text-xl font-semibold">Rp {a.nominal.toLocaleString("id-ID")}</p>
               </div>
             ))}
@@ -155,33 +187,41 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
         <CardContent>
           <div className="overflow-x-auto rounded-md border">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>No Anggota</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead className="text-right">Jasa Modal</TableHead>
-                <TableHead className="text-right">Jasa Usaha</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.shuAnggota.length === 0 ? (
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                    Belum ada data perhitungan SHU per anggota
-                  </TableCell>
+                  <TableHead>No Anggota</TableHead>
+                  <TableHead>Nama</TableHead>
+                  <TableHead className="text-right">Jasa Modal</TableHead>
+                  <TableHead className="text-right">Jasa Usaha</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
                 </TableRow>
-              ) : (
-                data.shuAnggota.map((a) => (
-                  <TableRow key={a.anggotaId}>
-                    <TableCell>{a.noAnggota}</TableCell>
-                    <TableCell>{a.nama}</TableCell>
-                    <TableCell className="text-right">Rp {a.jasaModal.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-right">Rp {a.jasaUsaha.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className={`text-right font-medium ${a.total >= 0 ? "text-green-600" : "text-red-600"}`}>Rp {a.total.toLocaleString("id-ID")}</TableCell>
+              </TableHeader>
+              <TableBody>
+                {data.shuAnggota.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                      Belum ada data perhitungan SHU per anggota
+                    </TableCell>
                   </TableRow>
-                ))
-              )}
+                ) : (
+                  data.shuAnggota.map((a) => (
+                    <TableRow key={a.anggotaId}>
+                      <TableCell>{a.noAnggota}</TableCell>
+                      <TableCell>{a.nama}</TableCell>
+                      <TableCell className="text-right">
+                        Rp {a.jasaModal.toLocaleString("id-ID")}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        Rp {a.jasaUsaha.toLocaleString("id-ID")}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right font-medium ${a.total >= 0 ? "text-green-600" : "text-red-600"}`}
+                      >
+                        Rp {a.total.toLocaleString("id-ID")}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>

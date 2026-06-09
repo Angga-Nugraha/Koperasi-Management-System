@@ -7,12 +7,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -21,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
@@ -99,7 +94,21 @@ const TIPE_LABEL: Record<string, string> = {
   PENARIKAN: "Penarikan",
 }
 
-const BULAN = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+const BULAN = [
+  "",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+]
 
 const STATUS_LABEL: Record<string, string> = {
   BELUM_LUNAS: "Belum",
@@ -113,7 +122,13 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   TERLAMBAT: "destructive",
 }
 
-export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, pendingPayments = [] }: Props) {
+export function AnggotaSimpananView({
+  simpanan,
+  mutasi,
+  tagihan,
+  pageSize = 20,
+  pendingPayments = [],
+}: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const totalSaldo = simpanan.reduce((s, x) => s + x.saldo, 0)
@@ -138,7 +153,11 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
     return `${hours}j ${minutes}m ${seconds}d`
   }
 
-  const handlePayOnline = async (tipe: "TAGIHAN_WAJIB" | "SIMPANAN_SUKARELA", relatedId?: string, nominalInput?: number) => {
+  const handlePayOnline = async (
+    tipe: "TAGIHAN_WAJIB" | "SIMPANAN_SUKARELA",
+    relatedId?: string,
+    nominalInput?: number,
+  ) => {
     const key = relatedId || `sukarela-${nominalInput}`
     setLoadingPayment(key)
     try {
@@ -168,7 +187,7 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
       toast.error("Midtrans payment library is not loaded yet. Please wait a moment.")
       return
     }
-    (window as any).snap.pay(token, {
+    ;(window as any).snap.pay(token, {
       onSuccess: async () => {
         toast.success("Pembayaran berhasil!")
         await syncOnlinePaymentStatus(orderId)
@@ -184,7 +203,7 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
       onClose: () => {
         toast.info("Pembayaran belum diselesaikan.")
         router.refresh()
-      }
+      },
     })
   }
 
@@ -231,9 +250,7 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
           <h1 className="text-2xl font-bold tracking-tight">Simpanan Saya</h1>
           <p className="text-sm text-muted-foreground">Ringkasan simpanan Anda</p>
         </div>
-        <Button onClick={() => setSukarelaOpen(true)}>
-          Setor Sukarela Online
-        </Button>
+        <Button onClick={() => setSukarelaOpen(true)}>Setor Sukarela Online</Button>
       </div>
 
       {/* Pending Payments Banner */}
@@ -246,21 +263,28 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
             if (sisaWaktu === "Kedaluwarsa") return null
 
             return (
-              <div key={p.id} className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div
+                key={p.id}
+                className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
                 <div className="flex items-start gap-2.5">
                   <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600 shrink-0" />
                   <div>
-                    <h5 className="font-semibold text-amber-900">Pembayaran Online Tertunda ({label})</h5>
+                    <h5 className="font-semibold text-amber-900">
+                      Pembayaran Online Tertunda ({label})
+                    </h5>
                     <p className="text-sm text-amber-700">
-                      Anda menginisiasi pembayaran sebesar <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>. 
-                      Selesaikan sebelum kedaluwarsa dalam <span className="font-bold text-amber-900">{sisaWaktu}</span>.
+                      Anda menginisiasi pembayaran sebesar{" "}
+                      <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>.
+                      Selesaikan sebelum kedaluwarsa dalam{" "}
+                      <span className="font-bold text-amber-900">{sisaWaktu}</span>.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
+                  <Button
                     variant="outline"
-                    size="sm" 
+                    size="sm"
                     className="bg-white border-amber-300 text-amber-800 hover:bg-amber-100"
                     onClick={() => handleSyncStatus(p.orderId)}
                     disabled={loadingPayment === p.orderId}
@@ -271,8 +295,8 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
                       "Cek Status"
                     )}
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     className="bg-amber-600 hover:bg-amber-700 text-white border-0"
                     onClick={() => triggerSnap(p.snapToken!, p.orderId)}
                   >
@@ -289,9 +313,7 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
         {simpanan.map((s) => (
           <Card key={s.jenisKode}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                {s.jenisNama}
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">{s.jenisNama}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>
@@ -319,7 +341,9 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
                 className="h-8 overflow-x-auto rounded-md border bg-background px-2 text-xs"
               >
                 {years.map((y) => (
-                  <option key={y} value={y}>{y}</option>
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
                 ))}
               </select>
             </div>
@@ -327,46 +351,52 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
           <CardContent>
             <div className="overflow-x-auto rounded-md border">
               <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Periode</TableHead>
-                  <TableHead className="text-right">Nominal</TableHead>
-                  <TableHead>Jatuh Tempo</TableHead>
-                  <TableHead>Tgl Bayar</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredTagihan.map((t) => (
-                  <TableRow key={t.id}>
-                    <TableCell>{BULAN[t.bulan]} {t.tahun}</TableCell>
-                    <TableCell className="text-right font-mono">Rp{t.nominal.toLocaleString("id-ID")}</TableCell>
-                    <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
-                    <TableCell className="text-xs">{t.tglBayar ? formatTanggal(t.tglBayar) : "-"}</TableCell>
-                    <TableCell>
-                      <Badge variant={STATUS_VARIANT[t.status] ?? "outline"}>
-                        {STATUS_LABEL[t.status] ?? t.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {t.status !== "LUNAS" && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handlePayOnline("TAGIHAN_WAJIB", t.id)}
-                          disabled={loadingPayment !== null}
-                        >
-                          {loadingPayment === t.id ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            "Bayar Online"
-                          )}
-                        </Button>
-                      )}
-                    </TableCell>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Periode</TableHead>
+                    <TableHead className="text-right">Nominal</TableHead>
+                    <TableHead>Jatuh Tempo</TableHead>
+                    <TableHead>Tgl Bayar</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
-                ))}
+                </TableHeader>
+                <TableBody>
+                  {filteredTagihan.map((t) => (
+                    <TableRow key={t.id}>
+                      <TableCell>
+                        {BULAN[t.bulan]} {t.tahun}
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        Rp{t.nominal.toLocaleString("id-ID")}
+                      </TableCell>
+                      <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
+                      <TableCell className="text-xs">
+                        {t.tglBayar ? formatTanggal(t.tglBayar) : "-"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={STATUS_VARIANT[t.status] ?? "outline"}>
+                          {STATUS_LABEL[t.status] ?? t.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {t.status !== "LUNAS" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handlePayOnline("TAGIHAN_WAJIB", t.id)}
+                            disabled={loadingPayment !== null}
+                          >
+                            {loadingPayment === t.id ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              "Bayar Online"
+                            )}
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -381,43 +411,41 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
         <CardContent>
           <div className="overflow-x-auto rounded-md border">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Tanggal</TableHead>
-                <TableHead>Jenis</TableHead>
-                <TableHead>Tipe</TableHead>
-                <TableHead className="text-right">Nominal</TableHead>
-                <TableHead className="text-right">Saldo</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mutasi.data.length === 0 ? (
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    Belum ada transaksi
-                  </TableCell>
+                  <TableHead>Tanggal</TableHead>
+                  <TableHead>Jenis</TableHead>
+                  <TableHead>Tipe</TableHead>
+                  <TableHead className="text-right">Nominal</TableHead>
+                  <TableHead className="text-right">Saldo</TableHead>
                 </TableRow>
-              ) : (
-                mutasi.data.map((t) => (
-                  <TableRow key={t.id}>
-                    <TableCell className="text-sm">
-                      {formatTanggal(t.createdAt)}
-                    </TableCell>
-                    <TableCell>{t.jenisNama}</TableCell>
-                    <TableCell>
-                      <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
-                        {TIPE_LABEL[t.tipe] ?? t.tipe}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-mono">
-                      Rp {t.nominal.toLocaleString("id-ID")}
-                    </TableCell>
-                    <TableCell className="text-right font-mono">
-                      Rp {t.saldoSetelah.toLocaleString("id-ID")}
+              </TableHeader>
+              <TableBody>
+                {mutasi.data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      Belum ada transaksi
                     </TableCell>
                   </TableRow>
-                ))
-              )}
+                ) : (
+                  mutasi.data.map((t) => (
+                    <TableRow key={t.id}>
+                      <TableCell className="text-sm">{formatTanggal(t.createdAt)}</TableCell>
+                      <TableCell>{t.jenisNama}</TableCell>
+                      <TableCell>
+                        <Badge variant={TIPE_VARIANTS[t.tipe] ?? "secondary"}>
+                          {TIPE_LABEL[t.tipe] ?? t.tipe}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        Rp {t.nominal.toLocaleString("id-ID")}
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        Rp {t.saldoSetelah.toLocaleString("id-ID")}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -438,7 +466,8 @@ export function AnggotaSimpananView({ simpanan, mutasi, tagihan, pageSize = 20, 
           <DialogHeader>
             <DialogTitle>Setor Simpanan Sukarela</DialogTitle>
             <DialogDescription>
-              Masukkan nominal setoran sukarela. Pembayaran akan diproses secara online melalui Midtrans.
+              Masukkan nominal setoran sukarela. Pembayaran akan diproses secara online melalui
+              Midtrans.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

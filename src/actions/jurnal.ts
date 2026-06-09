@@ -15,11 +15,7 @@ import { jurnalManualSchema } from "@/lib/validations/jurnal"
 import { buatJurnal, COA_SHU_BERJALAN, getSaldoAkunTipe, COA_KAS_BANK } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 
-export async function getJurnalList(params: {
-  search?: string
-  page?: number
-  pageSize?: number
-}) {
+export async function getJurnalList(params: { search?: string; page?: number; pageSize?: number }) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
 
@@ -27,10 +23,7 @@ export async function getJurnalList(params: {
 
   const where: Prisma.JurnalUmumWhereInput = {}
   if (search) {
-    where.OR = [
-      { noJurnal: { contains: search } },
-      { keterangan: { contains: search } },
-    ]
+    where.OR = [{ noJurnal: { contains: search } }, { keterangan: { contains: search } }]
   }
 
   const [raw, total] = await Promise.all([
@@ -149,7 +142,7 @@ export async function getBukuBesar(
   tanggalMulai?: string,
   tanggalSelesai?: string,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
 ) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
@@ -211,7 +204,13 @@ export async function getBukuBesar(
     kredit: Number(d.kredit),
   }))
 
-  return { data, total, page, totalPages: Math.ceil(total / pageSize), saldoAwal: round2(saldoAwal) }
+  return {
+    data,
+    total,
+    page,
+    totalPages: Math.ceil(total / pageSize),
+    saldoAwal: round2(saldoAwal),
+  }
 }
 
 export async function getNeracaSaldo(tanggalSelesai?: string) {
@@ -307,7 +306,11 @@ export async function getNeraca(sampai?: string) {
     if (shuIdx >= 0) {
       adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
     } else {
-      adjustedEkuitas.push({ kode: COA_SHU_BERJALAN, nama: "SHU Tahun Berjalan", saldo: labaBersih })
+      adjustedEkuitas.push({
+        kode: COA_SHU_BERJALAN,
+        nama: "SHU Tahun Berjalan",
+        saldo: labaBersih,
+      })
     }
   }
 
@@ -348,7 +351,16 @@ export async function getArusKas(dari?: string, sampai?: string, page = 1, pageS
   const kasAkun = await prisma.akun.findMany({
     where: { kode: { in: [...COA_KAS_BANK] }, isActive: true },
   })
-  if (kasAkun.length === 0) return { items: [], totalMasuk: 0, totalKeluar: 0, saldoAkhir: 0, total: 0, page: 1, totalPages: 0 }
+  if (kasAkun.length === 0)
+    return {
+      items: [],
+      totalMasuk: 0,
+      totalKeluar: 0,
+      saldoAkhir: 0,
+      total: 0,
+      page: 1,
+      totalPages: 0,
+    }
 
   const whereKas = {
     akunId: { in: kasAkun.map((a) => a.id) },
@@ -385,5 +397,13 @@ export async function getArusKas(dari?: string, sampai?: string, page = 1, pageS
     keluar: Number(d.kredit),
   }))
 
-  return { items, totalMasuk, totalKeluar, saldoAkhir: totalMasuk - totalKeluar, total, page, totalPages: Math.ceil(total / pageSize) }
+  return {
+    items,
+    totalMasuk,
+    totalKeluar,
+    saldoAkhir: totalMasuk - totalKeluar,
+    total,
+    page,
+    totalPages: Math.ceil(total / pageSize),
+  }
 }

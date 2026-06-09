@@ -14,9 +14,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Edit, Plus, Trash2 } from "lucide-react"
 import { EditStrukturSheet } from "@/components/kepengurusan/edit-struktur-sheet"
@@ -71,9 +76,7 @@ export function StrukturTable({ data, anggotaList }: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Total {data.length} jabatan
-        </p>
+        <p className="text-sm text-muted-foreground">Total {data.length} jabatan</p>
         <Button size="sm" onClick={() => setTambahOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Tambah Jabatan
@@ -84,8 +87,12 @@ export function StrukturTable({ data, anggotaList }: Props) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Badge variant="default" className="bg-blue-600">Pengurus</Badge>
-              <span className="text-sm font-normal text-muted-foreground">{pengurus.length} orang</span>
+              <Badge variant="default" className="bg-blue-600">
+                Pengurus
+              </Badge>
+              <span className="text-sm font-normal text-muted-foreground">
+                {pengurus.length} orang
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -140,8 +147,12 @@ export function StrukturTable({ data, anggotaList }: Props) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Badge variant="default" className="bg-green-600">Pengawas</Badge>
-              <span className="text-sm font-normal text-muted-foreground">{pengawas.length} orang</span>
+              <Badge variant="default" className="bg-green-600">
+                Pengawas
+              </Badge>
+              <span className="text-sm font-normal text-muted-foreground">
+                {pengawas.length} orang
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -210,7 +221,12 @@ export function StrukturTable({ data, anggotaList }: Props) {
 
       <TambahJabatanDialog open={tambahOpen} onOpenChange={setTambahOpen} />
 
-      <AlertDialog open={!!hapusConfirm} onOpenChange={(open) => { if (!open) setHapusConfirm(null) }}>
+      <AlertDialog
+        open={!!hapusConfirm}
+        onOpenChange={(open) => {
+          if (!open) setHapusConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Hapus Jabatan</AlertDialogTitle>

@@ -16,8 +16,8 @@ vi.mock("@/lib/auth", () => ({
 }))
 
 describe("SHU Calculation", () => {
-  let hitungSHU: typeof import("@/lib/shu")["hitungSHU"]
-  let getTotalPendapatanBeban: typeof import("@/lib/shu")["getTotalPendapatanBeban"]
+  let hitungSHU: (typeof import("@/lib/shu"))["hitungSHU"]
+  let getTotalPendapatanBeban: (typeof import("@/lib/shu"))["getTotalPendapatanBeban"]
   let prisma: any
 
   beforeEach(async () => {
@@ -96,18 +96,38 @@ describe("SHU Calculation", () => {
       prisma.detailJurnal.findMany.mockResolvedValue([
         { id: "d1", debit: 0, kredit: 1000000, akun: { tipe: "PENDAPATAN" } },
       ])
-      prisma.simpanan.findMany.mockResolvedValue([
-        { anggotaId: "a1", saldo: 500000 },
-      ])
+      prisma.simpanan.findMany.mockResolvedValue([{ anggotaId: "a1", saldo: 500000 }])
       prisma.angsuran.findMany.mockResolvedValue([
-        { id: "a1", pokok: 200000, pinjaman: { anggotaId: "a1" }, status: "LUNAS", tglBayar: new Date("2024-06-15") },
+        {
+          id: "a1",
+          pokok: 200000,
+          pinjaman: { anggotaId: "a1" },
+          status: "LUNAS",
+          tglBayar: new Date("2024-06-15"),
+        },
       ])
-      prisma.anggota.findMany.mockResolvedValue([
-        { id: "a1", nama: "John Doe", noAnggota: "001" },
-      ])
+      prisma.anggota.findMany.mockResolvedValue([{ id: "a1", nama: "John Doe", noAnggota: "001" }])
       prisma.indikatorSHU.findMany.mockResolvedValue([
-        { id: "i1", kode: "JM", nama: "Jasa Modal", persentase: 50, kelompok: "ANGGOTA", akunId: null, urutan: 1, isActive: true },
-        { id: "i2", kode: "JU", nama: "Jasa Usaha", persentase: 50, kelompok: "ANGGOTA", akunId: null, urutan: 2, isActive: true },
+        {
+          id: "i1",
+          kode: "JM",
+          nama: "Jasa Modal",
+          persentase: 50,
+          kelompok: "ANGGOTA",
+          akunId: null,
+          urutan: 1,
+          isActive: true,
+        },
+        {
+          id: "i2",
+          kode: "JU",
+          nama: "Jasa Usaha",
+          persentase: 50,
+          kelompok: "ANGGOTA",
+          akunId: null,
+          urutan: 2,
+          isActive: true,
+        },
       ])
 
       const result = await hitungSHU(2024)
@@ -133,16 +153,46 @@ describe("SHU Calculation", () => {
         { anggotaId: "a2", saldo: 200000 },
       ])
       prisma.angsuran.findMany.mockResolvedValue([
-        { id: "a1", pokok: 100000, pinjaman: { anggotaId: "a1" }, status: "LUNAS", tglBayar: new Date("2024-06-15") },
-        { id: "a2", pokok: 100000, pinjaman: { anggotaId: "a2" }, status: "LUNAS", tglBayar: new Date("2024-06-15") },
+        {
+          id: "a1",
+          pokok: 100000,
+          pinjaman: { anggotaId: "a1" },
+          status: "LUNAS",
+          tglBayar: new Date("2024-06-15"),
+        },
+        {
+          id: "a2",
+          pokok: 100000,
+          pinjaman: { anggotaId: "a2" },
+          status: "LUNAS",
+          tglBayar: new Date("2024-06-15"),
+        },
       ])
       prisma.anggota.findMany.mockResolvedValue([
         { id: "a1", nama: "Alice", noAnggota: "001" },
         { id: "a2", nama: "Bob", noAnggota: "002" },
       ])
       prisma.indikatorSHU.findMany.mockResolvedValue([
-        { id: "i1", kode: "JM", nama: "Jasa Modal", persentase: 50, kelompok: "ANGGOTA", akunId: null, urutan: 1, isActive: true },
-        { id: "i2", kode: "JU", nama: "Jasa Usaha", persentase: 50, kelompok: "ANGGOTA", akunId: null, urutan: 2, isActive: true },
+        {
+          id: "i1",
+          kode: "JM",
+          nama: "Jasa Modal",
+          persentase: 50,
+          kelompok: "ANGGOTA",
+          akunId: null,
+          urutan: 1,
+          isActive: true,
+        },
+        {
+          id: "i2",
+          kode: "JU",
+          nama: "Jasa Usaha",
+          persentase: 50,
+          kelompok: "ANGGOTA",
+          akunId: null,
+          urutan: 2,
+          isActive: true,
+        },
       ])
 
       const result = await hitungSHU(2024)
@@ -168,7 +218,16 @@ describe("SHU Calculation", () => {
       prisma.angsuran.findMany.mockResolvedValue([])
       prisma.anggota.findMany.mockResolvedValue([])
       prisma.indikatorSHU.findMany.mockResolvedValue([
-        { id: "i1", kode: "CAD", nama: "Cadangan", persentase: 100, kelompok: "DANA", akunId: null, urutan: 1, isActive: true },
+        {
+          id: "i1",
+          kode: "CAD",
+          nama: "Cadangan",
+          persentase: 100,
+          kelompok: "DANA",
+          akunId: null,
+          urutan: 1,
+          isActive: true,
+        },
       ])
 
       const result = await hitungSHU(2024)

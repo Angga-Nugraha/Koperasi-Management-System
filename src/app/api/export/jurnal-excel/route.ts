@@ -15,10 +15,16 @@ export async function GET(request: NextRequest) {
     const sampai = searchParams.get("sampai") ?? undefined
 
     if (dari && !DATE_REGEX.test(dari)) {
-      return NextResponse.json({ error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" },
+        { status: 400 },
+      )
     }
     if (sampai && !DATE_REGEX.test(sampai)) {
-      return NextResponse.json({ error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" },
+        { status: 400 },
+      )
     }
 
     const buffer = await exportJurnalExcel({
@@ -36,7 +42,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Export failed" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

@@ -8,15 +8,32 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Upload, CheckCircle2, XCircle, ArrowLeft, Send } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { previewImportAnggota, commitImportAnggota, type PreviewRowResult, type CommitRowResult } from "@/actions/import-anggota"
+import {
+  previewImportAnggota,
+  commitImportAnggota,
+  type PreviewRowResult,
+  type CommitRowResult,
+} from "@/actions/import-anggota"
 import Link from "next/link"
 
 export function ImportAnggotaForm() {
@@ -25,7 +42,11 @@ export function ImportAnggotaForm() {
   const [commitResults, setCommitResults] = useState<CommitRowResult[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   async function handlePreview() {
     if (!file) return
@@ -70,7 +91,7 @@ export function ImportAnggotaForm() {
           pekerjaan: r.pekerjaan,
           penghasilan: r.penghasilan,
           tglMasuk: r.tglMasuk,
-        }))
+        })),
       )
       setCommitResults(res)
       setPreviewResults(null)
@@ -107,11 +128,16 @@ export function ImportAnggotaForm() {
             <div className="mb-4 rounded-md bg-muted p-4 text-sm">
               <p className="mb-2 font-medium">Format CSV yang didukung:</p>
               <p className="text-muted-foreground">
-                Kolom: <code>nik</code>, <code>nama</code>, <code>noHp</code> (opsional), <code>jenisKelamin</code> (opsional), <code>alamat</code>, <code>pekerjaan</code> (opsional),{" "}
-                <code>penghasilan</code> (opsional), <code>tglMasuk</code>
+                Kolom: <code>nik</code>, <code>nama</code>, <code>noHp</code> (opsional),{" "}
+                <code>jenisKelamin</code> (opsional), <code>alamat</code>, <code>pekerjaan</code>{" "}
+                (opsional), <code>penghasilan</code> (opsional), <code>tglMasuk</code>
               </p>
               <p className="mt-1 text-muted-foreground">
-                Contoh: <code>3201010203040506,John Doe,081234567890,Laki-laki,Jl. Merdeka No. 1,Karyawan,5000000,2024-01-15</code>
+                Contoh:{" "}
+                <code>
+                  3201010203040506,John Doe,081234567890,Laki-laki,Jl. Merdeka No.
+                  1,Karyawan,5000000,2024-01-15
+                </code>
               </p>
             </div>
 
@@ -146,7 +172,9 @@ export function ImportAnggotaForm() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Preview Data Anggota</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">Review data sebelum disimpan ke database</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Review data sebelum disimpan ke database
+                </p>
               </div>
               <div className="flex gap-2">
                 <Badge variant="default" className="text-sm">
@@ -187,8 +215,8 @@ export function ImportAnggotaForm() {
                         {r.jenisKelamin === "LAKI_LAKI"
                           ? "Laki-laki"
                           : r.jenisKelamin === "PEREMPUAN"
-                          ? "Perempuan"
-                          : "-"}
+                            ? "Perempuan"
+                            : "-"}
                       </TableCell>
                       <TableCell>
                         {r.isValid ? (
@@ -280,16 +308,19 @@ export function ImportAnggotaForm() {
                 Import File Lain
               </Button>
               <Button asChild>
-                <Link href="/pengurus/anggota">
-                  Lihat Daftar Anggota
-                </Link>
+                <Link href="/pengurus/anggota">Lihat Daftar Anggota</Link>
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

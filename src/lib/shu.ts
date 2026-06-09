@@ -37,14 +37,16 @@ export async function getIndikatorSHU(): Promise<IndikatorSHUData[]> {
   }))
 }
 
-export async function saveIndikatorSHU(items: Array<{
-  kode: string
-  nama: string
-  persentase: number
-  kelompok: string
-  akunId: string | null
-  urutan: number
-}>) {
+export async function saveIndikatorSHU(
+  items: Array<{
+    kode: string
+    nama: string
+    persentase: number
+    kelompok: string
+    akunId: string | null
+    urutan: number
+  }>,
+) {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const total = items.reduce((a, b) => a + b.persentase, 0)
   if (Math.abs(total - 100) > 0.01) throw new Error("Total persentase harus 100%")
@@ -74,10 +76,7 @@ export async function deleteIndikatorSHU(kode: string) {
   await prisma.indikatorSHU.delete({ where: { kode } })
 }
 
-export async function getTotalPendapatanBeban(
-  tahun: number,
-  tx?: PrismaTx
-) {
+export async function getTotalPendapatanBeban(tahun: number, tx?: PrismaTx) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
   const mulai = tahunMulai(tahun)
@@ -97,7 +96,10 @@ export async function getTotalPendapatanBeban(
 
   for (const d of detail) {
     if (d.akun.tipe === "PENDAPATAN") {
-      totalPendapatan = new Decimal(totalPendapatan).plus(Number(d.kredit)).minus(Number(d.debit)).toNumber()
+      totalPendapatan = new Decimal(totalPendapatan)
+        .plus(Number(d.kredit))
+        .minus(Number(d.debit))
+        .toNumber()
     }
     if (d.akun.tipe === "BEBAN") {
       totalBeban = new Decimal(totalBeban).plus(Number(d.debit)).minus(Number(d.kredit)).toNumber()
@@ -111,9 +113,7 @@ export async function getTotalPendapatanBeban(
   }
 }
 
-export async function getSaldoPerAnggota(
-  tx?: PrismaTx
-) {
+export async function getSaldoPerAnggota(tx?: PrismaTx) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
   const simpanan = await client.simpanan.findMany({
@@ -131,10 +131,7 @@ export async function getSaldoPerAnggota(
   return { perAnggota, totalSimpanan: round2(total) }
 }
 
-export async function getTotalAngsuranAnggota(
-  tahun: number,
-  tx?: PrismaTx
-) {
+export async function getTotalAngsuranAnggota(tahun: number, tx?: PrismaTx) {
   if (!tx) await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
   const client = tx ?? prisma
   const mulai = tahunMulai(tahun)

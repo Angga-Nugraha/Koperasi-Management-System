@@ -37,17 +37,8 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { signOut } from "next-auth/react"
 
@@ -102,9 +93,8 @@ function NavLink({
   const pathname = usePathname()
   const Icon = ICON_MAP[icon]
   const depth = href.split("/").filter(Boolean).length
-  const isActive = depth <= 1
-    ? pathname === href
-    : pathname === href || pathname.startsWith(href + "/")
+  const isActive =
+    depth <= 1 ? pathname === href : pathname === href || pathname.startsWith(href + "/")
 
   const link = (
     <Link
@@ -146,17 +136,16 @@ function NavSubmenu({
   collapsed: boolean
   onNavigate?: () => void
 }) {
-  const [open, setOpen] = useState(
-    pathname === item.href || pathname.startsWith(item.href + "/"),
-  )
+  const [open, setOpen] = useState(pathname === item.href || pathname.startsWith(item.href + "/"))
   const isActive = pathname.startsWith(item.href + "/")
   const ParentIcon = ICON_MAP[item.icon]
 
   const childrenLinks = item.children!.map((child) => {
     const ChildIcon = ICON_MAP[child.icon]
-    const isChildActive = child.href === item.href
-      ? pathname === child.href
-      : pathname === child.href || pathname.startsWith(child.href + "/")
+    const isChildActive =
+      child.href === item.href
+        ? pathname === child.href
+        : pathname === child.href || pathname.startsWith(child.href + "/")
     return (
       <Link
         key={child.href}
@@ -196,9 +185,7 @@ function NavSubmenu({
           <TooltipContent side="right">{item.label}</TooltipContent>
         </Tooltip>
         <PopoverContent side="right" align="start" className="w-56 p-2 bg-card border shadow-md">
-          <div className="mb-2 px-3 py-1.5 text-sm font-semibold text-foreground">
-            {item.label}
-          </div>
+          <div className="mb-2 px-3 py-1.5 text-sm font-semibold text-foreground">{item.label}</div>
           <Separator className="mb-2" />
           <div className="space-y-1">{childrenLinks}</div>
         </PopoverContent>
@@ -222,9 +209,7 @@ function NavSubmenu({
         <span className="flex-1 text-left">{item.label}</span>
         {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
       </button>
-      {open && (
-        <div className="ml-4 mt-1 space-y-1 border-l pl-2">{childrenLinks}</div>
-      )}
+      {open && <div className="ml-4 mt-1 space-y-1 border-l pl-2">{childrenLinks}</div>}
     </div>
   )
 }
@@ -241,7 +226,9 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
   useEffect(() => {
     fetch("/api/general-info")
       .then((r) => r.json())
-      .then((info) => { if (info?.logo) setLogoUrl(info.logo) })
+      .then((info) => {
+        if (info?.logo) setLogoUrl(info.logo)
+      })
       .catch(() => {})
   }, [])
 
@@ -313,8 +300,16 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      <div className={cn("relative flex items-center border-b", collapsed ? "h-14 justify-center" : "h-16 justify-center px-6")}>
-        <Link href={items[0]?.href ?? "/"} className={cn(collapsed && "flex items-center justify-center")}>
+      <div
+        className={cn(
+          "relative flex items-center border-b",
+          collapsed ? "h-14 justify-center" : "h-16 justify-center px-6",
+        )}
+      >
+        <Link
+          href={items[0]?.href ?? "/"}
+          className={cn(collapsed && "flex items-center justify-center")}
+        >
           <img
             src={logo}
             alt="Logo"
@@ -335,9 +330,7 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
           </Button>
         )}
       </div>
-      <nav className={cn("flex-1 space-y-1", collapsed ? "p-2" : "p-4")}>
-        {navLinks}
-      </nav>
+      <nav className={cn("flex-1 space-y-1", collapsed ? "p-2" : "p-4")}>{navLinks}</nav>
       {renderUserSection(collapsed)}
     </div>
   )
@@ -395,9 +388,26 @@ export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) 
             <nav className="flex-1 space-y-1 p-4">
               {items.map((item) => {
                 if (item.children) {
-                  return <NavSubmenu key={item.href} item={item} pathname={pathname} onNavigate={() => setMobileOpen(false)} collapsed={false} />
+                  return (
+                    <NavSubmenu
+                      key={item.href}
+                      item={item}
+                      pathname={pathname}
+                      onNavigate={() => setMobileOpen(false)}
+                      collapsed={false}
+                    />
+                  )
                 }
-                return <NavLink key={item.href} href={item.href} icon={item.icon} label={item.label} collapsed={false} onNavigate={() => setMobileOpen(false)} />
+                return (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    icon={item.icon}
+                    label={item.label}
+                    collapsed={false}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
+                )
               })}
             </nav>
             {renderUserSection(false)}

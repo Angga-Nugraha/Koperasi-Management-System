@@ -17,10 +17,25 @@ import { FileSpreadsheet } from "lucide-react"
 
 type Props = {
   params: Promise<{ jenis: string }>
-  searchParams: Promise<{ sampai?: string; dari?: string; akunId?: string; page?: string; pageSize?: string; entityType?: string; action?: string }>
+  searchParams: Promise<{
+    sampai?: string
+    dari?: string
+    akunId?: string
+    page?: string
+    pageSize?: string
+    entityType?: string
+    action?: string
+  }>
 }
 
-const JENIS_LIST = ["neraca", "laba-rugi", "arus-kas", "neraca-saldo", "buku-besar", "audit-log"] as const
+const JENIS_LIST = [
+  "neraca",
+  "laba-rugi",
+  "arus-kas",
+  "neraca-saldo",
+  "buku-besar",
+  "audit-log",
+] as const
 
 const LABEL: Record<string, string> = {
   neraca: "Neraca",
@@ -36,7 +51,7 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
   const { sampai, dari, akunId, page, pageSize: ps, entityType, action } = await searchParams
   const pageSize = Number(ps) || 20
 
-  if (!JENIS_LIST.includes(jenis as typeof JENIS_LIST[number])) {
+  if (!JENIS_LIST.includes(jenis as (typeof JENIS_LIST)[number])) {
     notFound()
   }
 
@@ -57,12 +72,39 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
           Export Excel
         </a>
       </div>
-      <LaporanContent jenis={jenis} sampai={sampai ?? ""} dari={dari ?? ""} akunId={akunId ?? ""} page={page ?? "1"} pageSize={pageSize} entityType={entityType} action={action} />
+      <LaporanContent
+        jenis={jenis}
+        sampai={sampai ?? ""}
+        dari={dari ?? ""}
+        akunId={akunId ?? ""}
+        page={page ?? "1"}
+        pageSize={pageSize}
+        entityType={entityType}
+        action={action}
+      />
     </div>
   )
 }
 
-async function LaporanContent({ jenis, sampai, dari, akunId, page, pageSize, entityType, action }: { jenis: string; sampai: string; dari: string; akunId?: string; page?: string; pageSize: number; entityType?: string; action?: string }) {
+async function LaporanContent({
+  jenis,
+  sampai,
+  dari,
+  akunId,
+  page,
+  pageSize,
+  entityType,
+  action,
+}: {
+  jenis: string
+  sampai: string
+  dari: string
+  akunId?: string
+  page?: string
+  pageSize: number
+  entityType?: string
+  action?: string
+}) {
   const tahunIni = new Date().getFullYear()
   const defaultDari = `${tahunIni}-01-01`
   const defaultSampai = new Date().toISOString().split("T")[0]
@@ -99,21 +141,35 @@ async function LaporanContent({ jenis, sampai, dari, akunId, page, pageSize, ent
         getAkunList(),
         getBukuBesar(akunId || undefined, d, s, pageNum, pageSize),
       ])
-      const akunTerpilih = akunId ? akunList.find((a) => a.id === akunId) ?? null : null
-      return <BukuBesarClient akunList={akunList} akunId={akunId ?? ""} dari={d} sampai={s} detail={page1.data as any} akunTerpilih={akunTerpilih} page={page1.page} totalPages={page1.totalPages} pageSize={pageSize} />
+      const akunTerpilih = akunId ? (akunList.find((a) => a.id === akunId) ?? null) : null
+      return (
+        <BukuBesarClient
+          akunList={akunList}
+          akunId={akunId ?? ""}
+          dari={d}
+          sampai={s}
+          detail={page1.data as any}
+          akunTerpilih={akunTerpilih}
+          page={page1.page}
+          totalPages={page1.totalPages}
+          pageSize={pageSize}
+        />
+      )
     }
     case "audit-log": {
       const pageNum = Number(page) || 1
       const result = await getAuditLogs({ entityType, action, page: pageNum, pageSize })
-      return <AuditLogTable
-        data={result.data}
-        total={result.total}
-        page={result.page}
-        totalPages={result.totalPages}
-        pageSize={pageSize}
-        entityType={entityType ?? "SEMUA"}
-        action={action ?? "SEMUA"}
-      />
+      return (
+        <AuditLogTable
+          data={result.data}
+          total={result.total}
+          page={result.page}
+          totalPages={result.totalPages}
+          pageSize={pageSize}
+          entityType={entityType ?? "SEMUA"}
+          action={action ?? "SEMUA"}
+        />
+      )
     }
     default:
       return null

@@ -12,12 +12,24 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { upsertKepengurusan, kosongkanJabatan } from "@/actions/kepengurusan"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Check, ChevronsUpDown, UserX } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -47,7 +59,11 @@ export function EditStrukturSheet({ open, onOpenChange, item, anggotaList }: Pro
   const [loading, setLoading] = useState(false)
   const [comboOpen, setComboOpen] = useState(false)
   const [anggotaId, setAnggotaId] = useState(item.anggotaId ?? "")
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   const selectedAnggota = anggotaList.find((a) => a.id === anggotaId)
 
@@ -109,13 +125,17 @@ export function EditStrukturSheet({ open, onOpenChange, item, anggotaList }: Pro
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{item.jabatan}</SheetTitle>
-            <SheetDescription>{item.tipe === "PENGURUS" ? "Pengurus" : "Pengawas"}</SheetDescription>
+            <SheetDescription>
+              {item.tipe === "PENGURUS" ? "Pengurus" : "Pengawas"}
+            </SheetDescription>
           </SheetHeader>
 
           <div className="mt-6 space-y-4">
             <form onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
 
               <div className="space-y-2">
@@ -178,7 +198,12 @@ export function EditStrukturSheet({ open, onOpenChange, item, anggotaList }: Pro
 
             {item.anggotaId && (
               <div className="pt-4 border-t">
-                <Button variant="destructive" size="sm" onClick={handleKosongkanClick} disabled={loading}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleKosongkanClick}
+                  disabled={loading}
+                >
                   <UserX className="mr-2 h-4 w-4" />
                   Kosongkan Jabatan
                 </Button>
@@ -188,7 +213,12 @@ export function EditStrukturSheet({ open, onOpenChange, item, anggotaList }: Pro
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

@@ -108,7 +108,9 @@ export async function getDashboardPengurus(tahun: number) {
     else chartData[month].penarikan += Number(t.nominal)
   }
   const simpananChart = Object.entries(chartData).map(([bulan, data]) => ({
-    bulan, setoran: data.setoran, penarikan: data.penarikan,
+    bulan,
+    setoran: data.setoran,
+    penarikan: data.penarikan,
   }))
 
   // Kas flow
@@ -128,7 +130,9 @@ export async function getDashboardPengurus(tahun: number) {
     flowData[month].keluar += Number(d.kredit)
   }
   const trendChart = Object.entries(flowData).map(([bulan, data]) => ({
-    bulan, masuk: data.masuk, keluar: data.keluar,
+    bulan,
+    masuk: data.masuk,
+    keluar: data.keluar,
   }))
 
   // Kas balance + kewajiban
@@ -152,9 +156,7 @@ export async function getDashboardPengurus(tahun: number) {
     kewajibanLancar = round2(Number(agg._sum.kredit ?? 0) - Number(agg._sum.debit ?? 0))
   }
 
-  const cashRatio = kewajibanLancar > 0
-    ? round2(saldoKas / kewajibanLancar)
-    : 0
+  const cashRatio = kewajibanLancar > 0 ? round2(saldoKas / kewajibanLancar) : 0
 
   let cashRatioStatus: string
   if (cashRatio >= 2.0) cashRatioStatus = "Sangat Baik"

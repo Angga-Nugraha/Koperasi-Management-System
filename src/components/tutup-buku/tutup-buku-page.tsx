@@ -10,7 +10,15 @@ import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { getSHUTutupBukuList, prosesTutupBuku } from "@/actions/tutup-buku"
 import { BookCheck, FileText, AlertTriangle } from "lucide-react"
 
@@ -44,7 +52,9 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Tutup Buku</h1>
-        <p className="text-sm text-muted-foreground">Proses tutup buku tahunan — jurnal penutup, distribusi SHU anggota, dan distribusi dana</p>
+        <p className="text-sm text-muted-foreground">
+          Proses tutup buku tahunan — jurnal penutup, distribusi SHU anggota, dan distribusi dana
+        </p>
       </div>
 
       {/* Daftar SHU yang siap ditutup */}
@@ -54,21 +64,39 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
         </CardHeader>
         <CardContent>
           {draftItems.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">Tidak ada SHU estimasi yang siap ditutup. Generate SHU terlebih dahulu.</p>
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              Tidak ada SHU estimasi yang siap ditutup. Generate SHU terlebih dahulu.
+            </p>
           ) : (
             <div className="space-y-3">
               {draftItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-lg border p-4">
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between rounded-lg border p-4"
+                >
                   <div>
                     <p className="font-semibold">SHU {item.tahun}</p>
                     <p className="text-sm text-muted-foreground">
-                      Total: <span className={item.totalSHU >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Rp {item.totalSHU.toLocaleString("id-ID")}</span> — {item.jumlahAnggota} anggota
+                      Total:{" "}
+                      <span
+                        className={
+                          item.totalSHU >= 0
+                            ? "text-green-600 font-medium"
+                            : "text-red-600 font-medium"
+                        }
+                      >
+                        Rp {item.totalSHU.toLocaleString("id-ID")}
+                      </span>{" "}
+                      — {item.jumlahAnggota} anggota
                     </p>
                   </div>
-                  <Dialog open={confirmTahun === item.tahun} onOpenChange={(open) => {
-                    if (!open) setConfirmTahun(null)
-                    setError("")
-                  }}>
+                  <Dialog
+                    open={confirmTahun === item.tahun}
+                    onOpenChange={(open) => {
+                      if (!open) setConfirmTahun(null)
+                      setError("")
+                    }}
+                  >
                     <DialogTrigger asChild>
                       <Button onClick={() => setConfirmTahun(item.tahun)}>
                         <BookCheck className="mr-2 h-4 w-4" />
@@ -81,19 +109,21 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                           <AlertTriangle className="h-5 w-5 text-destructive" />
                           Tutup Buku {item.tahun}?
                         </DialogTitle>
-                        <DialogDescription>
-                          Tindakan ini akan:
-                        </DialogDescription>
+                        <DialogDescription>Tindakan ini akan:</DialogDescription>
                       </DialogHeader>
                       <ul className="space-y-2 text-sm">
                         <li>✓ Membuat jurnal penutup (reset PENDAPATAN & BEBAN ke 0)</li>
                         <li>✓ Mendistribusikan SHU anggota ke simpanan sukarela</li>
                         <li>✓ Membuat jurnal distribusi dana SHU</li>
-                        <li className="font-semibold text-destructive">⚠️ Tidak dapat dibatalkan</li>
+                        <li className="font-semibold text-destructive">
+                          ⚠️ Tidak dapat dibatalkan
+                        </li>
                       </ul>
                       {error && <p className="text-sm text-destructive">{error}</p>}
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setConfirmTahun(null)}>Batal</Button>
+                        <Button variant="outline" onClick={() => setConfirmTahun(null)}>
+                          Batal
+                        </Button>
                         <Button onClick={handleProses} disabled={processing}>
                           {processing ? "Memproses..." : "Ya, Tutup Buku"}
                         </Button>
@@ -116,7 +146,10 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
           <CardContent>
             <div className="space-y-3">
               {finalItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-lg border p-4">
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between rounded-lg border p-4"
+                >
                   <div>
                     <div className="font-semibold flex items-center gap-2">
                       SHU {item.tahun}
@@ -125,10 +158,24 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Total: <span className={item.totalSHU >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>Rp {item.totalSHU.toLocaleString("id-ID")}</span> — {item.jumlahAnggota} anggota
+                      Total:{" "}
+                      <span
+                        className={
+                          item.totalSHU >= 0
+                            ? "text-green-600 font-medium"
+                            : "text-red-600 font-medium"
+                        }
+                      >
+                        Rp {item.totalSHU.toLocaleString("id-ID")}
+                      </span>{" "}
+                      — {item.jumlahAnggota} anggota
                     </p>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => router.push(`/pengurus/shu/${item.tahun}`)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push(`/pengurus/shu/${item.tahun}`)}
+                  >
                     Lihat Detail
                   </Button>
                 </div>

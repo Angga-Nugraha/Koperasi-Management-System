@@ -25,7 +25,9 @@ export default async function JurnalPage({ searchParams }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Jurnal Umum</h1>
-          <p className="text-sm text-muted-foreground">Daftar seluruh jurnal dan catatan transaksi</p>
+          <p className="text-sm text-muted-foreground">
+            Daftar seluruh jurnal dan catatan transaksi
+          </p>
         </div>
       </div>
 

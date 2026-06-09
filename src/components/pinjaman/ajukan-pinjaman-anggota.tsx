@@ -18,16 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { ajukanPinjamanAnggota, getJenisPinjamanList } from "@/actions/pinjaman"
 
@@ -53,14 +53,23 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
   const [defaultBunga, setDefaultBunga] = useState(0)
   const [tenorMin, setTenorMin] = useState(3)
   const [tenorMax, setTenorMax] = useState(36)
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
-    fetch("/api/konfig").then(r => r.json()).then(konfig => {
-      if (konfig.tenor_min !== undefined && konfig.tenor_min !== "") setTenorMin(Number(konfig.tenor_min))
-      if (konfig.tenor_max !== undefined && konfig.tenor_max !== "") setTenorMax(Number(konfig.tenor_max))
-    }).catch(() => {})
+    fetch("/api/konfig")
+      .then((r) => r.json())
+      .then((konfig) => {
+        if (konfig.tenor_min !== undefined && konfig.tenor_min !== "")
+          setTenorMin(Number(konfig.tenor_min))
+        if (konfig.tenor_max !== undefined && konfig.tenor_max !== "")
+          setTenorMax(Number(konfig.tenor_max))
+      })
+      .catch(() => {})
   }, [])
 
   function handleJenisChange(value: string) {
@@ -79,7 +88,9 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
     const jumlah = Number(formData.get("jumlah"))
 
     if (jumlah > plafon.maxPlafon) {
-      setError(`Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`)
+      setError(
+        `Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`,
+      )
       setLoading(false)
       return
     }
@@ -119,7 +130,9 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
         <CardContent>
           <form id="ajukan-anggota-form" onSubmit={handleSubmitClick} className="space-y-4">
             {error && (
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {error}
+              </div>
             )}
 
             <div className="rounded-md bg-muted p-3 text-sm space-y-1">
@@ -128,13 +141,19 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
                 Rp{plafon.maxPlafon.toLocaleString("id-ID")}
               </p>
               <p className="text-xs text-muted-foreground">
-                {plafon.plafonMaxSaldo}× saldo simpanan (Rp{plafon.totalSimpanan.toLocaleString("id-ID")})
+                {plafon.plafonMaxSaldo}× saldo simpanan (Rp
+                {plafon.totalSimpanan.toLocaleString("id-ID")})
               </p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="jenisPinjamanId">Jenis Pinjaman *</Label>
-              <Select name="jenisPinjamanId" value={selectedJenis} onValueChange={handleJenisChange} required>
+              <Select
+                name="jenisPinjamanId"
+                value={selectedJenis}
+                onValueChange={handleJenisChange}
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih jenis pinjaman" />
                 </SelectTrigger>
@@ -159,8 +178,18 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tenor">Tenor ({tenorMin}-{tenorMax} bulan) *</Label>
-              <Input id="tenor" name="tenor" type="number" placeholder="12" min={tenorMin} max={tenorMax} required />
+              <Label htmlFor="tenor">
+                Tenor ({tenorMin}-{tenorMax} bulan) *
+              </Label>
+              <Input
+                id="tenor"
+                name="tenor"
+                type="number"
+                placeholder="12"
+                min={tenorMin}
+                max={tenorMax}
+                required
+              />
             </div>
 
             <div className="space-y-2">
@@ -175,7 +204,12 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
         </CardContent>
       </Card>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

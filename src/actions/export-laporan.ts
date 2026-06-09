@@ -18,8 +18,10 @@ const MAX_EXPORT_ROWS = 10_000
 
 function validateDateRange(dari?: string, sampai?: string) {
   const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
-  if (dari && !DATE_REGEX.test(dari)) throw new Error("Format tanggal 'dari' tidak valid (YYYY-MM-DD)")
-  if (sampai && !DATE_REGEX.test(sampai)) throw new Error("Format tanggal 'sampai' tidak valid (YYYY-MM-DD)")
+  if (dari && !DATE_REGEX.test(dari))
+    throw new Error("Format tanggal 'dari' tidak valid (YYYY-MM-DD)")
+  if (sampai && !DATE_REGEX.test(sampai))
+    throw new Error("Format tanggal 'sampai' tidak valid (YYYY-MM-DD)")
 }
 
 function dateFilter(dari?: string, sampai?: string) {
@@ -63,14 +65,22 @@ export async function exportBukuBesar(params: Param) {
   ws.getRow(1).font = { bold: true }
 
   if (akun) {
-    ws.addRow({ tanggal: "", noJurnal: "", keterangan: sanitizeCellValue(`Akun: ${akun.kode} - ${akun.nama}`), debit: "", kredit: "", saldo: "" })
+    ws.addRow({
+      tanggal: "",
+      noJurnal: "",
+      keterangan: sanitizeCellValue(`Akun: ${akun.kode} - ${akun.nama}`),
+      debit: "",
+      kredit: "",
+      saldo: "",
+    })
   }
 
   let saldo = 0
   for (const d of detail) {
-    const s = akun?.saldoNormal === "DEBIT"
-      ? round2(saldo + Number(d.debit) - Number(d.kredit))
-      : round2(saldo + Number(d.kredit) - Number(d.debit))
+    const s =
+      akun?.saldoNormal === "DEBIT"
+        ? round2(saldo + Number(d.debit) - Number(d.kredit))
+        : round2(saldo + Number(d.kredit) - Number(d.debit))
     saldo = s
     ws.addRow({
       tanggal: sanitizeCellValue(formatTanggal(d.jurnal.tanggal)),
@@ -82,7 +92,7 @@ export async function exportBukuBesar(params: Param) {
     })
   }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }
 
 export async function exportNeracaSaldo(params: Param) {
@@ -100,7 +110,12 @@ export async function exportNeracaSaldo(params: Param) {
   const saldoMap = new Map<string, { kode: string; nama: string; debit: number; kredit: number }>()
   for (const d of detail) {
     const key = d.akunId
-    const existing = saldoMap.get(key) ?? { kode: d.akun.kode, nama: d.akun.nama, debit: 0, kredit: 0 }
+    const existing = saldoMap.get(key) ?? {
+      kode: d.akun.kode,
+      nama: d.akun.nama,
+      debit: 0,
+      kredit: 0,
+    }
     existing.debit += Number(d.debit)
     existing.kredit += Number(d.kredit)
     saldoMap.set(key, existing)
@@ -119,10 +134,15 @@ export async function exportNeracaSaldo(params: Param) {
   const akunAll = await prisma.akun.findMany({ orderBy: { kode: "asc" } })
   for (const a of akunAll) {
     const s = saldoMap.get(a.id)
-    ws.addRow({ kode: sanitizeCellValue(a.kode), nama: sanitizeCellValue(a.nama), debit: s?.debit ?? 0, kredit: s?.kredit ?? 0 })
+    ws.addRow({
+      kode: sanitizeCellValue(a.kode),
+      nama: sanitizeCellValue(a.nama),
+      debit: s?.debit ?? 0,
+      kredit: s?.kredit ?? 0,
+    })
   }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }
 
 export async function exportNeraca(params: Param) {
@@ -147,29 +167,39 @@ export async function exportNeraca(params: Param) {
     if (shuIdx >= 0) {
       adjustedEkuitas[shuIdx] = { ...adjustedEkuitas[shuIdx]!, saldo: labaBersih }
     } else {
-      adjustedEkuitas.push({ kode: COA_SHU_BERJALAN, nama: "SHU Tahun Berjalan", saldo: labaBersih })
+      adjustedEkuitas.push({
+        kode: COA_SHU_BERJALAN,
+        nama: "SHU Tahun Berjalan",
+        saldo: labaBersih,
+      })
     }
   }
   const totalEkuitas = ekuitas.total + labaBersih - existingSHUSaldo
 
   const wb = new ExcelJS.Workbook()
   const ws = wb.addWorksheet("Neraca")
-  ws.columns = [{ header: "Akun", key: "akun", width: 40 }, { header: "Saldo", key: "saldo", width: 20 }]
+  ws.columns = [
+    { header: "Akun", key: "akun", width: 40 },
+    { header: "Saldo", key: "saldo", width: 20 },
+  ]
   ws.getRow(1).font = { bold: true }
 
   ws.addRow({ akun: "ASET", saldo: "" }).font = { bold: true }
-  for (const i of aset.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
+  for (const i of aset.items)
+    ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Aset", saldo: aset.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "KEWAJIBAN", saldo: "" }).font = { bold: true }
-  for (const i of liabilitas.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
+  for (const i of liabilitas.items)
+    ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Kewajiban", saldo: liabilitas.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "EKUITAS", saldo: "" }).font = { bold: true }
-  for (const i of adjustedEkuitas) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
+  for (const i of adjustedEkuitas)
+    ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Ekuitas", saldo: totalEkuitas }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }
 
 export async function exportLabaRugi(params: Param) {
@@ -186,20 +216,27 @@ export async function exportLabaRugi(params: Param) {
 
   const wb = new ExcelJS.Workbook()
   const ws = wb.addWorksheet("Laba Rugi")
-  ws.columns = [{ header: "Akun", key: "akun", width: 40 }, { header: "Saldo", key: "saldo", width: 20 }]
+  ws.columns = [
+    { header: "Akun", key: "akun", width: 40 },
+    { header: "Saldo", key: "saldo", width: 20 },
+  ]
   ws.getRow(1).font = { bold: true }
 
   ws.addRow({ akun: "PENDAPATAN", saldo: "" }).font = { bold: true }
-  for (const i of pendapatan.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
+  for (const i of pendapatan.items)
+    ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Pendapatan", saldo: pendapatan.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
   ws.addRow({ akun: "BEBAN", saldo: "" }).font = { bold: true }
-  for (const i of beban.items) ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
+  for (const i of beban.items)
+    ws.addRow({ akun: sanitizeCellValue(`  ${i.kode} ${i.nama}`), saldo: i.saldo })
   ws.addRow({ akun: "Total Beban", saldo: beban.total }).font = { bold: true }
   ws.addRow({ akun: "", saldo: "" })
-  ws.addRow({ akun: "Laba / Rugi Bersih", saldo: pendapatan.total - beban.total }).font = { bold: true }
+  ws.addRow({ akun: "Laba / Rugi Bersih", saldo: pendapatan.total - beban.total }).font = {
+    bold: true,
+  }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }
 
 export async function exportArusKas(params: Param) {
@@ -213,7 +250,10 @@ export async function exportArusKas(params: Param) {
   const kasAkun = await prisma.akun.findFirst({ where: { kode: COA_KAS, isActive: true } })
   const detail = kasAkun
     ? await prisma.detailJurnal.findMany({
-        where: { akunId: kasAkun.id, jurnal: { tanggal: { gte: tanggalMulai, lte: tanggalSelesai } } },
+        where: {
+          akunId: kasAkun.id,
+          jurnal: { tanggal: { gte: tanggalMulai, lte: tanggalSelesai } },
+        },
         include: { jurnal: { select: { tanggal: true, keterangan: true, noJurnal: true } } },
         orderBy: { jurnal: { tanggal: "asc" } },
       })
@@ -230,7 +270,8 @@ export async function exportArusKas(params: Param) {
   ]
   ws.getRow(1).font = { bold: true }
 
-  let totalMasuk = 0, totalKeluar = 0
+  let totalMasuk = 0,
+    totalKeluar = 0
   for (const d of detail) {
     const masuk = Number(d.debit)
     const keluar = Number(d.kredit)
@@ -244,9 +285,15 @@ export async function exportArusKas(params: Param) {
       keluar: keluar,
     })
   }
-  ws.addRow({ tanggal: "", noJurnal: "", keterangan: "TOTAL", masuk: totalMasuk, keluar: totalKeluar }).font = { bold: true }
+  ws.addRow({
+    tanggal: "",
+    noJurnal: "",
+    keterangan: "TOTAL",
+    masuk: totalMasuk,
+    keluar: totalKeluar,
+  }).font = { bold: true }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }
 
 export async function exportSHU(params: Param) {
@@ -268,7 +315,10 @@ export async function exportSHU(params: Param) {
 
   const wb = new ExcelJS.Workbook()
   const ws = wb.addWorksheet("SHU")
-  ws.columns = [{ header: "Keterangan", key: "ket", width: 40 }, { header: "Jumlah", key: "jumlah", width: 20 }]
+  ws.columns = [
+    { header: "Keterangan", key: "ket", width: 40 },
+    { header: "Jumlah", key: "jumlah", width: 20 },
+  ]
   ws.getRow(1).font = { bold: true }
 
   ws.addRow({ ket: sanitizeCellValue("Total Pendapatan"), jumlah: pendapatan.total })
@@ -276,9 +326,12 @@ export async function exportSHU(params: Param) {
   ws.addRow({ ket: sanitizeCellValue("SHU Kotor"), jumlah: shuKotor }).font = { bold: true }
   for (const ind of indikator) {
     const nominal = round2(shuKotor * (Number(ind.persentase) / 100))
-    ws.addRow({ ket: sanitizeCellValue(`${ind.nama} (${Number(ind.persentase)}%)`), jumlah: nominal })
+    ws.addRow({
+      ket: sanitizeCellValue(`${ind.nama} (${Number(ind.persentase)}%)`),
+      jumlah: nominal,
+    })
   }
   ws.addRow({ ket: sanitizeCellValue("Jumlah Anggota Aktif"), jumlah: jumlahAnggota })
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }

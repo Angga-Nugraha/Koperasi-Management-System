@@ -10,7 +10,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 type NeracaItem = {
   akunId: string
@@ -51,13 +58,18 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
-        </div>
-        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
-      </form>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
+          >
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Sampai</Label>
+              <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
+            </div>
+            <Button type="submit" className="w-full sm:w-auto">
+              Tampilkan
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -78,16 +90,24 @@ export function NeracaSaldoClient({ sampai, data, totalDebit, totalKredit }: Pro
                 <TableCell className="font-mono text-xs">{item.kode}</TableCell>
                 <TableCell>{item.nama}</TableCell>
                 <TableCell className="text-xs text-muted-foreground">{item.saldoNormal}</TableCell>
-                <TableCell className="text-right">{item.debit > 0 ? fmt(item.debit) : "-"}</TableCell>
-                <TableCell className="text-right">{item.kredit > 0 ? fmt(item.kredit) : "-"}</TableCell>
+                <TableCell className="text-right">
+                  {item.debit > 0 ? fmt(item.debit) : "-"}
+                </TableCell>
+                <TableCell className="text-right">
+                  {item.kredit > 0 ? fmt(item.kredit) : "-"}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
       <div className="flex items-center justify-end gap-8 overflow-x-auto rounded-md border bg-muted/50 px-4 py-2 text-sm font-medium">
-        <span>Total Debit: <span className="font-mono">{fmt(totalDebit)}</span></span>
-        <span>Total Kredit: <span className="font-mono">{fmt(totalKredit)}</span></span>
+        <span>
+          Total Debit: <span className="font-mono">{fmt(totalDebit)}</span>
+        </span>
+        <span>
+          Total Kredit: <span className="font-mono">{fmt(totalKredit)}</span>
+        </span>
       </div>
     </div>
   )

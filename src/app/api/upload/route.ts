@@ -36,11 +36,19 @@ function checkRateLimit(ip: string): boolean {
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown"
   if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: "Terlalu banyak upload. Coba lagi dalam 1 menit." }, { status: 429 })
+    return NextResponse.json(
+      { error: "Terlalu banyak upload. Coba lagi dalam 1 menit." },
+      { status: 429 },
+    )
   }
 
   const session = await auth()
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "PENGURUS" && session.user.role !== "BENDAHARA")) {
+  if (
+    !session?.user ||
+    (session.user.role !== "ADMIN" &&
+      session.user.role !== "PENGURUS" &&
+      session.user.role !== "BENDAHARA")
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 

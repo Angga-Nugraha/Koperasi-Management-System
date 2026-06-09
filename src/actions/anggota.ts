@@ -32,9 +32,10 @@ export async function getAnggotaList(params: {
   const where = anggotaFilter({ search, status })
 
   const SORTABLE: Record<string, string> = { noAnggota: "noAnggota", tglMasuk: "tglMasuk" }
-  const orderBy = sortBy && SORTABLE[sortBy]
-    ? { [SORTABLE[sortBy]]: sortOrder === "asc" ? "asc" as const : "desc" as const }
-    : { createdAt: "desc" as const }
+  const orderBy =
+    sortBy && SORTABLE[sortBy]
+      ? { [SORTABLE[sortBy]]: sortOrder === "asc" ? ("asc" as const) : ("desc" as const) }
+      : { createdAt: "desc" as const }
 
   const [raw, total] = await Promise.all([
     prisma.anggota.findMany({
@@ -171,30 +172,33 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
   tglMasuk.setHours(0, 0, 0, 0)
   const tglFilter = anggotaTanggalFilter(tglMasuk)
 
-  const created = await prisma.$transaction(async (tx) => {
-    const count = await tx.anggota.count({
-      where: { tglMasuk: tglFilter },
-    })
-    const u = count + 1
-    const noAnggota = generateNoAnggota(tglMasuk, u)
+  const created = await prisma.$transaction(
+    async (tx) => {
+      const count = await tx.anggota.count({
+        where: { tglMasuk: tglFilter },
+      })
+      const u = count + 1
+      const noAnggota = generateNoAnggota(tglMasuk, u)
 
-    return tx.anggota.create({
-      data: {
-        nik: parsed.nik,
-        noAnggota,
-        nama: parsed.nama,
-        noHp: parsed.noHp || null,
-        jenisKelamin: parsed.jenisKelamin || null,
-        alamat: parsed.alamat,
-        pekerjaan: parsed.pekerjaan || null,
-        penghasilan: parsed.penghasilan ?? null,
-        foto: parsed.foto ?? null,
-        ktp: parsed.ktp ?? null,
-        tglMasuk,
-        status: "AKTIF",
-      },
-    })
-  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable })
+      return tx.anggota.create({
+        data: {
+          nik: parsed.nik,
+          noAnggota,
+          nama: parsed.nama,
+          noHp: parsed.noHp || null,
+          jenisKelamin: parsed.jenisKelamin || null,
+          alamat: parsed.alamat,
+          pekerjaan: parsed.pekerjaan || null,
+          penghasilan: parsed.penghasilan ?? null,
+          foto: parsed.foto ?? null,
+          ktp: parsed.ktp ?? null,
+          tglMasuk,
+          status: "AKTIF",
+        },
+      })
+    },
+    { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+  )
 
   if (parsed.buatUser) {
     if (!parsed.email || !parsed.password) {
@@ -337,7 +341,10 @@ export async function updateAnggotaStatus(input: z.infer<typeof anggotaStatusSch
     }
   }
 
-  const before = await prisma.anggota.findUnique({ where: { id: parsed.id }, select: { status: true } })
+  const before = await prisma.anggota.findUnique({
+    where: { id: parsed.id },
+    select: { status: true },
+  })
 
   if (parsed.status === "KELUAR") {
     const anggota = await prisma.anggota.findUnique({
@@ -431,7 +438,10 @@ export async function deleteAnggota(id: string) {
     })
     revalidatePath("/pengurus/anggota")
     revalidatePath("/pengurus/simpanan")
-    return { success: true, message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR" }
+    return {
+      success: true,
+      message: "Anggota memiliki data transaksi, status diubah menjadi KELUAR",
+    }
   }
 
   await prisma.anggota.delete({ where: { id } })
@@ -542,7 +552,15 @@ export async function getAnggotaKartu(anggotaId: string) {
 
   const anggota = await prisma.anggota.findUnique({
     where: { id: anggotaId },
-    select: { noAnggota: true, nama: true, nik: true, alamat: true, pekerjaan: true, tglMasuk: true, foto: true },
+    select: {
+      noAnggota: true,
+      nama: true,
+      nik: true,
+      alamat: true,
+      pekerjaan: true,
+      tglMasuk: true,
+      foto: true,
+    },
   })
   if (!anggota) throw new Error("Anggota tidak ditemukan")
 

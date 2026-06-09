@@ -22,7 +22,7 @@ export async function buatJurnal(
     keterangan: string
     entries: JurnalEntry[]
     createdById?: string
-  }
+  },
 ) {
   const { tanggal, keterangan, entries, createdById } = params
 
@@ -118,10 +118,14 @@ export const COA_KAS_BANK = [COA_KAS, COA_BANK, COA_BANK_BRI, COA_BANK_MANDIRI] 
 
 export function getSimpananAkun(jenis: string): string {
   switch (jenis) {
-    case "POKOK": return COA_SIMPANAN_POKOK
-    case "WAJIB": return COA_SIMPANAN_WAJIB
-    case "SUKARELA": return COA_SIMPANAN_SUKARELA
-    default: return COA_SIMPANAN_SUKARELA
+    case "POKOK":
+      return COA_SIMPANAN_POKOK
+    case "WAJIB":
+      return COA_SIMPANAN_WAJIB
+    case "SUKARELA":
+      return COA_SIMPANAN_SUKARELA
+    default:
+      return COA_SIMPANAN_SUKARELA
   }
 }
 
@@ -151,7 +155,10 @@ export async function getSaldoAkunTipe(
   }
 
   const detail = await client.detailJurnal.findMany({
-    where: { akunId: { in: akunIds }, ...(Object.keys(jurnalWhere).length > 0 ? { jurnal: jurnalWhere } : {}) },
+    where: {
+      akunId: { in: akunIds },
+      ...(Object.keys(jurnalWhere).length > 0 ? { jurnal: jurnalWhere } : {}),
+    },
   })
 
   const saldoMap = new Map<string, number>()

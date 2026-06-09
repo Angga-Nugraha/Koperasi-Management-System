@@ -26,7 +26,10 @@ export async function catatLog(params: CatatLogParams, tx?: PrismaTx) {
   } catch {
     try {
       const client = tx ?? prisma
-      const user = await client.user.findUnique({ where: { id: params.userId }, select: { email: true } })
+      const user = await client.user.findUnique({
+        where: { id: params.userId },
+        select: { email: true },
+      })
       userEmail = user?.email ?? null
     } catch (innerErr) {
       console.error("catatLog: failed to fetch user email:", innerErr)

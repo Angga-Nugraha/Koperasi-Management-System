@@ -73,7 +73,7 @@ describe("Pinjaman Flow Integration", () => {
   })
 
   describe("ajukanPinjaman", () => {
-    let ajukanPinjaman: typeof import("@/actions/pinjaman")["ajukanPinjaman"]
+    let ajukanPinjaman: (typeof import("@/actions/pinjaman"))["ajukanPinjaman"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/pinjaman")
@@ -82,7 +82,7 @@ describe("Pinjaman Flow Integration", () => {
 
     it("rejects with invalid input (zero jumlah)", async () => {
       await expect(
-        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 0, tenor: 12 })
+        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 0, tenor: 12 }),
       ).rejects.toThrow()
     })
 
@@ -90,7 +90,12 @@ describe("Pinjaman Flow Integration", () => {
       prisma.anggota.findUnique.mockResolvedValue(null)
 
       await expect(
-        ajukanPinjaman({ anggotaId: "nonexistent", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 })
+        ajukanPinjaman({
+          anggotaId: "nonexistent",
+          jenisPinjamanId: "j1",
+          jumlah: 1000000,
+          tenor: 12,
+        }),
       ).rejects.toThrow("Anggota tidak ditemukan")
     })
 
@@ -99,7 +104,7 @@ describe("Pinjaman Flow Integration", () => {
       prisma.pinjaman.findFirst.mockResolvedValue({ id: "existing", status: "DICAIRKAN" })
 
       await expect(
-        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 })
+        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 }),
       ).rejects.toThrow("pinjaman aktif")
     })
 
@@ -109,7 +114,7 @@ describe("Pinjaman Flow Integration", () => {
       prisma.jenisPinjaman.findUnique.mockResolvedValue(null)
 
       await expect(
-        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 })
+        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 }),
       ).rejects.toThrow("Jenis pinjaman tidak ditemukan")
     })
 
@@ -120,7 +125,7 @@ describe("Pinjaman Flow Integration", () => {
       prisma.simpanan.aggregate.mockResolvedValue({ _sum: { saldo: 100000 } })
 
       await expect(
-        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 })
+        ajukanPinjaman({ anggotaId: "a1", jenisPinjamanId: "j1", jumlah: 1000000, tenor: 12 }),
       ).rejects.toThrow("melebihi plafon")
     })
 
@@ -156,7 +161,7 @@ describe("Pinjaman Flow Integration", () => {
             angsuranTotal: 491666.67,
             status: "PENGAJUAN",
           }),
-        })
+        }),
       )
     })
 
@@ -174,7 +179,7 @@ describe("Pinjaman Flow Integration", () => {
   })
 
   describe("setujuiPinjaman", () => {
-    let setujuiPinjaman: typeof import("@/actions/pinjaman")["setujuiPinjaman"]
+    let setujuiPinjaman: (typeof import("@/actions/pinjaman"))["setujuiPinjaman"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/pinjaman")
@@ -184,7 +189,9 @@ describe("Pinjaman Flow Integration", () => {
     it("rejects when pinjaman not found", async () => {
       prisma.pinjaman.findUnique.mockResolvedValue(null)
 
-      await expect(setujuiPinjaman({ pinjamanId: "nonexistent" })).rejects.toThrow("Pinjaman tidak ditemukan")
+      await expect(setujuiPinjaman({ pinjamanId: "nonexistent" })).rejects.toThrow(
+        "Pinjaman tidak ditemukan",
+      )
     })
 
     it("rejects when pinjaman status is not PENGAJUAN", async () => {
@@ -210,7 +217,7 @@ describe("Pinjaman Flow Integration", () => {
         expect.objectContaining({
           where: { id: "p1" },
           data: expect.objectContaining({ status: "DISETUJUI" }),
-        })
+        }),
       )
     })
 
@@ -231,13 +238,13 @@ describe("Pinjaman Flow Integration", () => {
           data: expect.objectContaining({
             keterangan: expect.stringContaining("Catatan awal"),
           }),
-        })
+        }),
       )
     })
   })
 
   describe("cairkanPinjaman", () => {
-    let cairkanPinjaman: typeof import("@/actions/pinjaman")["cairkanPinjaman"]
+    let cairkanPinjaman: (typeof import("@/actions/pinjaman"))["cairkanPinjaman"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/pinjaman")
@@ -247,7 +254,9 @@ describe("Pinjaman Flow Integration", () => {
     it("rejects when pinjaman not found", async () => {
       prisma.pinjaman.findUnique.mockResolvedValue(null)
 
-      await expect(cairkanPinjaman({ pinjamanId: "nonexistent" })).rejects.toThrow("Pinjaman tidak ditemukan")
+      await expect(cairkanPinjaman({ pinjamanId: "nonexistent" })).rejects.toThrow(
+        "Pinjaman tidak ditemukan",
+      )
     })
 
     it("rejects when pinjaman is not yet approved", async () => {
@@ -296,7 +305,7 @@ describe("Pinjaman Flow Integration", () => {
   })
 
   describe("bayarAngsuran", () => {
-    let bayarAngsuran: typeof import("@/actions/pinjaman")["bayarAngsuran"]
+    let bayarAngsuran: (typeof import("@/actions/pinjaman"))["bayarAngsuran"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/pinjaman")
@@ -310,9 +319,9 @@ describe("Pinjaman Flow Integration", () => {
         anggota: { noAnggota: "001", nama: "Budi" },
       })
 
-      await expect(
-        bayarAngsuran({ pinjamanId: "p1", nominal: 500000 })
-      ).rejects.toThrow("Pinjaman sudah lunas")
+      await expect(bayarAngsuran({ pinjamanId: "p1", nominal: 500000 })).rejects.toThrow(
+        "Pinjaman sudah lunas",
+      )
     })
 
     it("rejects when no unpaid installments exist", async () => {
@@ -324,9 +333,9 @@ describe("Pinjaman Flow Integration", () => {
         angsuran: [],
       })
 
-      await expect(
-        bayarAngsuran({ pinjamanId: "p1", nominal: 500000 })
-      ).rejects.toThrow("Semua angsuran sudah lunas")
+      await expect(bayarAngsuran({ pinjamanId: "p1", nominal: 500000 })).rejects.toThrow(
+        "Semua angsuran sudah lunas",
+      )
     })
 
     it("rejects payment less than total due", async () => {
@@ -350,9 +359,9 @@ describe("Pinjaman Flow Integration", () => {
       })
       prisma.jurnalUmum.create.mockResolvedValue({ id: "jurnal-1" })
 
-      await expect(
-        bayarAngsuran({ pinjamanId: "p1", nominal: 100000 })
-      ).rejects.toThrow("Pembayaran kurang")
+      await expect(bayarAngsuran({ pinjamanId: "p1", nominal: 100000 })).rejects.toThrow(
+        "Pembayaran kurang",
+      )
     })
 
     it("processes payment successfully for first angsuran", async () => {

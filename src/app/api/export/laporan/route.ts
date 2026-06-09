@@ -13,7 +13,10 @@ import {
   exportSHU,
 } from "@/actions/export-laporan"
 
-const EXPORTERS: Record<string, (p: { dari?: string; sampai?: string; akunId?: string }) => Promise<Uint8Array>> = {
+const EXPORTERS: Record<
+  string,
+  (p: { dari?: string; sampai?: string; akunId?: string }) => Promise<Uint8Array>
+> = {
   "buku-besar": exportBukuBesar,
   "neraca-saldo": exportNeracaSaldo,
   neraca: exportNeraca,
@@ -46,10 +49,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid export type" }, { status: 400 })
     }
     if (dari && !DATE_REGEX.test(dari)) {
-      return NextResponse.json({ error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Format tanggal 'dari' tidak valid (YYYY-MM-DD)" },
+        { status: 400 },
+      )
     }
     if (sampai && !DATE_REGEX.test(sampai)) {
-      return NextResponse.json({ error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Format tanggal 'sampai' tidak valid (YYYY-MM-DD)" },
+        { status: 400 },
+      )
     }
     if (akunId && !UUID_REGEX.test(akunId)) {
       return NextResponse.json({ error: "Format akunId tidak valid" }, { status: 400 })
@@ -67,7 +76,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Export failed" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

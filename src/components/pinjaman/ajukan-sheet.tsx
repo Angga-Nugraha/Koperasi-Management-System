@@ -26,9 +26,14 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { ajukanPinjaman, getJenisPinjamanList, getPlafonAnggota } from "@/actions/pinjaman"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
@@ -49,18 +54,31 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
   const [defaultBunga, setDefaultBunga] = useState<number>(0)
   const [tenorMin, setTenorMin] = useState(3)
   const [tenorMax, setTenorMax] = useState(36)
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
   const [anggotaId, setAnggotaId] = useState("")
-  const [plafon, setPlafon] = useState<{ maxPlafon: number; totalSimpanan: number; plafonMaxSaldo: number } | null>(null)
+  const [plafon, setPlafon] = useState<{
+    maxPlafon: number
+    totalSimpanan: number
+    plafonMaxSaldo: number
+  } | null>(null)
   const [loadingPlafon, setLoadingPlafon] = useState(false)
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
-    fetch("/api/konfig").then(r => r.json()).then(konfig => {
-      if (konfig.tenor_min !== undefined && konfig.tenor_min !== "") setTenorMin(Number(konfig.tenor_min))
-      if (konfig.tenor_max !== undefined && konfig.tenor_max !== "") setTenorMax(Number(konfig.tenor_max))
-    }).catch(() => {})
+    fetch("/api/konfig")
+      .then((r) => r.json())
+      .then((konfig) => {
+        if (konfig.tenor_min !== undefined && konfig.tenor_min !== "")
+          setTenorMin(Number(konfig.tenor_min))
+        if (konfig.tenor_max !== undefined && konfig.tenor_max !== "")
+          setTenorMax(Number(konfig.tenor_max))
+      })
+      .catch(() => {})
   }, [])
   /* eslint-enable react-hooks/set-state-in-effect */
 
@@ -107,7 +125,9 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
 
     const jumlah = Number(formData.get("jumlah"))
     if (plafon && jumlah > plafon.maxPlafon) {
-      setError(`Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`)
+      setError(
+        `Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`,
+      )
       setLoading(false)
       return
     }
@@ -146,15 +166,12 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
           <div className="mt-6 space-y-4">
             <form id="ajukan-form-sheet" onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
 
-              <AnggotaSelect
-                name="anggotaId"
-                value={anggotaId}
-                onChange={setAnggotaId}
-                required
-              />
+              <AnggotaSelect name="anggotaId" value={anggotaId} onChange={setAnggotaId} required />
 
               {plafon && (
                 <div className="rounded-md bg-muted p-3 text-sm space-y-1">
@@ -163,7 +180,8 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
                     Rp{plafon.maxPlafon.toLocaleString("id-ID")}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {plafon.plafonMaxSaldo}× saldo simpanan (Rp{plafon.totalSimpanan.toLocaleString("id-ID")})
+                    {plafon.plafonMaxSaldo}× saldo simpanan (Rp
+                    {plafon.totalSimpanan.toLocaleString("id-ID")})
                   </p>
                 </div>
               )}
@@ -173,7 +191,12 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
 
               <div className="space-y-2">
                 <Label htmlFor="jenisPinjamanId">Jenis Pinjaman *</Label>
-                <Select name="jenisPinjamanId" value={selectedJenis} onValueChange={handleJenisChange} required>
+                <Select
+                  name="jenisPinjamanId"
+                  value={selectedJenis}
+                  onValueChange={handleJenisChange}
+                  required
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih jenis pinjaman" />
                   </SelectTrigger>
@@ -201,8 +224,18 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tenor">Tenor ({tenorMin}-{tenorMax} bulan) *</Label>
-                <Input id="tenor" name="tenor" type="number" placeholder="12" min={tenorMin} max={tenorMax} required />
+                <Label htmlFor="tenor">
+                  Tenor ({tenorMin}-{tenorMax} bulan) *
+                </Label>
+                <Input
+                  id="tenor"
+                  name="tenor"
+                  type="number"
+                  placeholder="12"
+                  min={tenorMin}
+                  max={tenorMax}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
@@ -211,15 +244,24 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Button type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Ajukan"}</Button>
-                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Batal</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Menyimpan..." : "Ajukan"}
+                </Button>
+                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
+                  Batal
+                </Button>
               </div>
             </form>
           </div>
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

@@ -27,16 +27,26 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { StrukPembayaran } from "@/components/struk-pembayaran"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ArrowLeft, RefreshCw, Wallet } from "lucide-react"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 
-import { generateTagihanWajib, bayarTagihanWajib, getTagihanWajibList, getJenisSimpananList } from "@/actions/simpanan"
+import {
+  generateTagihanWajib,
+  bayarTagihanWajib,
+  getTagihanWajibList,
+  getJenisSimpananList,
+} from "@/actions/simpanan"
 import Link from "next/link"
 
 type Tagihan = {
@@ -54,7 +64,21 @@ type Tagihan = {
   status: string
 }
 
-const BULAN = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+const BULAN = [
+  "",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+]
 
 const STATUS_LABEL: Record<string, string> = {
   BELUM_LUNAS: "Belum",
@@ -83,8 +107,17 @@ export default function TagihanWajibPage() {
   const [filterStatus, setFilterStatus] = useState<string>("SEMUA")
   const [filterSearch, setFilterSearch] = useState("")
   const [jenisList, setJenisList] = useState<{ kode: string; nama: string }[]>([])
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
-  const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
+  const [generalInfo, setGeneralInfo] = useState<{
+    namaKoperasi: string
+    alamat: string | null
+    noAhu: string | null
+    logo: string | null
+  } | null>(null)
   const [receipt, setReceipt] = useState<{
     noStruk: string
     nominal: number
@@ -121,8 +154,13 @@ export default function TagihanWajibPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData()
-    fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
-    getJenisSimpananList().then(setJenisList).catch(() => {})
+    fetch("/api/general-info")
+      .then((r) => r.json())
+      .then(setGeneralInfo)
+      .catch(() => {})
+    getJenisSimpananList()
+      .then(setJenisList)
+      .catch(() => {})
   }, [fetchData])
 
   async function handleGenerate() {
@@ -184,19 +222,29 @@ export default function TagihanWajibPage() {
       )}
 
       <Card>
-        <CardHeader><CardTitle>Filter & Generate</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Filter & Generate</CardTitle>
+        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
             <div className="space-y-1">
               <Label>Bulan</Label>
-              <Select value={filterBulan} onValueChange={(v) => { setFilterBulan(v === "all" ? "" : v); setPage(1) }}>
+              <Select
+                value={filterBulan}
+                onValueChange={(v) => {
+                  setFilterBulan(v === "all" ? "" : v)
+                  setPage(1)
+                }}
+              >
                 <SelectTrigger className="w-full lg:w-28">
                   <SelectValue placeholder="Semua" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua</SelectItem>
                   {BULAN.slice(1).map((name, i) => (
-                    <SelectItem key={i + 1} value={String(i + 1)}>{name}</SelectItem>
+                    <SelectItem key={i + 1} value={String(i + 1)}>
+                      {name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -207,12 +255,21 @@ export default function TagihanWajibPage() {
                 type="number"
                 className="w-full lg:w-24"
                 value={filterTahun}
-                onChange={(e) => { setFilterTahun(e.target.value); setPage(1) }}
+                onChange={(e) => {
+                  setFilterTahun(e.target.value)
+                  setPage(1)
+                }}
               />
             </div>
             <div className="space-y-1">
               <Label>Status</Label>
-              <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v); setPage(1) }}>
+              <Select
+                value={filterStatus}
+                onValueChange={(v) => {
+                  setFilterStatus(v)
+                  setPage(1)
+                }}
+              >
                 <SelectTrigger className="w-full lg:w-28">
                   <SelectValue />
                 </SelectTrigger>
@@ -226,15 +283,25 @@ export default function TagihanWajibPage() {
             </div>
             <div className="space-y-1">
               <Label>Jenis</Label>
-              <Select value={filterJenis} onValueChange={(v) => { setFilterJenis(v === "all" ? "" : v); setPage(1) }}>
+              <Select
+                value={filterJenis}
+                onValueChange={(v) => {
+                  setFilterJenis(v === "all" ? "" : v)
+                  setPage(1)
+                }}
+              >
                 <SelectTrigger className="w-full lg:w-32">
                   <SelectValue placeholder="Semua" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua</SelectItem>
-                  {jenisList.filter((j) => j.kode !== "SUKARELA").map((j) => (
-                    <SelectItem key={j.kode} value={j.kode}>{j.nama}</SelectItem>
-                  ))}
+                  {jenisList
+                    .filter((j) => j.kode !== "SUKARELA")
+                    .map((j) => (
+                      <SelectItem key={j.kode} value={j.kode}>
+                        {j.nama}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -244,10 +311,18 @@ export default function TagihanWajibPage() {
                 className="w-full lg:w-44"
                 placeholder="Nama / No Anggota"
                 value={filterSearch}
-                onChange={(e) => { setFilterSearch(e.target.value); setPage(1) }}
+                onChange={(e) => {
+                  setFilterSearch(e.target.value)
+                  setPage(1)
+                }}
               />
             </div>
-            <Button variant="outline" onClick={fetchData} disabled={loading} className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={fetchData}
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
               <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
               Cari
             </Button>
@@ -262,59 +337,71 @@ export default function TagihanWajibPage() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Anggota</TableHead>
-                <TableHead>Jenis</TableHead>
-                <TableHead>Periode</TableHead>
-                <TableHead className="text-right">Nominal</TableHead>
-                <TableHead>Jatuh Tempo</TableHead>
-                <TableHead>Tgl Bayar</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.length === 0 && (
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center text-muted-foreground">
-                    {loading ? "Memuat..." : "Tidak ada tagihan"}
-                  </TableCell>
+                  <TableHead>Anggota</TableHead>
+                  <TableHead>Jenis</TableHead>
+                  <TableHead>Periode</TableHead>
+                  <TableHead className="text-right">Nominal</TableHead>
+                  <TableHead>Jatuh Tempo</TableHead>
+                  <TableHead>Tgl Bayar</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
-              )}
-              {data.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell>
-                    <div className="text-sm font-medium">{t.namaAnggota}</div>
-                    <div className="text-xs text-muted-foreground">{t.noAnggota}</div>
-                  </TableCell>
-                  <TableCell><Badge variant="secondary" className="text-xs">{t.jenisNama}</Badge></TableCell>
-                  <TableCell>{BULAN[t.bulan]} {t.tahun}</TableCell>
-                  <TableCell className="text-right font-mono">Rp{t.nominal.toLocaleString("id-ID")}</TableCell>
-                  <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
-                  <TableCell className="text-xs">{t.tglBayar ? formatTanggal(t.tglBayar) : "-"}</TableCell>
-                  <TableCell>
-                    <Badge variant={STATUS_VARIANT[t.status] ?? "outline"}>
-                      {STATUS_LABEL[t.status] ?? t.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {t.status !== "LUNAS" && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setConfirm({
-                          title: `Bayar Tagihan ${BULAN[t.bulan]} ${t.tahun}`,
-                          desc: `Bayar tagihan ${t.jenisNama} ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar Rp${t.nominal.toLocaleString("id-ID")}?`,
-                          onConfirm: () => handleBayar(t),
-                        })}
-                      >
-                        <Wallet className="mr-1 h-3 w-3" /> Bayar
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              </TableHeader>
+              <TableBody>
+                {data.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
+                      {loading ? "Memuat..." : "Tidak ada tagihan"}
+                    </TableCell>
+                  </TableRow>
+                )}
+                {data.map((t) => (
+                  <TableRow key={t.id}>
+                    <TableCell>
+                      <div className="text-sm font-medium">{t.namaAnggota}</div>
+                      <div className="text-xs text-muted-foreground">{t.noAnggota}</div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="text-xs">
+                        {t.jenisNama}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {BULAN[t.bulan]} {t.tahun}
+                    </TableCell>
+                    <TableCell className="text-right font-mono">
+                      Rp{t.nominal.toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
+                    <TableCell className="text-xs">
+                      {t.tglBayar ? formatTanggal(t.tglBayar) : "-"}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={STATUS_VARIANT[t.status] ?? "outline"}>
+                        {STATUS_LABEL[t.status] ?? t.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {t.status !== "LUNAS" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            setConfirm({
+                              title: `Bayar Tagihan ${BULAN[t.bulan]} ${t.tahun}`,
+                              desc: `Bayar tagihan ${t.jenisNama} ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar Rp${t.nominal.toLocaleString("id-ID")}?`,
+                              onConfirm: () => handleBayar(t),
+                            })
+                          }
+                        >
+                          <Wallet className="mr-1 h-3 w-3" /> Bayar
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
@@ -324,12 +411,20 @@ export default function TagihanWajibPage() {
             total={total}
             pageSize={pageSize}
             onPageChange={(p) => setPage(p)}
-            onPageSizeChange={(s) => { setPageSize(s); setPage(1) }}
+            onPageSizeChange={(s) => {
+              setPageSize(s)
+              setPage(1)
+            }}
           />
         </CardContent>
       </Card>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
@@ -345,7 +440,9 @@ export default function TagihanWajibPage() {
       {receipt && generalInfo && (
         <StrukPembayaran
           open={!!receipt}
-          onOpenChange={(open) => { if (!open) handleCloseReceipt() }}
+          onOpenChange={(open) => {
+            if (!open) handleCloseReceipt()
+          }}
           generalInfo={generalInfo}
           data={{
             jenis: "tagihan" as const,

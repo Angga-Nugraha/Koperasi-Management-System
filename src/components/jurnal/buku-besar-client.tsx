@@ -20,7 +20,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { formatTanggal } from "@/lib/format"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 type AkunItem = { id: string; kode: string; nama: string; tipe: string; saldoNormal: string }
 
@@ -46,7 +53,18 @@ type Props = {
   pageSize?: number
 }
 
-export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTerpilih, saldoAwal = 0, page = 1, totalPages = 0, pageSize = 20 }: Props) {
+export function BukuBesarClient({
+  akunList,
+  akunId,
+  dari,
+  sampai,
+  detail,
+  akunTerpilih,
+  saldoAwal = 0,
+  page = 1,
+  totalPages = 0,
+  pageSize = 20,
+}: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -95,35 +113,40 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
   }
 
   return (
-      <div className="space-y-6">
+    <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Akun</Label>
-          <Select name="akunId" defaultValue={akunId}>
-            <SelectTrigger className="w-full sm:w-72">
-              <SelectValue placeholder="Pilih akun" />
-            </SelectTrigger>
-            <SelectContent>
-              {akunList.map((a) => (
-                <SelectItem key={a.id} value={a.id}>
-                  {a.kode} - {a.nama}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Dari</Label>
-          <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
-        </div>
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Sampai</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
-        </div>
-        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
-      </form>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
+          >
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Akun</Label>
+              <Select name="akunId" defaultValue={akunId}>
+                <SelectTrigger className="w-full sm:w-72">
+                  <SelectValue placeholder="Pilih akun" />
+                </SelectTrigger>
+                <SelectContent>
+                  {akunList.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.kode} - {a.nama}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Dari</Label>
+              <Input type="date" name="dari" defaultValue={dari} className="w-full sm:w-auto" />
+            </div>
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Sampai</Label>
+              <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
+            </div>
+            <Button type="submit" className="w-full sm:w-auto">
+              Tampilkan
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -165,7 +188,9 @@ export function BukuBesarClient({ akunList, akunId, dari, sampai, detail, akunTe
                     <TableCell>{r.keterangan}</TableCell>
                     <TableCell>{r.saldoNormal === "DEBIT" ? "Debit" : "Kredit"}</TableCell>
                     <TableCell className="text-right">{r.debit > 0 ? fmt(r.debit) : "-"}</TableCell>
-                    <TableCell className="text-right">{r.kredit > 0 ? fmt(r.kredit) : "-"}</TableCell>
+                    <TableCell className="text-right">
+                      {r.kredit > 0 ? fmt(r.kredit) : "-"}
+                    </TableCell>
                     <TableCell className="text-right font-medium">{fmt(r.saldo)}</TableCell>
                   </TableRow>
                 ))}

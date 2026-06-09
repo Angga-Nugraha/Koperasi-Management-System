@@ -10,7 +10,13 @@ import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { catatLog } from "@/lib/audit"
-import { createUserSchema, updateUserSchema, resetPasswordSchema, type CreateUserInput, type UpdateUserInput } from "@/lib/validations/user"
+import {
+  createUserSchema,
+  updateUserSchema,
+  resetPasswordSchema,
+  type CreateUserInput,
+  type UpdateUserInput,
+} from "@/lib/validations/user"
 
 const ROLE_HIERARCHY: Record<string, number> = {
   ADMIN: 5,
@@ -25,7 +31,10 @@ async function assertCanManageRole(targetRole: string) {
   if (!session?.user) throw new Error("Unauthorized")
   const userRole = session.user.role as string
   if (!["ADMIN", "PENGURUS", "BENDAHARA"].includes(userRole)) throw new Error("Unauthorized")
-  if (userRole !== "ADMIN" && (ROLE_HIERARCHY[targetRole] ?? 0) >= (ROLE_HIERARCHY[userRole] ?? 0)) {
+  if (
+    userRole !== "ADMIN" &&
+    (ROLE_HIERARCHY[targetRole] ?? 0) >= (ROLE_HIERARCHY[userRole] ?? 0)
+  ) {
     throw new Error("Tidak bisa mengelola user dengan role yang sama atau di atas role Anda")
   }
 }
@@ -48,7 +57,9 @@ export async function getUserList(q?: string) {
     role: u.role,
     isActive: u.isActive,
     anggotaId: u.anggotaId,
-    anggota: u.anggota ? { id: u.anggota.id, nama: u.anggota.nama, noAnggota: u.anggota.noAnggota } : null,
+    anggota: u.anggota
+      ? { id: u.anggota.id, nama: u.anggota.nama, noAnggota: u.anggota.noAnggota }
+      : null,
     createdAt: u.createdAt.toISOString(),
   }))
 }
@@ -62,10 +73,7 @@ export async function getAnggotaTanpaUser(includeId?: string) {
   const anggota = await prisma.anggota.findMany({
     where: {
       status: "AKTIF",
-      OR: [
-        { user: null },
-        ...(includeId ? [{ id: includeId }] : []),
-      ],
+      OR: [{ user: null }, ...(includeId ? [{ id: includeId }] : [])],
     },
     select: { id: true, nama: true, noAnggota: true },
     orderBy: { nama: "asc" },
@@ -163,7 +171,11 @@ export async function updateUser(input: UpdateUserInput) {
   return { success: true }
 }
 
-export async function resetPassword(input: { userId: string; password: string; confirmPassword: string }) {
+export async function resetPassword(input: {
+  userId: string
+  password: string
+  confirmPassword: string
+}) {
   const session = await auth()
   if (!session?.user || !["ADMIN", "PENGURUS", "BENDAHARA"].includes(session.user.role as string)) {
     throw new Error("Unauthorized")

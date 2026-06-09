@@ -10,7 +10,15 @@ import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { generateSHU, hapusSHU, getSHUList } from "@/actions/shu"
@@ -40,7 +48,10 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
   }
 
   return (
-    <Card className="cursor-pointer transition-shadow hover:shadow-md" onClick={() => router.push(`/pengurus/shu/${shu.tahun}`)}>
+    <Card
+      className="cursor-pointer transition-shadow hover:shadow-md"
+      onClick={() => router.push(`/pengurus/shu/${shu.tahun}`)}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
@@ -65,7 +76,9 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
                   </DialogHeader>
                   {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>Batal</Button>
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                      Batal
+                    </Button>
                     <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
                       {deleting ? "Menghapus..." : "Hapus"}
                     </Button>
@@ -75,16 +88,22 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
             )}
             <Badge variant={shu.status === "FINAL" ? "default" : "secondary"}>
               {shu.status === "FINAL" ? (
-                <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Closed</span>
+                <span className="flex items-center gap-1">
+                  <FileText className="h-3 w-3" /> Closed
+                </span>
               ) : (
-                <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> Estimasi</span>
+                <span className="flex items-center gap-1">
+                  <FileText className="h-3 w-3" /> Estimasi
+                </span>
               )}
             </Badge>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <p className={`text-3xl font-bold ${shu.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}>
+        <p
+          className={`text-3xl font-bold ${shu.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}
+        >
           Rp {shu.totalSHU.toLocaleString("id-ID")}
         </p>
         <p className="text-xs text-muted-foreground mt-1">Total SHU</p>
@@ -121,7 +140,9 @@ export function SHUList({ data }: { data: SHU[] }) {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">SHU (Sisa Hasil Usaha)</h1>
-          <p className="text-sm text-muted-foreground">Kelola perhitungan dan alokasi SHU tahunan</p>
+          <p className="text-sm text-muted-foreground">
+            Kelola perhitungan dan alokasi SHU tahunan
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" onClick={() => router.push("/pengurus/shu/konfigurasi")}>
@@ -173,7 +194,9 @@ export function SHUList({ data }: { data: SHU[] }) {
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-12">
             <p className="text-sm text-muted-foreground">Belum ada data SHU</p>
-            <p className="text-xs text-muted-foreground">Klik &ldquo;Generate SHU&rdquo; untuk memulai</p>
+            <p className="text-xs text-muted-foreground">
+              Klik &ldquo;Generate SHU&rdquo; untuk memulai
+            </p>
           </CardContent>
         </Card>
       ) : (

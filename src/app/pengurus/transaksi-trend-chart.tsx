@@ -5,7 +5,16 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: transaksi-trend-chart.
  */
 
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts"
 import { formatCompact } from "@/lib/format"
 
 type Props = {
@@ -23,7 +32,11 @@ export function TransaksiTrendChart({ data }: Props) {
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
           <XAxis dataKey="bulan" tick={{ fontSize: 12 }} className="text-muted-foreground" />
-          <YAxis tick={{ fontSize: 12 }} className="text-muted-foreground" tickFormatter={formatCompact} />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            className="text-muted-foreground"
+            tickFormatter={formatCompact}
+          />
           <Tooltip
             formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, undefined]}
           />

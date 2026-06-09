@@ -35,11 +35,13 @@ export function AnggotaSelect({ value, onChange, name, required }: Props) {
 
   useEffect(() => {
     if (!value) return
-    getAnggotaBasic(value).then((a) => {
-      if (a) setSelected(a)
-    }).catch((err) => {
-      console.error("Failed to fetch anggota basic:", err)
-    })
+    getAnggotaBasic(value)
+      .then((a) => {
+        if (a) setSelected(a)
+      })
+      .catch((err) => {
+        console.error("Failed to fetch anggota basic:", err)
+      })
   }, [value])
 
   useEffect(() => {

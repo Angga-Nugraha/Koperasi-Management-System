@@ -6,12 +6,7 @@
  */
 
 import { useState, useEffect } from "react"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -20,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {formatTanggal} from "@/lib/format"
+import { formatTanggal } from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -96,7 +91,15 @@ type PlafonInfo = {
   plafonMaxSaldo: number
 }
 
-export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = [] }: { pinjaman: Pinjaman[]; plafon: PlafonInfo; pendingPayments?: PendingPayment[] }) {
+export function AnggotaPinjamanView({
+  pinjaman: data,
+  plafon,
+  pendingPayments = [],
+}: {
+  pinjaman: Pinjaman[]
+  plafon: PlafonInfo
+  pendingPayments?: PendingPayment[]
+}) {
   const router = useRouter()
   const [loadingPayment, setLoadingPayment] = useState<string | null>(null)
   const [now, setNow] = useState(() => Date.now())
@@ -145,7 +148,7 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
       toast.error("Midtrans payment library is not loaded yet. Please wait a moment.")
       return
     }
-    (window as any).snap.pay(token, {
+    ;(window as any).snap.pay(token, {
       onSuccess: async () => {
         toast.success("Pembayaran berhasil!")
         await syncOnlinePaymentStatus(orderId)
@@ -161,7 +164,7 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
       onClose: () => {
         toast.info("Pembayaran belum diselesaikan.")
         router.refresh()
-      }
+      },
     })
   }
 
@@ -182,7 +185,9 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
     }
   }
 
-  const aktif = data.filter((p) => p.status !== "LUNAS" && p.status !== "DITOLAK" && p.status !== "GAGAL")
+  const aktif = data.filter(
+    (p) => p.status !== "LUNAS" && p.status !== "DITOLAK" && p.status !== "GAGAL",
+  )
   const totalSisa = aktif.reduce((sum, p) => sum + p.sisaPinjaman, 0)
   const [showForm, setShowForm] = useState(false)
 
@@ -201,21 +206,28 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
             if (sisaWaktu === "Kedaluwarsa") return null
 
             return (
-              <div key={p.id} className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div
+                key={p.id}
+                className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
                 <div className="flex items-start gap-2.5">
                   <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600 shrink-0" />
                   <div>
-                    <h5 className="font-semibold text-amber-900">Pembayaran Online Tertunda (Angsuran Pinjaman)</h5>
+                    <h5 className="font-semibold text-amber-900">
+                      Pembayaran Online Tertunda (Angsuran Pinjaman)
+                    </h5>
                     <p className="text-sm text-amber-700">
-                      Anda menginisiasi pembayaran sebesar <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>. 
-                      Selesaikan sebelum kedaluwarsa dalam <span className="font-bold text-amber-900">{sisaWaktu}</span>.
+                      Anda menginisiasi pembayaran sebesar{" "}
+                      <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>.
+                      Selesaikan sebelum kedaluwarsa dalam{" "}
+                      <span className="font-bold text-amber-900">{sisaWaktu}</span>.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
+                  <Button
                     variant="outline"
-                    size="sm" 
+                    size="sm"
                     className="bg-white border-amber-300 text-amber-800 hover:bg-amber-100"
                     onClick={() => handleSyncStatus(p.orderId)}
                     disabled={loadingPayment === p.orderId}
@@ -226,8 +238,8 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
                       "Cek Status"
                     )}
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     className="bg-amber-600 hover:bg-amber-700 text-white border-0"
                     onClick={() => triggerSnap(p.snapToken!, p.orderId)}
                   >
@@ -242,15 +254,25 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total Pinjaman Aktif</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">{aktif.length} pinjaman</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Pinjaman Aktif</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{aktif.length} pinjaman</p>
+          </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Sisa Pinjaman</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">Rp{totalSisa.toLocaleString("id-ID")}</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Sisa Pinjaman</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">Rp{totalSisa.toLocaleString("id-ID")}</p>
+          </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Angsuran per Bulan</CardTitle></CardHeader>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Angsuran per Bulan</CardTitle>
+          </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
               Rp{aktif.reduce((sum, p) => sum + p.angsuranTotal, 0).toLocaleString("id-ID")}
@@ -258,11 +280,16 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
           </CardContent>
         </Card>
         <Card className="border-primary/30">
-          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Limit Pinjaman</CardTitle></CardHeader>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Limit Pinjaman</CardTitle>
+          </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-primary">Rp{plafon.maxPlafon.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold text-primary">
+              Rp{plafon.maxPlafon.toLocaleString("id-ID")}
+            </p>
             <p className="text-xs text-muted-foreground mt-1">
-              {plafon.plafonMaxSaldo}× saldo simpanan (Rp{plafon.totalSimpanan.toLocaleString("id-ID")})
+              {plafon.plafonMaxSaldo}× saldo simpanan (Rp
+              {plafon.totalSimpanan.toLocaleString("id-ID")})
             </p>
           </CardContent>
         </Card>
@@ -351,10 +378,18 @@ export function AnggotaPinjamanView({ pinjaman: data, plafon, pendingPayments = 
                         <TableRow key={a.id}>
                           <TableCell>{a.angsuranKe}</TableCell>
                           <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
-                          <TableCell className="text-right font-mono">Rp{a.pokok.toLocaleString("id-ID")}</TableCell>
-                          <TableCell className="text-right font-mono">Rp{a.jasa.toLocaleString("id-ID")}</TableCell>
-                          <TableCell className="text-right font-mono">Rp{a.total.toLocaleString("id-ID")}</TableCell>
-                          <TableCell className="text-xs">{a.tglBayar ? formatTanggal(a.tglBayar) : "-"}</TableCell>
+                          <TableCell className="text-right font-mono">
+                            Rp{a.pokok.toLocaleString("id-ID")}
+                          </TableCell>
+                          <TableCell className="text-right font-mono">
+                            Rp{a.jasa.toLocaleString("id-ID")}
+                          </TableCell>
+                          <TableCell className="text-right font-mono">
+                            Rp{a.total.toLocaleString("id-ID")}
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            {a.tglBayar ? formatTanggal(a.tglBayar) : "-"}
+                          </TableCell>
                           <TableCell>
                             <Badge variant={a.status === "LUNAS" ? "default" : "outline"}>
                               {a.status === "LUNAS" ? "Lunas" : "Belum"}

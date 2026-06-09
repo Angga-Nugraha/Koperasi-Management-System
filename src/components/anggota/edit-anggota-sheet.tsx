@@ -27,9 +27,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { updateAnggota } from "@/actions/anggota"
 import { X } from "lucide-react"
@@ -63,7 +68,11 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
   const [ktp, setKtp] = useState<string | null>(anggota.ktp)
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -152,7 +161,11 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
 
   function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setConfirm({ title: "Edit Anggota", desc: "Simpan perubahan data anggota?", onConfirm: handleSubmit })
+    setConfirm({
+      title: "Edit Anggota",
+      desc: "Simpan perubahan data anggota?",
+      onConfirm: handleSubmit,
+    })
   }
 
   return (
@@ -167,27 +180,50 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
           <div className="mt-6 space-y-4">
             <form onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
 
               <div className="space-y-2">
                 <Label htmlFor="nik">NIK *</Label>
-                <Input id="nik" name="nik" value={formValues.nik} onChange={(e) => handleChange("nik", e.target.value)} required />
+                <Input
+                  id="nik"
+                  name="nik"
+                  value={formValues.nik}
+                  onChange={(e) => handleChange("nik", e.target.value)}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="nama">Nama Lengkap *</Label>
-                <Input id="nama" name="nama" value={formValues.nama} onChange={(e) => handleChange("nama", e.target.value)} required />
+                <Input
+                  id="nama"
+                  name="nama"
+                  value={formValues.nama}
+                  onChange={(e) => handleChange("nama", e.target.value)}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="noHp">No. HP</Label>
-                <Input id="noHp" name="noHp" value={formValues.noHp} onChange={(e) => handleChange("noHp", e.target.value)} />
+                <Input
+                  id="noHp"
+                  name="noHp"
+                  value={formValues.noHp}
+                  onChange={(e) => handleChange("noHp", e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="jenisKelamin">Jenis Kelamin</Label>
-                <Select name="jenisKelamin" value={formValues.jenisKelamin || undefined} onValueChange={(v) => handleChange("jenisKelamin", v)}>
+                <Select
+                  name="jenisKelamin"
+                  value={formValues.jenisKelamin || undefined}
+                  onValueChange={(v) => handleChange("jenisKelamin", v)}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Pilih..." />
                   </SelectTrigger>
@@ -200,13 +236,24 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
 
               <div className="space-y-2">
                 <Label htmlFor="alamat">Alamat *</Label>
-                <Textarea id="alamat" name="alamat" value={formValues.alamat} onChange={(e) => handleChange("alamat", e.target.value)} required />
+                <Textarea
+                  id="alamat"
+                  name="alamat"
+                  value={formValues.alamat}
+                  onChange={(e) => handleChange("alamat", e.target.value)}
+                  required
+                />
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="pekerjaan">Pekerjaan</Label>
-                  <Input id="pekerjaan" name="pekerjaan" value={formValues.pekerjaan} onChange={(e) => handleChange("pekerjaan", e.target.value)} />
+                  <Input
+                    id="pekerjaan"
+                    name="pekerjaan"
+                    value={formValues.pekerjaan}
+                    onChange={(e) => handleChange("pekerjaan", e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="penghasilan">Penghasilan (Rp)</Label>
@@ -231,11 +278,20 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                       disabled={fotoUploading}
                       className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:text-primary-foreground hover:file:bg-primary/90"
                     />
-                    {fotoUploading && <span className="text-sm text-muted-foreground">Uploading...</span>}
+                    {fotoUploading && (
+                      <span className="text-sm text-muted-foreground">Uploading...</span>
+                    )}
                   </div>
                   {foto && (
                     <div className="relative mt-2 inline-block">
-                      <Image src={foto} alt="Foto preview" width={64} height={80} unoptimized className="h-20 w-16 rounded border object-cover" />
+                      <Image
+                        src={foto}
+                        alt="Foto preview"
+                        width={64}
+                        height={80}
+                        unoptimized
+                        className="h-20 w-16 rounded border object-cover"
+                      />
                       <button
                         type="button"
                         onClick={() => setFoto(null)}
@@ -256,11 +312,20 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                       disabled={ktpUploading}
                       className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:text-primary-foreground hover:file:bg-primary/90"
                     />
-                    {ktpUploading && <span className="text-sm text-muted-foreground">Uploading...</span>}
+                    {ktpUploading && (
+                      <span className="text-sm text-muted-foreground">Uploading...</span>
+                    )}
                   </div>
                   {ktp && (
                     <div className="relative mt-2 inline-block">
-                      <Image src={ktp} alt="KTP preview" width={128} height={80} unoptimized className="h-20 w-32 rounded border object-cover" />
+                      <Image
+                        src={ktp}
+                        alt="KTP preview"
+                        width={128}
+                        height={80}
+                        unoptimized
+                        className="h-20 w-32 rounded border object-cover"
+                      />
                       <button
                         type="button"
                         onClick={() => setKtp(null)}
@@ -277,10 +342,10 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                 <Label htmlFor="tglMasuk">Tanggal Masuk *</Label>
                 <Input
                   id="tglMasuk"
-                    name="tglMasuk"
-                    type="date"
-                    value={formValues.tglMasuk}
-                    onChange={(e) => handleChange("tglMasuk", e.target.value)}
+                  name="tglMasuk"
+                  type="date"
+                  value={formValues.tglMasuk}
+                  onChange={(e) => handleChange("tglMasuk", e.target.value)}
                   required
                 />
               </div>
@@ -289,14 +354,21 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
                 <Button type="submit" disabled={loading || fotoUploading || ktpUploading}>
                   {loading ? "Menyimpan..." : "Simpan"}
                 </Button>
-                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Batal</Button>
+                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
+                  Batal
+                </Button>
               </div>
             </form>
           </div>
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

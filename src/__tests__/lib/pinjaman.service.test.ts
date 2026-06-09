@@ -76,9 +76,10 @@ describe("Pinjaman Service Logic", () => {
     it("applies no denda within grace period", () => {
       const daysLate = 5
       const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-      const denda = effectiveDaysLate > 0
-        ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-        : 0
+      const denda =
+        effectiveDaysLate > 0
+          ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+          : 0
 
       expect(effectiveDaysLate).toBe(0)
       expect(denda).toBe(0)
@@ -87,9 +88,10 @@ describe("Pinjaman Service Logic", () => {
     it("applies denda exactly at grace period boundary", () => {
       const daysLate = 7
       const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-      const denda = effectiveDaysLate > 0
-        ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-        : 0
+      const denda =
+        effectiveDaysLate > 0
+          ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+          : 0
 
       expect(effectiveDaysLate).toBe(0)
       expect(denda).toBe(0)
@@ -98,9 +100,10 @@ describe("Pinjaman Service Logic", () => {
     it("applies denda after grace period", () => {
       const daysLate = 10
       const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-      const denda = effectiveDaysLate > 0
-        ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-        : 0
+      const denda =
+        effectiveDaysLate > 0
+          ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+          : 0
 
       expect(effectiveDaysLate).toBe(3)
       const expectedDenda = (pokok + jasa) * (0.5 / 100) * 3
@@ -118,7 +121,9 @@ describe("Pinjaman Service Logic", () => {
       const highDendaPerHari = 1.0
       const daysLate = 15
       const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-      const denda = Number(((pokok + jasa) * (highDendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+      const denda = Number(
+        ((pokok + jasa) * (highDendaPerHari / 100) * effectiveDaysLate).toFixed(2),
+      )
 
       expect(denda).toBe(Number(((pokok + jasa) * 0.01 * 8).toFixed(2)))
     })
@@ -126,9 +131,10 @@ describe("Pinjaman Service Logic", () => {
     it("handles zero denda when paid on time", () => {
       const daysLate = 0
       const effectiveDaysLate = Math.max(0, daysLate - gracePeriod)
-      const denda = effectiveDaysLate > 0
-        ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
-        : 0
+      const denda =
+        effectiveDaysLate > 0
+          ? Number(((pokok + jasa) * (dendaPerHari / 100) * effectiveDaysLate).toFixed(2))
+          : 0
 
       expect(denda).toBe(0)
     })

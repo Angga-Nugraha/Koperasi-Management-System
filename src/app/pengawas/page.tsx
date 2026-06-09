@@ -33,15 +33,45 @@ export default async function PengawasDashboard({ searchParams }: Props) {
   const data = await getDashboardPengawas(tahun)
 
   const topCards = [
-    { title: "Anggota Aktif", value: data.totalAnggota.toString(), sub: "Total anggota", icon: Users },
-    { title: "Total Simpanan", value: `Rp ${data.totalSimpanan.toLocaleString("id-ID")}`, sub: "Seluruh jenis simpanan", icon: PiggyBank },
-    { title: "Pinjaman Outstanding", value: `Rp ${data.totalPinjaman.toLocaleString("id-ID")}`, sub: "Belum lunas", icon: HandCoins },
-    { title: "Jurnal Bulan Ini", value: data.jurnalBulanIni.toString(), sub: "Total transaksi", icon: FileText },
+    {
+      title: "Anggota Aktif",
+      value: data.totalAnggota.toString(),
+      sub: "Total anggota",
+      icon: Users,
+    },
+    {
+      title: "Total Simpanan",
+      value: `Rp ${data.totalSimpanan.toLocaleString("id-ID")}`,
+      sub: "Seluruh jenis simpanan",
+      icon: PiggyBank,
+    },
+    {
+      title: "Pinjaman Outstanding",
+      value: `Rp ${data.totalPinjaman.toLocaleString("id-ID")}`,
+      sub: "Belum lunas",
+      icon: HandCoins,
+    },
+    {
+      title: "Jurnal Bulan Ini",
+      value: data.jurnalBulanIni.toString(),
+      sub: "Total transaksi",
+      icon: FileText,
+    },
   ]
 
   const bottomCards = [
-    { title: "Saldo Kas", value: `Rp ${data.saldoKas.toLocaleString("id-ID")}`, sub: `Akun Kas (1.1.1) — ${tahun}`, icon: Wallet },
-    { title: "Piutang Pinjaman", value: `Rp ${data.saldoPiutang.toLocaleString("id-ID")}`, sub: `Akun Piutang (1.2.1) — ${tahun}`, icon: Landmark },
+    {
+      title: "Saldo Kas",
+      value: `Rp ${data.saldoKas.toLocaleString("id-ID")}`,
+      sub: `Akun Kas (1.1.1) — ${tahun}`,
+      icon: Wallet,
+    },
+    {
+      title: "Piutang Pinjaman",
+      value: `Rp ${data.saldoPiutang.toLocaleString("id-ID")}`,
+      sub: `Akun Piutang (1.2.1) — ${tahun}`,
+      icon: Landmark,
+    },
   ]
 
   return (

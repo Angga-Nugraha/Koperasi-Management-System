@@ -21,7 +21,7 @@ export async function getMessagingClient() {
   if (typeof window === "undefined" || !hasConfig) return null
   const { initializeApp, getApps } = await import("firebase/app")
   const { getMessaging } = await import("firebase/messaging")
-  
+
   // Mencegah inisialisasi ulang jika Firebase App sudah pernah dibuat.
   const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]!
   return getMessaging(app)

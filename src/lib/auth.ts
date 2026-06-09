@@ -11,7 +11,12 @@ import { prisma } from "@/lib/prisma"
 import { rateLimit } from "@/lib/rate-limit"
 import { logger } from "@/lib/logger"
 
-const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
+const {
+  handlers,
+  signIn,
+  signOut,
+  auth: rawAuth,
+} = NextAuth({
   adapter: undefined,
   session: { strategy: "jwt" },
   pages: {

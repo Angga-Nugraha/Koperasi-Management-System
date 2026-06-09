@@ -32,13 +32,13 @@ export default async function AnggotaSimpananPage({ searchParams }: Props) {
         anggotaId,
         tipe: { in: ["TAGIHAN_WAJIB", "SIMPANAN_SUKARELA"] },
         status: "PENDING",
-        expiredAt: { gte: new Date() }
+        expiredAt: { gte: new Date() },
       },
-      orderBy: { createdAt: "desc" }
-    })
+      orderBy: { createdAt: "desc" },
+    }),
   ])
 
-  const pendingPayments = pendingPaymentsRaw.map(p => ({
+  const pendingPayments = pendingPaymentsRaw.map((p) => ({
     id: p.id,
     orderId: p.orderId,
     tipe: p.tipe,
@@ -48,15 +48,15 @@ export default async function AnggotaSimpananPage({ searchParams }: Props) {
     snapToken: p.snapToken,
     snapUrl: p.snapUrl,
     expiredAt: p.expiredAt.toISOString(),
-    createdAt: p.createdAt.toISOString()
+    createdAt: p.createdAt.toISOString(),
   }))
 
   return (
-    <AnggotaSimpananView 
-      simpanan={simpanan} 
-      mutasi={mutasi} 
-      tagihan={tagihan} 
-      pageSize={pageSize} 
+    <AnggotaSimpananView
+      simpanan={simpanan}
+      mutasi={mutasi}
+      tagihan={tagihan}
+      pageSize={pageSize}
       pendingPayments={pendingPayments}
     />
   )

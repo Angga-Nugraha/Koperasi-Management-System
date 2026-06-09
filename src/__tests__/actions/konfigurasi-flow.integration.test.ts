@@ -2,10 +2,29 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
-    akun: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), count: vi.fn() },
+    akun: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      count: vi.fn(),
+    },
     konfigurasi: { findMany: vi.fn(), findUnique: vi.fn(), upsert: vi.fn() },
-    jenisPinjaman: { findMany: vi.fn(), findUnique: vi.fn(), findFirst: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn() },
-    jenisSimpanan: { findMany: vi.fn(), findUnique: vi.fn(), findFirst: vi.fn(), create: vi.fn(), update: vi.fn() },
+    jenisPinjaman: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      findFirst: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    },
+    jenisSimpanan: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      findFirst: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+    },
     generalInfo: { findFirst: vi.fn(), create: vi.fn(), update: vi.fn(), upsert: vi.fn() },
     pinjaman: { count: vi.fn() },
   },
@@ -28,7 +47,7 @@ describe("Konfigurasi Flow Integration", () => {
   })
 
   describe("createAkun", () => {
-    let createAkun: typeof import("@/actions/konfigurasi")["createAkun"]
+    let createAkun: (typeof import("@/actions/konfigurasi"))["createAkun"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -39,7 +58,7 @@ describe("Konfigurasi Flow Integration", () => {
       prisma.akun.findUnique.mockResolvedValue({ id: "existing", kode: "1.1.1" })
 
       await expect(
-        createAkun({ kode: "1.1.1", nama: "Kas", tipe: "ASET", saldoNormal: "DEBIT" })
+        createAkun({ kode: "1.1.1", nama: "Kas", tipe: "ASET", saldoNormal: "DEBIT" }),
       ).rejects.toThrow("Kode akun sudah ada")
     })
 
@@ -47,14 +66,19 @@ describe("Konfigurasi Flow Integration", () => {
       prisma.akun.findUnique.mockResolvedValue(null)
       prisma.akun.create.mockResolvedValue({ id: "akun-1", kode: "9.9.9", nama: "Akun Baru" })
 
-      const result = await createAkun({ kode: "9.9.9", nama: "Akun Baru", tipe: "ASET", saldoNormal: "DEBIT" })
+      const result = await createAkun({
+        kode: "9.9.9",
+        nama: "Akun Baru",
+        tipe: "ASET",
+        saldoNormal: "DEBIT",
+      })
 
       expect(result.success).toBe(true)
     })
   })
 
   describe("toggleAkunActive", () => {
-    let toggleAkunActive: typeof import("@/actions/konfigurasi")["toggleAkunActive"]
+    let toggleAkunActive: (typeof import("@/actions/konfigurasi"))["toggleAkunActive"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -78,7 +102,7 @@ describe("Konfigurasi Flow Integration", () => {
   })
 
   describe("createJenisPinjaman", () => {
-    let createJenisPinjaman: typeof import("@/actions/konfigurasi")["createJenisPinjaman"]
+    let createJenisPinjaman: (typeof import("@/actions/konfigurasi"))["createJenisPinjaman"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -89,7 +113,7 @@ describe("Konfigurasi Flow Integration", () => {
       prisma.jenisPinjaman.findUnique.mockResolvedValue({ id: "existing", nama: "Reguler" })
 
       await expect(
-        createJenisPinjaman({ nama: "Reguler", bunga: 1.5, keterangan: "" })
+        createJenisPinjaman({ nama: "Reguler", bunga: 1.5, keterangan: "" }),
       ).rejects.toThrow("Nama jenis pinjaman sudah ada")
     })
 
@@ -104,7 +128,7 @@ describe("Konfigurasi Flow Integration", () => {
   })
 
   describe("deleteJenisPinjaman", () => {
-    let deleteJenisPinjaman: typeof import("@/actions/konfigurasi")["deleteJenisPinjaman"]
+    let deleteJenisPinjaman: (typeof import("@/actions/konfigurasi"))["deleteJenisPinjaman"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -128,7 +152,7 @@ describe("Konfigurasi Flow Integration", () => {
   })
 
   describe("createJenisSimpanan", () => {
-    let createJenisSimpanan: typeof import("@/actions/konfigurasi")["createJenisSimpanan"]
+    let createJenisSimpanan: (typeof import("@/actions/konfigurasi"))["createJenisSimpanan"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -139,7 +163,12 @@ describe("Konfigurasi Flow Integration", () => {
       prisma.jenisSimpanan.findUnique.mockResolvedValue({ id: "existing", kode: "WAJIB" })
 
       await expect(
-        createJenisSimpanan({ kode: "WAJIB", nama: "Wajib", minimalSetoran: 50000, keterangan: "" })
+        createJenisSimpanan({
+          kode: "WAJIB",
+          nama: "Wajib",
+          minimalSetoran: 50000,
+          keterangan: "",
+        }),
       ).rejects.toThrow("Kode jenis simpanan sudah ada")
     })
 
@@ -148,14 +177,19 @@ describe("Konfigurasi Flow Integration", () => {
       prisma.jenisSimpanan.findFirst.mockResolvedValue({ urutan: 5 })
       prisma.jenisSimpanan.create.mockResolvedValue({ id: "js-1", kode: "NEW" })
 
-      const result = await createJenisSimpanan({ kode: "NEW", nama: "Baru", minimalSetoran: 25000, keterangan: "" })
+      const result = await createJenisSimpanan({
+        kode: "NEW",
+        nama: "Baru",
+        minimalSetoran: 25000,
+        keterangan: "",
+      })
 
       expect(result.success).toBe(true)
     })
   })
 
   describe("updateKonfig", () => {
-    let updateKonfig: typeof import("@/actions/konfigurasi")["updateKonfig"]
+    let updateKonfig: (typeof import("@/actions/konfigurasi"))["updateKonfig"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")
@@ -173,7 +207,7 @@ describe("Konfigurasi Flow Integration", () => {
   })
 
   describe("updateGeneralInfo", () => {
-    let updateGeneralInfo: typeof import("@/actions/konfigurasi")["updateGeneralInfo"]
+    let updateGeneralInfo: (typeof import("@/actions/konfigurasi"))["updateGeneralInfo"]
 
     beforeEach(async () => {
       const mod = await import("@/actions/konfigurasi")

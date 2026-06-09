@@ -19,9 +19,14 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { tarikSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
@@ -37,9 +42,18 @@ export function TarikSheet({ open, onOpenChange }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [jenisSukarelaId, setJenisSukarelaId] = useState<string>("")
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
   const [anggotaId, setAnggotaId] = useState("")
-  const [generalInfo, setGeneralInfo] = useState<{ namaKoperasi: string; alamat: string | null; noAhu: string | null; logo: string | null } | null>(null)
+  const [generalInfo, setGeneralInfo] = useState<{
+    namaKoperasi: string
+    alamat: string | null
+    noAhu: string | null
+    logo: string | null
+  } | null>(null)
   const [receipt, setReceipt] = useState<{
     noStruk: string
     tipe: "PENARIKAN"
@@ -52,11 +66,17 @@ export function TarikSheet({ open, onOpenChange }: Props) {
   } | null>(null)
 
   useEffect(() => {
-    fetch("/api/jenis-simpanan").then(r => r.json()).then((list: Array<{ id: string; kode: string }>) => {
-      const sukarela = list.find((j) => j.kode === "SUKARELA")
-      if (sukarela) setJenisSukarelaId(sukarela.id)
-    }).catch(() => {})
-    fetch("/api/general-info").then(r => r.json()).then(setGeneralInfo).catch(() => {})
+    fetch("/api/jenis-simpanan")
+      .then((r) => r.json())
+      .then((list: Array<{ id: string; kode: string }>) => {
+        const sukarela = list.find((j) => j.kode === "SUKARELA")
+        if (sukarela) setJenisSukarelaId(sukarela.id)
+      })
+      .catch(() => {})
+    fetch("/api/general-info")
+      .then((r) => r.json())
+      .then(setGeneralInfo)
+      .catch(() => {})
   }, [])
 
   function handleOpenChange(open: boolean) {
@@ -107,7 +127,11 @@ export function TarikSheet({ open, onOpenChange }: Props) {
 
   function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setConfirm({ title: "Tarik Simpanan", desc: "Proses penarikan simpanan?", onConfirm: handleSubmit })
+    setConfirm({
+      title: "Tarik Simpanan",
+      desc: "Proses penarikan simpanan?",
+      onConfirm: handleSubmit,
+    })
   }
 
   return (
@@ -122,19 +146,16 @@ export function TarikSheet({ open, onOpenChange }: Props) {
           <div className="mt-6 space-y-4">
             <form id="tarik-form-sheet" onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
 
-              <AnggotaSelect
-                name="anggotaId"
-                value={anggotaId}
-                onChange={setAnggotaId}
-                required
-              />
+              <AnggotaSelect name="anggotaId" value={anggotaId} onChange={setAnggotaId} required />
 
               <div className="rounded-md bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
-                Hanya simpanan sukarela yang bisa ditarik. Simpanan pokok dan wajib hanya dapat ditarik
-                saat anggota keluar dari keanggotaan koperasi.
+                Hanya simpanan sukarela yang bisa ditarik. Simpanan pokok dan wajib hanya dapat
+                ditarik saat anggota keluar dari keanggotaan koperasi.
               </div>
 
               <input type="hidden" name="jenis" value="SUKARELA" />
@@ -150,15 +171,24 @@ export function TarikSheet({ open, onOpenChange }: Props) {
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Button type="submit" disabled={loading}>{loading ? "Menyimpan..." : "Simpan"}</Button>
-                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Batal</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Menyimpan..." : "Simpan"}
+                </Button>
+                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
+                  Batal
+                </Button>
               </div>
             </form>
           </div>
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

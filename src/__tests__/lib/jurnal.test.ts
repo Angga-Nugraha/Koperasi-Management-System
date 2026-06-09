@@ -9,7 +9,7 @@ vi.mock("@/lib/auth", () => ({
 }))
 
 describe("jurnal utilities", () => {
-  let getSimpananAkun: typeof import("@/lib/jurnal")["getSimpananAkun"]
+  let getSimpananAkun: (typeof import("@/lib/jurnal"))["getSimpananAkun"]
   let COA_SIMPANAN_POKOK: string
   let COA_SIMPANAN_WAJIB: string
   let COA_SIMPANAN_SUKARELA: string
@@ -83,7 +83,7 @@ describe("jurnal utilities", () => {
   })
 
   describe("buatJurnal - balance validation", () => {
-    let buatJurnal: typeof import("@/lib/jurnal")["buatJurnal"]
+    let buatJurnal: (typeof import("@/lib/jurnal"))["buatJurnal"]
 
     beforeEach(async () => {
       const mod = await import("@/lib/jurnal")
@@ -100,7 +100,7 @@ describe("jurnal utilities", () => {
           tanggal: new Date("2024-01-15"),
           keterangan: "Test",
           entries: [{ akunKode: "1.1.1", debit: 50000, kredit: 50000 }],
-        })
+        }),
       ).resolves.toBeDefined()
     })
 
@@ -114,7 +114,7 @@ describe("jurnal utilities", () => {
           tanggal: new Date("2024-01-15"),
           keterangan: "Test",
           entries: [{ akunKode: "1.1.1", debit: 100000, kredit: 50000 }],
-        })
+        }),
       ).rejects.toThrow("Jurnal tidak balance")
     })
 
@@ -128,7 +128,7 @@ describe("jurnal utilities", () => {
           tanggal: new Date("2024-01-15"),
           keterangan: "Test",
           entries: [{ akunKode: "1.1.1", debit: 30000, kredit: 60000 }],
-        })
+        }),
       ).rejects.toThrow("Jurnal tidak balance")
     })
 
@@ -142,7 +142,7 @@ describe("jurnal utilities", () => {
           tanggal: new Date("2024-01-15"),
           keterangan: "Test",
           entries: [{ akunKode: "99.99.99", debit: 50000, kredit: 50000 }],
-        })
+        }),
       ).rejects.toThrow("Akun dengan kode 99.99.99 tidak ditemukan")
     })
 

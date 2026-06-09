@@ -85,7 +85,8 @@ export async function generateSHU(tahun: number) {
   if (existing) throw new Error(`SHU tahun ${tahun} sudah ada`)
 
   const hasil = await hitungSHU(tahun)
-  if (hasil.perAnggota.length === 0) throw new Error("Tidak ada anggota aktif untuk perhitungan SHU")
+  if (hasil.perAnggota.length === 0)
+    throw new Error("Tidak ada anggota aktif untuk perhitungan SHU")
 
   await prisma.$transaction(async (tx) => {
     await tx.sHU.create({
@@ -159,14 +160,16 @@ export async function getIndikatorSHUList() {
   return getIndikatorSHU()
 }
 
-export async function saveAllIndikatorSHU(data: Array<{
-  kode: string
-  nama: string
-  persentase: number
-  kelompok: string
-  akunId: string | null
-  urutan: number
-}>) {
+export async function saveAllIndikatorSHU(
+  data: Array<{
+    kode: string
+    nama: string
+    persentase: number
+    kelompok: string
+    akunId: string | null
+    urutan: number
+  }>,
+) {
   await assertRole("ADMIN", "PENGURUS", "BENDAHARA")
 
   await saveIndikatorSHU(data)
@@ -238,7 +241,11 @@ export async function exportSHUExcel(tahun: number) {
   ws1.getRow(1).font = { bold: true }
   ws1.addRow({ pos: "Total SHU", persen: 100, nominal: Number(raw.totalSHU) }).font = { bold: true }
   for (const a of raw.alokasi) {
-    ws1.addRow({ pos: `${a.indikator.nama} (${a.pos})`, persen: `${Number(a.persentase)}%`, nominal: Number(a.nominal) })
+    ws1.addRow({
+      pos: `${a.indikator.nama} (${a.pos})`,
+      persen: `${Number(a.persentase)}%`,
+      nominal: Number(a.nominal),
+    })
   }
 
   const ws2 = wb.addWorksheet("SHU Anggota")
@@ -260,5 +267,5 @@ export async function exportSHUExcel(tahun: number) {
     })
   }
 
-  return wb.xlsx.writeBuffer().then(b => new Uint8Array(b))
+  return wb.xlsx.writeBuffer().then((b) => new Uint8Array(b))
 }

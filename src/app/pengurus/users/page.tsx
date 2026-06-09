@@ -13,20 +13,46 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table"
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { getUserList, createUser, updateUser, resetPassword, toggleUserActive, getAnggotaTanpaUser, getAllowedRoles } from "@/actions/users"
+import {
+  getUserList,
+  createUser,
+  updateUser,
+  resetPassword,
+  toggleUserActive,
+  getAnggotaTanpaUser,
+  getAllowedRoles,
+} from "@/actions/users"
 import { Search, Plus, Shield, Pencil, KeyRound, Eye, EyeOff } from "lucide-react"
 
 const ROLE_LABEL: Record<string, string> = {
@@ -55,17 +81,33 @@ export default function UsersPage() {
   const [search, setSearch] = useState("")
   const [availableRoles, setAvailableRoles] = useState<string[]>([])
 
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => Promise<void> | void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => Promise<void> | void
+  } | null>(null)
 
   const [createOpen, setCreateOpen] = useState(false)
-  const [createForm, setCreateForm] = useState({ email: "", password: "", confirmPassword: "", role: "", anggotaId: "" })
+  const [createForm, setCreateForm] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
+    anggotaId: "",
+  })
   const [createError, setCreateError] = useState("")
   const [createLoading, setCreateLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [editOpen, setEditOpen] = useState(false)
-  const [editForm, setEditForm] = useState({ id: "", email: "", role: "", isActive: true, anggotaId: "" })
+  const [editForm, setEditForm] = useState({
+    id: "",
+    email: "",
+    role: "",
+    isActive: true,
+    anggotaId: "",
+  })
   const [editError, setEditError] = useState("")
   const [editLoading, setEditLoading] = useState(false)
 
@@ -101,20 +143,34 @@ export default function UsersPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadUsers()
-    getAllowedRoles().then(setAvailableRoles).catch(() => {})
+    getAllowedRoles()
+      .then(setAvailableRoles)
+      .catch(() => {})
   }, [search])
 
   const defaultRole = availableRoles[0] ?? ""
 
   function openCreate() {
-    setCreateForm({ email: "", password: "", confirmPassword: "", role: defaultRole, anggotaId: "" })
+    setCreateForm({
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: defaultRole,
+      anggotaId: "",
+    })
     setCreateError("")
     loadAnggota()
     setCreateOpen(true)
   }
 
   function openEdit(user: UserItem) {
-    setEditForm({ id: user.id, email: user.email, role: user.role, isActive: user.isActive, anggotaId: user.anggotaId ?? "" })
+    setEditForm({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      anggotaId: user.anggotaId ?? "",
+    })
     setEditError("")
     loadAnggota(user.anggotaId ?? undefined)
     setEditOpen(true)
@@ -199,7 +255,9 @@ export default function UsersPage() {
     try {
       const result = await toggleUserActive(userId)
       if (result?.success) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, isActive: result.isActive } : u)))
+        setUsers((prev) =>
+          prev.map((u) => (u.id === userId ? { ...u, isActive: result.isActive } : u)),
+        )
       }
     } catch (e) {
       alert((e as Error).message)
@@ -235,63 +293,62 @@ export default function UsersPage() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Anggota</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    Memuat...
-                  </TableCell>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Anggota</TableHead>
+                  <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
-              ) : users.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    Tidak ada user
-                  </TableCell>
-                </TableRow>
-              ) : (
-                users.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium">{u.email}</TableCell>
-                    <TableCell>
-                      <Badge variant={ROLE_VARIANT[u.role] ?? "secondary"}>
-                        <Shield className="mr-1 h-3 w-3" />
-                        {ROLE_LABEL[u.role] ?? u.role}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={u.isActive}
-                          onCheckedChange={() => handleToggle(u.id)}
-                        />
-                        <span className={`text-xs ${u.isActive ? "text-primary" : "text-muted-foreground"}`}>
-                          {u.isActive ? "Aktif" : "Nonaktif"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {u.anggota ? `${u.anggota.nama} (${u.anggota.noAnggota})` : "—"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => openEdit(u)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => openReset(u.id)}>
-                        <KeyRound className="h-4 w-4" />
-                      </Button>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      Memuat...
                     </TableCell>
                   </TableRow>
-                ))
-              )}
+                ) : users.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      Tidak ada user
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  users.map((u) => (
+                    <TableRow key={u.id}>
+                      <TableCell className="font-medium">{u.email}</TableCell>
+                      <TableCell>
+                        <Badge variant={ROLE_VARIANT[u.role] ?? "secondary"}>
+                          <Shield className="mr-1 h-3 w-3" />
+                          {ROLE_LABEL[u.role] ?? u.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={u.isActive} onCheckedChange={() => handleToggle(u.id)} />
+                          <span
+                            className={`text-xs ${u.isActive ? "text-primary" : "text-muted-foreground"}`}
+                          >
+                            {u.isActive ? "Aktif" : "Nonaktif"}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {u.anggota ? `${u.anggota.nama} (${u.anggota.noAnggota})` : "—"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => openEdit(u)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => openReset(u.id)}>
+                          <KeyRound className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -307,7 +364,11 @@ export default function UsersPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input value={createForm.email} onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })} placeholder="user@email.com" />
+              <Input
+                value={createForm.email}
+                onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+                placeholder="user@email.com"
+              />
             </div>
             <div className="space-y-2">
               <Label>Password</Label>
@@ -333,7 +394,9 @@ export default function UsersPage() {
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
                   value={createForm.confirmPassword}
-                  onChange={(e) => setCreateForm({ ...createForm, confirmPassword: e.target.value })}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, confirmPassword: e.target.value })
+                  }
                   placeholder="Ulangi password"
                 />
                 <button
@@ -341,33 +404,47 @@ export default function UsersPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>
             <div className="space-y-2">
               <Label>Role</Label>
-              <Select value={createForm.role} onValueChange={(v) => setCreateForm({ ...createForm, role: v })}>
+              <Select
+                value={createForm.role}
+                onValueChange={(v) => setCreateForm({ ...createForm, role: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {availableRoles.map((r) => (
-                    <SelectItem key={r} value={r}>{ROLE_LABEL[r] ?? r}</SelectItem>
+                    <SelectItem key={r} value={r}>
+                      {ROLE_LABEL[r] ?? r}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>Link Anggota (opsional)</Label>
-              <Select value={createForm.anggotaId} onValueChange={(v) => setCreateForm({ ...createForm, anggotaId: v })}>
+              <Select
+                value={createForm.anggotaId}
+                onValueChange={(v) => setCreateForm({ ...createForm, anggotaId: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih anggota" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__none__">— Tanpa anggota —</SelectItem>
                   {anggotaList.map((a) => (
-                    <SelectItem key={a.id} value={a.id}>{a.nama} ({a.noAnggota})</SelectItem>
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.nama} ({a.noAnggota})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -375,8 +452,19 @@ export default function UsersPage() {
             {createError && <p className="text-sm text-destructive">{createError}</p>}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>Batal</Button>
-            <Button onClick={() => setConfirm({ title: "Tambah User", desc: `Buat user ${createForm.email} dengan role ${ROLE_LABEL[createForm.role] ?? createForm.role}?`, onConfirm: handleCreate })} disabled={createLoading}>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              Batal
+            </Button>
+            <Button
+              onClick={() =>
+                setConfirm({
+                  title: "Tambah User",
+                  desc: `Buat user ${createForm.email} dengan role ${ROLE_LABEL[createForm.role] ?? createForm.role}?`,
+                  onConfirm: handleCreate,
+                })
+              }
+              disabled={createLoading}
+            >
               {createLoading ? "Menyimpan..." : "Simpan"}
             </Button>
           </DialogFooter>
@@ -392,17 +480,25 @@ export default function UsersPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+              <Input
+                value={editForm.email}
+                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+              />
             </div>
             <div className="space-y-2">
               <Label>Role</Label>
-              <Select value={editForm.role} onValueChange={(v) => setEditForm({ ...editForm, role: v })}>
+              <Select
+                value={editForm.role}
+                onValueChange={(v) => setEditForm({ ...editForm, role: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {availableRoles.map((r) => (
-                    <SelectItem key={r} value={r}>{ROLE_LABEL[r] ?? r}</SelectItem>
+                    <SelectItem key={r} value={r}>
+                      {ROLE_LABEL[r] ?? r}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -418,7 +514,9 @@ export default function UsersPage() {
               <Label>Link Anggota (opsional)</Label>
               <Select
                 value={editForm.anggotaId || "__none__"}
-                onValueChange={(v) => setEditForm({ ...editForm, anggotaId: v === "__none__" ? "" : v })}
+                onValueChange={(v) =>
+                  setEditForm({ ...editForm, anggotaId: v === "__none__" ? "" : v })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Pilih anggota" />
@@ -426,7 +524,9 @@ export default function UsersPage() {
                 <SelectContent>
                   <SelectItem value="__none__">— Tanpa anggota —</SelectItem>
                   {anggotaList.map((a) => (
-                    <SelectItem key={a.id} value={a.id}>{a.nama} ({a.noAnggota})</SelectItem>
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.nama} ({a.noAnggota})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -434,8 +534,19 @@ export default function UsersPage() {
             {editError && <p className="text-sm text-destructive">{editError}</p>}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)}>Batal</Button>
-            <Button onClick={() => setConfirm({ title: "Edit User", desc: `Simpan perubahan user ${editForm.email}?`, onConfirm: handleEdit })} disabled={editLoading}>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>
+              Batal
+            </Button>
+            <Button
+              onClick={() =>
+                setConfirm({
+                  title: "Edit User",
+                  desc: `Simpan perubahan user ${editForm.email}?`,
+                  onConfirm: handleEdit,
+                })
+              }
+              disabled={editLoading}
+            >
               {editLoading ? "Menyimpan..." : "Simpan"}
             </Button>
           </DialogFooter>
@@ -488,15 +599,31 @@ export default function UsersPage() {
             {resetError && <p className="text-sm text-destructive">{resetError}</p>}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setResetOpen(false)}>Batal</Button>
-            <Button onClick={() => setConfirm({ title: "Reset Password", desc: "Reset password user ini?", onConfirm: handleReset })} disabled={resetLoading}>
+            <Button variant="outline" onClick={() => setResetOpen(false)}>
+              Batal
+            </Button>
+            <Button
+              onClick={() =>
+                setConfirm({
+                  title: "Reset Password",
+                  desc: "Reset password user ini?",
+                  onConfirm: handleReset,
+                })
+              }
+              disabled={resetLoading}
+            >
               {resetLoading ? "Menyimpan..." : "Simpan"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

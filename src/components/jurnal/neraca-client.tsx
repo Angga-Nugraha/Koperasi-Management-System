@@ -32,19 +32,25 @@ export function NeracaClient({ sampai, aset, liabilitas, ekuitas }: Props) {
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n)
 
   return (
     <div className="space-y-6">
       <Card>
         <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <div className="space-y-2 w-full sm:w-auto">
-          <Label>Sampai Tanggal</Label>
-          <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
-        </div>
-        <Button type="submit" className="w-full sm:w-auto">Tampilkan</Button>
-      </form>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
+          >
+            <div className="space-y-2 w-full sm:w-auto">
+              <Label>Sampai Tanggal</Label>
+              <Input type="date" name="sampai" defaultValue={sampai} className="w-full sm:w-auto" />
+            </div>
+            <Button type="submit" className="w-full sm:w-auto">
+              Tampilkan
+            </Button>
+          </form>
         </CardContent>
       </Card>
 

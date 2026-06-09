@@ -26,9 +26,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { createAnggota } from "@/actions/anggota"
 import { X } from "lucide-react"
@@ -47,7 +52,11 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
   const [buatUser, setBuatUser] = useState(false)
-  const [confirm, setConfirm] = useState<{ title: string; desc: string; onConfirm: () => void } | null>(null)
+  const [confirm, setConfirm] = useState<{
+    title: string
+    desc: string
+    onConfirm: () => void
+  } | null>(null)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -125,7 +134,11 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
 
   function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setConfirm({ title: "Tambah Anggota", desc: "Simpan data anggota baru?", onConfirm: handleSubmit })
+    setConfirm({
+      title: "Tambah Anggota",
+      desc: "Simpan data anggota baru?",
+      onConfirm: handleSubmit,
+    })
   }
 
   return (
@@ -140,7 +153,9 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
           <div className="mt-6 space-y-4">
             <form id="tambah-anggota-form-sheet" onSubmit={handleSubmitClick} className="space-y-4">
               {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
 
               <div className="space-y-2">
@@ -201,11 +216,17 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
                       disabled={fotoUploading}
                       className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:text-primary-foreground hover:file:bg-primary/90"
                     />
-                    {fotoUploading && <span className="text-sm text-muted-foreground">Uploading...</span>}
+                    {fotoUploading && (
+                      <span className="text-sm text-muted-foreground">Uploading...</span>
+                    )}
                   </div>
                   {foto && (
                     <div className="relative mt-2 inline-block">
-                      <img src={foto} alt="Foto preview" className="h-20 w-16 rounded border object-cover" />
+                      <img
+                        src={foto}
+                        alt="Foto preview"
+                        className="h-20 w-16 rounded border object-cover"
+                      />
                       <button
                         type="button"
                         onClick={() => setFoto(null)}
@@ -226,11 +247,17 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
                       disabled={ktpUploading}
                       className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:text-primary-foreground hover:file:bg-primary/90"
                     />
-                    {ktpUploading && <span className="text-sm text-muted-foreground">Uploading...</span>}
+                    {ktpUploading && (
+                      <span className="text-sm text-muted-foreground">Uploading...</span>
+                    )}
                   </div>
                   {ktp && (
                     <div className="relative mt-2 inline-block">
-                      <img src={ktp} alt="KTP preview" className="h-20 w-32 rounded border object-cover" />
+                      <img
+                        src={ktp}
+                        alt="KTP preview"
+                        className="h-20 w-32 rounded border object-cover"
+                      />
                       <button
                         type="button"
                         onClick={() => setKtp(null)}
@@ -269,11 +296,24 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
                   <div className="space-y-4 pl-7 border-l-2 border-primary/20">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email *</Label>
-                      <Input id="email" name="email" type="email" placeholder="anggota@email.com" required={buatUser} />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="anggota@email.com"
+                        required={buatUser}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="password">Password *</Label>
-                      <Input id="password" name="password" type="password" placeholder="Minimal 6 karakter" minLength={6} required={buatUser} />
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Minimal 6 karakter"
+                        minLength={6}
+                        required={buatUser}
+                      />
                     </div>
                   </div>
                 )}
@@ -283,14 +323,21 @@ export function TambahAnggotaSheet({ open, onOpenChange }: Props) {
                 <Button type="submit" disabled={loading || fotoUploading || ktpUploading}>
                   {loading ? "Menyimpan..." : "Simpan"}
                 </Button>
-                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Batal</Button>
+                <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
+                  Batal
+                </Button>
               </div>
             </form>
           </div>
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!confirm} onOpenChange={(open) => { if (!open) setConfirm(null) }}>
+      <AlertDialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open) setConfirm(null)
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>

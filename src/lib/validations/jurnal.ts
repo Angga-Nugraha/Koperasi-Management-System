@@ -14,7 +14,7 @@ export const jurnalManualSchema = z.object({
         akunId: z.string().min(1, "Akun wajib dipilih"),
         debit: z.number().min(0),
         kredit: z.number().min(0),
-      })
+      }),
     )
     .min(2, "Minimal 2 entry (debit dan kredit)")
     .refine(
@@ -23,7 +23,7 @@ export const jurnalManualSchema = z.object({
         const totalKredit = entries.reduce((s, e) => s + e.kredit, 0)
         return Math.abs(totalDebit - totalKredit) < 0.01
       },
-      { message: "Total debit harus sama dengan total kredit" }
+      { message: "Total debit harus sama dengan total kredit" },
     ),
 })
 
