@@ -145,6 +145,8 @@ model Anggota {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([status])
+  @@index([nama])
   @@map("anggota")
 }
 
@@ -199,6 +201,8 @@ model TransaksiSimpanan {
 
   createdAt DateTime @default(now())
 
+  @@index([anggotaId, createdAt])
+  @@index([jenisSimpananId])
   @@map("transaksi_simpanan")
 }
 
@@ -264,6 +268,9 @@ model Pinjaman {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([status])
+  @@index([anggotaId, status])
+  @@index([tglPengajuan])
   @@map("pinjaman")
 }
 
@@ -317,6 +324,7 @@ model JurnalUmum {
 
   createdAt DateTime @default(now())
 
+  @@index([tanggal])
   @@map("jurnal_umum")
 }
 
@@ -330,6 +338,9 @@ model DetailJurnal {
   jurnal JurnalUmum @relation(fields: [jurnalId], references: [id])
   akun   Akun       @relation(fields: [akunId], references: [id])
 
+  @@index([akunId, jurnalId])
+  @@index([jurnalId])
+  @@index([akunId])
   @@map("detail_jurnal")
 }
 
@@ -407,6 +418,10 @@ model AuditLog {
 
   createdAt DateTime @default(now())
 
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
   @@map("audit_log")
 }
 

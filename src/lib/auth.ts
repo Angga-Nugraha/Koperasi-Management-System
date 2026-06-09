@@ -8,6 +8,8 @@ import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { cache } from "react"
 import { prisma } from "@/lib/prisma"
+import { rateLimit } from "@/lib/rate-limit"
+import { logger } from "@/lib/logger"
 
 const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
   adapter: undefined,
@@ -27,15 +29,28 @@ const { handlers, signIn, signOut, auth: rawAuth } = NextAuth({
         const email = credentials.email as string
         const password = credentials.password as string
 
+        const rlKey = `login:${email}`
+        const rl = rateLimit(rlKey, 5, 60_000)
+        if (!rl.success) {
+          logger.warn("Rate limit exceeded", { email })
+          throw new Error("Terlalu banyak percobaan. Silakan coba lagi dalam 1 menit.")
+        }
+
         const user = await prisma.user.findUnique({
           where: { email },
           include: { anggota: true },
         })
 
-        if (!user || !user.isActive) return null
+        if (!user || !user.isActive) {
+          await new Promise((r) => setTimeout(r, 200 + Math.random() * 300))
+          return null
+        }
 
         const isValid = await bcrypt.compare(password, user.passwordHash)
-        if (!isValid) return null
+        if (!isValid) {
+          await new Promise((r) => setTimeout(r, 200 + Math.random() * 300))
+          return null
+        }
 
         return {
           id: user.id,
