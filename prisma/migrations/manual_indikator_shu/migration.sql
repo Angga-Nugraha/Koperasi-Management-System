@@ -1,8 +1,6 @@
--- Drop existing FK and recreate
-ALTER TABLE `alokasi_shu` DROP FOREIGN KEY IF EXISTS `alokasi_shu_ibfk_1`;
-ALTER TABLE `alokasi_shu` DROP FOREIGN KEY IF EXISTS `alokasi_shu_shuId_fkey`;
-ALTER TABLE `alokasi_shu` DROP INDEX IF EXISTS `alokasi_shu_shuId_pos_key`;
-ALTER TABLE `alokasi_shu` DROP INDEX IF EXISTS `shuId`;
+-- Drop existing FK and recreate (MySQL 8 compatible)
+ALTER TABLE `alokasi_shu` DROP FOREIGN KEY `alokasi_shu_shuId_fkey`;
+DROP INDEX `alokasi_shu_shuId_pos_key` ON `alokasi_shu`;
 
 -- Create IndikatorSHU table
 CREATE TABLE IF NOT EXISTS `indikator_shu` (
