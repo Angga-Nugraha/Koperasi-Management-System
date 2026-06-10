@@ -67,7 +67,6 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
   } | null>(null)
   const [loadingPlafon, setLoadingPlafon] = useState(false)
 
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     getJenisPinjamanList().then(setJenisList)
     fetch("/api/konfig")
@@ -80,21 +79,21 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
       })
       .catch(() => {})
   }, [])
-  /* eslint-enable react-hooks/set-state-in-effect */
 
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (!anggotaId) {
-      setPlafon(null)
-      return
-    }
-    setLoadingPlafon(true)
-    getPlafonAnggota(anggotaId)
-      .then(setPlafon)
-      .catch(() => setPlafon(null))
-      .finally(() => setLoadingPlafon(false))
+    const id = setTimeout(() => {
+      if (!anggotaId) {
+        setPlafon(null)
+        return
+      }
+      setLoadingPlafon(true)
+      getPlafonAnggota(anggotaId)
+        .then(setPlafon)
+        .catch(() => setPlafon(null))
+        .finally(() => setLoadingPlafon(false))
+    }, 0)
+    return () => clearTimeout(id)
   }, [anggotaId])
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   function handleOpenChange(open: boolean) {
     if (!open) {
