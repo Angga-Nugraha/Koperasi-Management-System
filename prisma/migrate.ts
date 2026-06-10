@@ -36,6 +36,12 @@ type JurnalRaw = { tanggal: string; keterangan: string; nama_anggota: string | n
 async function main() {
   console.log("=== MIGRASI DATA ===\n")
 
+  const existingJurnal = await prisma.jurnalUmum.count()
+  if (existingJurnal > 0) {
+    console.log("  ⏭️  Data already migrated (jurnal found), skipping.")
+    return
+  }
+
   const anggotaData: AnggotaRaw[] = JSON.parse(fs.readFileSync(path.join(__dirname, "anggota.json"), "utf-8"))
   const jurnalData: JurnalRaw[] = JSON.parse(fs.readFileSync(path.join(__dirname, "jurnal.json"), "utf-8"))
 
@@ -83,9 +89,13 @@ async function main() {
     })
 
     const passwordHash = await bcrypt.hash(m.nama.toLowerCase().replace(/\s+/g, ""), 4)
-    await prisma.user.create({
-      data: { email: `${noAnggota}@cibunar.com`, passwordHash, role: "ANGGOTA", anggotaId: anggota.id },
-    })
+    const email = `${noAnggota}@cibunar.com`
+    const userExists = await prisma.user.findUnique({ where: { email } })
+    if (!userExists) {
+      await prisma.user.create({
+        data: { email, passwordHash, role: "ANGGOTA", anggotaId: anggota.id },
+      })
+    }
 
     memberIdByNik.set(m.NIK, anggota.id)
     memberCount++
