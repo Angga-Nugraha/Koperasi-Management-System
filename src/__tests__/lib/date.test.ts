@@ -3,13 +3,20 @@
  * @description Unit test untuk menguji fungsionalitas date.
  */
 
-import { describe, it, expect } from "vitest"
-import { tahunRange, tahunMulai, tahunSelesai, hinggaAkhirTahun } from "@/lib/date"
+import { describe, it, expect, beforeAll } from "vitest"
+
+type DateMod = typeof import("@/lib/date")
+let mod: DateMod
+
+beforeAll(async () => {
+  process.env.TZ_OFFSET = "+07:00"
+  mod = await import("@/lib/date")
+})
 
 describe("date utilities", () => {
   describe("tahunRange", () => {
     it("returns correct date range for a given year", () => {
-      const range = tahunRange(2024)
+      const range = mod.tahunRange(2024)
       expect(range.gte.getFullYear()).toBe(2024)
       expect(range.gte.getMonth()).toBe(0)
       expect(range.gte.getDate()).toBe(1)
@@ -21,7 +28,7 @@ describe("date utilities", () => {
 
   describe("tahunMulai", () => {
     it("returns Jan 1 of the given year", () => {
-      const date = tahunMulai(2024)
+      const date = mod.tahunMulai(2024)
       expect(date.getFullYear()).toBe(2024)
       expect(date.getMonth()).toBe(0)
       expect(date.getDate()).toBe(1)
@@ -30,7 +37,7 @@ describe("date utilities", () => {
 
   describe("tahunSelesai", () => {
     it("returns Jan 1 of the next year", () => {
-      const date = tahunSelesai(2024)
+      const date = mod.tahunSelesai(2024)
       expect(date.getFullYear()).toBe(2025)
       expect(date.getMonth()).toBe(0)
       expect(date.getDate()).toBe(1)
@@ -39,7 +46,7 @@ describe("date utilities", () => {
 
   describe("hinggaAkhirTahun", () => {
     it("returns Dec 31 23:59:59 of the given year", () => {
-      const result = hinggaAkhirTahun(2024)
+      const result = mod.hinggaAkhirTahun(2024)
       expect(result.lte.getFullYear()).toBe(2024)
       expect(result.lte.getMonth()).toBe(11)
       expect(result.lte.getDate()).toBe(31)
