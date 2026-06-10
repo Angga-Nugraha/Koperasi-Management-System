@@ -33,6 +33,7 @@ services:
       - simko
 
   app:
+    image: ghcr.io/angga-nugraha/koperasi-management-system:main
     build:
       context: .
       args:
