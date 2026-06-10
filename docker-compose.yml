@@ -94,12 +94,6 @@ services:
         npx prisma db seed
 
         echo "================================="
-        echo "Running Data Migration..."
-        echo "================================="
-
-        npx tsx prisma/migrate.ts
-
-        echo "================================="
         echo "Starting Application..."
         echo "================================="
 
