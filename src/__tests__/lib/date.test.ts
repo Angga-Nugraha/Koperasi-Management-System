@@ -9,6 +9,7 @@ type DateMod = typeof import("@/lib/date")
 let mod: DateMod
 
 beforeAll(async () => {
+  process.env.TZ = "Asia/Jakarta"
   process.env.TZ_OFFSET = "+07:00"
   mod = await import("@/lib/date")
 })
