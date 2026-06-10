@@ -98,6 +98,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 # package.json
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
+RUN mkdir -p /app/public/uploads && chown -R nextjs:nodejs /app/public/uploads
+
 USER nextjs
 
 EXPOSE 3000
