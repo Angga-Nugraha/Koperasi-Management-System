@@ -50,6 +50,8 @@ ENV NEXT_PUBLIC_FIREBASE_APP_ID=$NEXT_PUBLIC_FIREBASE_APP_ID
 
 # Dummy DATABASE_URL hanya untuk generate
 ENV DATABASE_URL="mysql://root:root@localhost:3306/dummy"
+ENV AUTH_SECRET="build-dummy-secret"
+ENV AUTH_URL="http://localhost:3000"
 
 # Generate Prisma Client
 RUN npx prisma generate

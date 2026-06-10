@@ -77,3 +77,5 @@ jobs:
       - run: npm run build
         env:
           DOCKER_BUILD: "true"
+          AUTH_URL: "http://localhost:3000"
+          AUTH_SECRET: "build-dummy-secret-for-nextauth"
