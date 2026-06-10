@@ -1,5 +1,6 @@
 volumes:
   mysql_data:
+  uploads:
   backups:
   certbot_www:
 
@@ -50,11 +51,14 @@ services:
     expose:
       - "3000"
 
+    volumes:
+      - uploads:/app/public/uploads
+
     environment:
       NODE_ENV: production
       DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-simko_secret}@mysql:3306/${MYSQL_DATABASE:-simko}?allowPublicKeyRetrieval=true
       AUTH_SECRET: ${AUTH_SECRET:?required}
-      AUTH_URL: ${AUTH_URL:-http://localhost:3000}
+      AUTH_URL: ${AUTH_URL:-http://localhost}
       NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
       TZ_OFFSET: ${TZ_OFFSET:-+07:00}
       MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY}
