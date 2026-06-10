@@ -11,26 +11,44 @@ services:
   mysql:
     image: mysql:8.4
     restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-simko_secret}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-simko}
+
     ports:
       - "${MYSQL_PORT:-3307}:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
+
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 20s
+
     networks:
       - simko
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_MIDTRANS_CLIENT_KEY: ${NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        NEXT_PUBLIC_MIDTRANS_SNAP_URL: ${NEXT_PUBLIC_MIDTRANS_SNAP_URL}
+        NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY}
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID}
+        NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}
+        NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID}
     restart: unless-stopped
+
     expose:
       - "3000"
+
     environment:
       NODE_ENV: production
       DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-simko_secret}@mysql:3306/${MYSQL_DATABASE:-simko}?allowPublicKeyRetrieval=true
@@ -38,68 +56,140 @@ services:
       AUTH_URL: ${AUTH_URL:-http://localhost:3000}
       NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
       TZ_OFFSET: ${TZ_OFFSET:-+07:00}
+      MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY}
+      NEXT_PUBLIC_MIDTRANS_CLIENT_KEY: ${NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+      NEXT_PUBLIC_MIDTRANS_SNAP_URL: ${NEXT_PUBLIC_MIDTRANS_SNAP_URL}
+      MIDTRANS_IS_PRODUCTION: ${MIDTRANS_IS_PRODUCTION:-false}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID}
+
     depends_on:
       mysql:
         condition: service_healthy
-    entrypoint: >
-      sh -c "
-        npx prisma migrate deploy &&
-        npx prisma db seed --skip-generate || true &&
-        node server.js
-      "
+
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+
+        echo "================================="
+        echo "Running Prisma Migrations..."
+        echo "================================="
+
+        npx prisma migrate deploy
+
+        echo "================================="
+        echo "Running Prisma Seed..."
+        echo "================================="
+
+        npx prisma db seed
+
+        echo "================================="
+        echo "Running Data Migration..."
+        echo "================================="
+
+        npx tsx prisma/migrate.ts
+
+        echo "================================="
+        echo "Starting Application..."
+        echo "================================="
+
+        exec node server.js
+
     networks:
       - simko
 
   nginx:
     image: nginx:1.26-alpine
     restart: unless-stopped
+
+    depends_on:
+      - app
+
     ports:
       - "${NGINX_HTTP:-80}:80"
       - "${NGINX_HTTPS:-443}:443"
+
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/security.conf:/etc/nginx/security.conf:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/locations.conf:/etc/nginx/locations.conf:ro
       - certbot_www:/var/www/certbot
-    depends_on:
-      - app
+
     networks:
       - simko
 
   certbot:
     image: certbot/certbot
     restart: unless-stopped
+
     volumes:
       - certbot_www:/var/www/certbot
       - ./nginx/certbot:/etc/letsencrypt
-    entrypoint: >
-      sh -c "
-        trap exit TERM;
+
+    entrypoint:
+      - sh
+      - -c
+      - |
+        trap exit TERM
+
         while true; do
-          certbot renew --webroot -w /var/www/certbot --quiet;
-          sleep 43200;
+          certbot renew \
+            --webroot \
+            -w /var/www/certbot \
+            --quiet
+
+          sleep 43200
         done
-      "
+
     networks:
       - simko
 
   backup:
     image: mysql:8.4
     restart: unless-stopped
+
     environment:
       MYSQL_PWD: ${MYSQL_ROOT_PASSWORD:-simko_secret}
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
     volumes:
       - backups:/backups
-    entrypoint: >
-      sh -c "
+
+    entrypoint:
+      - sh
+      - -c
+      - |
         while true; do
-          sleep 86400 &&
-          mysqldump -h mysql -u root --single-transaction --routines --triggers simko > /backups/simko_\$(date +%Y%m%d).sql &&
-          find /backups -name 'simko_*.sql' -mtime +30 -delete
+          sleep 86400
+
+          mysqldump \
+            -h mysql \
+            -u root \
+            -p"$${MYSQL_PWD}" \
+            --single-transaction \
+            --routines \
+            --triggers \
+            ${MYSQL_DATABASE:-simko} \
+            > /backups/${MYSQL_DATABASE:-simko}_$$(date +%Y%m%d).sql
+
+          find /backups \
+            -name "${MYSQL_DATABASE:-simko}_*.sql" \
+            -mtime +30 \
+            -delete
         done
-      "
-    depends_on:
-      - mysql
+
     networks:
       - simko

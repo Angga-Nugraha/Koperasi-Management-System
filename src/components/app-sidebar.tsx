@@ -217,22 +217,12 @@ function NavSubmenu({
 export function AppSidebar({ items, roleLabel, userEmail, userInitial }: Props) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false
     return localStorage.getItem(COLLAPSED_KEY) === "true"
   })
 
-  useEffect(() => {
-    fetch("/api/general-info")
-      .then((r) => r.json())
-      .then((info) => {
-        if (info?.logo) setLogoUrl(info.logo)
-      })
-      .catch(() => {})
-  }, [])
-
-  const logo = logoUrl || "/logo.png"
+  const logo = "/logo.png"
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
