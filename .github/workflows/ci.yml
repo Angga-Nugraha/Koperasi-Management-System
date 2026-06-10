@@ -77,5 +77,6 @@ jobs:
       - run: npm run build
         env:
           DOCKER_BUILD: "true"
+          DATABASE_URL: "mysql://root:root@localhost:3306/dummy"
           AUTH_URL: "http://localhost:3000"
           AUTH_SECRET: "build-dummy-secret-for-nextauth"
