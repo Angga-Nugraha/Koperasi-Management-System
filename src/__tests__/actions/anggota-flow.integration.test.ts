@@ -62,6 +62,7 @@ describe("Anggota Flow Integration", () => {
           nama: "Test",
           alamat: "Jl. Test No 123",
           tglMasuk: "2024-01-15",
+          buatUser: false,
         }),
       ).rejects.toThrow()
     })
@@ -86,6 +87,7 @@ describe("Anggota Flow Integration", () => {
         nama: "Budi Santoso",
         alamat: "Jl. Merdeka No 1, Jakarta",
         tglMasuk: "2024-01-15",
+        buatUser: false,
       })
       expect(result.success).toBe(true)
       expect(result.data.noAnggota).toBe("001")
@@ -142,6 +144,7 @@ describe("Anggota Flow Integration", () => {
         nama: "Budi Updated",
         alamat: "Jl. Baru No 10, Jakarta",
         tglMasuk: "2024-01-15",
+        buatUser: false,
       })
       expect(result.success).toBe(true)
     })

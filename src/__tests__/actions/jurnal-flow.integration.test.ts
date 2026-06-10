@@ -150,7 +150,7 @@ describe("Jurnal Flow Integration", () => {
       ])
       const result = await getAkunList()
       expect(result).toHaveLength(1)
-      expect(result[0].kode).toBe("1.1.1")
+      expect(result[0]!.kode).toBe("1.1.1")
     })
   })
 })

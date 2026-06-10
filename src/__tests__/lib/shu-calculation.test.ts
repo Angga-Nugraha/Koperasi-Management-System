@@ -136,12 +136,12 @@ describe("SHU Calculation", () => {
       expect(result.keuangan.totalSHU).toBe(1000000)
       expect(result.totalAnggota).toBe(1)
 
-      expect(result.alokasi.JM.nominal).toBe(500000)
-      expect(result.alokasi.JU.nominal).toBe(500000)
+      expect(result.alokasi.JM!.nominal).toBe(500000)
+      expect(result.alokasi.JU!.nominal).toBe(500000)
 
-      expect(result.perAnggota[0].jasaModal).toBe(round2(500000 * (500000 / 500000)))
-      expect(result.perAnggota[0].jasaUsaha).toBe(round2(500000 * (200000 / 200000)))
-      expect(result.perAnggota[0].total).toBe(1000000)
+      expect(result.perAnggota[0]!.jasaModal).toBe(round2(500000 * (500000 / 500000)))
+      expect(result.perAnggota[0]!.jasaUsaha).toBe(round2(500000 * (200000 / 200000)))
+      expect(result.perAnggota[0]!.total).toBe(1000000)
     })
 
     it("distributes SHU proportionally among multiple anggota", async () => {
@@ -203,10 +203,10 @@ describe("SHU Calculation", () => {
       const danaJM = shuBersih * 0.5
       const danaJU = shuBersih * 0.5
 
-      expect(result.perAnggota[0].jasaModal).toBe(round2(danaJM * (300000 / totalSimpanan)))
-      expect(result.perAnggota[0].jasaUsaha).toBe(round2(danaJU * (100000 / totalAngsuran)))
-      expect(result.perAnggota[1].jasaModal).toBe(round2(danaJM * (200000 / totalSimpanan)))
-      expect(result.perAnggota[1].jasaUsaha).toBe(round2(danaJU * (100000 / totalAngsuran)))
+      expect(result.perAnggota[0]!.jasaModal).toBe(round2(danaJM * (300000 / totalSimpanan)))
+      expect(result.perAnggota[0]!.jasaUsaha).toBe(round2(danaJU * (100000 / totalAngsuran)))
+      expect(result.perAnggota[1]!.jasaModal).toBe(round2(danaJM * (200000 / totalSimpanan)))
+      expect(result.perAnggota[1]!.jasaUsaha).toBe(round2(danaJU * (100000 / totalAngsuran)))
     })
 
     it("handles loss (negative SHU) by using max(0, SHU)", async () => {
@@ -233,7 +233,7 @@ describe("SHU Calculation", () => {
       const result = await hitungSHU(2024)
 
       expect(result.keuangan.totalSHU).toBe(-500000)
-      expect(result.alokasi.CAD.nominal).toBe(0)
+      expect(result.alokasi.CAD!.nominal).toBe(0)
     })
   })
 })

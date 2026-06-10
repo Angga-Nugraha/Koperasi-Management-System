@@ -78,7 +78,7 @@ describe("Tutup Buku Flow Integration", () => {
       ])
       const result = await getSHUTutupBukuList()
       expect(result).toHaveLength(1)
-      expect(result[0].tahun).toBe(2024)
+      expect(result[0]!.tahun).toBe(2024)
     })
   })
 })
