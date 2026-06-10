@@ -5,7 +5,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -131,7 +131,7 @@ export default function UsersPage() {
   const [showResetPassword, setShowResetPassword] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
-  async function loadUsers() {
+  const loadUsers = useCallback(async function loadUsers() {
     setLoading(true)
     try {
       const result = await getUserList(search || undefined, page, 10)
@@ -142,7 +142,7 @@ export default function UsersPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, search])
 
   async function loadAnggota(includeId?: string) {
     try {
@@ -153,16 +153,14 @@ export default function UsersPage() {
     }
   }
 
-  useEffect(() => {
-    setPage(1)
-  }, [search])
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { loadUsers() }, [loadUsers])
 
   useEffect(() => {
-    loadUsers()
     getAllowedRoles()
       .then(setAvailableRoles)
       .catch(() => {})
-  }, [search, page])
+  }, [])
 
   const defaultRole = availableRoles[0] ?? ""
 
@@ -299,7 +297,10 @@ export default function UsersPage() {
           <Input
             placeholder="Cari email..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              setPage(1)
+            }}
             className="pl-9"
           />
         </div>
