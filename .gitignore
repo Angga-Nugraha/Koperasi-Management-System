@@ -53,8 +53,8 @@ github.pub
 /REPORT-REVIEW.md
 
 # raw data files
-/prisma/anggota.json
-/prisma/jurnal.json
+# /prisma/anggota.json
+# /prisma/jurnal.json
 /fiirebase.txt
 /tabel_anggota.txt
 /tabeljurnal.txt

@@ -1,0 +1,5852 @@
+[
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dede Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030004"
+  },
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dede Mimin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030004"
+  },
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-02",
+    "keterangan": "Penerimaan Simpanan Wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Asep Saepudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205221212590001"
+  },
+  {
+    "tanggal": "2025-06-07",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Asep Saepudin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205221212590001"
+  },
+  {
+    "tanggal": "2025-06-07",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sopiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054505950004"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Oding Suhendar",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 70000,
+    "nik": "A020001"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iyoh Rokayah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056704730001"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Hetty Herawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 70000,
+    "nik": "A020003"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Sopiani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054505950004"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Oding Suhendar",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020001"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Iyoh Rokayah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056704730001"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Hetty Herawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020003"
+  },
+  {
+    "tanggal": "2025-06-10",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 295000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enung Nurnaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055505730004"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yanwarsyah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 30000,
+    "nik": "3205050107800012"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Leni Marlina",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056810860001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Syamsiah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056807840001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sutarja",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052408650001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tintin Nurnaeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056801690001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Enung Nurnaningsih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055505730004"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yanwarsyah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050107800012"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Leni Marlina",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056810860001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Syamsiah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056807840001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Sutarja",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052408650001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tintin Nurnaeni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056801690001"
+  },
+  {
+    "tanggal": "2025-06-11",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 230000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807780001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Usup",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808690011"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107740010"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055807780001"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Usup",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050808690011"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054107740010"
+  },
+  {
+    "tanggal": "2025-06-12",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 260000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aming Alex Hidayat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051204840008"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kadir",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051203380002"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Anisa",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205057005740001"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aam Amalia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055709820003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yuliawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054207810003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Hodijah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056212790003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Aming Alex Hidayat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051204840008"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Kadir",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051203380002"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Anisa",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205057005740001"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Aam Amalia",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055709820003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yuliawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054207810003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Hodijah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056212790003"
+  },
+  {
+    "tanggal": "2025-06-13",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 245000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Slamet",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 185000,
+    "nik": "3205052704560002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 65000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayat Ruhiyat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051005640002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Slamet",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052704560002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedi Firmansyah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051103800002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedi Sukmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060010"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ejen",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051803640001"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yayat Ruhiyat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051005640002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Slamet",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052704560002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dedi Firmansyah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051103800002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dedi Sukmawan",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060010"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ejen",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051803640001"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-06-14",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 495000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Lilis Lisnawati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 215000,
+    "nik": "3205055507660003"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lilis Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055507660003"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052712070266"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Andi Suherli",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051307700001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Marni Suminar",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055111950001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054509600001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Slamet Mulyadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051807910001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tuti Susilawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056112720002"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Lilis Lisnawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055507660003"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Lia",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052712070266"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Andi Suherli",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051307700001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Marni Suminar",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055111950001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Mimin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054509600001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Slamet Mulyadin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051807910001"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tuti Susilawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056112720002"
+  },
+  {
+    "tanggal": "2025-06-15",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 705000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054202770008"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dede Rohayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055707800003"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yoga Oktavia Fitrana",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205042810720003"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Engkus Sutisna",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070002"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054202770008"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dede Rohayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055707800003"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yoga Oktavia Fitrana",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205042810720003"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Engkus Sutisna",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A070002"
+  },
+  {
+    "tanggal": "2025-06-16",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 140000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "A Deni Junaedi",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070001"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "A Deni Junaedi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070001"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 120000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-17",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-18",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Solihin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051103570002"
+  },
+  {
+    "tanggal": "2025-06-18",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Solihin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051103570002"
+  },
+  {
+    "tanggal": "2025-06-18",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Euis Juariah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055503630003"
+  },
+  {
+    "tanggal": "2025-06-19",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Euis Juariah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055503630003"
+  },
+  {
+    "tanggal": "2025-06-19",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "ATK",
+    "nama_anggota": null,
+    "nama_akun": "ATK dan Perlengkapan Kantor",
+    "debit": 100000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nana Mulyana",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052704740004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Entin Kartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056512670001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iyam Maryam",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055609620002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Beti Sulastri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054707690001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Udan Wijaya",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050605720002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kurniawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050101870002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Intan Wulan Purnama Sari",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056406870002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Asep Sudirman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051711650001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Muhamad Hilman Sudirman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050907030004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wildan Abdul Halim Sudirman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051107020009"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Bangbang Sugianto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205053008610001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tika",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A050013"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wiwit",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055212810001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Atik Rohmayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055212790003"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nani Rosidah, S.Pd",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054306780004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ucu",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056812670004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kulsum Maryati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054101720009"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Cacu Samsudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051707010002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Awang Karmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050810650001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ida Farida",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205305908790001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Elly Susilawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054411760001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fahrizal Safrudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051803850001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Edi Supardi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052710600001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Suherman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050812690004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Heri Junaeri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205053002620001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enung Sopiah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055010620005"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yono Maryono",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052303580001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mariam",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056802800005"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nana Mulyana",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052704740004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Entin Kartini",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056512670001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Iyam Maryam",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055609620002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Beti Sulastri",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054707690001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Udan Wijaya",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050605720002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Kurniawan",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050101870002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Intan Wulan Purnama Sari",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056406870002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Asep Sudirman",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051711650001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Muhamad Hilman Sudirman",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050907030004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wildan Abdul Halim Sudirman",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051107020009"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Bangbang Sugianto",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205053008610001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tika",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A050013"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wiwit",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055212810001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Atik Rohmayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055212790003"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nani Rosidah, S.Pd",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054306780004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ucu",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056812670004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Kulsum Maryati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054101720009"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Cacu Samsudin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051707010002"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Awang Karmawan",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050810650001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ida Farida",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205305908790001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Elly Susilawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054411760001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Fahrizal Safrudin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051803850001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Edi Supardi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052710600001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Suherman",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050812690004"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Heri Junaeri",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205053002620001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Enung Sopiah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055010620005"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yono Maryono",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052303580001"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Mariam",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056802800005"
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Ongkos Transport Pembuatan Plang",
+    "nama_anggota": null,
+    "nama_akun": "ATK dan Perlengkapan Kantor",
+    "debit": 200000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Pembelian Administrasi Koperasi",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": null,
+    "kredit": 1890000,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Pembelian Materai",
+    "nama_anggota": null,
+    "nama_akun": "ATK dan Perlengkapan Kantor",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Pembuatan Buku Tabungan",
+    "nama_anggota": null,
+    "nama_akun": "ATK dan Perlengkapan Kantor",
+    "debit": 1270000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 980000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-20",
+    "keterangan": "Transportasi Pelatihan ke Tasik",
+    "nama_anggota": null,
+    "nama_akun": "Transportasi",
+    "debit": 300000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-24",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Inna Masliah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070006"
+  },
+  {
+    "tanggal": "2025-06-24",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Inna Masliah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A070006"
+  },
+  {
+    "tanggal": "2025-06-24",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-25",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Anton Rahmat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070007"
+  },
+  {
+    "tanggal": "2025-06-25",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Harry Aries Siswanto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052111680003"
+  },
+  {
+    "tanggal": "2025-06-25",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Anton Rahmat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A070007"
+  },
+  {
+    "tanggal": "2025-06-25",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Harry Aries Siswanto",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052111680003"
+  },
+  {
+    "tanggal": "2025-06-25",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 70000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-26",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-06-26",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Neneng Rosi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3201035610910006"
+  },
+  {
+    "tanggal": "2025-06-26",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-06-26",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Neneng Rosi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3201035610910006"
+  },
+  {
+    "tanggal": "2025-06-26",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 70000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-27",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eman Sualeman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A050020"
+  },
+  {
+    "tanggal": "2025-06-27",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Eman Sualeman",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A050020"
+  },
+  {
+    "tanggal": "2025-06-27",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-06-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-06-30",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-06-30",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-01",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Fitrianie",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 15000,
+    "nik": "3205054402940005"
+  },
+  {
+    "tanggal": "2025-07-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fitrianie",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402940005"
+  },
+  {
+    "tanggal": "2025-07-01",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Fitrianie",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054402940005"
+  },
+  {
+    "tanggal": "2025-07-01",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Mila",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 15000,
+    "nik": "3205054904000002"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Lia",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052712070266"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Maryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055201610001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tijah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055502660001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mila",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054904000002"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wati Rohmawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3273077003870001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enung",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054812690004"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Jaja",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002720003"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iin Insyaroh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054707900001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052712070266"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iyoh Rokayah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056704730001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Eni Maryani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055201610001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tijah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055502660001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Mila",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054904000002"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wati Rohmawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3273077003870001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Enung",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054812690004"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Jaja",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055002720003"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Iin Insyaroh",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054707900001"
+  },
+  {
+    "tanggal": "2025-07-03",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 290000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Asih Anggraeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056107720001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mia Sekarahmatia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060026"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aas Faridah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060027"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sri Rahayu",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060028"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aat Solihat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060029"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Srie Sudewi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060030"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ika Rostika",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060031"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wulan Fitria",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054206870001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dewi Hendrawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060033"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Teni Gusniar",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060034"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Rini Susrianti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060036"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lina Sulastina",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054406660004"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tatang Rohendi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051106620001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054509600001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Hodijah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056212790003"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Asih Anggraeni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056107720001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Mia Sekarahmatia",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060026"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Aas Faridah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060027"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Sri Rahayu",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060028"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Aat Solihat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060029"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Srie Sudewi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060030"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ika Rostika",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060031"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wulan Fitria",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054206870001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Dewi Hendrawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060033"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Teni Gusniar",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060034"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Rini Susrianti",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060036"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Lina Sulastina",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054406660004"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tatang Rohendi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051106620001"
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 490000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-04",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-05",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-07-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-07-05",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 30000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807780001"
+  },
+  {
+    "tanggal": "2025-07-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055611650002"
+  },
+  {
+    "tanggal": "2025-07-07",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055611650002"
+  },
+  {
+    "tanggal": "2025-07-07",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-07",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-09",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-07-09",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-07-09",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-07-09",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-07-09",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 40000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Neneng Rosi",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 40000,
+    "nik": "3201035610910006"
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dede Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030004"
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Usup",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808690011"
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aam Amalia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055709820003"
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Neneng Rosi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3201035610910006"
+  },
+  {
+    "tanggal": "2025-07-10",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 80000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-11",
+    "keterangan": "Bayar Simpnan Wajib",
+    "nama_anggota": "Pina Anggraeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056009930001"
+  },
+  {
+    "tanggal": "2025-07-11",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Pina Anggraeni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056009930001"
+  },
+  {
+    "tanggal": "2025-07-11",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Euis Juaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070012"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fani Nur Oktaviani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056410970012"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ade Kamilah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056008720007"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nur Aini Rochmawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3273145308810001"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yeni Halimah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055506830009"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Devi Despliasi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055312650003"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Euis Juaningsih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A070012"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Fani Nur Oktaviani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056410970012"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ade Kamilah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056008720007"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nur Aini Rochmawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3273145308810001"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yeni Halimah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055506830009"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Devi Despliasi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055312650003"
+  },
+  {
+    "tanggal": "2025-07-12",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 210000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-13",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-07-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-07-13",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-07-13",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-13",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 15000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Marni Suminar",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055111950001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-07-14",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-07-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Andi Suherli",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051307700001"
+  },
+  {
+    "tanggal": "2025-07-15",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Yati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054202770008"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Tati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107740010"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054202770008"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107740010"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dede Rohayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055707800003"
+  },
+  {
+    "tanggal": "2025-07-16",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 60000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-18",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Syamsiah",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "3205056807840001"
+  },
+  {
+    "tanggal": "2025-07-18",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Leni Marlina",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056810860001"
+  },
+  {
+    "tanggal": "2025-07-18",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Syamsiah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056807840001"
+  },
+  {
+    "tanggal": "2025-07-18",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 40000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Oneng",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730006"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sopandi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051506680004"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tatang Sontani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050107760017"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Deni Ramdani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205012512670006"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Oneng",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054107730006"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Sopandi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051506680004"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Tatang Sontani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050107760017"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Deni Ramdani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205012512670006"
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 140000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-19",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 60000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayat Ruhiyat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051005640002"
+  },
+  {
+    "tanggal": "2025-07-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Awang Karmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050810650001"
+  },
+  {
+    "tanggal": "2025-07-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Heri Junaeri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205053002620001"
+  },
+  {
+    "tanggal": "2025-07-20",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 30000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-21",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedi Sukmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060010"
+  },
+  {
+    "tanggal": "2025-07-21",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Didit Andita",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 15000,
+    "nik": "3205052609900001"
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Didit Andita",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052609900001"
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aming Alex Hidayat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051204840008"
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kadir",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051203380002"
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Didit Andita",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205052609900001"
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-22",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-23",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-07-23",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-07-23",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-24",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nunung",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055405600002"
+  },
+  {
+    "tanggal": "2025-07-24",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nunung",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055405600002"
+  },
+  {
+    "tanggal": "2025-07-24",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-26",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-07-26",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-07-26",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 30000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-27",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yuyun Hermawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050504690002"
+  },
+  {
+    "tanggal": "2025-07-27",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yuyun Hermawan",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050504690002"
+  },
+  {
+    "tanggal": "2025-07-27",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-28",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Enung Nurnaningsih",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205055505730004"
+  },
+  {
+    "tanggal": "2025-07-28",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enung Nurnaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055505730004"
+  },
+  {
+    "tanggal": "2025-07-28",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 15000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Sopiani",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054505950004"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sopiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054505950004"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Asep Saepudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205221212590001"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yoga Oktavia Fitrana",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205042810720003"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Inna Masliah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070006"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Anton Rahmat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A070007"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Harry Aries Siswanto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052111680003"
+  },
+  {
+    "tanggal": "2025-07-31",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 85000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-08-01",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056407760003"
+  },
+  {
+    "tanggal": "2025-08-02",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Suryani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056407760003"
+  },
+  {
+    "tanggal": "2025-08-02",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Fitrianie",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402940005"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Cucu Cahayati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 15000,
+    "nik": "3205054411520001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enung Nurnaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055505730004"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aam Amalia",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055709820003"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fitrianie",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402940005"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wulan Fitria",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054206870001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enok Mae",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054309760001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Cucu Cahayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054411520001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Enok Mae",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054309760001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Cucu Cahayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205054411520001"
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 85000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-04",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 90000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Heri Junaeri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205053002620001"
+  },
+  {
+    "tanggal": "2025-08-05",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iyoh Rokayah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056704730001"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedi Sukmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060010"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yadi Supriadi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050606780007"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056512740001"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Pepen Sopandi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051508620005"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yadi Supriadi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205050606780007"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056512740001"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Pepen Sopandi",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051508620005"
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 105000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-06",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 5000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Maryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055201610001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807780001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Juliyadi Suparno",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Raden Rijanto",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205051305710001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Slamet Mulyadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051807910001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ida Farida",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205305908790001"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Suherman",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050812690004"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Rini Susrianti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060036"
+  },
+  {
+    "tanggal": "2025-08-07",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 145000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 30000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Hodijah",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 100000,
+    "nik": "3205056212790003"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Hodijah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056212790003"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayan Sopyan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051712640001"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yayan Sopyan",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051712640001"
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-08",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 160000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-09",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ayat Sutaryat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051312680001"
+  },
+  {
+    "tanggal": "2025-08-09",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ayat Sutaryat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205051312680001"
+  },
+  {
+    "tanggal": "2025-08-09",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Angga Nugraha",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205052504960002"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Riana Abdul Azis",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 30000,
+    "nik": "A060002"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fahrizal Safrudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051803850001"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Edi Supardi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052710600001"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055611650002"
+  },
+  {
+    "tanggal": "2025-08-15",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 155000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-19",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Engkus Sutisna",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "A070002"
+  },
+  {
+    "tanggal": "2025-08-19",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-08-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayat Ruhiyat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051005640002"
+  },
+  {
+    "tanggal": "2025-08-20",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Awang Karmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050810650001"
+  },
+  {
+    "tanggal": "2025-08-20",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Bayar Simpanan Sukarela",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wini Mandela",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056205860005"
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayat Ruhiyat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051005640002"
+  },
+  {
+    "tanggal": "2025-09-01",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-09-07",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-09-07",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-09-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sutarja",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052408650001"
+  },
+  {
+    "tanggal": "2025-09-15",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tintin Nurnaeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056801690001"
+  },
+  {
+    "tanggal": "2025-09-15",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 20000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-10-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-10-01",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-10-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-10-02",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 10000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Juliyadi Suparno",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Slamet Mulyadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051807910001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ida Farida",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205305908790001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lina Sulastina",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054406660004"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tatang Rohendi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051106620001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Inna Masliah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "A070006"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Anton Rahmat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "A070007"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Euis Juaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "A070012"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fani Nur Oktaviani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056410970012"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ade Kamilah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "3205056008720007"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nur Aini Rochmawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3273145308810001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yeni Halimah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055506830009"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Deni Ramdani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205012512670006"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Fany Munggarani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205135608910003"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Il. Diana Maria",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055509590001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ratna Siti Maemunah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056812740002"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ai Cucu Sutarsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205136706680002"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Fany Munggarani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205135608910003"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Il. Diana Maria",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205055509590001"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ratna Siti Maemunah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056812740002"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ai Cucu Sutarsih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205136706680002"
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 140000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-10-05",
+    "keterangan": "Simpanan Anggota",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 200000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-10-22",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Yuyun Yunarsih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030026"
+  },
+  {
+    "tanggal": "2025-10-22",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Yuyun Yunarsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030026"
+  },
+  {
+    "tanggal": "2025-10-22",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 225000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yanwarsyah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050107800012"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aming Alex Hidayat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051204840008"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kadir",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051203380002"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar simpanan sukarela",
+    "nama_anggota": "Yanwarsyah",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 40000,
+    "nik": "3205050107800012"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar simpanan sukarela",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar simpanan sukarela",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 50000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-11-01",
+    "keterangan": "Bayar simpanan sukarela",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Selvian Salvalas",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030027"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ida Susilawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030031"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Endang",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030032"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Neulis Yuniarti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030033"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "M. Adis",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030034"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aah Rohayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030035"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Rosheni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030036"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Atik",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030037"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Selvian Salvalas",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030027"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Ida Susilawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030031"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Endang",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030032"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Neulis Yuniarti",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030033"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "M. Adis",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030034"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Aah Rohayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030035"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Rosheni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030036"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Atik",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030037"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Asep Sopian",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030038"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Asep Sopian",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030038"
+  },
+  {
+    "tanggal": "2025-11-04",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 315000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Jono Sujana",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060042"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Komang Ayu M",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060043"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Jani Abdullah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060044"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Yanti Novianti",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060045"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Ardiansyah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060046"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Neni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A010016"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yuyun Rahayu",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A010017"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Iyus",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A010018"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ajat Rahmat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A020009"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Entin Supriatin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A020010"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Wiwi Susilawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A020011"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Mariah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A020012"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Susminar",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A020013"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Jono Sujana",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060042"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Komang Ayu M",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060043"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Jani Abdullah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060044"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Yanti Novianti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060045"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Ardiansyah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060046"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Neni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A010016"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Yuyun Rahayu",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A010017"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Iyus",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A010018"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Ajat Rahmat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020009"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Entin Supriatin",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020010"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Wiwi Susilawati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020011"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Mariah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020012"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Bayar simpanan pokok",
+    "nama_anggota": "Susminar",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A020013"
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 280000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-08",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 175000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dede Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030004"
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lilis Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055507660003"
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Pembayaran Pembuatan Banner",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": null,
+    "kredit": 60000,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-12",
+    "keterangan": "Pembuatan Banner",
+    "nama_anggota": null,
+    "nama_akun": "ATK dan Perlengkapan Kantor",
+    "debit": 60000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Komala",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060047"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 110000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Asep Saepudin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 20000,
+    "nik": "3205221212590001"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Tini Supartini",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055409870005"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 40000,
+    "nik": "3205055611650002"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Rini Susrianti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060036"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yayan Sopyan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051712640001"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Komala",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060047"
+  },
+  {
+    "tanggal": "2025-11-16",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan pokok",
+    "nama_anggota": "Haryani",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040016"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 60000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054509600001"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Tijah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055502660001"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Haryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040016"
+  },
+  {
+    "tanggal": "2025-11-18",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 35000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 115000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Sumiati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807810002"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Dedeh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054107730064"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ocih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054908540001"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055308920001"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nanih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055204640005"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aming Alex Hidayat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051204840008"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Kadir",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205051203380002"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eni Sumarni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054605640002"
+  },
+  {
+    "tanggal": "2025-12-01",
+    "keterangan": "Bayar simpanan sukarela",
+    "nama_anggota": "Karyati",
+    "nama_akun": "Simpanan Sukarela",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "3205056403910001"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Yanti Sunarti",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030028"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Nining Ratnaningsih",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030029"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Ade Tarsiri",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A030030"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Yanti Sunarti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030028"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nining Ratnaningsih",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030029"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ade Tarsiri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030030"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 50000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Onah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055310700001"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054509600001"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Irna Kustiani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205057010970001"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Reni Rahmani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055002960001"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Nurhayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205056001800004"
+  },
+  {
+    "tanggal": "2025-12-02",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 105000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 80000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Cucu Cahayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054411520001"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Dede Mimin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030004"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Yani Suryani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055807780001"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Lilis Lisnawati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205055507660003"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Tati Hartati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054402760001"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Nani",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205054909580001"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Enah Nurjanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3507244812560002"
+  },
+  {
+    "tanggal": "2025-12-04",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Aah Rohayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A030035"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 80000,
+    "kredit": null,
+    "nik": null
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Dedi Sukmawan",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060010"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Heri Junaeri",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205053002620001"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Yadi Supriadi",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050606780007"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Ujang Saepulloh",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205050808740004"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Udin Nuryadin",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205052005620002"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Juliyadi Suparno",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060001"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Ida Farida",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "3205305908790001"
+  },
+  {
+    "tanggal": "2025-12-25",
+    "keterangan": "Bayar Simpanan wajib",
+    "nama_anggota": "Jani Abdullah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060044"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Ati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040017"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Nina Anggraeni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040018"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Markonah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040019"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Aah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040020"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Enih Rohaeni",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040021"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Eti Rohaeti",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040022"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Aay Hayati",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A040023"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Suhasanah",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060048"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Faisal L Tobing",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060049"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Pokok",
+    "nama_anggota": "Rahmat Hidayat",
+    "nama_akun": "Simpanan Pokok",
+    "debit": null,
+    "kredit": 25000,
+    "nik": "A060050"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Ati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040017"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Nina Anggraeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040018"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Markonah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040019"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040020"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Enih Rohaeni",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040021"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Eti Rohaeti",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040022"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Aay Hayati",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A040023"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Suhasanah",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060048"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Faisal L Tobing",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060049"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Bayar Simpanan Wajib",
+    "nama_anggota": "Rahmat Hidayat",
+    "nama_akun": "Simpanan Wajib",
+    "debit": null,
+    "kredit": 10000,
+    "nik": "A060050"
+  },
+  {
+    "tanggal": "2025-12-30",
+    "keterangan": "Pendaftaran anggota baru",
+    "nama_anggota": null,
+    "nama_akun": "Kas",
+    "debit": 350000,
+    "kredit": null,
+    "nik": null
+  }
+]

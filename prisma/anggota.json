@@ -1,0 +1,1748 @@
+[
+  {
+    "nama": "Enok Maryati",
+    "NIK": "3205055104880001",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Guru",
+    "noHp": "83825519745",
+    "tglMasuk": "2025-05-28"
+  },
+  {
+    "nama": "Luthfi Hafazhah",
+    "NIK": "A060003",
+    "alamat": "Perum Jati Putra RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "8972447666",
+    "tglMasuk": "2025-05-28"
+  },
+  {
+    "nama": "Ramdani",
+    "NIK": "A030003",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "82130993485",
+    "tglMasuk": "2025-05-28"
+  },
+  {
+    "nama": "Dede Mimin",
+    "NIK": "A030004",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "RW",
+    "noHp": "-",
+    "tglMasuk": "2025-06-02"
+  },
+  {
+    "nama": "Asep Saepudin",
+    "NIK": "3205221212590001",
+    "alamat": "Perum Jati Putra Blok V No.03 RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "81298911453",
+    "tglMasuk": "2025-06-07"
+  },
+  {
+    "nama": "Hetty Herawati",
+    "NIK": "A020003",
+    "alamat": "Kp Cibunar Hilir RT 08 RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Pensiunan",
+    "noHp": "-",
+    "tglMasuk": "2025-06-10"
+  },
+  {
+    "nama": "Iyoh Rokayah",
+    "NIK": "3205056704730001",
+    "alamat": "Kp Cibunar Hilir RT 08 RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82115463069",
+    "tglMasuk": "2025-06-10"
+  },
+  {
+    "nama": "Oding Suhendar",
+    "NIK": "A020001",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "BPD",
+    "noHp": "8121409225",
+    "tglMasuk": "2025-06-10"
+  },
+  {
+    "nama": "Sopiani",
+    "NIK": "3205054505950004",
+    "alamat": "Kp Cibunar Hilir RT 01 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "895418758060",
+    "tglMasuk": "2025-06-10"
+  },
+  {
+    "nama": "Sumiati",
+    "NIK": "3205055807810002",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85724095148",
+    "tglMasuk": "2025-06-10"
+  },
+  {
+    "nama": "Enung Nurnaningsih",
+    "NIK": "3205055505730004",
+    "alamat": "Kp Cibunar Hilir RT 04 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82130993498",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Leni Marlina",
+    "NIK": "3205056810860001",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Pegawai Swasta",
+    "noHp": "83894933689",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Sutarja",
+    "NIK": "3205052408650001",
+    "alamat": "Perum Jati Putra Blok X No.05 RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan",
+    "noHp": "81320330500",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Syamsiah",
+    "NIK": "3205056807840001",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "83872877284",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Tintin Nurnaeni",
+    "NIK": "3205056801690001",
+    "alamat": "Perum Jati Putra Blok X No.05 RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81320330500",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Yanwarsyah",
+    "NIK": "3205050107800012",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Tani",
+    "noHp": "81224276256",
+    "tglMasuk": "2025-06-11"
+  },
+  {
+    "nama": "Dedeh",
+    "NIK": "3205054107730064",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Berdagang",
+    "noHp": "81386654583",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Lisnawati",
+    "NIK": "3205055308920001",
+    "alamat": "Kp Cibunar Hilir RT 03 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82117938714",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Ocih",
+    "NIK": "3205054908540001",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Tati",
+    "NIK": "3205054107740010",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Wirausaha",
+    "noHp": "89513377973",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Usup",
+    "NIK": "3205050808690011",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wirausaha",
+    "noHp": "85722608568",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Yani Suryani",
+    "NIK": "3205055807780001",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85747957871",
+    "tglMasuk": "2025-06-12"
+  },
+  {
+    "nama": "Aam Amalia",
+    "NIK": "3205055709820003",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85860223284",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Aming Alex Hidayat",
+    "NIK": "3205051204840008",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "82119538202",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Anisa",
+    "NIK": "3205057005740001",
+    "alamat": "Kp Cibunar Hilir RT 01 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85871733369",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Hodijah",
+    "NIK": "3205056212790003",
+    "alamat": "Kp Cibunar Hilir RT 19 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85794926287",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Kadir",
+    "NIK": "3205051203380002",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Tani",
+    "noHp": "82119538202",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Tati Hartati",
+    "NIK": "3205054402760001",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82219198802",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Yuliawati",
+    "NIK": "3205054207810003",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81225544251",
+    "tglMasuk": "2025-06-13"
+  },
+  {
+    "nama": "Dedi Firmansyah",
+    "NIK": "3205051103800002",
+    "alamat": "Perum Jati Putra RT 02 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "-",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Dedi Sukmawan",
+    "NIK": "A060010",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "-",
+    "noHp": "-",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Ejen",
+    "NIK": "3205051803640001",
+    "alamat": "Perum Jati Putra Blok O No.02 RT 02 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "85235851006",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Raden Rijanto",
+    "NIK": "3205051305710001",
+    "alamat": "Perum Jati Putra Blok V No.07 RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Karyawan Swasta",
+    "noHp": "8112125455",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Slamet",
+    "NIK": "3205052704560002",
+    "alamat": "Perum Jati Putra  RT 03 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan",
+    "noHp": "-",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Udin Nuryadin",
+    "NIK": "3205052005620002",
+    "alamat": "Perum Jati Putra Blok M No.22 RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan PNS",
+    "noHp": "82001604486",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Yayat Ruhiyat",
+    "NIK": "3205051005640002",
+    "alamat": "Perum Jati Putra Blok R No.03 RT 04 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "8987743611",
+    "tglMasuk": "2025-06-14"
+  },
+  {
+    "nama": "Andi Suherli",
+    "NIK": "3205051307700001",
+    "alamat": "Kp Cibunar Hilir RT 16 RW 04",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Berdagang",
+    "noHp": "85871507596",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Enah Nurjanah",
+    "NIK": "3507244812560002",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Irna Kustiani",
+    "NIK": "3205057010970001",
+    "alamat": "Kp Cibunar Hilir RT 15 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82130986728",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Lia",
+    "NIK": "3205052712070266",
+    "alamat": "Kp Cibunar Hilir RT 17 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81220377917",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Lilis Lisnawati",
+    "NIK": "3205055507660003",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Marni Suminar",
+    "NIK": "3205055111950001",
+    "alamat": "Kp Cibunar Hilir RT 15 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89639629029",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Mimin",
+    "NIK": "3205054509600001",
+    "alamat": "Kp Cibunar Hilir RT 15 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82130986728",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Nani",
+    "NIK": "3205054909580001",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89699375415",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Nurhayati",
+    "NIK": "3205056001800004",
+    "alamat": "Kp Cibunar Hilir RT 16 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85603375495",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Onah",
+    "NIK": "3205055310700001",
+    "alamat": "Kp Cibunar Hilir RT 17 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Reni Rahmani",
+    "NIK": "3205055002960001",
+    "alamat": "Kp Cibunar Hilir RT 18 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85693099271",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Slamet Mulyadin",
+    "NIK": "3205051807910001",
+    "alamat": "Perum Jati Putra Blok M No.22 RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pegawai Swasta",
+    "noHp": "82120179991",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Tuti Susilawati",
+    "NIK": "3205056112720002",
+    "alamat": "Perum Jati Putra Blok M No.16-A RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89531027606",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Ujang Saepulloh",
+    "NIK": "3205050808740004",
+    "alamat": "Perum Jati Putra Blok N No.06 RT 02 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85315053035",
+    "tglMasuk": "2025-06-15"
+  },
+  {
+    "nama": "Dede Rohayati",
+    "NIK": "3205055707800003",
+    "alamat": "Kp Cibunar Hilir RT 19 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85860574381",
+    "tglMasuk": "2025-06-16"
+  },
+  {
+    "nama": "Engkus Sutisna",
+    "NIK": "A070002",
+    "alamat": "Perum Jati Putra RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pengawas",
+    "noHp": "81323929500",
+    "tglMasuk": "2025-06-16"
+  },
+  {
+    "nama": "Yati",
+    "NIK": "3205054202770008",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85281836226",
+    "tglMasuk": "2025-06-16"
+  },
+  {
+    "nama": "Yoga Oktavia Fitrana",
+    "NIK": "3205042810720003",
+    "alamat": "Perum Jati Putra Blok K No.09 RT 03 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "85222385464",
+    "tglMasuk": "2025-06-16"
+  },
+  {
+    "nama": "A Deni Junaedi",
+    "NIK": "A070001",
+    "alamat": "Perum Jati Putra  RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Konsultan",
+    "noHp": "81324811211",
+    "tglMasuk": "2025-06-17"
+  },
+  {
+    "nama": "Karyati",
+    "NIK": "3205056403910001",
+    "alamat": "Kp Cibunar Hilir RT 05 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82130986665",
+    "tglMasuk": "2025-06-17"
+  },
+  {
+    "nama": "Nanih",
+    "NIK": "3205055204640005",
+    "alamat": "Kp Cibunar Hilir RT 04 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81572114652",
+    "tglMasuk": "2025-06-17"
+  },
+  {
+    "nama": "Solihin",
+    "NIK": "3205051103570002",
+    "alamat": "Perum Jati Putra Blok G N0.01 RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Jual Beli Besi",
+    "noHp": "82319595034",
+    "tglMasuk": "2025-06-18"
+  },
+  {
+    "nama": "Euis Juariah",
+    "NIK": "3205055503630003",
+    "alamat": "Perum Jati Putra Blok U No.03 RT 04 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89630503491",
+    "tglMasuk": "2025-06-19"
+  },
+  {
+    "nama": "Asep Sudirman",
+    "NIK": "3205051711650001",
+    "alamat": "Kp Cibunar Girang RT 22 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Guru",
+    "noHp": "895340064216",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Atik Rohmayati",
+    "NIK": "3205055212790003",
+    "alamat": "Kp Cibunar Girang RT 21 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "88976414514",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Awang Karmawan",
+    "NIK": "3205050810650001",
+    "alamat": "Perum Jati Putra Blok K2 No.15 RT 03 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan",
+    "noHp": "89630624058",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Bangbang Sugianto",
+    "NIK": "3205053008610001",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "87736440132",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Beti Sulastri",
+    "NIK": "3205054707690001",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85861944470",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Cacu Samsudin",
+    "NIK": "3205051707010002",
+    "alamat": "Kp Cibunar Girang RT 22 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "89650226972",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Edi Supardi",
+    "NIK": "3205052710600001",
+    "alamat": "Perum Jati Putra Blok T No.04 RT 04 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Karyawan Swasta",
+    "noHp": "89662368899",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Elly Susilawati",
+    "NIK": "3205054411760001",
+    "alamat": "Perum Jati Putra Blok Y No.05 RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89665216452",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Entin Kartini",
+    "NIK": "3205056512670001",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Enung Sopiah",
+    "NIK": "3205055010620005",
+    "alamat": "Perum Jati Putra Blok E No.13 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82130940076",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Fahrizal Safrudin",
+    "NIK": "3205051803850001",
+    "alamat": "Perum Jati Putra Blok T No.04 RT 04 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "89662368899",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Heri Junaeri",
+    "NIK": "3205053002620001",
+    "alamat": "Perum Jati Putra Blok Q2 No.05 RT 03 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan PNS",
+    "noHp": "81223108468",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Ida Farida",
+    "NIK": "3205305908790001",
+    "alamat": "Perum Jati Putra  RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "8388835048",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Intan Wulan Purnama Sari",
+    "NIK": "3205056406870002",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85942150600",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Iyam Maryam",
+    "NIK": "3205055609620002",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89612304964",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Kulsum Maryati",
+    "NIK": "3205054101720009",
+    "alamat": "Kp Cibunar Girang RT 21 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81221815154",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Kurniawan",
+    "NIK": "3205050101870002",
+    "alamat": "Kp Cibunar Girang RT 21 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "85321228640",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Mariam",
+    "NIK": "3205056802800005",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Muhamad Hilman Sudirman",
+    "NIK": "3205050907030004",
+    "alamat": "Kp Cibunar Girang RT 22 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Mahasiswa",
+    "noHp": "82119305658",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Nana Mulyana",
+    "NIK": "3205052704740004",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "-",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Nani Rosidah, S.Pd",
+    "NIK": "3205054306780004",
+    "alamat": "Kp Cibunar Girang RT 22 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Guru",
+    "noHp": "85224094471",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Suherman",
+    "NIK": "3205050812690004",
+    "alamat": "Perum Jati Putra RT 03 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "TNI",
+    "noHp": "85294155900",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Tika",
+    "NIK": "A050013",
+    "alamat": "Kp Cibunar Girang RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Ucu",
+    "NIK": "3205056812670004",
+    "alamat": "Kp Cibunar Girang RT 21 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "83873562804",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Udan Wijaya",
+    "NIK": "3205050605720002",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "-",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Wildan Abdul Halim Sudirman",
+    "NIK": "3205051107020009",
+    "alamat": "Kp Cibunar Girang RT 22 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Mahasiswa",
+    "noHp": "82119305216",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Wiwit",
+    "NIK": "3205055212810001",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "83167955163",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Yono Maryono",
+    "NIK": "3205052303580001",
+    "alamat": "Perum Jati Putra Blok E No.18 RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "85150837403",
+    "tglMasuk": "2025-06-20"
+  },
+  {
+    "nama": "Inna Masliah",
+    "NIK": "A070006",
+    "alamat": "Perum Jati Putra Blok J No.05 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Honorer",
+    "noHp": "85223469175",
+    "tglMasuk": "2025-06-24"
+  },
+  {
+    "nama": "Anton Rahmat",
+    "NIK": "A070007",
+    "alamat": "Perum Jati Putra Blok J No.05 RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "81214767875",
+    "tglMasuk": "2025-06-25"
+  },
+  {
+    "nama": "Harry Aries Siswanto",
+    "NIK": "3205052111680003",
+    "alamat": "Perum Jati Putra Blok G No.09 RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Tidak Bekerja",
+    "noHp": "81290884887",
+    "tglMasuk": "2025-06-25"
+  },
+  {
+    "nama": "Neneng Rosi",
+    "NIK": "3201035610910006",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "83122506706",
+    "tglMasuk": "2025-06-26"
+  },
+  {
+    "nama": "Wini Mandela",
+    "NIK": "3205056205860005",
+    "alamat": "Kp Cibunar Hilir RT 04 RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Pegawai Swasta",
+    "noHp": "85321932463",
+    "tglMasuk": "2025-06-26"
+  },
+  {
+    "nama": "Eman Sualeman",
+    "NIK": "A050020",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "-",
+    "tglMasuk": "2025-06-27"
+  },
+  {
+    "nama": "Eni Sumarni",
+    "NIK": "3205054605640002",
+    "alamat": "Kp Cibunar Hilir RT 05 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-06-30"
+  },
+  {
+    "nama": "Fitrianie",
+    "NIK": "3205054402940005",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85281836226",
+    "tglMasuk": "2025-07-01"
+  },
+  {
+    "nama": "Eni Maryani",
+    "NIK": "3205055201610001",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Enung",
+    "NIK": "3205054812690004",
+    "alamat": "Kp Cibunar Hilir RT 16 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85801124268",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Iin Insyaroh",
+    "NIK": "3205054707900001",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Jaja",
+    "NIK": "3205055002720003",
+    "alamat": "Kp Cibunar Hilir RT 17 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "83813949075",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Mila",
+    "NIK": "3205054904000002",
+    "alamat": "Kp Cibunar Hilir RT 17 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82143679669",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Tijah",
+    "NIK": "3205055502660001",
+    "alamat": "Kp Cibunar Hilir RT 18 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82129544730",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Wati Rohmawati",
+    "NIK": "3273077003870001",
+    "alamat": "Kp Cibunar Hilir RT 16 RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82319997657",
+    "tglMasuk": "2025-07-03"
+  },
+  {
+    "nama": "Aas Faridah",
+    "NIK": "A060027",
+    "alamat": "Perum Jati Putra Blok O No.01 RT 02 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Aat Solihat",
+    "NIK": "A060029",
+    "alamat": "Perum Jati Putra Blok Z No.01 RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Asih Anggraeni",
+    "NIK": "3205056107720001",
+    "alamat": "Kp Cibunar Hilir RT 01 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81513569322",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Dewi Hendrawati",
+    "NIK": "A060033",
+    "alamat": "Perum Jati Putra Blok P No.05 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Ika Rostika",
+    "NIK": "A060031",
+    "alamat": "Perum Jati Putra Blok I No.07 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Lina Sulastina",
+    "NIK": "3205054406660004",
+    "alamat": "Perum Jati Putra RT 04 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85863375886",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Mia Sekarahmatia",
+    "NIK": "A060026",
+    "alamat": "Perum Jati Putra Blok I No.06 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89688214337",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Rini Susrianti",
+    "NIK": "A060036",
+    "alamat": "Perum Jati Putra Blok K2 No.16 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Sri Rahayu",
+    "NIK": "A060028",
+    "alamat": "Perum Jati Putra Blok K2 No.13 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Srie Sudewi",
+    "NIK": "A060030",
+    "alamat": "Perum Jati Putra  Blok L No.05 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Tatang Rohendi",
+    "NIK": "3205051106620001",
+    "alamat": "Perum Jati Putra Blok E No.02 RT 04 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan",
+    "noHp": "82128055836",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Teni Gusniar",
+    "NIK": "A060034",
+    "alamat": "Perum Jati Putra Blok K2 No.10 RT 03 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Tini Supartini",
+    "NIK": "3205055409870005",
+    "alamat": "Perum Jati Putra RT 02 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Wulan Fitria",
+    "NIK": "3205054206870001",
+    "alamat": "Perum Jati Putra Blok E No.02 RT 04 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82117451819",
+    "tglMasuk": "2025-07-04"
+  },
+  {
+    "nama": "Yani Suryani",
+    "NIK": "3205055611650002",
+    "alamat": "Perum Jati Putra Blok V No.16 RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "8977871425",
+    "tglMasuk": "2025-07-07"
+  },
+  {
+    "nama": "Pina Anggraeni",
+    "NIK": "3205056009930001",
+    "alamat": "Kp Cibunar Hilir RT 02 RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "-",
+    "tglMasuk": "2025-07-11"
+  },
+  {
+    "nama": "Ade Kamilah",
+    "NIK": "3205056008720007",
+    "alamat": "Perum Jati Putra Blok J No. 01 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82120265500",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Devi Despliasi",
+    "NIK": "3205055312650003",
+    "alamat": "Perum Jati Putra Blok D1-01 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81321829803",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Euis Juaningsih",
+    "NIK": "A070012",
+    "alamat": "Perum Jati Putra Blok J No.09 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82127042877",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Fani Nur Oktaviani",
+    "NIK": "3205056410970012",
+    "alamat": "Perum Jati Putra Blok J No.01 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "8990098925",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Nur Aini Rochmawati",
+    "NIK": "3273145308810001",
+    "alamat": "Perum Jati Putra Blok F-8 RT 05 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "895404962312",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Yeni Halimah",
+    "NIK": "3205055506830009",
+    "alamat": "Perum Jati Putra Blok F-5 RT 05 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82315616188",
+    "tglMasuk": "2025-07-12"
+  },
+  {
+    "nama": "Deni Ramdani",
+    "NIK": "3205012512670006",
+    "alamat": "Perum Jati Putra Blok F-10 RT 03 RW 07",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "81323230456",
+    "tglMasuk": "2025-07-19"
+  },
+  {
+    "nama": "Oneng",
+    "NIK": "3205054107730006",
+    "alamat": "Kp Cibunar Hilir RT 06 RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "81324695330",
+    "tglMasuk": "2025-07-19"
+  },
+  {
+    "nama": "Sopandi",
+    "NIK": "3205051506680004",
+    "alamat": "Kp Cibunar Hilir RT 06 RW 02",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "81513569322",
+    "tglMasuk": "2025-07-19"
+  },
+  {
+    "nama": "Tatang Sontani",
+    "NIK": "3205050107760017",
+    "alamat": "Kp Cibunar Hilir RT 10 RW 02",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "85817424641",
+    "tglMasuk": "2025-07-19"
+  },
+  {
+    "nama": "Didit Andita",
+    "NIK": "3205052609900001",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pegawai Swasta",
+    "noHp": "82128825723",
+    "tglMasuk": "2025-07-22"
+  },
+  {
+    "nama": "Nunung",
+    "NIK": "3205055405600002",
+    "alamat": "Perum Jati Putra RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82127442576",
+    "tglMasuk": "2025-07-24"
+  },
+  {
+    "nama": "Yuyun Hermawan",
+    "NIK": "3205050504690002",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "82315902966",
+    "tglMasuk": "2025-07-27"
+  },
+  {
+    "nama": "Suryani",
+    "NIK": "3205056407760003",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82319594755",
+    "tglMasuk": "2025-08-02"
+  },
+  {
+    "nama": "Cucu Cahayati",
+    "NIK": "3205054411520001",
+    "alamat": "Kp Cibunar Hilir RT 08 RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Pegawai Swasta",
+    "noHp": "85320916767",
+    "tglMasuk": "2025-08-04"
+  },
+  {
+    "nama": "Enok Mae",
+    "NIK": "3205054309760001",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "882002506836",
+    "tglMasuk": "2025-08-04"
+  },
+  {
+    "nama": "Julia Supartini",
+    "NIK": "A030025",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "89509019952",
+    "tglMasuk": "2025-08-04"
+  },
+  {
+    "nama": "Nurhayati",
+    "NIK": "3205056512740001",
+    "alamat": "Perum Jati Putra Blok M No.23 RT 01 RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "895622491812",
+    "tglMasuk": "2025-08-06"
+  },
+  {
+    "nama": "Pepen Sopandi",
+    "NIK": "3205051508620005",
+    "alamat": "Perum Jati Putra  RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "8988297688",
+    "tglMasuk": "2025-08-06"
+  },
+  {
+    "nama": "Yadi Supriadi",
+    "NIK": "3205050606780007",
+    "alamat": "Perum Jati Putra Blok K No.13 RT 02 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "8981820546",
+    "tglMasuk": "2025-08-06"
+  },
+  {
+    "nama": "Juliyadi Suparno",
+    "NIK": "A060001",
+    "alamat": "Perum Jati Putra  RT 01 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "82120900559",
+    "tglMasuk": "2025-08-07"
+  },
+  {
+    "nama": "Yayan Sopyan",
+    "NIK": "3205051712640001",
+    "alamat": "Perum Jati Putra RT 01  RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Pensiunan",
+    "noHp": "81229143808",
+    "tglMasuk": "2025-08-08"
+  },
+  {
+    "nama": "Ayat Sutaryat",
+    "NIK": "3205051312680001",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "81317704365",
+    "tglMasuk": "2025-08-09"
+  },
+  {
+    "nama": "Angga Nugraha",
+    "NIK": "3205052504960002",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Freelance",
+    "noHp": "81389042140",
+    "tglMasuk": "2025-08-15"
+  },
+  {
+    "nama": "Riana Abdul Azis",
+    "NIK": "A060002",
+    "alamat": "Bumi Cibunar Asri  RT 15 RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Wiraswasta",
+    "noHp": "85220930955",
+    "tglMasuk": "2025-08-15"
+  },
+  {
+    "nama": "Ai Cucu Sutarsih",
+    "NIK": "3205136706680002",
+    "alamat": "Perum Jati Putra Blok C2-05 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "882001000508",
+    "tglMasuk": "2025-10-05"
+  },
+  {
+    "nama": "Fany Munggarani",
+    "NIK": "3205135608910003",
+    "alamat": "Perum Jati Putra Blok E-18 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "82118750504",
+    "tglMasuk": "2025-10-05"
+  },
+  {
+    "nama": "Il. Diana Maria",
+    "NIK": "3205055509590001",
+    "alamat": "Perum Jati Putra Blok J-08 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "",
+    "tglMasuk": "2025-10-05"
+  },
+  {
+    "nama": "Ratna Siti Maemunah",
+    "NIK": "3205056812740002",
+    "alamat": "Perum Jati Putra Blok C-08 RT 03 RW 07",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "85320906208",
+    "tglMasuk": "2025-10-05"
+  },
+  {
+    "nama": "Yuyun Yunarsih",
+    "NIK": "A030026",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-10-22"
+  },
+  {
+    "nama": "Aah Rohayati",
+    "NIK": "A030035",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Asep Sopian",
+    "NIK": "A030038",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Atik",
+    "NIK": "A030037",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Endang",
+    "NIK": "A030032",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Ida Susilawati",
+    "NIK": "A030031",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "M. Adis",
+    "NIK": "A030034",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Neulis Yuniarti",
+    "NIK": "A030033",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Rosheni",
+    "NIK": "A030036",
+    "alamat": "Kp Cibunar Hilir RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Selvian Salvalas",
+    "NIK": "A030027",
+    "alamat": "Kp Cibunar Hilir RT 11 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-04"
+  },
+  {
+    "nama": "Ajat Rahmat",
+    "NIK": "A020009",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Ardiansyah",
+    "NIK": "A060046",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Entin Supriatin",
+    "NIK": "A020010",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Iyus",
+    "NIK": "A010018",
+    "alamat": "Kp Cibunar Hilir RW 01",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Buruh Harian Lepas",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Jani Abdullah",
+    "NIK": "A060044",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Jono Sujana",
+    "NIK": "A060042",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Komang Ayu M",
+    "NIK": "A060043",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Mariah",
+    "NIK": "A020012",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Neni",
+    "NIK": "A010016",
+    "alamat": "Kp Cibunar Hilir RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Susminar",
+    "NIK": "A020013",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Wiwi Susilawati",
+    "NIK": "A020011",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Yanti Novianti",
+    "NIK": "A060045",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Yuyun Rahayu",
+    "NIK": "A010017",
+    "alamat": "Kp Cibunar Hilir RW 01",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "Ibu Rumah Tangga",
+    "noHp": "",
+    "tglMasuk": "2025-11-08"
+  },
+  {
+    "nama": "Komala",
+    "NIK": "A060047",
+    "alamat": "RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-16"
+  },
+  {
+    "nama": "Haryani",
+    "NIK": "A040016",
+    "alamat": "RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-11-18"
+  },
+  {
+    "nama": "Ade Tarsiri",
+    "NIK": "A030030",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-02"
+  },
+  {
+    "nama": "Nining Ratnaningsih",
+    "NIK": "A030029",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-02"
+  },
+  {
+    "nama": "Yanti Sunarti",
+    "NIK": "A030028",
+    "alamat": "Kp Cibunar Hilir RW 03",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-02"
+  },
+  {
+    "nama": "Aah",
+    "NIK": "A040020",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Aay Hayati",
+    "NIK": "A040023",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Ati",
+    "NIK": "A040017",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Enih Rohaeni",
+    "NIK": "A040021",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Eti Rohaeti",
+    "NIK": "A040022",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Faisal L Tobing",
+    "NIK": "A060049",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Markonah",
+    "NIK": "A040019",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Nina Anggraeni",
+    "NIK": "A040018",
+    "alamat": "Kp Cibunar Hilir RW 04",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Rahmat Hidayat",
+    "NIK": "A060050",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Suhasanah",
+    "NIK": "A060048",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "PEREMPUAN",
+    "pekerjaan": "",
+    "noHp": "",
+    "tglMasuk": "2025-12-30"
+  },
+  {
+    "nama": "Apit nuryusup",
+    "NIK": "A030039",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "H. Iwan setiawan",
+    "NIK": "A020014",
+    "alamat": "Kp Cibunar Hilir RW 02",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Hendi kurniadi",
+    "NIK": "A060051",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Hendra suhendra",
+    "NIK": "A030040",
+    "alamat": "Kp Cibunar Hilir RT 12 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Iman sukirman",
+    "NIK": "A050022",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Kepala Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Irpan Sugiarno",
+    "NIK": "A030041",
+    "alamat": "Kp Cibunar Hilir RT 14 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Moch Adam Septian",
+    "NIK": "A060052",
+    "alamat": "Perum Jati Putra RW 06",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Riski bayu",
+    "NIK": "A030042",
+    "alamat": "Kp Cibunar Hilir RT 13 RW 03",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  },
+  {
+    "nama": "Udin Syamsudin",
+    "NIK": "A050023",
+    "alamat": "Kp Cibunar Girang RT 20 RW 05",
+    "jenisKelamin": "LAKI_LAKI",
+    "pekerjaan": "Perangkat Desa",
+    "noHp": "",
+    "tglMasuk": ""
+  }
+]
