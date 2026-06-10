@@ -131,18 +131,21 @@ export default function UsersPage() {
   const [showResetPassword, setShowResetPassword] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
-  const loadUsers = useCallback(async function loadUsers() {
-    setLoading(true)
-    try {
-      const result = await getUserList(search || undefined, page, 10)
-      setUsers(result.users)
-      setTotalPages(result.totalPages)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }, [page, search])
+  const loadUsers = useCallback(
+    async function loadUsers() {
+      setLoading(true)
+      try {
+        const result = await getUserList(search || undefined, page, 10)
+        setUsers(result.users)
+        setTotalPages(result.totalPages)
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setLoading(false)
+      }
+    },
+    [page, search],
+  )
 
   async function loadAnggota(includeId?: string) {
     try {
@@ -154,7 +157,9 @@ export default function UsersPage() {
   }
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { loadUsers() }, [loadUsers])
+  useEffect(() => {
+    loadUsers()
+  }, [loadUsers])
 
   useEffect(() => {
     getAllowedRoles()
