@@ -11,7 +11,7 @@ import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { Prisma } from "@prisma/client"
 import { generateNoAnggota } from "@/lib/utils/anggota"
-import { deleteOrphanFiles } from "@/lib/utils/file"
+import { deleteOrphanFiles, renameAnggotaFile } from "@/lib/utils/file"
 import { anggotaFilter, anggotaTanggalFilter } from "@/lib/where"
 import { catatLog } from "@/lib/audit"
 import { generateTagihanAnggotaBaru } from "@/actions/simpanan"
@@ -199,6 +199,16 @@ export async function createAnggota(input: z.infer<typeof anggotaSchema>) {
     },
     { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
   )
+
+  const fotoUrl = (await renameAnggotaFile(parsed.foto, created.noAnggota)) ?? parsed.foto
+  const ktpUrl = (await renameAnggotaFile(parsed.ktp, created.noAnggota)) ?? parsed.ktp
+
+  if (fotoUrl !== parsed.foto || ktpUrl !== parsed.ktp) {
+    await prisma.anggota.update({
+      where: { id: created.id },
+      data: { foto: fotoUrl, ktp: ktpUrl },
+    })
+  }
 
   if (parsed.buatUser) {
     if (!parsed.email || !parsed.password) {

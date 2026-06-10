@@ -75,8 +75,12 @@ export async function POST(req: Request) {
   }
 
   const ext = MIME_TO_EXT[file.type] ?? "jpg"
-  const filename = `${uploadType}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`
-  const subDir = uploadType === "logo" ? "logo" : "anggota"
+  const noAnggota = formData.get("noAnggota") as string | null
+  const filename = noAnggota
+    ? `${uploadType}-${noAnggota}.${ext}`
+    : `${uploadType}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`
+  const subDir =
+    uploadType === "logo" ? "logo" : uploadType === "foto" ? "anggota/foto" : uploadType === "ktp" ? "anggota/ktp" : "anggota"
   const uploadDir = path.join(process.cwd(), "public", "uploads", subDir)
 
   await mkdir(uploadDir, { recursive: true })

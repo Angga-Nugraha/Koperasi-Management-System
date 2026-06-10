@@ -78,6 +78,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("type", type)
+    formData.append("noAnggota", anggota.noAnggota)
     const res = await fetch("/api/upload", { method: "POST", body: formData })
     if (!res.ok) {
       const err = await res.json()
