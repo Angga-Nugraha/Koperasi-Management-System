@@ -74,6 +74,13 @@ const {
         token.anggotaId = user.anggotaId as string | undefined
         token.id = user.id as string
       }
+      if (token.id) {
+        const exists = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { id: true, isActive: true },
+        })
+        if (!exists || !exists.isActive) return null
+      }
       return token
     },
     async session({ session, token }) {
