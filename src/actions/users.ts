@@ -39,29 +39,41 @@ async function assertCanManageRole(targetRole: string) {
   }
 }
 
-export async function getUserList(q?: string) {
+export async function getUserList(q?: string, page = 1, pageSize = 10) {
   const session = await auth()
   if (!session?.user || !["ADMIN", "PENGURUS", "BENDAHARA"].includes(session.user.role as string)) {
     throw new Error("Unauthorized")
   }
 
-  const users = await prisma.user.findMany({
-    where: q ? { email: { contains: q } } : undefined,
-    include: { anggota: { select: { id: true, nama: true, noAnggota: true } } },
-    orderBy: { createdAt: "desc" },
-  })
+  const where = q ? { email: { contains: q } } : undefined
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      include: { anggota: { select: { id: true, nama: true, noAnggota: true } } },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.user.count({ where }),
+  ])
 
-  return users.map((u) => ({
-    id: u.id,
-    email: u.email,
-    role: u.role,
-    isActive: u.isActive,
-    anggotaId: u.anggotaId,
-    anggota: u.anggota
-      ? { id: u.anggota.id, nama: u.anggota.nama, noAnggota: u.anggota.noAnggota }
-      : null,
-    createdAt: u.createdAt.toISOString(),
-  }))
+  return {
+    users: users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      role: u.role,
+      isActive: u.isActive,
+      anggotaId: u.anggotaId,
+      anggota: u.anggota
+        ? { id: u.anggota.id, nama: u.anggota.nama, noAnggota: u.anggota.noAnggota }
+        : null,
+      createdAt: u.createdAt.toISOString(),
+    })),
+    total,
+    page,
+    pageSize,
+    totalPages: Math.ceil(total / pageSize),
+  }
 }
 
 export async function getAnggotaTanpaUser(includeId?: string) {

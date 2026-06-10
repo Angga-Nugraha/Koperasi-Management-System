@@ -53,7 +53,7 @@ import {
   getAnggotaTanpaUser,
   getAllowedRoles,
 } from "@/actions/users"
-import { Search, Plus, Shield, Pencil, KeyRound, Eye, EyeOff } from "lucide-react"
+import { Search, Plus, Shield, Pencil, KeyRound, Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react"
 
 const ROLE_LABEL: Record<string, string> = {
   ADMIN: "Admin",
@@ -71,7 +71,7 @@ const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline" | "destru
   ANGGOTA: "secondary",
 }
 
-type UserItem = Awaited<ReturnType<typeof getUserList>>[number]
+type UserItem = Awaited<ReturnType<typeof getUserList>>["users"][number]
 type AnggotaItem = Awaited<ReturnType<typeof getAnggotaTanpaUser>>[number]
 
 export default function UsersPage() {
@@ -79,6 +79,8 @@ export default function UsersPage() {
   const [anggotaList, setAnggotaList] = useState<AnggotaItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [availableRoles, setAvailableRoles] = useState<string[]>([])
 
   const [confirm, setConfirm] = useState<{
@@ -122,8 +124,9 @@ export default function UsersPage() {
   async function loadUsers() {
     setLoading(true)
     try {
-      const result = await getUserList(search || undefined)
-      setUsers(result)
+      const result = await getUserList(search || undefined, page, 10)
+      setUsers(result.users)
+      setTotalPages(result.totalPages)
     } catch (e) {
       console.error(e)
     } finally {
@@ -141,12 +144,15 @@ export default function UsersPage() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1)
+  }, [search])
+
+  useEffect(() => {
     loadUsers()
     getAllowedRoles()
       .then(setAvailableRoles)
       .catch(() => {})
-  }, [search])
+  }, [search, page])
 
   const defaultRole = availableRoles[0] ?? ""
 
@@ -354,6 +360,34 @@ export default function UsersPage() {
           </div>
         </CardContent>
       </Card>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>
+            Halaman {page} dari {totalPages}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Sebelumnya
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              Selanjutnya
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
