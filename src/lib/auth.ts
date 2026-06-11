@@ -34,6 +34,30 @@ const {
         const email = credentials.email as string
         const password = credentials.password as string
 
+        if (process.env.TURNSTILE_SECRET_KEY) {
+          const turnstileToken = credentials.turnstileToken as string
+          if (!turnstileToken) {
+            await new Promise((r) => setTimeout(r, 200 + Math.random() * 300))
+            return null
+          }
+          const res = await fetch(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                secret: process.env.TURNSTILE_SECRET_KEY,
+                response: turnstileToken,
+              }),
+            },
+          )
+          const data = await res.json()
+          if (!data.success) {
+            await new Promise((r) => setTimeout(r, 200 + Math.random() * 300))
+            return null
+          }
+        }
+
         const rlKey = `login:${email}`
         const rl = await rateLimit(rlKey, 5, 60_000)
         if (!rl.success) {

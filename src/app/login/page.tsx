@@ -8,6 +8,7 @@
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
+import Turnstile from "@marsidev/react-turnstile"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,6 +22,8 @@ export default function LoginPage() {
   const [namaKoperasi, setNamaKoperasi] = useState("Simko")
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
   const [rememberMe, setRememberMe] = useState(() => {
     if (typeof window === "undefined") return false
     try {
@@ -67,6 +70,7 @@ export default function LoginPage() {
     const result = await signIn("credentials", {
       email,
       password,
+      ...(siteKey ? { turnstileToken } : {}),
       redirect: false,
     })
 
@@ -142,7 +146,15 @@ export default function LoginPage() {
               />
               Ingat Saya
             </label>
-            <Button type="submit" className="w-full" disabled={loading}>
+            {siteKey && (
+              <Turnstile
+                siteKey={siteKey}
+                onSuccess={setTurnstileToken}
+                onError={() => setError("Verifikasi captcha gagal. Muat ulang halaman.")}
+                options={{ theme: "light" }}
+              />
+            )}
+            <Button type="submit" className="w-full" disabled={loading || (!!siteKey && !turnstileToken)}>
               {loading ? "Memproses..." : "Masuk"}
             </Button>
           </form>
