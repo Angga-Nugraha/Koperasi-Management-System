@@ -23,7 +23,8 @@ export default function LoginPage() {
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  const isProduction = process.env.NEXT_PUBLIC_APP_ENV === "production"
+  const siteKey = isProduction ? process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY : null
   const [rememberMe, setRememberMe] = useState(() => {
     if (typeof window === "undefined") return false
     try {

@@ -218,41 +218,6 @@ export function AnggotaDetailClient({ anggota }: Props) {
             <CreditCard className="mr-2 h-4 w-4" />
             Kartu
           </Button>
-
-          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Hapus
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Hapus Anggota</DialogTitle>
-                <DialogDescription>
-                  Yakin ingin menghapus {anggota.nama}? Jika memiliki data transaksi, status akan
-                  diubah menjadi KELUAR.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-                  Batal
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() =>
-                    setConfirm({
-                      title: "Hapus Anggota",
-                      desc: `Yakin ingin menghapus ${anggota.nama}? Tindakan ini tidak dapat dikembalikan.`,
-                      onConfirm: handleDelete,
-                    })
-                  }
-                >
-                  Hapus
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
 
@@ -434,6 +399,41 @@ export function AnggotaDetailClient({ anggota }: Props) {
               )}
             </CardContent>
           </Card>
+
+          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="destructive" className="mt-6">
+                <Trash2 className="mr-2 h-4 w-4" />
+                Hapus Anggota
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Hapus Anggota</DialogTitle>
+                <DialogDescription>
+                  Yakin ingin menghapus {anggota.nama}? Jika memiliki data transaksi, status akan
+                  diubah menjadi KELUAR.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                  Batal
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() =>
+                    setConfirm({
+                      title: "Hapus Anggota",
+                      desc: `Yakin ingin menghapus ${anggota.nama}? Tindakan ini tidak dapat dikembalikan.`,
+                      onConfirm: handleDelete,
+                    })
+                  }
+                >
+                  Hapus
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="simpanan">

@@ -35,7 +35,7 @@ const {
         const email = credentials.email as string
         const password = credentials.password as string
 
-        if (process.env.TURNSTILE_SECRET_KEY) {
+        if (process.env.NEXT_PUBLIC_APP_ENV === "production" && process.env.TURNSTILE_SECRET_KEY) {
           const turnstileToken = credentials.turnstileToken as string
           if (!turnstileToken) {
             await new Promise((r) => setTimeout(r, 200 + Math.random() * 300))

@@ -58,7 +58,7 @@ async function midtransFetch(url: string, options: RequestInit = {}) {
 function getMidtransConfig() {
   const serverKey = process.env.MIDTRANS_SERVER_KEY ?? ""
   const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? ""
-  const isProd = process.env.MIDTRANS_IS_PRODUCTION === "true"
+  const isProd = process.env.MIDTRANS_IS_PRODUCTION === "true" || process.env.NEXT_PUBLIC_APP_ENV === "production"
 
   const snapUrl = isProd
     ? "https://app.midtrans.com/snap/v1"
