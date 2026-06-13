@@ -53,6 +53,7 @@ import {
   getAnggotaTanpaUser,
   getAllowedRoles,
 } from "@/actions/users"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import {
   Search,
   Plus,
@@ -61,8 +62,6 @@ import {
   KeyRound,
   Eye,
   EyeOff,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react"
 
 const ROLE_LABEL: Record<string, string> = {
@@ -90,7 +89,9 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
+  const pageSize = 10
   const [availableRoles, setAvailableRoles] = useState<string[]>([])
 
   const [confirm, setConfirm] = useState<{
@@ -135,8 +136,9 @@ export default function UsersPage() {
     async function loadUsers() {
       setLoading(true)
       try {
-        const result = await getUserList(search || undefined, page, 10)
+        const result = await getUserList(search || undefined, page, pageSize)
         setUsers(result.users)
+        setTotal(result.total)
         setTotalPages(result.totalPages)
       } catch (e) {
         console.error(e)
@@ -377,33 +379,13 @@ export default function UsersPage() {
         </CardContent>
       </Card>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            Halaman {page} dari {totalPages}
-          </span>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Sebelumnya
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              Selanjutnya
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+      <DataTablePagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        pageSize={pageSize}
+        onPageChange={setPage}
+      />
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
