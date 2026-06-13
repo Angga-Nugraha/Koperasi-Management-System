@@ -3,6 +3,7 @@
  * @description Route Handler API untuk endpoint /api/export/jurnal-excel/route.ts
  */
 
+import { auth } from "@/lib/auth"
 import { exportJurnalExcel } from "@/actions/export"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -10,6 +11,10 @@ const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth()
+    if (!session?.user || !["ADMIN", "PENGURUS", "BENDAHARA"].includes(session.user.role as string)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const { searchParams } = new URL(request.url)
     const dari = searchParams.get("dari") ?? undefined
     const sampai = searchParams.get("sampai") ?? undefined

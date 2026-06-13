@@ -7,6 +7,7 @@
 
 import { useSession } from "next-auth/react"
 import { useState } from "react"
+import { PageHeader } from "@/components/ui/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -58,10 +59,7 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Profil Saya</h1>
-        <p className="text-sm text-muted-foreground">Kelola informasi akun Anda</p>
-      </div>
+      <PageHeader title="Profil Saya" description="Kelola informasi akun Anda" />
 
       <Card>
         <CardHeader>

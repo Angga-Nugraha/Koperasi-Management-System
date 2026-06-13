@@ -27,7 +27,7 @@ vi.mock("@/lib/auth", () => ({
 vi.mock("@/lib/audit", () => ({ catatLog: vi.fn() }))
 vi.mock("@/lib/notifikasi", () => ({ notifyAdmins: vi.fn(), notifyMember: vi.fn() }))
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
-vi.mock("@/lib/utils/file", () => ({ deleteOrphanFiles: vi.fn() }))
+vi.mock("@/lib/utils/file", () => ({ deleteOrphanFiles: vi.fn(), renameAnggotaFile: vi.fn() }))
 vi.mock("@/lib/utils/anggota", () => ({
   generateNoAnggota: vi.fn().mockResolvedValue("001"),
 }))

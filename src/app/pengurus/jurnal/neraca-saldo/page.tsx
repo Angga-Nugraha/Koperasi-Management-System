@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getNeracaSaldo } from "@/actions/jurnal"
 import { NeracaSaldoClient } from "@/components/jurnal/neraca-saldo-client"
 
@@ -17,7 +18,7 @@ export default async function NeracaSaldoPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Neraca Saldo</h1>
+        <PageHeader title="Neraca Saldo" />
         <div className="flex items-center gap-2">
           <a
             href={`/api/export/laporan?type=neraca-saldo${sampai ? `&sampai=${sampai}` : ""}`}

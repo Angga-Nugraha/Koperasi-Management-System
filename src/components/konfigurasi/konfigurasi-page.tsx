@@ -65,6 +65,7 @@ import {
   updateJenisSimpanan,
   toggleJenisSimpananActive,
 } from "@/actions/konfigurasi"
+import { formatRupiah } from "@/lib/format"
 import { Save, Plus, Pencil, Trash2, Upload, X, Lock, Unlock } from "lucide-react"
 
 type KonfigItem = Awaited<ReturnType<typeof getKonfigList>>[number]
@@ -826,7 +827,7 @@ export function KonfigurasiPage({
                       <TableRow key={js.id}>
                         <TableCell className="font-mono">{js.kode}</TableCell>
                         <TableCell>{js.nama}</TableCell>
-                        <TableCell>Rp{js.minimalSetoran.toLocaleString("id-ID")}</TableCell>
+                        <TableCell>{formatRupiah(js.minimalSetoran)}</TableCell>
                         <TableCell>
                           <div className="flex flex-col items-center gap-1">
                             <Switch

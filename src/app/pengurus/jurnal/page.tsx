@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getJurnalList } from "@/actions/jurnal"
 import { JurnalTable } from "@/components/jurnal/jurnal-table"
 
@@ -23,12 +24,7 @@ export default async function JurnalPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Jurnal Umum</h1>
-          <p className="text-sm text-muted-foreground">
-            Daftar seluruh jurnal dan catatan transaksi
-          </p>
-        </div>
+        <PageHeader title="Jurnal Umum" description="Daftar seluruh jurnal dan catatan transaksi" />
       </div>
 
       <div className="flex items-center justify-between">

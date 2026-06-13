@@ -4,6 +4,7 @@
  */
 
 import { notFound } from "next/navigation"
+import { PageHeader } from "@/components/ui/page-header"
 import { getNeraca, getLabaRugi, getArusKas, getNeracaSaldo, getBukuBesar } from "@/actions/jurnal"
 import { getAuditLogs } from "@/actions/audit-log"
 import { getAkunList } from "@/actions/konfigurasi"
@@ -60,9 +61,7 @@ export default async function LaporanJenisPage({ params, searchParams }: Props) 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{LABEL[jenis] ?? jenis}</h1>
-        </div>
+        <PageHeader title={LABEL[jenis] ?? jenis} />
         <a
           href={exportUrl}
           target="_blank"

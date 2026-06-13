@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 
@@ -145,10 +145,10 @@ export function MutasiTable({ data, total, page, totalPages, pageSize = 20, angg
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      Rp {t.nominal.toLocaleString("id-ID")}
+                      {formatRupiah(t.nominal)}
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      Rp {t.saldoSetelah.toLocaleString("id-ID")}
+                      {formatRupiah(t.saldoSetelah)}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {t.keterangan ?? "-"}

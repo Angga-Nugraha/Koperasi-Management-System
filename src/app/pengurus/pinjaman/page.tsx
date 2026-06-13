@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getPinjamanList } from "@/actions/pinjaman"
 import { PinjamanTable } from "@/components/pinjaman/pinjaman-table"
 
@@ -23,10 +24,7 @@ export default async function PinjamanPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Pinjaman</h1>
-        <p className="text-sm text-muted-foreground">Kelola pinjaman anggota koperasi</p>
-      </div>
+      <PageHeader title="Pinjaman" description="Kelola pinjaman anggota koperasi" />
       <PinjamanTable
         data={result.data}
         total={result.total}

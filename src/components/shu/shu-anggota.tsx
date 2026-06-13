@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { getSHUAnggota } from "@/actions/shu"
+import { formatRupiah } from "@/lib/format"
 import { CheckCircle2, Clock } from "lucide-react"
 
 type SHUAnggota = Awaited<ReturnType<typeof getSHUAnggota>>
@@ -75,15 +76,15 @@ export function SHUAnggotaCard({ data }: { data: SHUAnggota }) {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      Rp {s.jasaModal.toLocaleString("id-ID")}
+                      {formatRupiah(s.jasaModal)}
                     </TableCell>
                     <TableCell className="text-right">
-                      Rp {s.jasaUsaha.toLocaleString("id-ID")}
+                      {formatRupiah(s.jasaUsaha)}
                     </TableCell>
                     <TableCell
                       className={`text-right font-bold ${s.total >= 0 ? "text-green-600" : "text-red-600"}`}
                     >
-                      Rp {s.total.toLocaleString("id-ID")}
+                      {formatRupiah(s.total)}
                     </TableCell>
                   </TableRow>
                 ))}

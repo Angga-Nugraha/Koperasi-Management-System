@@ -20,16 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
 import {
   Select,
   SelectContent,
@@ -49,7 +40,7 @@ import { updateAnggotaStatus, deleteAnggota } from "@/actions/anggota"
 import { EditAnggotaSheet } from "./edit-anggota-sheet"
 import { KartuAnggotaCard } from "./kartu-anggota-card"
 import { ArrowLeft, Edit, Trash2, ShieldAlert, Eye, CreditCard } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 import Link from "next/link"
 
@@ -112,11 +103,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
   const [ktpPreviewOpen, setKtpPreviewOpen] = useState(false)
   const [editSheetOpen, setEditSheetOpen] = useState(false)
   const [kartuOpen, setKartuOpen] = useState(false)
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
 
   async function handleStatusChange() {
     setConfirm(null)
@@ -232,7 +219,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
             <CardTitle className="text-sm font-medium">Total Simpanan</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp {totalSimpanan.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(totalSimpanan)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -241,7 +228,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              Rp {totalPinjamanOutstanding.toLocaleString("id-ID")}
+              {formatRupiah(totalPinjamanOutstanding)}
             </p>
           </CardContent>
         </Card>
@@ -345,7 +332,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                   <p className="text-sm text-muted-foreground">Penghasilan</p>
                   <p className="font-medium">
                     {anggota.penghasilan
-                      ? `Rp ${Number(anggota.penghasilan).toLocaleString("id-ID")}`
+                      ? formatRupiah(Number(anggota.penghasilan))
                       : "-"}
                   </p>
                 </div>
@@ -462,7 +449,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
                         <TableRow key={s.jenisKode}>
                           <TableCell className="font-medium">{s.jenisNama}</TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp {Number(s.saldo).toLocaleString("id-ID")}
+                            {formatRupiah(Number(s.saldo))}
                           </TableCell>
                         </TableRow>
                       ))
@@ -522,10 +509,10 @@ export function AnggotaDetailClient({ anggota }: Props) {
                         return (
                           <TableRow key={p.id}>
                             <TableCell className="font-mono">
-                              Rp {Number(p.jumlah).toLocaleString("id-ID")}
+                              {formatRupiah(Number(p.jumlah))}
                             </TableCell>
                             <TableCell className="font-mono">
-                              Rp {Number(p.sisaPinjaman).toLocaleString("id-ID")}
+                              {formatRupiah(Number(p.sisaPinjaman))}
                             </TableCell>
                             <TableCell>
                               <Badge className={statusStyle[p.status] ?? ""}>
@@ -563,23 +550,7 @@ export function AnggotaDetailClient({ anggota }: Props) {
         }}
       />
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
     </div>
   )
 }

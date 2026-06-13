@@ -3,6 +3,7 @@
  * @description Route Handler API untuk endpoint /api/export/laporan/route.ts
  */
 
+import { auth } from "@/lib/auth"
 import { NextRequest, NextResponse } from "next/server"
 import {
   exportBukuBesar,
@@ -39,6 +40,10 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth()
+    if (!session?.user || !["ADMIN", "PENGURUS", "BENDAHARA"].includes(session.user.role as string)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const { searchParams } = new URL(request.url)
     const type = searchParams.get("type")
     const dari = searchParams.get("dari") ?? undefined

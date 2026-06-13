@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getLabaRugi } from "@/actions/jurnal"
 import { LabaRugiClient } from "@/components/jurnal/laba-rugi-client"
 
@@ -20,7 +21,7 @@ export default async function LabaRugiPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Laba / Rugi</h1>
+        <PageHeader title="Laba / Rugi" />
         <div className="flex items-center gap-2">
           <a
             href={`/api/export/laporan?type=laba-rugi&dari=${dari}&sampai=${sampai}`}

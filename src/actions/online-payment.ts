@@ -23,6 +23,7 @@ import {
 } from "@/lib/struk"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { notifyAdmins, notifyMember } from "@/lib/notifikasi"
+import { formatRupiah } from "@/lib/format"
 import crypto from "crypto"
 
 const MIDTRANS_TIMEOUT = 15_000
@@ -211,7 +212,7 @@ export async function createOnlinePayment({
     if (!jenisSukarela) throw new Error("Jenis simpanan Sukarela tidak ditemukan")
     if (nominalInput < Number(jenisSukarela.minimalSetoran)) {
       throw new Error(
-        `Minimal setoran Sukarela adalah Rp${Number(jenisSukarela.minimalSetoran).toLocaleString("id-ID")}`,
+        `Minimal setoran Sukarela adalah ${formatRupiah(Number(jenisSukarela.minimalSetoran))}`,
       )
     }
 
@@ -597,7 +598,7 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
       {
         anggotaId: trxOnline.anggotaId,
         title: "Pembayaran Online Sukses",
-        message: `Pembayaran ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans berhasil.`,
+        message: `Pembayaran ${typeLabel} ${formatRupiah(nominalNum)} via Midtrans berhasil.`,
         type: notifType,
         relatedId: notifType === "ANGSURAN" ? notifRelatedId : undefined,
       },
@@ -607,7 +608,7 @@ export async function prosesSuksesPaymentInternal(trxOnlineId: string, paymentMe
     await notifyAdmins(
       {
         title: "Pembayaran Online Sukses",
-        message: `${trxOnline.anggota.nama} telah membayar ${typeLabel} Rp${nominalNum.toLocaleString("id-ID")} via Midtrans.`,
+        message: `${trxOnline.anggota.nama} telah membayar ${typeLabel} ${formatRupiah(nominalNum)} via Midtrans.`,
         type: notifType,
         relatedId: notifRelatedId,
       },

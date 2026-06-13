@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
@@ -275,7 +275,7 @@ export function AnggotaSimpananView({
                     </h5>
                     <p className="text-sm text-amber-700">
                       Anda menginisiasi pembayaran sebesar{" "}
-                      <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>.
+                      <span className="font-bold">{formatRupiah(p.nominal)}</span>.
                       Selesaikan sebelum kedaluwarsa dalam{" "}
                       <span className="font-bold text-amber-900">{sisaWaktu}</span>.
                     </p>
@@ -316,7 +316,7 @@ export function AnggotaSimpananView({
               <CardTitle className="text-sm font-medium">{s.jenisNama}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>
+              <p className="text-2xl font-bold">{formatRupiah(s.saldo)}</p>
             </CardContent>
           </Card>
         ))}
@@ -325,7 +325,7 @@ export function AnggotaSimpananView({
             <CardTitle className="text-sm font-medium">Total</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp {totalSaldo.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(totalSaldo)}</p>
           </CardContent>
         </Card>
       </div>
@@ -368,7 +368,7 @@ export function AnggotaSimpananView({
                         {BULAN[t.bulan]} {t.tahun}
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        Rp{t.nominal.toLocaleString("id-ID")}
+                        {formatRupiah(t.nominal)}
                       </TableCell>
                       <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
                       <TableCell className="text-xs">
@@ -438,10 +438,10 @@ export function AnggotaSimpananView({
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        Rp {t.nominal.toLocaleString("id-ID")}
+                        {formatRupiah(t.nominal)}
                       </TableCell>
                       <TableCell className="text-right font-mono">
-                        Rp {t.saldoSetelah.toLocaleString("id-ID")}
+                        {formatRupiah(t.saldoSetelah)}
                       </TableCell>
                     </TableRow>
                   ))

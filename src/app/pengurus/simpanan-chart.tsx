@@ -7,7 +7,7 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts"
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
-import { formatCompact } from "@/lib/format"
+import { formatCompact, formatRupiah } from "@/lib/format"
 
 type Props = {
   data: { bulan: string; setoran: number; penarikan: number }[]
@@ -37,7 +37,7 @@ export function SimpananChart({ data }: Props) {
           <Tooltip
             content={
               <ChartTooltipContent
-                formatter={(value: any) => `Rp ${Number(value).toLocaleString("id-ID")}`}
+                formatter={(value: any) => formatRupiah(Number(value))}
               />
             }
           />

@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getAuditLogs } from "@/actions/audit-log"
 import { AuditLogTable } from "@/components/jurnal/audit-log-table"
 
@@ -24,7 +25,7 @@ export default async function AuditLogPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Audit Log</h1>
+        <PageHeader title="Audit Log" />
       </div>
 
       <AuditLogTable

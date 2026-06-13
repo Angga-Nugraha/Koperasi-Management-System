@@ -11,6 +11,7 @@ import { auth, assertRole } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { hitungSHU, getIndikatorSHU, saveIndikatorSHU, deleteIndikatorSHU } from "@/lib/shu"
 import { catatLog } from "@/lib/audit"
+import { sanitizeCellValue } from "@/lib/excel"
 
 export async function getSHUList(status?: "DRAFT" | "FINAL") {
   const session = await auth()
@@ -259,8 +260,8 @@ export async function exportSHUExcel(tahun: number) {
   ws2.getRow(1).font = { bold: true }
   for (const a of raw.shuAnggota) {
     ws2.addRow({
-      noAnggota: a.anggota.noAnggota,
-      nama: a.anggota.nama,
+      noAnggota: sanitizeCellValue(a.anggota.noAnggota),
+      nama: sanitizeCellValue(a.anggota.nama),
       jm: Number(a.jasaModal),
       ju: Number(a.jasaUsaha),
       total: Number(a.total),

@@ -4,9 +4,11 @@
  */
 
 import { auth } from "@/lib/auth"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, Users, PiggyBank, HandCoins, Landmark, Wallet } from "lucide-react"
 import { getDashboardPengawas, getTahunList } from "@/actions/dashboard"
+import { formatRupiah } from "@/lib/format"
 import { TahunSelector } from "@/components/tahun-selector"
 
 const CARD_STYLES = [
@@ -41,13 +43,13 @@ export default async function PengawasDashboard({ searchParams }: Props) {
     },
     {
       title: "Total Simpanan",
-      value: `Rp ${data.totalSimpanan.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalSimpanan),
       sub: "Seluruh jenis simpanan",
       icon: PiggyBank,
     },
     {
       title: "Pinjaman Outstanding",
-      value: `Rp ${data.totalPinjaman.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalPinjaman),
       sub: "Belum lunas",
       icon: HandCoins,
     },
@@ -62,13 +64,13 @@ export default async function PengawasDashboard({ searchParams }: Props) {
   const bottomCards = [
     {
       title: "Saldo Kas",
-      value: `Rp ${data.saldoKas.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.saldoKas),
       sub: `Akun Kas (1.1.1) — ${tahun}`,
       icon: Wallet,
     },
     {
       title: "Piutang Pinjaman",
-      value: `Rp ${data.saldoPiutang.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.saldoPiutang),
       sub: `Akun Piutang (1.2.1) — ${tahun}`,
       icon: Landmark,
     },
@@ -77,10 +79,7 @@ export default async function PengawasDashboard({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard Pengawas</h1>
-          <p className="text-sm text-muted-foreground">Selamat datang, {session?.user?.email}</p>
-        </div>
+        <PageHeader title="Dashboard Pengawas" description={`Selamat datang, ${session?.user?.email}`} />
         <TahunSelector tahun={tahun} daftarTahun={daftarTahun} />
       </div>
 

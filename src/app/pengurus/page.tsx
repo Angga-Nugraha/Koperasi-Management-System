@@ -4,6 +4,7 @@
  */
 
 import { auth } from "@/lib/auth"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Users,
@@ -19,6 +20,7 @@ import { SimpananChart } from "./simpanan-chart"
 import { PinjamanStatusChart } from "./pinjaman-status-chart"
 import { TransaksiTrendChart } from "./transaksi-trend-chart"
 import { TransaksiTerbaru } from "./transaksi-terbaru"
+import { formatRupiah } from "@/lib/format"
 import { TahunSelector } from "@/components/tahun-selector"
 
 const CARD_STYLES = [
@@ -49,26 +51,26 @@ export default async function PengurusDashboard({ searchParams }: Props) {
     },
     {
       title: "Total Simpanan",
-      value: `Rp ${data.totalSimpanan.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalSimpanan),
       sub: "Seluruh jenis simpanan",
       icon: PiggyBank,
     },
     {
       title: "Pinjaman Outstanding",
-      value: `Rp ${data.totalPinjaman.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalPinjaman),
       sub: "Belum lunas",
       icon: HandCoins,
     },
     {
       title: "SHU Tahun Ini",
-      value: `Rp ${Math.round(data.totalSHU).toLocaleString("id-ID")}`,
+      value: formatRupiah(Math.round(data.totalSHU)),
       sub: `Tahun ${tahun}`,
       icon: DollarSign,
     },
     {
       title: "Cash Ratio",
       value: `${(data.cashRatio * 100).toFixed(1)}%`,
-      sub: `Kas+Bank Rp${data.saldoKas.toLocaleString("id-ID")} / Kewajiban Rp${data.kewajibanLancar.toLocaleString("id-ID")}`,
+      sub: `Kas+Bank ${formatRupiah(data.saldoKas)} / Kewajiban ${formatRupiah(data.kewajibanLancar)}`,
       icon: Landmark,
       status: data.cashRatioStatus as string,
     },
@@ -98,10 +100,7 @@ export default async function PengurusDashboard({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard Pengurus</h1>
-          <p className="text-sm text-muted-foreground">Selamat datang, {session?.user?.email}</p>
-        </div>
+        <PageHeader title="Dashboard Pengurus" description={`Selamat datang, ${session?.user?.email}`} />
         <TahunSelector tahun={tahun} daftarTahun={daftarTahun} />
       </div>
 

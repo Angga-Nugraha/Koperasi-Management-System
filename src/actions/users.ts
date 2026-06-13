@@ -196,6 +196,7 @@ export async function resetPassword(input: {
   const parsed = resetPasswordSchema.parse(input)
   const user = await prisma.user.findUnique({ where: { id: parsed.userId } })
   if (!user) throw new Error("User tidak ditemukan")
+  await assertCanManageRole(user.role)
 
   await prisma.user.update({
     where: { id: parsed.userId },
@@ -223,6 +224,7 @@ export async function toggleUserActive(userId: string) {
 
   const user = await prisma.user.findUnique({ where: { id: userId } })
   if (!user) throw new Error("User tidak ditemukan")
+  await assertCanManageRole(user.role)
 
   await prisma.user.update({
     where: { id: userId },

@@ -18,3 +18,13 @@ export function formatCompact(v: number): string {
   if (v >= 1_000) return `${(v / 1_000).toFixed(1).replace(/\.0$/, "")}K`
   return `${v}`
 }
+
+export function formatRupiah(v: number | string | bigint): string {
+  const n = typeof v === "string" ? Number(v) : typeof v === "bigint" ? Number(v) : v
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n)
+}
+
+export function formatRupiahShort(v: number | string | bigint): string {
+  const n = typeof v === "string" ? Number(v) : typeof v === "bigint" ? Number(v) : v
+  return n.toLocaleString("id-ID")
+}

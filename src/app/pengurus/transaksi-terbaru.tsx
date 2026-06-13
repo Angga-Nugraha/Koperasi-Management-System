@@ -3,7 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: transaksi-terbaru.
  */
 
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 import {
   Table,
@@ -59,10 +59,10 @@ export function TransaksiTerbaru({ data }: Props) {
                   {t.keterangan ?? "-"}
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm">
-                  Rp {t.totalDebit.toLocaleString("id-ID")}
+                  {formatRupiah(t.totalDebit)}
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm">
-                  Rp {t.totalKredit.toLocaleString("id-ID")}
+                  {formatRupiah(t.totalKredit)}
                 </TableCell>
               </TableRow>
             ))

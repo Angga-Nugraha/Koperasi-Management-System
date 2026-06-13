@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getAnggotaList } from "@/actions/anggota"
 import { AnggotaTable } from "@/components/anggota/anggota-table"
 
@@ -30,10 +31,7 @@ export default async function AnggotaListPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Manajemen Anggota</h1>
-        <p className="text-sm text-muted-foreground">Kelola data anggota koperasi</p>
-      </div>
+      <PageHeader title="Manajemen Anggota" description="Kelola data anggota koperasi" />
 
       <AnggotaTable
         data={result.data}

@@ -66,15 +66,36 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 })
   }
 
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return NextResponse.json({ error: "Tipe file harus JPG/PNG/WebP" }, { status: 400 })
-  }
-
   if (file.size > MAX_SIZE) {
     return NextResponse.json({ error: "File maksimal 2MB" }, { status: 400 })
   }
 
-  const ext = MIME_TO_EXT[file.type] ?? "jpg"
+  const buffer = Buffer.from(await file.arrayBuffer())
+
+  const MAGIC_BYTES: Record<string, Uint8Array[]> = {
+    "image/jpeg": [new Uint8Array([0xFF, 0xD8, 0xFF])],
+    "image/png": [new Uint8Array([0x89, 0x50, 0x4E, 0x47])],
+    "image/webp": [
+      new Uint8Array([0x52, 0x49, 0x46, 0x46]),
+      // Also check WEBP chunk at offset 8
+    ],
+  }
+
+  function isWebP(buf: Buffer): boolean {
+    if (buf[0] !== 0x52 || buf[1] !== 0x49 || buf[2] !== 0x46 || buf[3] !== 0x46) return false
+    if (buf.length < 12) return false
+    return buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50
+  }
+
+  const detectedType = Object.entries(MAGIC_BYTES).find(([type, sigs]) =>
+    type === "image/webp" ? isWebP(buffer) : sigs.some((sig) => sig.every((b, i) => buffer[i] === b)),
+  )?.[0]
+
+  if (!detectedType || !ALLOWED_TYPES.includes(detectedType)) {
+    return NextResponse.json({ error: "File tidak valid atau bukan gambar" }, { status: 400 })
+  }
+
+  const ext = MIME_TO_EXT[detectedType] ?? "jpg"
   const noAnggota = formData.get("noAnggota") as string | null
   const filename = noAnggota
     ? `${uploadType}-${noAnggota}.${ext}`
@@ -84,7 +105,6 @@ export async function POST(req: Request) {
   const uploadDir = path.join(process.cwd(), "public", "uploads", subDir)
 
   await mkdir(uploadDir, { recursive: true })
-  const buffer = Buffer.from(await file.arrayBuffer())
   await writeFile(path.join(uploadDir, filename), buffer)
 
   return NextResponse.json({ url: `/uploads/${subDir}/${filename}` })

@@ -29,6 +29,7 @@ import { catatLog } from "@/lib/audit"
 import { getKonfig, getNumber } from "@/lib/konfig"
 import { generateNoStrukAngsuran } from "@/lib/struk"
 import { notifyAdmins, notifyMember, kirimNotifikasi as kirimNotif } from "@/lib/notifikasi"
+import { formatRupiah } from "@/lib/format"
 import { round2 } from "@/lib/math"
 
 export async function getPinjamanList(params: {
@@ -138,6 +139,9 @@ export async function getPinjamanById(pinjamanId: string) {
 export async function getPinjamanAnggota(anggotaId: string) {
   const session = await auth()
   if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
 
   const raw = await prisma.pinjaman.findMany({
     where: { anggotaId },
@@ -215,7 +219,7 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
   const maxPlafon = round2(Number(totalSimpanan._sum.saldo ?? 0) * plafonMaxSaldo)
   if (parsed.jumlah > maxPlafon)
     throw new Error(
-      `Jumlah pinjaman melebihi plafon. Maksimal Rp${maxPlafon.toLocaleString("id-ID")} (${plafonMaxSaldo}× saldo simpanan)`,
+      `Jumlah pinjaman melebihi plafon. Maksimal ${formatRupiah(maxPlafon)} (${plafonMaxSaldo}× saldo simpanan)`,
     )
   if (parsed.jumlah <= 0) throw new Error("Jumlah pinjaman harus lebih dari 0")
 
@@ -250,7 +254,7 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
 
   await notifyAdmins({
     title: "Pengajuan Pinjaman Baru",
-    message: `${anggota.nama} mengajukan pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")}`,
+    message: `${anggota.nama} mengajukan pinjaman ${formatRupiah(Number(parsed.jumlah))}`,
     type: "PENGAJUAN",
     relatedId: created.id,
   })
@@ -258,7 +262,7 @@ async function _ajukanPinjaman(input: z.infer<typeof ajukanPinjamanSchema>, user
   await notifyMember({
     anggotaId: parsed.anggotaId,
     title: "Pinjaman Diajukan",
-    message: `Pinjaman Rp${Number(parsed.jumlah).toLocaleString("id-ID")} berhasil diajukan`,
+    message: `Pinjaman ${formatRupiah(Number(parsed.jumlah))} berhasil diajukan`,
     type: "PENGAJUAN",
     relatedId: created.id,
   })
@@ -304,7 +308,7 @@ export async function setujuiPinjaman(input: z.infer<typeof setujuiPinjamanSchem
     await kirimNotif({
       userId: anggotaUser.id,
       title: "Pinjaman Disetujui",
-      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah disetujui`,
+      message: `Pinjaman ${formatRupiah(Number(pinjaman.jumlah))} telah disetujui`,
       type: "DISETUJUI",
       relatedId: parsed.pinjamanId,
     })
@@ -350,7 +354,7 @@ export async function tolakPinjaman(input: z.infer<typeof setujuiPinjamanSchema>
     await kirimNotif({
       userId: anggotaUser.id,
       title: "Pinjaman Ditolak",
-      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah ditolak`,
+      message: `Pinjaman ${formatRupiah(Number(pinjaman.jumlah))} telah ditolak`,
       type: "DITOLAK",
       relatedId: parsed.pinjamanId,
     })
@@ -432,7 +436,7 @@ export async function cairkanPinjaman(input: z.infer<typeof cairkanPinjamanSchem
     await kirimNotif({
       userId: anggotaUser.id,
       title: "Pinjaman Dicairkan",
-      message: `Pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} telah dicairkan`,
+      message: `Pinjaman ${formatRupiah(Number(pinjaman.jumlah))} telah dicairkan`,
       type: "DICAIRKAN",
       relatedId: parsed.pinjamanId,
     })
@@ -487,7 +491,7 @@ export async function bayarAngsuran(input: z.infer<typeof bayarAngsuranSchema>) 
   const totalHarusDibayar = pokok + jasa + denda
   if (parsed.nominal < totalHarusDibayar)
     throw new Error(
-      `Pembayaran kurang. Total yang harus dibayar: Rp${totalHarusDibayar.toLocaleString("id-ID")} (pokok Rp${pokok.toLocaleString("id-ID")} + jasa Rp${jasa.toLocaleString("id-ID")}${denda > 0 ? ` + denda Rp${denda.toLocaleString("id-ID")}` : ""})`,
+      `Pembayaran kurang. Total yang harus dibayar: ${formatRupiah(totalHarusDibayar)} (pokok ${formatRupiah(pokok)} + jasa ${formatRupiah(jasa)}${denda > 0 ? ` + denda ${formatRupiah(denda)}` : ""})`,
     )
   const sisaPinjamanSetelah = Number(pinjaman.sisaPinjaman) - pokok
   const isLunas = sisaPinjamanSetelah <= 0
@@ -659,7 +663,7 @@ export async function bayarAngsuranKe(input: z.infer<typeof bayarAngsuranKeSchem
     await kirimNotif({
       userId: anggotaUserBayar.id,
       title: isLunas ? "Pinjaman Lunas" : "Angsuran Dibayar",
-      message: `Angsuran ke-${angsuran.angsuranKe} pinjaman Rp${Number(pinjaman.jumlah).toLocaleString("id-ID")} berhasil dibayar${isLunas ? " — Pinjaman LUNAS" : ""}`,
+      message: `Angsuran ke-${angsuran.angsuranKe} pinjaman ${formatRupiah(Number(pinjaman.jumlah))} berhasil dibayar${isLunas ? " — Pinjaman LUNAS" : ""}`,
       type: "DISETUJUI",
       relatedId: parsed.pinjamanId,
     })

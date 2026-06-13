@@ -18,16 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
 import {
   setujuiPinjaman,
   tolakPinjaman,
@@ -36,7 +27,7 @@ import {
   hapusPinjaman,
 } from "@/actions/pinjaman"
 import { ArrowLeft, Check, X, Banknote, Trash2, Wallet } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah, formatRupiahShort } from "@/lib/format"
 import { StrukPembayaran } from "@/components/struk-pembayaran"
 
 import Link from "next/link"
@@ -97,11 +88,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
   const [verifKet, setVerifKet] = useState("")
   const [generalInfo, setGeneralInfo] = useState<{
     namaKoperasi: string
@@ -209,7 +196,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
             <CardTitle className="text-sm font-medium">Jumlah Pinjaman</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp{pinjaman.jumlah.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(pinjaman.jumlah)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -217,7 +204,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
             <CardTitle className="text-sm font-medium">Sisa Pinjaman</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp{pinjaman.sisaPinjaman.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(pinjaman.sisaPinjaman)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -225,10 +212,10 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
             <CardTitle className="text-sm font-medium">Angsuran / Bulan</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp{pinjaman.angsuranTotal.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(pinjaman.angsuranTotal)}</p>
             <p className="text-xs text-muted-foreground">
-              Pokok Rp{pinjaman.angsuranPokok.toLocaleString("id-ID")} + Jasa Rp
-              {pinjaman.angsuranJasa.toLocaleString("id-ID")}
+              Pokok {formatRupiah(pinjaman.angsuranPokok)} + Jasa Rp
+              {formatRupiahShort(pinjaman.angsuranJasa)}
             </p>
           </CardContent>
         </Card>
@@ -307,7 +294,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
               onClick={() =>
                 setConfirm({
                   title: "Setujui Pinjaman",
-                  desc: `Setujui pinjaman ${pinjaman.noAnggota} sebesar Rp${pinjaman.jumlah.toLocaleString("id-ID")}?`,
+                  desc: `Setujui pinjaman ${pinjaman.noAnggota} sebesar ${formatRupiah(pinjaman.jumlah)}?`,
                   onConfirm: () => handleAction("setujui"),
                 })
               }
@@ -335,7 +322,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
             onClick={() =>
               setConfirm({
                 title: "Cairkan Pinjaman",
-                desc: `Cairkan pinjaman ${pinjaman.noAnggota} sebesar Rp${pinjaman.jumlah.toLocaleString("id-ID")}?`,
+                desc: `Cairkan pinjaman ${pinjaman.noAnggota} sebesar ${formatRupiah(pinjaman.jumlah)}?`,
                 onConfirm: () => handleAction("cairkan"),
               })
             }
@@ -401,19 +388,19 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                           <TableCell>{a.angsuranKe}</TableCell>
                           <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.pokok.toLocaleString("id-ID")}
+                            {formatRupiah(a.pokok)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.jasa.toLocaleString("id-ID")}
+                            {formatRupiah(a.jasa)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.denda.toLocaleString("id-ID")}
+                            {formatRupiah(a.denda)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.total.toLocaleString("id-ID")}
+                            {formatRupiah(a.total)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{Math.max(0, sisa).toLocaleString("id-ID")}
+                            {formatRupiah(Math.max(0, sisa))}
                           </TableCell>
                           <TableCell className="text-xs">
                             {a.tglBayar ? formatTanggal(a.tglBayar) : "-"}
@@ -436,7 +423,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
                                   onClick={() =>
                                     setConfirm({
                                       title: `Bayar Angsuran #${a.angsuranKe}`,
-                                      desc: `Bayar angsuran ke-${a.angsuranKe} sebesar Rp${a.total.toLocaleString("id-ID")} (Pokok Rp${a.pokok.toLocaleString("id-ID")} + Jasa Rp${a.jasa.toLocaleString("id-ID")}${a.denda > 0 ? ` + Denda Rp${a.denda.toLocaleString("id-ID")}` : ""})?`,
+                                      desc: `Bayar angsuran ke-${a.angsuranKe} sebesar ${formatRupiah(a.total)} (Pokok ${formatRupiah(a.pokok)} + Jasa ${formatRupiah(a.jasa)}${a.denda > 0 ? ` + Denda ${formatRupiah(a.denda)}` : ""})?`,
                                       onConfirm: () => handleBayar(a.angsuranKe),
                                     })
                                   }
@@ -459,23 +446,7 @@ export function PinjamanDetailClient({ pinjaman }: { pinjaman: Pinjaman }) {
         </Card>
       )}
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
 
       {receipt && generalInfo && (
         <StrukPembayaran

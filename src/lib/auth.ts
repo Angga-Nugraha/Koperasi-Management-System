@@ -18,7 +18,8 @@ const {
   auth: rawAuth,
 } = NextAuth({
   adapter: undefined,
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
+  jwt: { maxAge: 24 * 60 * 60 },
   pages: {
     signIn: "/login",
   },

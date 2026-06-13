@@ -29,6 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { formatRupiah, formatRupiahShort } from "@/lib/format"
 import { ajukanPinjamanAnggota, getJenisPinjamanList } from "@/actions/pinjaman"
 
 type JenisPinjaman = { id: string; nama: string; bunga: number }
@@ -89,7 +90,7 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
 
     if (jumlah > plafon.maxPlafon) {
       setError(
-        `Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`,
+        `Jumlah pinjaman melebihi plafon. Maksimal ${formatRupiah(plafon.maxPlafon)}`,
       )
       setLoading(false)
       return
@@ -138,11 +139,11 @@ export function AjukanPinjamanAnggota({ plafon, onSuccess }: Props) {
             <div className="rounded-md bg-muted p-3 text-sm space-y-1">
               <p className="font-medium">Limit Pinjaman Anda</p>
               <p className="text-lg font-bold text-primary">
-                Rp{plafon.maxPlafon.toLocaleString("id-ID")}
+                {formatRupiah(plafon.maxPlafon)}
               </p>
               <p className="text-xs text-muted-foreground">
                 {plafon.plafonMaxSaldo}× saldo simpanan (Rp
-                {plafon.totalSimpanan.toLocaleString("id-ID")})
+                {formatRupiahShort(plafon.totalSimpanan)})
               </p>
             </div>
 

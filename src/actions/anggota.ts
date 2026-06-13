@@ -27,6 +27,9 @@ export async function getAnggotaList(params: {
   sortBy?: string
   sortOrder?: string
 }) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+
   const { search, status, sortBy, sortOrder, page = 1, pageSize = 20 } = params
 
   const where = anggotaFilter({ search, status })
@@ -74,6 +77,12 @@ export async function getAnggotaList(params: {
 }
 
 export async function getAnggotaById(id: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== id) {
+    throw new Error("Forbidden")
+  }
+
   const raw = await prisma.anggota.findUnique({
     where: { id },
     include: {
@@ -538,6 +547,12 @@ export async function getUserByAnggotaId(anggotaId: string) {
 }
 
 export async function getAnggotaSaldo(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
+
   const simpanan = await prisma.simpanan.findMany({
     where: { anggotaId },
   })

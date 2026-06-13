@@ -5,10 +5,12 @@
 
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PiggyBank, HandCoins, DollarSign } from "lucide-react"
 import { getDashboardAnggota } from "@/actions/dashboard"
 import { getAnggotaKartu } from "@/actions/anggota"
+import { formatRupiah } from "@/lib/format"
 import { KartuAnggotaButton } from "@/components/anggota/kartu-anggota-button"
 
 const CARD_STYLES = [
@@ -33,19 +35,19 @@ export default async function AnggotaDashboard() {
   const cards = [
     {
       title: "Saldo Simpanan",
-      value: `Rp ${data.totalSimpanan.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalSimpanan),
       sub: "Total seluruh simpanan",
       icon: PiggyBank,
     },
     {
       title: "Pinjaman Aktif",
-      value: `Rp ${data.totalPinjaman.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.totalPinjaman),
       sub: "Sisa pinjaman",
       icon: HandCoins,
     },
     {
       title: "SHU Diterima",
-      value: `Rp ${data.shuDiterima.toLocaleString("id-ID")}`,
+      value: formatRupiah(data.shuDiterima),
       sub: "Tahun terakhir",
       icon: DollarSign,
     },
@@ -54,10 +56,7 @@ export default async function AnggotaDashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard Anggota</h1>
-          <p className="text-sm text-muted-foreground">Selamat datang, {session?.user?.email}</p>
-        </div>
+        <PageHeader title="Dashboard Anggota" description={`Selamat datang, ${session?.user?.email}`} />
         <KartuAnggotaButton anggota={anggotaKartu} />
       </div>
 
@@ -90,7 +89,7 @@ export default async function AnggotaDashboard() {
               {data.simpanan.map((s) => (
                 <div key={s.kode} className="rounded-lg border border-l-4 border-l-emerald-500 p-4">
                   <p className="text-sm text-muted-foreground">{s.nama}</p>
-                  <p className="mt-1 text-xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>
+                  <p className="mt-1 text-xl font-bold">{formatRupiah(s.saldo)}</p>
                 </div>
               ))}
             </div>
@@ -112,12 +111,12 @@ export default async function AnggotaDashboard() {
                 >
                   <div>
                     <p className="text-sm font-medium">
-                      Pinjaman Rp {p.jumlah.toLocaleString("id-ID")}
+                      {formatRupiah(p.jumlah)}
                     </p>
                     <p className="text-xs text-muted-foreground">Status: {p.status}</p>
                   </div>
                   <p className="font-bold text-amber-600">
-                    Rp {p.sisaPinjaman.toLocaleString("id-ID")}
+                    {formatRupiah(p.sisaPinjaman)}
                   </p>
                 </div>
               ))}

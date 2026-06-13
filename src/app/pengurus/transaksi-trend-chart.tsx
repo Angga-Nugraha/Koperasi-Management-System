@@ -15,7 +15,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
-import { formatCompact } from "@/lib/format"
+import { formatCompact, formatRupiah } from "@/lib/format"
 
 type Props = {
   data: { bulan: string; masuk: number; keluar: number }[]
@@ -38,7 +38,7 @@ export function TransaksiTrendChart({ data }: Props) {
             tickFormatter={formatCompact}
           />
           <Tooltip
-            formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, undefined]}
+            formatter={(value: number) => [formatRupiah(value), undefined]}
           />
           <Legend />
           <Line

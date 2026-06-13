@@ -18,16 +18,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
 import { tarikSimpanan } from "@/actions/simpanan"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 import { StrukPembayaran } from "@/components/struk-pembayaran"
@@ -42,11 +33,7 @@ export function TarikSheet({ open, onOpenChange }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [jenisSukarelaId, setJenisSukarelaId] = useState<string>("")
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
   const [anggotaId, setAnggotaId] = useState("")
   const [generalInfo, setGeneralInfo] = useState<{
     namaKoperasi: string
@@ -183,23 +170,7 @@ export function TarikSheet({ open, onOpenChange }: Props) {
         </SheetContent>
       </Sheet>
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
 
       {receipt && generalInfo && (
         <StrukPembayaran

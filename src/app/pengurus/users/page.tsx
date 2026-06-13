@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react"
+import { PageHeader } from "@/components/ui/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -34,16 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
 import {
   getUserList,
   createUser,
@@ -94,11 +86,7 @@ export default function UsersPage() {
   const pageSize = 10
   const [availableRoles, setAvailableRoles] = useState<string[]>([])
 
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => Promise<void> | void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
 
   const [createOpen, setCreateOpen] = useState(false)
   const [createForm, setCreateForm] = useState({
@@ -288,10 +276,7 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Manajemen Users</h1>
-          <p className="text-sm text-muted-foreground">Kelola akun pengguna sistem</p>
-        </div>
+        <PageHeader title="Manajemen Users" description="Kelola akun pengguna sistem" />
         <Button onClick={openCreate} className="w-full sm:w-auto">
           <Plus className="mr-2 h-4 w-4" />
           Tambah User
@@ -650,23 +635,7 @@ export default function UsersPage() {
         </DialogContent>
       </Dialog>
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
     </div>
   )
 }

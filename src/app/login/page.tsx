@@ -82,7 +82,7 @@ export default function LoginPage() {
     }
 
     if (rememberMe) {
-      localStorage.setItem("login_remember", JSON.stringify({ email, password }))
+      localStorage.setItem("login_remember", JSON.stringify({ email }))
     } else {
       localStorage.removeItem("login_remember")
     }

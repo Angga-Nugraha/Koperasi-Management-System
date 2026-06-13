@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { getSHUTutupBukuList, prosesTutupBuku } from "@/actions/tutup-buku"
+import { formatRupiah } from "@/lib/format"
 import { BookCheck, FileText, AlertTriangle } from "lucide-react"
 
 type SHUItem = Awaited<ReturnType<typeof getSHUTutupBukuList>>[number]
@@ -85,7 +86,7 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                             : "text-red-600 font-medium"
                         }
                       >
-                        Rp {item.totalSHU.toLocaleString("id-ID")}
+                        {formatRupiah(item.totalSHU)}
                       </span>{" "}
                       — {item.jumlahAnggota} anggota
                     </p>
@@ -166,7 +167,7 @@ export function TutupBukuPage({ data }: { data: SHUItem[] }) {
                             : "text-red-600 font-medium"
                         }
                       >
-                        Rp {item.totalSHU.toLocaleString("id-ID")}
+                        {formatRupiah(item.totalSHU)}
                       </span>{" "}
                       — {item.jumlahAnggota} anggota
                     </p>

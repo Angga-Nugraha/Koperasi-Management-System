@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah, formatRupiahShort } from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -218,7 +218,7 @@ export function AnggotaPinjamanView({
                     </h5>
                     <p className="text-sm text-amber-700">
                       Anda menginisiasi pembayaran sebesar{" "}
-                      <span className="font-bold">Rp {p.nominal.toLocaleString("id-ID")}</span>.
+                      <span className="font-bold">{formatRupiah(p.nominal)}</span>.
                       Selesaikan sebelum kedaluwarsa dalam{" "}
                       <span className="font-bold text-amber-900">{sisaWaktu}</span>.
                     </p>
@@ -266,7 +266,7 @@ export function AnggotaPinjamanView({
             <CardTitle className="text-sm font-medium">Sisa Pinjaman</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp{totalSisa.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(totalSisa)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -275,7 +275,7 @@ export function AnggotaPinjamanView({
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              Rp{aktif.reduce((sum, p) => sum + p.angsuranTotal, 0).toLocaleString("id-ID")}
+              {formatRupiah(aktif.reduce((sum, p) => sum + p.angsuranTotal, 0))}
             </p>
           </CardContent>
         </Card>
@@ -285,11 +285,11 @@ export function AnggotaPinjamanView({
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-primary">
-              Rp{plafon.maxPlafon.toLocaleString("id-ID")}
+              {formatRupiah(plafon.maxPlafon)}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {plafon.plafonMaxSaldo}× saldo simpanan (Rp
-              {plafon.totalSimpanan.toLocaleString("id-ID")})
+              {formatRupiahShort(plafon.totalSimpanan)})
             </p>
           </CardContent>
         </Card>
@@ -316,7 +316,7 @@ export function AnggotaPinjamanView({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">
-                  Pinjaman Rp{p.jumlah.toLocaleString("id-ID")}
+                  {formatRupiah(p.jumlah)}
                 </CardTitle>
                 <Badge className={STATUS_STYLE[p.status]}>
                   {STATUS_LABEL[p.status] ?? p.status}
@@ -343,11 +343,11 @@ export function AnggotaPinjamanView({
                 </div>
                 <div>
                   <span className="text-muted-foreground">Angsuran / bln</span>
-                  <p className="font-medium">Rp{p.angsuranTotal.toLocaleString("id-ID")}</p>
+                  <p className="font-medium">{formatRupiah(p.angsuranTotal)}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Sisa</span>
-                  <p className="font-medium">Rp{p.sisaPinjaman.toLocaleString("id-ID")}</p>
+                  <p className="font-medium">{formatRupiah(p.sisaPinjaman)}</p>
                 </div>
               </div>
 
@@ -379,13 +379,13 @@ export function AnggotaPinjamanView({
                           <TableCell>{a.angsuranKe}</TableCell>
                           <TableCell className="text-xs">{formatTanggal(a.jatuhTempo)}</TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.pokok.toLocaleString("id-ID")}
+                            {formatRupiah(a.pokok)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.jasa.toLocaleString("id-ID")}
+                            {formatRupiah(a.jasa)}
                           </TableCell>
                           <TableCell className="text-right font-mono">
-                            Rp{a.total.toLocaleString("id-ID")}
+                            {formatRupiah(a.total)}
                           </TableCell>
                           <TableCell className="text-xs">
                             {a.tglBayar ? formatTanggal(a.tglBayar) : "-"}

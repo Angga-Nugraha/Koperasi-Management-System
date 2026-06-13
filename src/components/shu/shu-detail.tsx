@@ -29,6 +29,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { hapusSHU, generateSHU, getSHUByTahun } from "@/actions/shu"
+import { formatRupiah } from "@/lib/format"
 import { FileText, ArrowLeft, Download, Trash2, RefreshCw } from "lucide-react"
 
 type SHUDetail = NonNullable<Awaited<ReturnType<typeof getSHUByTahun>>>
@@ -164,7 +165,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
               <p
                 className={`text-2xl font-bold ${data.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}
               >
-                Rp {data.totalSHU.toLocaleString("id-ID")}
+                {formatRupiah(data.totalSHU)}
               </p>
             </div>
             {data.alokasi.map((a) => (
@@ -172,7 +173,7 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
                 <p className="text-sm text-muted-foreground">
                   {a.indikatorNama} ({a.persentase}%)
                 </p>
-                <p className="text-xl font-semibold">Rp {a.nominal.toLocaleString("id-ID")}</p>
+                <p className="text-xl font-semibold">{formatRupiah(a.nominal)}</p>
               </div>
             ))}
           </div>
@@ -209,15 +210,15 @@ export function SHUDetailCard({ data }: { data: SHUDetail }) {
                       <TableCell>{a.noAnggota}</TableCell>
                       <TableCell>{a.nama}</TableCell>
                       <TableCell className="text-right">
-                        Rp {a.jasaModal.toLocaleString("id-ID")}
+                        {formatRupiah(a.jasaModal)}
                       </TableCell>
                       <TableCell className="text-right">
-                        Rp {a.jasaUsaha.toLocaleString("id-ID")}
+                        {formatRupiah(a.jasaUsaha)}
                       </TableCell>
                       <TableCell
                         className={`text-right font-medium ${a.total >= 0 ? "text-green-600" : "text-red-600"}`}
                       >
-                        Rp {a.total.toLocaleString("id-ID")}
+                        {formatRupiah(a.total)}
                       </TableCell>
                     </TableRow>
                   ))

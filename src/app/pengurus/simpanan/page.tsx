@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getSimpananList } from "@/actions/simpanan"
 import { SimpananTable } from "@/components/simpanan/simpanan-table"
 import { prisma } from "@/lib/prisma"
@@ -28,10 +29,7 @@ export default async function SimpananListPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Simpanan</h1>
-        <p className="text-sm text-muted-foreground">Kelola simpanan anggota koperasi</p>
-      </div>
+      <PageHeader title="Simpanan" description="Kelola simpanan anggota koperasi" />
 
       <SimpananTable
         data={result.data}

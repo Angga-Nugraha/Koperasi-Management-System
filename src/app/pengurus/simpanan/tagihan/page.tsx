@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react"
+import { PageHeader } from "@/components/ui/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -39,7 +40,7 @@ import {
 import { StrukPembayaran } from "@/components/struk-pembayaran"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ArrowLeft, RefreshCw, Wallet } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 import {
   generateTagihanWajib,
@@ -209,12 +210,7 @@ export default function TagihanWajibPage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">Tagihan Simpanan</h1>
-          <p className="text-sm text-muted-foreground">
-            Tagihan simpanan Pokok (1x) dan Wajib (bulanan) — Total: {total} tagihan
-          </p>
-        </div>
+      <PageHeader title="Tagihan Simpanan" description={`Tagihan simpanan Pokok (1x) dan Wajib (bulanan) — Total: ${total} tagihan`} />
       </div>
 
       {error && (
@@ -372,7 +368,7 @@ export default function TagihanWajibPage() {
                       {BULAN[t.bulan]} {t.tahun}
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      Rp{t.nominal.toLocaleString("id-ID")}
+                      {formatRupiah(t.nominal)}
                     </TableCell>
                     <TableCell className="text-xs">{formatTanggal(t.jatuhTempo)}</TableCell>
                     <TableCell className="text-xs">
@@ -391,7 +387,7 @@ export default function TagihanWajibPage() {
                           onClick={() =>
                             setConfirm({
                               title: `Bayar Tagihan ${BULAN[t.bulan]} ${t.tahun}`,
-                              desc: `Bayar tagihan ${t.jenisNama} ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar Rp${t.nominal.toLocaleString("id-ID")}?`,
+                              desc: `Bayar tagihan ${t.jenisNama} ${t.namaAnggota} periode ${BULAN[t.bulan]} ${t.tahun} sebesar ${formatRupiah(t.nominal)}?`,
                               onConfirm: () => handleBayar(t),
                             })
                           }

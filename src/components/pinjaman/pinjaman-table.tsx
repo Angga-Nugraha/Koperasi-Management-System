@@ -27,7 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { Search } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 import Link from "next/link"
 
 import { AjukanSheet } from "@/components/pinjaman/ajukan-sheet"
@@ -200,11 +200,11 @@ export function PinjamanTable({
                   <TableCell>{p.namaAnggota}</TableCell>
                   <TableCell className="text-xs">{p.jenisPinjaman}</TableCell>
                   <TableCell className="text-right font-mono">
-                    Rp{Number(p.jumlah).toLocaleString("id-ID")}
+                    {formatRupiah(Number(p.jumlah))}
                   </TableCell>
                   <TableCell className="text-right">{p.tenor} bln</TableCell>
                   <TableCell className="text-right font-mono">
-                    Rp{Number(p.sisaPinjaman).toLocaleString("id-ID")}
+                    {formatRupiah(Number(p.sisaPinjaman))}
                   </TableCell>
                   <TableCell>
                     <Badge className={STATUS_STYLE[p.status]}>

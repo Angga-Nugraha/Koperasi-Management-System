@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getArusKas } from "@/actions/jurnal"
 import { ArusKasClient } from "@/components/jurnal/arus-kas-client"
 
@@ -23,7 +24,7 @@ export default async function ArusKasPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Arus Kas</h1>
+        <PageHeader title="Arus Kas" />
         <div className="flex items-center gap-2">
           <a
             href={`/api/export/laporan?type=arus-kas${dari ? `&dari=${dari}` : ""}${sampai ? `&sampai=${sampai}` : ""}`}

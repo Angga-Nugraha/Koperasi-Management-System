@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Printer, X } from "lucide-react"
-import { formatTanggal } from "@/lib/format"
+import { formatTanggal, formatRupiah } from "@/lib/format"
 
 type GeneralInfo = {
   namaKoperasi: string
@@ -87,7 +87,7 @@ type Props = {
 }
 
 function formatRp(n: number) {
-  return `Rp${n.toLocaleString("id-ID")}`
+  return formatRupiah(n)
 }
 
 function StrukContent({

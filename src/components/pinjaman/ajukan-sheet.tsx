@@ -25,16 +25,8 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
+import { formatRupiah, formatRupiahShort } from "@/lib/format"
 import { ajukanPinjaman, getJenisPinjamanList, getPlafonAnggota } from "@/actions/pinjaman"
 import { AnggotaSelect } from "@/components/simpanan/anggota-select"
 
@@ -54,11 +46,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
   const [defaultBunga, setDefaultBunga] = useState<number>(0)
   const [tenorMin, setTenorMin] = useState(3)
   const [tenorMax, setTenorMax] = useState(36)
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
   const [anggotaId, setAnggotaId] = useState("")
   const [plafon, setPlafon] = useState<{
     maxPlafon: number
@@ -125,7 +113,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
     const jumlah = Number(formData.get("jumlah"))
     if (plafon && jumlah > plafon.maxPlafon) {
       setError(
-        `Jumlah pinjaman melebihi plafon. Maksimal Rp${plafon.maxPlafon.toLocaleString("id-ID")}`,
+        `Jumlah pinjaman melebihi plafon. Maksimal ${formatRupiah(plafon.maxPlafon)}`,
       )
       setLoading(false)
       return
@@ -176,11 +164,11 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
                 <div className="rounded-md bg-muted p-3 text-sm space-y-1">
                   <p className="font-medium">Limit Pinjaman Maksimal</p>
                   <p className="text-lg font-bold text-primary">
-                    Rp{plafon.maxPlafon.toLocaleString("id-ID")}
+                    {formatRupiah(plafon.maxPlafon)}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {plafon.plafonMaxSaldo}× saldo simpanan (Rp
-                    {plafon.totalSimpanan.toLocaleString("id-ID")})
+                    {formatRupiahShort(plafon.totalSimpanan)})
                   </p>
                 </div>
               )}
@@ -255,23 +243,7 @@ export function AjukanSheet({ open, onOpenChange }: Props) {
         </SheetContent>
       </Sheet>
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
     </>
   )
 }

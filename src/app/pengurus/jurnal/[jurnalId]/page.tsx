@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getJurnalById } from "@/actions/jurnal"
 import { formatTanggal } from "@/lib/format"
 import { notFound } from "next/navigation"
@@ -39,7 +40,7 @@ export default async function JurnalDetailPage({ params }: Props) {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h1 className="text-2xl font-bold tracking-tight">Detail Jurnal</h1>
+        <PageHeader title="Detail Jurnal" />
       </div>
 
       <Card>

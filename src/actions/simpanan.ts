@@ -17,6 +17,7 @@ import {
   bayarTagihanSchema,
 } from "@/lib/validations/simpanan"
 import { z } from "zod"
+import { formatRupiah } from "@/lib/format"
 import { buatJurnal, COA_KAS, getSimpananAkun } from "@/lib/jurnal"
 import { catatLog } from "@/lib/audit"
 import { generateNoStrukTagihan, generateNoStrukSimpanan } from "@/lib/struk"
@@ -87,6 +88,12 @@ export async function getSimpananList(params: {
 }
 
 export async function getSimpananAnggota(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
+
   const raw = await prisma.simpanan.findMany({
     where: { anggotaId },
     include: { jenisSimpanan: { select: { kode: true, nama: true } } },
@@ -108,6 +115,12 @@ export async function getMutasiAnggota(
   anggotaId: string,
   params: { jenisSimpananId?: string; page?: number; pageSize?: number },
 ) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
+
   const { jenisSimpananId, page = 1, pageSize = 20 } = params
 
   const where: Prisma.TransaksiSimpananWhereInput = { anggotaId }
@@ -152,7 +165,7 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
 
   if (parsed.nominal < Number(jenis.minimalSetoran)) {
     throw new Error(
-      `Setoran ${jenis.nama} minimal Rp${Number(jenis.minimalSetoran).toLocaleString("id-ID")}`,
+      `Setoran ${jenis.nama} minimal ${formatRupiah(Number(jenis.minimalSetoran))}`,
     )
   }
 
@@ -214,14 +227,14 @@ export async function setorSimpanan(input: z.infer<typeof setorSimpananSchema>) 
 
   await notifyAdmins({
     title: "Setoran Simpanan",
-    message: `${anggota.nama} melakukan setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")}`,
+    message: `${anggota.nama} melakukan setoran ${jenis.nama} ${formatRupiah(parsed.nominal)}`,
     type: "SETORAN",
   })
 
   await notifyMember({
     anggotaId: parsed.anggotaId,
     title: "Setoran Simpanan",
-    message: `Setoran ${jenis.nama} Rp${parsed.nominal.toLocaleString("id-ID")} berhasil`,
+    message: `Setoran ${jenis.nama} ${formatRupiah(parsed.nominal)} berhasil`,
     type: "SETORAN",
   })
 
@@ -433,7 +446,7 @@ export async function generateTagihanWajib(input: z.infer<typeof generateTagihan
       await kirimNotif({
         userId: u.id,
         title: `Tagihan Wajib ${bulan}/${tahun}`,
-        message: `Tagihan simpanan wajib Rp${Number(jenisWajib.minimalSetoran).toLocaleString("id-ID")} telah diterbitkan, jatuh tempo ${jatuhTempo.toLocaleDateString("id-ID")}`,
+        message: `Tagihan simpanan wajib ${formatRupiah(Number(jenisWajib.minimalSetoran))} telah diterbitkan, jatuh tempo ${jatuhTempo.toLocaleDateString("id-ID")}`,
         type: "TAGIHAN",
       })
     }
@@ -532,7 +545,7 @@ export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema
     await kirimNotif({
       userId: anggotaUser.id,
       title: "Pembayaran Tagihan",
-      message: `Tagihan ${tagihan.jenisSimpanan.nama} periode ${tagihan.bulan}/${tagihan.tahun} sebesar Rp${Number(tagihan.nominal).toLocaleString("id-ID")} berhasil dibayar`,
+      message: `Tagihan ${tagihan.jenisSimpanan.nama} periode ${tagihan.bulan}/${tagihan.tahun} sebesar ${formatRupiah(Number(tagihan.nominal))} berhasil dibayar`,
       type: "TAGIHAN",
     })
   }
@@ -552,6 +565,12 @@ export async function bayarTagihanWajib(input: z.infer<typeof bayarTagihanSchema
 }
 
 export async function getTagihanWajibAnggota(anggotaId: string) {
+  const session = await auth()
+  if (!session?.user) throw new Error("Unauthorized")
+  if (session.user.role === "ANGGOTA" && session.user.anggotaId !== anggotaId) {
+    throw new Error("Forbidden")
+  }
+
   const raw = await prisma.tagihanSimpanan.findMany({
     where: { anggotaId },
     orderBy: [{ tahun: "desc" }, { bulan: "desc" }],

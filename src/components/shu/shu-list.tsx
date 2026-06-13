@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { formatRupiah } from "@/lib/format"
 import { generateSHU, hapusSHU, getSHUList } from "@/actions/shu"
 import { Plus, FileSpreadsheet, FileText, Trash2 } from "lucide-react"
 
@@ -104,7 +105,7 @@ function SHUCard({ shu, onDelete }: { shu: SHU; onDelete: () => void }) {
         <p
           className={`text-3xl font-bold ${shu.totalSHU >= 0 ? "text-green-600" : "text-red-600"}`}
         >
-          Rp {shu.totalSHU.toLocaleString("id-ID")}
+          {formatRupiah(shu.totalSHU)}
         </p>
         <p className="text-xs text-muted-foreground mt-1">Total SHU</p>
       </CardContent>

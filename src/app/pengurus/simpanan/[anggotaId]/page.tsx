@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getSimpananAnggota, getMutasiAnggota } from "@/actions/simpanan"
 import { getAnggotaById } from "@/actions/anggota"
 import { notFound } from "next/navigation"
@@ -13,6 +14,7 @@ import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
+import { formatRupiah } from "@/lib/format"
 
 type Props = {
   params: Promise<{ anggotaId: string }>
@@ -49,14 +51,11 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">{anggota.nama}</h1>
-            <Badge variant={anggota.status === "AKTIF" ? "default" : "secondary"}>
-              {anggota.status}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">{anggota.noAnggota}</p>
+        <div className="flex items-center gap-3">
+          <PageHeader title={anggota.nama} description={anggota.noAnggota} />
+          <Badge variant={anggota.status === "AKTIF" ? "default" : "secondary"}>
+            {anggota.status}
+          </Badge>
         </div>
       </div>
 
@@ -67,7 +66,7 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
               <CardTitle className="text-sm font-medium">{s.jenisNama}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">Rp {s.saldo.toLocaleString("id-ID")}</p>
+              <p className="text-2xl font-bold">{formatRupiah(s.saldo)}</p>
             </CardContent>
           </Card>
         ))}
@@ -76,7 +75,7 @@ export default async function SimpananAnggotaPage({ params, searchParams }: Prop
             <CardTitle className="text-sm font-medium">Total</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">Rp {totalSaldo.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-bold">{formatRupiah(totalSaldo)}</p>
           </CardContent>
         </Card>
       </div>

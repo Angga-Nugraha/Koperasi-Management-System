@@ -28,6 +28,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { formatRupiah } from "@/lib/format"
 import { Search, ArrowUpRight, ArrowDownLeft, FileText } from "lucide-react"
 import Link from "next/link"
 import { SetorSheet } from "@/components/simpanan/setor-sheet"
@@ -215,7 +216,7 @@ export function SimpananTable({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      Rp {s.saldo.toLocaleString("id-ID")}
+                      {formatRupiah(s.saldo)}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" size="sm" asChild>

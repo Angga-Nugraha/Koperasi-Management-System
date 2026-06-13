@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getNeraca } from "@/actions/jurnal"
 import { NeracaClient } from "@/components/jurnal/neraca-client"
 
@@ -17,7 +18,7 @@ export default async function NeracaPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Neraca</h1>
+        <PageHeader title="Neraca" />
         <div className="flex items-center gap-2">
           <a
             href={`/api/export/laporan?type=neraca${sampai ? `&sampai=${sampai}` : ""}`}

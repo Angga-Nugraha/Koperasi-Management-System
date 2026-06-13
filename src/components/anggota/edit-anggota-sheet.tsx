@@ -26,16 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { ConfirmDialog, type ConfirmData } from "@/components/ui/confirm-dialog"
 import { updateAnggota } from "@/actions/anggota"
 import { X } from "lucide-react"
 
@@ -68,11 +59,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
   const [ktp, setKtp] = useState<string | null>(anggota.ktp)
   const [fotoUploading, setFotoUploading] = useState(false)
   const [ktpUploading, setKtpUploading] = useState(false)
-  const [confirm, setConfirm] = useState<{
-    title: string
-    desc: string
-    onConfirm: () => void
-  } | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmData>(null)
 
   async function uploadFile(file: File, type: "foto" | "ktp"): Promise<string> {
     const formData = new FormData()
@@ -364,23 +351,7 @@ export function EditAnggotaSheet({ open, onOpenChange, anggota }: Props) {
         </SheetContent>
       </Sheet>
 
-      <AlertDialog
-        open={!!confirm}
-        onOpenChange={(open) => {
-          if (!open) setConfirm(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{confirm?.title}</AlertDialogTitle>
-            <AlertDialogDescription>{confirm?.desc}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirm?.onConfirm}>Lanjutkan</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
     </>
   )
 }

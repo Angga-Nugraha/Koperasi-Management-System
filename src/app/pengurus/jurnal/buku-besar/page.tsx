@@ -3,6 +3,7 @@
  * @description Halaman dashboard/fitur pengurus untuk modul: page.
  */
 
+import { PageHeader } from "@/components/ui/page-header"
 import { getAkunList, getBukuBesar } from "@/actions/jurnal"
 import { BukuBesarClient } from "@/components/jurnal/buku-besar-client"
 
@@ -36,7 +37,7 @@ export default async function BukuBesarPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Buku Besar</h1>
+        <PageHeader title="Buku Besar" />
         <div className="flex items-center gap-2">
           {akunId && (
             <a
