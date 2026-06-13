@@ -155,7 +155,7 @@ export default function LoginPage() {
                 options={{ theme: "light" }}
               />
             )}
-            <Button type="submit" className="w-full" disabled={loading || (!!siteKey && !turnstileToken)}>
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Memproses..." : "Masuk"}
             </Button>
           </form>
